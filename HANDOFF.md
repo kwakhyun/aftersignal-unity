@@ -17,12 +17,12 @@
 - 앞뒤·대각선 대시, 승강기/에스컬레이터 접지, 안전한 내부 진입, 카메라 가림 투명화, 열차 및 내부의 부적절한 간판 정리를 적용했다.
 - 40개 시설과 40개 고층의 실제 옥상, 외벽 로프 발판·가로등 앵커, 전망 모드와 낮/밤 조명을 연결했다. 시설 NPC 다수 배치와 시민 의복·직업·성격 다양화, 시설 결제·은행·옷장·취침을 추가했다.
 - 시민 공격/차량 탈취에 반응하는 수배 1~5단계, 경찰/경찰차/특수대응팀/무장 헬기, 은신 또는 출동 병력 제압으로 해제를 구현했다. 캠페인 적과 경찰은 별도 집계한다.
-- `Tools/NpcGateway.py`가 서버에서 `gpt-5.6-luna` Responses API를 호출한다. 고정 퀘스트 외 대화 및 수락형 히든 의뢰를 연결했다. 키 저장 확인 도구가 `not_approved / decline`을 반환하여 키 생성·저장·유료 API 호출은 하지 않았다. 사용자의 새 요청 없이 이를 재시도하지 않는다. 실제 AI 호출은 미검증이다.
+- `Tools/NpcGateway.py`가 서버에서 `gpt-5.6-luna` Responses API를 호출한다. 이후 사용자가 텍스트로 로컬 저장을 다시 승인하여 `AFTERSIGNAL` 키를 Git에서 제외된 `.env.local`에 저장했다. 실제 요청 2회로 NPC별 대화, 소방서 배달 의뢰(180 C), 의뢰 금지 요청에서 `quest=null`을 확인했다. 키는 출력·커밋하지 않는다. 다른 PC에서는 별도 설정이 필요하다. 현재 실행은 `PLAY.cmd`가 로컬 대화 서버를 함께 시작한다.
 - 일반 실행은 `PLAY.cmd`. 이미 빌드된 플레이어와 로컬 Python 대화 서버를 함께 실행하며 키가 없어도 게임을 실행한다. 키를 게임 에셋이나 PlayerPrefs에 넣지 않는다.
 - 기존 씬을 유지하며 갱신하는 에디터 메서드는 `ProjectBuilder.CityLifeAndRelease`이다. 구형 전체 씬 생성 후에는 이 업그레이드를 다시 적용한다. 업그레이드는 자신이 추가한 루트만 교체하고 가림 렌더러를 전역 정적 배치에서 제외한다.
 - `-life-smoke`는 요청 시에만 실행되는 짧은 통합 검사다. 저장을 스냅샷/복원하고 실제 로프 물리, 앞뒤 대시, 수배 출동/제압, 내부 바닥/NPC, 시설 결제, 의상, 취침, 승강기를 검사한다. 장시간 성능·전체 캠페인·직접 키보드 조작감 검수는 이번에 반복하지 않았다.
 
-이번 변경은 로컬 소스와 Windows 빌드에 반영했다. 새 커밋·푸시는 요청받지 않았다.
+도시 생활·코드 정리·BGM·AI 연결 안내를 통합한 최신 소스는 `main`을 공유 기준으로 사용한다. 로컬 API 키와 Windows 빌드 결과물은 Git에 포함하지 않는다.
 
 ## 프로젝트 구분
 
@@ -30,7 +30,7 @@
 
 작업 폴더: `AFTERSIGNAL-Unity`. `Assets`, `Packages`, `ProjectSettings`가 있는 이 저장소의 루트를 Codex 프로젝트와 Unity Hub에 등록한다.
 
-공개 저장소: https://github.com/kwakhyun/aftersignal-unity · 브랜치: `codex/unity-source`.
+공개 저장소: https://github.com/kwakhyun/aftersignal-unity · 기본 브랜치: `main`. 기존 `codex/unity-source` 브랜치도 유지한다.
 
 GitHub 복제 후에는 `SETUP.cmd` → `OPEN_UNITY.cmd`. 정확한 버전의 SDK를 에디터 설치 경로와 Unity 공식 서버에서 복원한다. 로컬 embedded SDK는 Git에서 제외했고 `Packages/sources.json`에 버전·출처·레지스트리 체크섬을 고정했다. Assets, 씬, 이미지, 오디오, `.meta`는 저장소에 포함된다. 에디터가 다른 곳에 설치돼 있으면 `Tools/Restore-UnityPackages.ps1 -Editor <Unity.exe>`를 실행한다.
 

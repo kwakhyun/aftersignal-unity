@@ -42,4 +42,4 @@
 
 정리 후 Windows Release 빌드는 성공했다(오류 0, 경고 35). `Artifacts/Maintenance/build.log`에 원본 로그가 있다. 이동한 90개 스크립트의 메타 파일 해시는 모두 유지됐으며, 생성 메시 재검사 결과 미사용 0개다. 서식 검사도 통과했다.
 
-`Artifacts/Maintenance/Smoke/life-smoke.json`에서 도시 생활 필수 동작 17개가 통과했다. 앞뒤 대시, 실제 로프 등반, 수배 5단계 출동·해제, 실내 바닥·다수 NPC, 결제, 의상 변경, 취침과 승강기를 확인했다. 전체 캠페인, 장시간 성능 측정, 실제 OpenAI 호출, BGM 검수는 이번 검사에서 수행하지 않았다.
+`Artifacts/Maintenance/Smoke/life-smoke.json`에서 도시 생활 필수 동작 17개가 통과했다. 앞뒤 대시, 실제 로프 등반, 수배 5단계 출동·해제, 실내 바닥·다수 NPC, 결제, 의상 변경, 취침과 승강기를 확인했다. 구조 정리 당시 전체 캠페인, 장시간 성능 측정, 실제 OpenAI 호출, BGM 검수는 반복하지 않았다. 이후 키 저장 승인과 실제 AI 대화·히든 의뢰 연결 확인은 `Urban/CITY-LIFE-16.md`에 기록했다.
