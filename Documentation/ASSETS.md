@@ -7,7 +7,7 @@
 - Geometry, procedural surface grain, shaders, interface and synthesized audio: authored for this Unity project.
 - Official Unity packages are embedded with Unity's own API-updater migrations for 6000.4 (including the move from UnityEditor.GUID to UnityEngine.GUID in Shader Graph). No gameplay features were added to package code. Their package directories contain the corresponding license and third-party notices. They remain subject to their own terms and are not relicensed by this project.
 
-No commercial game assets were extracted or copied. This project does not require an online generative service during play.
+This project does not require an online generative service during play.
 
 Version 1.1 adds six original image-generated, normalized katana poses, one generated ceramic albedo, authored contact-shadow/effect shaders and 64 authored DSP WAV assets. Sources, actual scope and normalization notes are in `Quality/QUALITY.md`; source generators are in `Tools/Build-QualityAssets.py`. The concept paintover is review material, not a gameplay screenshot. No paid third-party assets were purchased.
 
