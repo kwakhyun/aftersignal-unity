@@ -6,7 +6,11 @@
 
 현재 PC 경로: `C:\Users\82105\Documents\ChatGPT\ANNO_ Mutationem\AFTERSIGNAL-Unity`
 
+공개 저장소: https://github.com/kwakhyun/aftersignal-unity · 브랜치: `codex/unity-source`.
+
 GitHub 복제 후에는 `SETUP.cmd` → `OPEN_UNITY.cmd`. 정확한 버전의 SDK를 에디터 설치 경로와 Unity 공식 서버에서 복원한다. 로컬 embedded SDK는 Git에서 제외했고 `Packages/sources.json`에 버전·출처·레지스트리 체크섬을 고정했다. Assets, 씬, 이미지, 오디오, `.meta`는 저장소에 포함된다. 에디터가 다른 곳에 설치돼 있으면 `Tools/Restore-UnityPackages.ps1 -Editor <Unity.exe>`를 실행한다.
+
+기존 ShaderGraph의 Unity 6.4 GUID 호환성 수정 등 14개 파일 차이는 `Packages/compatibility.json`으로 보존한다. 패키지 복원 후 원본 해시가 일치할 때만 적용하고, 알 수 없는 사용자 수정은 덮어쓰지 않는다. 빈 패키지 디렉터리에서 복원한 뒤 재실행 안전성과 최종 파일 체크섬을 검사했다. 결과와 핵심 네이티브 보고서는 `Documentation/Urban/Checkpoint`에 있다.
 
 ## 최근 적용 내용
 

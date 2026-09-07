@@ -2,7 +2,7 @@
   "unity": "6000.4.0f1",
   "packages": 14,
   "filesCompared": 16585,
-  "differences": [
+  "initialDifferences": [
     "Packages\\com.unity.collections\\Unity.Collections.LowLevel.ILSupport\\source~\\Unity.Collections.LowLevel.ILSupport\\Unity.Collections.LowLevel.ILSupport.asmdef.meta",
     "Packages\\com.unity.collections\\Unity.Collections.LowLevel.ILSupport\\source~\\Unity.Collections.LowLevel.ILSupport.CodeGen\\CollectionsUnsafeUtilityPostProcessor.cs",
     "Packages\\com.unity.collections\\Unity.Collections.LowLevel.ILSupport\\source~\\Unity.Collections.LowLevel.ILSupport.CodeGen\\CollectionsUnsafeUtilityPostProcessor.cs.meta",
@@ -17,5 +17,8 @@
     "Packages\\com.unity.shadergraph\\Editor\\Generation\\Targets\\BuiltIn\\Editor\\ShaderGraph\\Targets\\BuiltInCanvasSubTarget.cs",
     "Packages\\com.unity.shadergraph\\Editor\\Generation\\Targets\\BuiltIn\\Editor\\ShaderGraph\\Targets\\BuiltInLitSubTarget.cs",
     "Packages\\com.unity.shadergraph\\Editor\\Generation\\Targets\\BuiltIn\\Editor\\ShaderGraph\\Targets\\BuiltInTarget.cs"
-  ]
+  ],
+  "remainingDifferences": [],
+  "compatibilityAdjustments": 14,
+  "idempotentSecondRunPassed": true
 }
