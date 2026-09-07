@@ -1,0 +1,16 @@
+{
+    "checks": [
+        {
+            "stage": "Tower",
+            "detail": "Traversal, guards, archive, relay and exit prerequisites",
+            "kills": 12,
+            "ropes": 0,
+            "health": 100.0,
+            "seconds": 25.208335876464845,
+            "passed": true
+        }
+    ],
+    "errors": [],
+    "completed": true,
+    "scope": "SingleStage:Tower"
+}

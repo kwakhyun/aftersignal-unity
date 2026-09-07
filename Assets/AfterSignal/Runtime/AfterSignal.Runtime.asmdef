@@ -1,0 +1,6 @@
+{
+  "name": "AfterSignal.Runtime",
+  "rootNamespace": "AfterSignal",
+  "references": ["Unity.InputSystem", "Unity.RenderPipelines.Universal.Runtime", "Unity.RenderPipelines.Core.Runtime", "Unity.ugui"],
+  "autoReferenced": true
+}

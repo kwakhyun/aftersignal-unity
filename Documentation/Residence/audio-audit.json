@@ -1,0 +1,146 @@
+[
+  {
+    "cue": "weapon_switch",
+    "variant": 0,
+    "duration": 0.15,
+    "peak": 0.6990836342919882
+  },
+  {
+    "cue": "weapon_switch",
+    "variant": 1,
+    "duration": 0.15,
+    "peak": 0.6990680216482975
+  },
+  {
+    "cue": "weapon_switch",
+    "variant": 2,
+    "duration": 0.15,
+    "peak": 0.6990514877861216
+  },
+  {
+    "cue": "reload_out",
+    "variant": 0,
+    "duration": 0.2,
+    "peak": 0.6991138519208426
+  },
+  {
+    "cue": "reload_out",
+    "variant": 1,
+    "duration": 0.2,
+    "peak": 0.6991029262103204
+  },
+  {
+    "cue": "reload_out",
+    "variant": 2,
+    "duration": 0.2,
+    "peak": 0.6990327577971728
+  },
+  {
+    "cue": "reload_in",
+    "variant": 0,
+    "duration": 0.16,
+    "peak": 0.6990850704853951
+  },
+  {
+    "cue": "reload_in",
+    "variant": 1,
+    "duration": 0.16,
+    "peak": 0.6991062142011946
+  },
+  {
+    "cue": "reload_in",
+    "variant": 2,
+    "duration": 0.16,
+    "peak": 0.6990625990897344
+  },
+  {
+    "cue": "reload_slide",
+    "variant": 0,
+    "duration": 0.25,
+    "peak": 0.6990732808600809
+  },
+  {
+    "cue": "reload_slide",
+    "variant": 1,
+    "duration": 0.25,
+    "peak": 0.6990924905039297
+  },
+  {
+    "cue": "reload_slide",
+    "variant": 2,
+    "duration": 0.25,
+    "peak": 0.6990566081156265
+  },
+  {
+    "cue": "pistol_overdrive",
+    "variant": 0,
+    "duration": 0.22,
+    "peak": 0.6990724672643066
+  },
+  {
+    "cue": "pistol_overdrive",
+    "variant": 1,
+    "duration": 0.22,
+    "peak": 0.6990237557410133
+  },
+  {
+    "cue": "pistol_overdrive",
+    "variant": 2,
+    "duration": 0.22,
+    "peak": 0.6990272356583624
+  },
+  {
+    "cue": "katana_wave",
+    "variant": 0,
+    "duration": 0.48,
+    "peak": 0.698999221943685
+  },
+  {
+    "cue": "katana_wave",
+    "variant": 1,
+    "duration": 0.48,
+    "peak": 0.6990443333993603
+  },
+  {
+    "cue": "katana_wave",
+    "variant": 2,
+    "duration": 0.48,
+    "peak": 0.6990096715806986
+  },
+  {
+    "cue": "heavy_slam",
+    "variant": 0,
+    "duration": 0.55,
+    "peak": 0.6993021803844037
+  },
+  {
+    "cue": "heavy_slam",
+    "variant": 1,
+    "duration": 0.55,
+    "peak": 0.6993014326427045
+  },
+  {
+    "cue": "heavy_slam",
+    "variant": 2,
+    "duration": 0.55,
+    "peak": 0.6994025138038958
+  },
+  {
+    "cue": "door",
+    "variant": 0,
+    "duration": 0.65,
+    "peak": 0.6983232343598063
+  },
+  {
+    "cue": "door",
+    "variant": 1,
+    "duration": 0.65,
+    "peak": 0.6980895492948859
+  },
+  {
+    "cue": "door",
+    "variant": 2,
+    "duration": 0.65,
+    "peak": 0.6980898945662758
+  }
+]

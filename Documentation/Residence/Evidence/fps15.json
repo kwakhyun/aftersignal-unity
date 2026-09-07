@@ -1,0 +1,28 @@
+{
+    "checks": [
+        {
+            "stage": "Station",
+            "passed": true,
+            "detail": "Power, six guards and train arrival",
+            "kills": 6,
+            "attacks": 20,
+            "ropes": 0,
+            "coreStrikes": 0,
+            "health": 93.0,
+            "seconds": 28.20005989074707
+        },
+        {
+            "stage": "Station",
+            "passed": true,
+            "detail": "Postcombat rope, archive pickup and return route",
+            "kills": 6,
+            "attacks": 20,
+            "ropes": 1,
+            "coreStrikes": 0,
+            "health": 100.0,
+            "seconds": 59.8134765625
+        }
+    ],
+    "errors": [],
+    "completed": true
+}

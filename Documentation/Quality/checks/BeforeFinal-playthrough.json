@@ -1,0 +1,17 @@
+{
+    "checks": [
+        {
+            "stage": "Station",
+            "passed": true,
+            "detail": "Power, six guards and train arrival",
+            "kills": 6,
+            "attacks": 22,
+            "ropes": 0,
+            "coreStrikes": 0,
+            "health": 86.0,
+            "seconds": 26.02337074279785
+        }
+    ],
+    "errors": [],
+    "completed": true
+}

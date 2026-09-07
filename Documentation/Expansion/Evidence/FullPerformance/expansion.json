@@ -1,0 +1,178 @@
+{
+    "checks": [
+        {
+            "stage": "Haven",
+            "detail": "Town lift, escalators, workshop, roof antenna and Yun delivery",
+            "kills": 0,
+            "ropes": 0,
+            "health": 100.0,
+            "seconds": 63.4156379699707,
+            "passed": true
+        },
+        {
+            "stage": "Harbor",
+            "detail": "Traversal, guards, archive, relay and exit prerequisites",
+            "kills": 0,
+            "ropes": 0,
+            "health": 100.0,
+            "seconds": 12.799492835998536,
+            "passed": true
+        },
+        {
+            "stage": "Haven",
+            "detail": "Town return, supply delivery and chapter 2",
+            "kills": 0,
+            "ropes": 0,
+            "health": 100.0,
+            "seconds": 4.409129619598389,
+            "passed": true
+        },
+        {
+            "stage": "Market",
+            "detail": "Traversal, guards, archive, relay and exit prerequisites",
+            "kills": 8,
+            "ropes": 0,
+            "health": 100.0,
+            "seconds": 16.369001388549806,
+            "passed": true
+        },
+        {
+            "stage": "Arcade",
+            "detail": "Traversal, guards, archive, relay and exit prerequisites",
+            "kills": 9,
+            "ropes": 0,
+            "health": 100.0,
+            "seconds": 15.946297645568848,
+            "passed": true
+        },
+        {
+            "stage": "Canal",
+            "detail": "Traversal, guards, archive, relay and exit prerequisites",
+            "kills": 8,
+            "ropes": 2,
+            "health": 83.0,
+            "seconds": 24.55038070678711,
+            "passed": true
+        },
+        {
+            "stage": "Transit",
+            "detail": "Traversal, guards, archive, relay and exit prerequisites",
+            "kills": 12,
+            "ropes": 0,
+            "health": 100.0,
+            "seconds": 20.29342269897461,
+            "passed": true
+        },
+        {
+            "stage": "Lab",
+            "detail": "Traversal, guards, archive, relay and exit prerequisites",
+            "kills": 10,
+            "ropes": 0,
+            "health": 100.0,
+            "seconds": 21.65373420715332,
+            "passed": true
+        },
+        {
+            "stage": "Archive",
+            "detail": "Traversal, guards, archive, relay and exit prerequisites",
+            "kills": 10,
+            "ropes": 1,
+            "health": 100.0,
+            "seconds": 20.950517654418947,
+            "passed": true
+        },
+        {
+            "stage": "Tower",
+            "detail": "Traversal, guards, archive, relay and exit prerequisites",
+            "kills": 12,
+            "ropes": 0,
+            "health": 100.0,
+            "seconds": 25.489459991455079,
+            "passed": true
+        },
+        {
+            "stage": "Haven",
+            "detail": "Town return, supply delivery and chapter 3",
+            "kills": 0,
+            "ropes": 0,
+            "health": 100.0,
+            "seconds": 4.436688423156738,
+            "passed": true
+        },
+        {
+            "stage": "Skyline",
+            "detail": "Traversal, guards, archive, relay and exit prerequisites",
+            "kills": 10,
+            "ropes": 1,
+            "health": 100.0,
+            "seconds": 21.906465530395509,
+            "passed": true
+        },
+        {
+            "stage": "Foundry",
+            "detail": "Traversal, guards, archive, relay and exit prerequisites",
+            "kills": 14,
+            "ropes": 0,
+            "health": 100.0,
+            "seconds": 22.459854125976564,
+            "passed": true
+        },
+        {
+            "stage": "Crown",
+            "detail": "Traversal, guards, archive, relay and exit prerequisites",
+            "kills": 14,
+            "ropes": 0,
+            "health": 100.0,
+            "seconds": 25.46729850769043,
+            "passed": true
+        },
+        {
+            "stage": "Haven",
+            "detail": "Town return, supply delivery and chapter 4",
+            "kills": 0,
+            "ropes": 0,
+            "health": 100.0,
+            "seconds": 4.436710357666016,
+            "passed": true
+        },
+        {
+            "stage": "Aqueduct",
+            "detail": "Traversal, guards, archive, relay and exit prerequisites",
+            "kills": 12,
+            "ropes": 2,
+            "health": 100.0,
+            "seconds": 26.31740379333496,
+            "passed": true
+        },
+        {
+            "stage": "Observatory",
+            "detail": "Traversal, guards, archive, relay and exit prerequisites",
+            "kills": 12,
+            "ropes": 1,
+            "health": 100.0,
+            "seconds": 24.451414108276368,
+            "passed": true
+        },
+        {
+            "stage": "Origin",
+            "detail": "Traversal, guards, archive, relay and exit prerequisites",
+            "kills": 16,
+            "ropes": 0,
+            "health": 100.0,
+            "seconds": 28.63433265686035,
+            "passed": true
+        },
+        {
+            "stage": "Haven",
+            "detail": "Town return, supply delivery and chapter 0",
+            "kills": 0,
+            "ropes": 0,
+            "health": 100.0,
+            "seconds": 4.436687469482422,
+            "passed": true
+        }
+    ],
+    "errors": [],
+    "completed": true,
+    "scope": "FullExpansion"
+}

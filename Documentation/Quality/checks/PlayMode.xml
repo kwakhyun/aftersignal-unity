@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="16" result="Passed" total="16" passed="16" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-06 18:41:45Z" end-time="2026-09-06 18:42:06Z" duration="21.55641">
+  <test-suite type="TestSuite" id="13654" name="AFTERSIGNAL Night Line" fullname="AFTERSIGNAL Night Line" runstate="Runnable" testcasecount="8417" result="Passed" start-time="2026-09-06 18:41:45Z" end-time="2026-09-06 18:42:06Z" duration="21.556410" total="16" passed="16" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1018" name="AfterSignal.PlayModeTests.dll" fullname="C:/Users/82105/Documents/ChatGPT/ANNO_ Mutationem/AFTERSIGNAL-Unity/Library/ScriptAssemblies/AfterSignal.PlayModeTests.dll" runstate="Runnable" testcasecount="16" result="Passed" start-time="2026-09-06 18:41:45Z" end-time="2026-09-06 18:42:06Z" duration="21.512620" total="16" passed="16" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="92920" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1019" name="AfterSignal" fullname="AfterSignal" runstate="Runnable" testcasecount="16" result="Passed" start-time="2026-09-06 18:41:45Z" end-time="2026-09-06 18:42:06Z" duration="21.512283" total="16" passed="16" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1020" name="Tests" fullname="AfterSignal.Tests" runstate="Runnable" testcasecount="16" result="Passed" start-time="2026-09-06 18:41:45Z" end-time="2026-09-06 18:42:06Z" duration="21.512092" total="16" passed="16" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1001" name="GameplayTests" fullname="AfterSignal.Tests.GameplayTests" classname="AfterSignal.Tests.GameplayTests" runstate="Runnable" testcasecount="16" result="Passed" start-time="2026-09-06 18:41:45Z" end-time="2026-09-06 18:42:06Z" duration="21.511029" total="16" passed="16" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1011" name="AttackWindupContactAndRecoveryDoNotDoubleHit" fullname="AfterSignal.Tests.GameplayTests.AttackWindupContactAndRecoveryDoNotDoubleHit" methodname="AttackWindupContactAndRecoveryDoNotDoubleHit" classname="AfterSignal.Tests.GameplayTests" runstate="Runnable" seed="190458987" result="Passed" start-time="2026-09-06 18:41:45Z" end-time="2026-09-06 18:41:46Z" duration="1.072477" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1015" name="AudioAndEffectBudgetsRemainBounded" fullname="AfterSignal.Tests.GameplayTests.AudioAndEffectBudgetsRemainBounded" methodname="AudioAndEffectBudgetsRemainBounded" classname="AfterSignal.Tests.GameplayTests" runstate="Runnable" seed="475166193" result="Passed" start-time="2026-09-06 18:41:46Z" end-time="2026-09-06 18:41:48Z" duration="1.769001" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1010" name="BossNeedsTwoCapacitorsAndThreeCoreStrikes" fullname="AfterSignal.Tests.GameplayTests.BossNeedsTwoCapacitorsAndThreeCoreStrikes" methodname="BossNeedsTwoCapacitorsAndThreeCoreStrikes" classname="AfterSignal.Tests.GameplayTests" runstate="Runnable" seed="1643696473" result="Passed" start-time="2026-09-06 18:41:48Z" end-time="2026-09-06 18:41:52Z" duration="4.042051" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1007" name="CarriageCeilingStopsJumpingThroughTheTrain" fullname="AfterSignal.Tests.GameplayTests.CarriageCeilingStopsJumpingThroughTheTrain" methodname="CarriageCeilingStopsJumpingThroughTheTrain" classname="AfterSignal.Tests.GameplayTests" runstate="Runnable" seed="841899055" result="Passed" start-time="2026-09-06 18:41:52Z" end-time="2026-09-06 18:41:53Z" duration="1.656480" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1016" name="ContactSurvivesFifteenAndOneTwentyHzSimulation" fullname="AfterSignal.Tests.GameplayTests.ContactSurvivesFifteenAndOneTwentyHzSimulation" methodname="ContactSurvivesFifteenAndOneTwentyHzSimulation" classname="AfterSignal.Tests.GameplayTests" runstate="Runnable" seed="554130453" result="Passed" start-time="2026-09-06 18:41:53Z" end-time="2026-09-06 18:41:55Z" duration="1.844327" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1009" name="DirectionalGuardReducesIncomingDamage" fullname="AfterSignal.Tests.GameplayTests.DirectionalGuardReducesIncomingDamage" methodname="DirectionalGuardReducesIncomingDamage" classname="AfterSignal.Tests.GameplayTests" runstate="Runnable" seed="23417606" result="Passed" start-time="2026-09-06 18:41:55Z" end-time="2026-09-06 18:41:56Z" duration="0.647200" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1006" name="GlassBlocksTravelUntilDamaged" fullname="AfterSignal.Tests.GameplayTests.GlassBlocksTravelUntilDamaged" methodname="GlassBlocksTravelUntilDamaged" classname="AfterSignal.Tests.GameplayTests" runstate="Runnable" seed="1217663816" result="Passed" start-time="2026-09-06 18:41:56Z" end-time="2026-09-06 18:41:57Z" duration="0.930840" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1005" name="GrappleSelectsMouseTargetReelsAndReleasesMomentum" fullname="AfterSignal.Tests.GameplayTests.GrappleSelectsMouseTargetReelsAndReleasesMomentum" methodname="GrappleSelectsMouseTargetReelsAndReleasesMomentum" classname="AfterSignal.Tests.GameplayTests" runstate="Runnable" seed="1671770433" result="Passed" start-time="2026-09-06 18:41:57Z" end-time="2026-09-06 18:41:58Z" duration="0.793073" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1013" name="HitstopPauseAndSlowMotionDoNotOverwriteTimeScale" fullname="AfterSignal.Tests.GameplayTests.HitstopPauseAndSlowMotionDoNotOverwriteTimeScale" methodname="HitstopPauseAndSlowMotionDoNotOverwriteTimeScale" classname="AfterSignal.Tests.GameplayTests" runstate="Runnable" seed="250325834" result="Passed" start-time="2026-09-06 18:41:58Z" end-time="2026-09-06 18:41:59Z" duration="0.887445" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1004" name="JumpDashAndPausePreserveGameState" fullname="AfterSignal.Tests.GameplayTests.JumpDashAndPausePreserveGameState" methodname="JumpDashAndPausePreserveGameState" classname="AfterSignal.Tests.GameplayTests" runstate="Runnable" seed="1714625091" result="Passed" start-time="2026-09-06 18:41:59Z" end-time="2026-09-06 18:41:59Z" duration="0.869614" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1008" name="MeleeAndPistolDamageActualEnemyColliders" fullname="AfterSignal.Tests.GameplayTests.MeleeAndPistolDamageActualEnemyColliders" methodname="MeleeAndPistolDamageActualEnemyColliders" classname="AfterSignal.Tests.GameplayTests" runstate="Runnable" seed="1945911205" result="Passed" start-time="2026-09-06 18:41:59Z" end-time="2026-09-06 18:42:01Z" duration="1.398864" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1003" name="MovementUsesBothHorizontalAndDepthAxesAndStops" fullname="AfterSignal.Tests.GameplayTests.MovementUsesBothHorizontalAndDepthAxesAndStops" methodname="MovementUsesBothHorizontalAndDepthAxesAndStops" classname="AfterSignal.Tests.GameplayTests" runstate="Runnable" seed="255673495" result="Passed" start-time="2026-09-06 18:42:01Z" end-time="2026-09-06 18:42:02Z" duration="1.457353" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1002" name="NativeKeyboardAndMouseEventsReachTheController" fullname="AfterSignal.Tests.GameplayTests.NativeKeyboardAndMouseEventsReachTheController" methodname="NativeKeyboardAndMouseEventsReachTheController" classname="AfterSignal.Tests.GameplayTests" runstate="Runnable" seed="1046134319" result="Passed" start-time="2026-09-06 18:42:02Z" end-time="2026-09-06 18:42:03Z" duration="0.966080" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1017" name="OneSwingHitsTwoEnemiesButNotTheirExtraColliders" fullname="AfterSignal.Tests.GameplayTests.OneSwingHitsTwoEnemiesButNotTheirExtraColliders" methodname="OneSwingHitsTwoEnemiesButNotTheirExtraColliders" classname="AfterSignal.Tests.GameplayTests" runstate="Runnable" seed="596938357" result="Passed" start-time="2026-09-06 18:42:03Z" end-time="2026-09-06 18:42:04Z" duration="0.840797" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1014" name="TakingDamageCancelsAnUnresolvedWindup" fullname="AfterSignal.Tests.GameplayTests.TakingDamageCancelsAnUnresolvedWindup" methodname="TakingDamageCancelsAnUnresolvedWindup" classname="AfterSignal.Tests.GameplayTests" runstate="Runnable" seed="1671119600" result="Passed" start-time="2026-09-06 18:42:04Z" end-time="2026-09-06 18:42:05Z" duration="1.165584" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1012" name="WhiffNeverFreezesOrReportsAHit" fullname="AfterSignal.Tests.GameplayTests.WhiffNeverFreezesOrReportsAHit" methodname="WhiffNeverFreezesOrReportsAHit" classname="AfterSignal.Tests.GameplayTests" runstate="Runnable" seed="616784033" result="Passed" start-time="2026-09-06 18:42:05Z" end-time="2026-09-06 18:42:06Z" duration="1.156947" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Saving results to: C:/Users/82105/AppData/LocalLow/AfterSignal Studio/AFTERSIGNAL Night Line\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

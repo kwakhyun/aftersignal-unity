@@ -1,0 +1,33 @@
+{
+    "completed": true,
+    "passed": [
+        "Sedan, taxi, bus and truck prefabs",
+        "30 coordinated intersections",
+        "Every block has additional high-rise massing",
+        "Close pedestrian camera",
+        "Persistent main quest target resolved",
+        "Normal traffic does not strike protected pedestrians",
+        "Traffic follows lane path within 12 cm",
+        "Traffic stops before red lights",
+        "Citizens use protected crossing phase",
+        "Vehicle variant with chassis and collider 0",
+        "Vehicle variant with chassis and collider 1",
+        "Vehicle variant with chassis and collider 2",
+        "Vehicle variant with chassis and collider 3",
+        "Taxi can be entered",
+        "Actual throttle drives over 50 metres",
+        "Camera looks forward from behind vehicle",
+        "Brake stops vehicle",
+        "Fuel consumption remains active",
+        "Exit restores walking control",
+        "Physical collision reduces vehicle health",
+        "Destruction explodes once and restores player",
+        "Wreck cannot repeat explosion or be driven"
+    ],
+    "errors": [],
+    "redStops": 12,
+    "pedestrianCrossings": 40,
+    "ambientImpacts": 0,
+    "maxLaneError": 0.009534191340208054,
+    "method": "Native Release. 70s unmodified traffic simulation, followed by labelled vehicle/obstacle fixtures. Production ControlFrames drive/brake; no synthetic human-input claim."
+}

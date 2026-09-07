@@ -1,0 +1,814 @@
+[
+  {
+    "path": "Assets/AfterSignal/Editor/ProjectBuilder.cs",
+    "status": "modified"
+  },
+  {
+    "path": "Assets/AfterSignal/Editor/QualityPass.cs",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Editor/QualityPass.cs.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Prefabs/Seo.prefab",
+    "status": "modified"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/GameTuning.asset",
+    "status": "modified"
+  },
+  {
+    "path": "Assets/AfterSignal/Runtime/CameraRig.cs",
+    "status": "modified"
+  },
+  {
+    "path": "Assets/AfterSignal/Runtime/ContactShadow.cs",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Runtime/ContactShadow.cs.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Runtime/EffectBudget.cs",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Runtime/EffectBudget.cs.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Runtime/EnemyBrain.cs",
+    "status": "modified"
+  },
+  {
+    "path": "Assets/AfterSignal/Runtime/GameDirector.cs",
+    "status": "modified"
+  },
+  {
+    "path": "Assets/AfterSignal/Runtime/GameTuning.cs",
+    "status": "modified"
+  },
+  {
+    "path": "Assets/AfterSignal/Runtime/PixelActor.cs",
+    "status": "modified"
+  },
+  {
+    "path": "Assets/AfterSignal/Runtime/PlayerMotor.cs",
+    "status": "modified"
+  },
+  {
+    "path": "Assets/AfterSignal/Runtime/PresentationSettings.cs",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Runtime/PresentationSettings.cs.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Runtime/QualityAudioCapture.cs",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Runtime/QualityAudioCapture.cs.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Runtime/QualitySession.cs",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Runtime/QualitySession.cs.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Runtime/QualityVideoCapture.cs",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Runtime/QualityVideoCapture.cs.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Runtime/RopeMotor.cs",
+    "status": "modified"
+  },
+  {
+    "path": "Assets/AfterSignal/Runtime/RuntimeSmoke.cs",
+    "status": "modified"
+  },
+  {
+    "path": "Assets/AfterSignal/Runtime/SignalAudio.cs",
+    "status": "modified"
+  },
+  {
+    "path": "Assets/AfterSignal/Runtime/SignalEffects.cs",
+    "status": "modified"
+  },
+  {
+    "path": "Assets/AfterSignal/Runtime/SignalHud.cs",
+    "status": "modified"
+  },
+  {
+    "path": "Assets/AfterSignal/Runtime/TransientEffect.cs",
+    "status": "modified"
+  },
+  {
+    "path": "Assets/AfterSignal/Scenes/01_NeonStation.unity",
+    "status": "modified"
+  },
+  {
+    "path": "Assets/AfterSignal/Shaders/ContactShadow.shader",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Shaders/ContactShadow.shader.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Shaders/PixelActor.shader",
+    "status": "modified"
+  },
+  {
+    "path": "Assets/AfterSignal/Shaders/SignalEffect.shader",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Shaders/SignalEffect.shader.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Materials/CeramicAlbedo.png",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Materials/CeramicAlbedo.png.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Materials/CeramicWall.mat",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Materials/CeramicWall.mat.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Materials/Concrete.mat",
+    "status": "modified"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Materials/ContactShadow.mat",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Materials/ContactShadow.mat.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Materials/CyanFX.mat",
+    "status": "modified"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Materials/GhostFX.mat",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Materials/GhostFX.mat.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Materials/GoldFX.mat",
+    "status": "modified"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Materials/LightTile.mat",
+    "status": "modified"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Materials/Metal.mat",
+    "status": "modified"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Materials/RedFX.mat",
+    "status": "modified"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Materials/RoutePaint.mat",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Materials/RoutePaint.mat.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Materials/Tile.mat",
+    "status": "modified"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Materials/WarmWindow.mat",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Materials/WarmWindow.mat.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Materials/WornSteel.mat",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Materials/WornSteel.mat.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Art/Hero/Quality.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Art/Hero/Quality/katana-00.png",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Art/Hero/Quality/katana-00.png.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Art/Hero/Quality/katana-01.png",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Art/Hero/Quality/katana-01.png.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Art/Hero/Quality/katana-02.png",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Art/Hero/Quality/katana-02.png.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Art/Hero/Quality/katana-03.png",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Art/Hero/Quality/katana-03.png.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Art/Hero/Quality/katana-04.png",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Art/Hero/Quality/katana-04.png.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Art/Hero/Quality/katana-05.png",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Art/Hero/Quality/katana-05.png.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/ambient_roof.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/ambient_roof.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/ambient_station.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/ambient_station.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/ambient_town.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/ambient_town.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/ambient_train.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/ambient_train.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/blade_hit_0.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/blade_hit_0.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/blade_hit_1.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/blade_hit_1.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/blade_hit_2.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/blade_hit_2.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/blade_swing_0.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/blade_swing_0.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/blade_swing_1.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/blade_swing_1.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/blade_swing_2.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/blade_swing_2.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/dash_0.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/dash_0.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/dash_1.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/dash_1.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/dash_2.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/dash_2.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/death_0.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/death_0.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/death_1.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/death_1.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/death_2.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/death_2.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/glass_0.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/glass_0.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/glass_1.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/glass_1.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/glass_2.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/glass_2.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/guard_0.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/guard_0.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/guard_1.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/guard_1.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/guard_2.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/guard_2.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/heavy_hit_0.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/heavy_hit_0.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/heavy_hit_1.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/heavy_hit_1.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/heavy_hit_2.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/heavy_hit_2.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/heavy_swing_0.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/heavy_swing_0.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/heavy_swing_1.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/heavy_swing_1.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/heavy_swing_2.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/heavy_swing_2.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/hurt_0.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/hurt_0.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/hurt_1.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/hurt_1.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/hurt_2.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/hurt_2.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/jump_0.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/jump_0.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/jump_1.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/jump_1.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/jump_2.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/jump_2.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/land_0.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/land_0.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/land_1.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/land_1.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/land_2.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/land_2.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/pistol_0.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/pistol_0.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/pistol_1.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/pistol_1.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/pistol_2.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/pistol_2.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/rope_attach_0.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/rope_attach_0.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/rope_attach_1.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/rope_attach_1.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/rope_attach_2.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/rope_attach_2.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/rope_release_0.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/rope_release_0.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/rope_release_1.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/rope_release_1.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/rope_release_2.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/rope_release_2.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/skill_0.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/skill_0.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/skill_1.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/skill_1.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/skill_2.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/skill_2.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/step_metal_0.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/step_metal_0.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/step_metal_1.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/step_metal_1.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/step_metal_2.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/step_metal_2.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/step_tile_0.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/step_tile_0.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/step_tile_1.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/step_tile_1.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/step_tile_2.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/step_tile_2.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/ui_cancel_0.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/ui_cancel_0.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/ui_cancel_1.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/ui_cancel_1.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/ui_cancel_2.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/ui_cancel_2.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/ui_confirm_0.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/ui_confirm_0.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/ui_confirm_1.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/ui_confirm_1.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/ui_confirm_2.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/ui_confirm_2.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/ui_warn_0.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/ui_warn_0.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/ui_warn_1.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/ui_warn_1.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/ui_warn_2.wav",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Resources/Audio/Quality/ui_warn_2.wav.meta",
+    "status": "added"
+  },
+  {
+    "path": "Assets/AfterSignal/Tests/EditMode/ProjectContractTests.cs",
+    "status": "modified"
+  },
+  {
+    "path": "Assets/AfterSignal/Tests/PlayMode/GameplayTests.cs",
+    "status": "modified"
+  },
+  {
+    "path": "Assets/Settings/AfterSignal_Station.asset",
+    "status": "modified"
+  },
+  {
+    "path": "ProjectSettings/ProjectSettings.asset",
+    "status": "modified"
+  }
+]

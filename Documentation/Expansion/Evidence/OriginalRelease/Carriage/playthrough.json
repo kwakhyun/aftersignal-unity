@@ -1,0 +1,28 @@
+{
+    "checks": [
+        {
+            "stage": "Station",
+            "passed": true,
+            "detail": "Power, six guards and train arrival",
+            "kills": 6,
+            "attacks": 19,
+            "ropes": 0,
+            "coreStrikes": 0,
+            "health": 93.0,
+            "seconds": 17.434146881103517
+        },
+        {
+            "stage": "Carriage",
+            "passed": true,
+            "detail": "Glass breach, ten guards, hatch release",
+            "kills": 10,
+            "attacks": 29,
+            "ropes": 0,
+            "coreStrikes": 0,
+            "health": 100.0,
+            "seconds": 16.988872528076173
+        }
+    ],
+    "errors": [],
+    "completed": false
+}

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="17" result="Passed" total="17" passed="17" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-07 00:27:03Z" end-time="2026-09-07 00:27:03Z" duration="0.1414405">
+  <test-suite type="TestSuite" id="1000" name="AFTERSIGNAL Night Line" fullname="AFTERSIGNAL Night Line" runstate="Runnable" testcasecount="1581" result="Passed" start-time="2026-09-07 00:27:03Z" end-time="2026-09-07 00:27:03Z" duration="0.141441" total="17" passed="17" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1022" name="AfterSignal.EditModeTests.dll" fullname="C:/Users/82105/Documents/ChatGPT/ANNO_ Mutationem/AFTERSIGNAL-Unity/Library/ScriptAssemblies/AfterSignal.EditModeTests.dll" runstate="Runnable" testcasecount="17" result="Passed" start-time="2026-09-07 00:27:03Z" end-time="2026-09-07 00:27:03Z" duration="0.131646" total="17" passed="17" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="78316" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1023" name="AfterSignal" fullname="AfterSignal" runstate="Runnable" testcasecount="17" result="Passed" start-time="2026-09-07 00:27:03Z" end-time="2026-09-07 00:27:03Z" duration="0.131436" total="17" passed="17" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1024" name="Tests" fullname="AfterSignal.Tests" runstate="Runnable" testcasecount="17" result="Passed" start-time="2026-09-07 00:27:03Z" end-time="2026-09-07 00:27:03Z" duration="0.131329" total="17" passed="17" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1001" name="ProjectContractTests" fullname="AfterSignal.Tests.ProjectContractTests" classname="AfterSignal.Tests.ProjectContractTests" runstate="Runnable" testcasecount="14" result="Passed" start-time="2026-09-07 00:27:03Z" end-time="2026-09-07 00:27:03Z" duration="0.121375" total="14" passed="14" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1004" name="AllOriginalFramesImportAsPointFilteredSprites" fullname="AfterSignal.Tests.ProjectContractTests.AllOriginalFramesImportAsPointFilteredSprites" methodname="AllOriginalFramesImportAsPointFilteredSprites" classname="AfterSignal.Tests.ProjectContractTests" runstate="Runnable" seed="665388352" result="Passed" start-time="2026-09-07 00:27:03Z" end-time="2026-09-07 00:27:03Z" duration="0.091217" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1002" name="AllTwentyThreeScenesPreserveTheOriginalFourSaveIds" fullname="AfterSignal.Tests.ProjectContractTests.AllTwentyThreeScenesPreserveTheOriginalFourSaveIds" methodname="AllTwentyThreeScenesPreserveTheOriginalFourSaveIds" classname="AfterSignal.Tests.ProjectContractTests" runstate="Runnable" seed="1556634393" result="Passed" start-time="2026-09-07 00:27:03Z" end-time="2026-09-07 00:27:03Z" duration="0.003738" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1010" name="BoardingRequiresPowerAndClearance" fullname="AfterSignal.Tests.ProjectContractTests.BoardingRequiresPowerAndClearance" classname="AfterSignal.Tests.ProjectContractTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-09-07 00:27:03Z" end-time="2026-09-07 00:27:03Z" duration="0.002014" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1006" name="BoardingRequiresPowerAndClearance(False,False,False)" fullname="AfterSignal.Tests.ProjectContractTests.BoardingRequiresPowerAndClearance(False,False,False)" methodname="BoardingRequiresPowerAndClearance" classname="AfterSignal.Tests.ProjectContractTests" runstate="Runnable" seed="749103350" result="Passed" start-time="2026-09-07 00:27:03Z" end-time="2026-09-07 00:27:03Z" duration="0.000488" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1007" name="BoardingRequiresPowerAndClearance(True,False,False)" fullname="AfterSignal.Tests.ProjectContractTests.BoardingRequiresPowerAndClearance(True,False,False)" methodname="BoardingRequiresPowerAndClearance" classname="AfterSignal.Tests.ProjectContractTests" runstate="Runnable" seed="800331477" result="Passed" start-time="2026-09-07 00:27:03Z" end-time="2026-09-07 00:27:03Z" duration="0.000042" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1008" name="BoardingRequiresPowerAndClearance(False,True,False)" fullname="AfterSignal.Tests.ProjectContractTests.BoardingRequiresPowerAndClearance(False,True,False)" methodname="BoardingRequiresPowerAndClearance" classname="AfterSignal.Tests.ProjectContractTests" runstate="Runnable" seed="963079588" result="Passed" start-time="2026-09-07 00:27:03Z" end-time="2026-09-07 00:27:03Z" duration="0.000030" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1009" name="BoardingRequiresPowerAndClearance(True,True,True)" fullname="AfterSignal.Tests.ProjectContractTests.BoardingRequiresPowerAndClearance(True,True,True)" methodname="BoardingRequiresPowerAndClearance" classname="AfterSignal.Tests.ProjectContractTests" runstate="Runnable" seed="1130216103" result="Passed" start-time="2026-09-07 00:27:03Z" end-time="2026-09-07 00:27:03Z" duration="0.000027" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="ParameterizedMethod" id="1015" name="HatchRequiresReleaseGlassAndClearance" fullname="AfterSignal.Tests.ProjectContractTests.HatchRequiresReleaseGlassAndClearance" classname="AfterSignal.Tests.ProjectContractTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-09-07 00:27:03Z" end-time="2026-09-07 00:27:03Z" duration="0.000548" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1011" name="HatchRequiresReleaseGlassAndClearance(True,True,False,False)" fullname="AfterSignal.Tests.ProjectContractTests.HatchRequiresReleaseGlassAndClearance(True,True,False,False)" methodname="HatchRequiresReleaseGlassAndClearance" classname="AfterSignal.Tests.ProjectContractTests" runstate="Runnable" seed="381363953" result="Passed" start-time="2026-09-07 00:27:03Z" end-time="2026-09-07 00:27:03Z" duration="0.000152" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1012" name="HatchRequiresReleaseGlassAndClearance(False,True,True,False)" fullname="AfterSignal.Tests.ProjectContractTests.HatchRequiresReleaseGlassAndClearance(False,True,True,False)" methodname="HatchRequiresReleaseGlassAndClearance" classname="AfterSignal.Tests.ProjectContractTests" runstate="Runnable" seed="364471952" result="Passed" start-time="2026-09-07 00:27:03Z" end-time="2026-09-07 00:27:03Z" duration="0.000036" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1013" name="HatchRequiresReleaseGlassAndClearance(True,False,True,False)" fullname="AfterSignal.Tests.ProjectContractTests.HatchRequiresReleaseGlassAndClearance(True,False,True,False)" methodname="HatchRequiresReleaseGlassAndClearance" classname="AfterSignal.Tests.ProjectContractTests" runstate="Runnable" seed="108622110" result="Passed" start-time="2026-09-07 00:27:03Z" end-time="2026-09-07 00:27:03Z" duration="0.000031" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1014" name="HatchRequiresReleaseGlassAndClearance(True,True,True,True)" fullname="AfterSignal.Tests.ProjectContractTests.HatchRequiresReleaseGlassAndClearance(True,True,True,True)" methodname="HatchRequiresReleaseGlassAndClearance" classname="AfterSignal.Tests.ProjectContractTests" runstate="Runnable" seed="1444319652" result="Passed" start-time="2026-09-07 00:27:03Z" end-time="2026-09-07 00:27:03Z" duration="0.000027" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1016" name="OrdinaryEnemiesTakeOneToThreeWeaponHits" fullname="AfterSignal.Tests.ProjectContractTests.OrdinaryEnemiesTakeOneToThreeWeaponHits" methodname="OrdinaryEnemiesTakeOneToThreeWeaponHits" classname="AfterSignal.Tests.ProjectContractTests" runstate="Runnable" seed="951758709" result="Passed" start-time="2026-09-07 00:27:03Z" end-time="2026-09-07 00:27:03Z" duration="0.001560" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1017" name="QualityPosesAndSoundsAreRealImportedAssets" fullname="AfterSignal.Tests.ProjectContractTests.QualityPosesAndSoundsAreRealImportedAssets" methodname="QualityPosesAndSoundsAreRealImportedAssets" classname="AfterSignal.Tests.ProjectContractTests" runstate="Runnable" seed="1984863307" result="Passed" start-time="2026-09-07 00:27:03Z" end-time="2026-09-07 00:27:03Z" duration="0.012134" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1003" name="RenderPipelineIsUniversal3D" fullname="AfterSignal.Tests.ProjectContractTests.RenderPipelineIsUniversal3D" methodname="RenderPipelineIsUniversal3D" classname="AfterSignal.Tests.ProjectContractTests" runstate="Runnable" seed="266471804" result="Passed" start-time="2026-09-07 00:27:03Z" end-time="2026-09-07 00:27:03Z" duration="0.000432" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1005" name="WASDAndMouseBindingsAreNativeInputActions" fullname="AfterSignal.Tests.ProjectContractTests.WASDAndMouseBindingsAreNativeInputActions" methodname="WASDAndMouseBindingsAreNativeInputActions" classname="AfterSignal.Tests.ProjectContractTests" runstate="Runnable" seed="1703995396" result="Passed" start-time="2026-09-07 00:27:03Z" end-time="2026-09-07 00:27:03Z" duration="0.002121" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1018" name="ResidenceAssetTests" fullname="AfterSignal.Tests.ResidenceAssetTests" classname="AfterSignal.Tests.ResidenceAssetTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-09-07 00:27:03Z" end-time="2026-09-07 00:27:03Z" duration="0.009471" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1019" name="EveryPlayableSceneHasAnImportedBackgroundAndActionSheetsHaveStablePivots" fullname="AfterSignal.Tests.ResidenceAssetTests.EveryPlayableSceneHasAnImportedBackgroundAndActionSheetsHaveStablePivots" methodname="EveryPlayableSceneHasAnImportedBackgroundAndActionSheetsHaveStablePivots" classname="AfterSignal.Tests.ResidenceAssetTests" runstate="Runnable" seed="843999828" result="Passed" start-time="2026-09-07 00:27:03Z" end-time="2026-09-07 00:27:03Z" duration="0.007403" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1021" name="EveryWeaponHasFrontAndBackWalkFramesWithIdenticalFootAnchors" fullname="AfterSignal.Tests.ResidenceAssetTests.EveryWeaponHasFrontAndBackWalkFramesWithIdenticalFootAnchors" methodname="EveryWeaponHasFrontAndBackWalkFramesWithIdenticalFootAnchors" classname="AfterSignal.Tests.ResidenceAssetTests" runstate="Runnable" seed="633917855" result="Passed" start-time="2026-09-07 00:27:03Z" end-time="2026-09-07 00:27:03Z" duration="0.001079" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1020" name="SceneComponentsResolveToSeparateScripts" fullname="AfterSignal.Tests.ResidenceAssetTests.SceneComponentsResolveToSeparateScripts" methodname="SceneComponentsResolveToSeparateScripts" classname="AfterSignal.Tests.ResidenceAssetTests" runstate="Runnable" seed="2016100992" result="Passed" start-time="2026-09-07 00:27:03Z" end-time="2026-09-07 00:27:03Z" duration="0.000382" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Saving results to: C:/Users/82105/AppData/LocalLow/AfterSignal Studio/AFTERSIGNAL Night Line\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -1,0 +1,386 @@
+[
+  {
+    "weapon": "Katana",
+    "frame": 0,
+    "view": "front",
+    "pivot": [
+      144,
+      272
+    ],
+    "source_bounds": [
+      83,
+      20,
+      277,
+      251
+    ],
+    "scale": 0.49
+  },
+  {
+    "weapon": "Katana",
+    "frame": 1,
+    "view": "front",
+    "pivot": [
+      144,
+      272
+    ],
+    "source_bounds": [
+      303,
+      20,
+      504,
+      251
+    ],
+    "scale": 0.49
+  },
+  {
+    "weapon": "Katana",
+    "frame": 2,
+    "view": "front",
+    "pivot": [
+      144,
+      272
+    ],
+    "source_bounds": [
+      520,
+      22,
+      727,
+      251
+    ],
+    "scale": 0.49
+  },
+  {
+    "weapon": "Katana",
+    "frame": 3,
+    "view": "front",
+    "pivot": [
+      144,
+      272
+    ],
+    "source_bounds": [
+      750,
+      22,
+      955,
+      251
+    ],
+    "scale": 0.49
+  },
+  {
+    "weapon": "Katana",
+    "frame": 4,
+    "view": "back",
+    "pivot": [
+      144,
+      272
+    ],
+    "source_bounds": [
+      79,
+      274,
+      271,
+      503
+    ],
+    "scale": 0.49
+  },
+  {
+    "weapon": "Katana",
+    "frame": 5,
+    "view": "back",
+    "pivot": [
+      144,
+      272
+    ],
+    "source_bounds": [
+      298,
+      274,
+      496,
+      504
+    ],
+    "scale": 0.49
+  },
+  {
+    "weapon": "Katana",
+    "frame": 6,
+    "view": "back",
+    "pivot": [
+      144,
+      272
+    ],
+    "source_bounds": [
+      518,
+      274,
+      724,
+      504
+    ],
+    "scale": 0.49
+  },
+  {
+    "weapon": "Katana",
+    "frame": 7,
+    "view": "back",
+    "pivot": [
+      144,
+      272
+    ],
+    "source_bounds": [
+      747,
+      275,
+      953,
+      504
+    ],
+    "scale": 0.49
+  },
+  {
+    "weapon": "Greatsword",
+    "frame": 0,
+    "view": "front",
+    "pivot": [
+      144,
+      272
+    ],
+    "source_bounds": [
+      74,
+      517,
+      265,
+      760
+    ],
+    "scale": 0.49
+  },
+  {
+    "weapon": "Greatsword",
+    "frame": 1,
+    "view": "front",
+    "pivot": [
+      144,
+      272
+    ],
+    "source_bounds": [
+      300,
+      517,
+      490,
+      760
+    ],
+    "scale": 0.49
+  },
+  {
+    "weapon": "Greatsword",
+    "frame": 2,
+    "view": "front",
+    "pivot": [
+      144,
+      272
+    ],
+    "source_bounds": [
+      531,
+      518,
+      710,
+      760
+    ],
+    "scale": 0.49
+  },
+  {
+    "weapon": "Greatsword",
+    "frame": 3,
+    "view": "front",
+    "pivot": [
+      144,
+      272
+    ],
+    "source_bounds": [
+      753,
+      520,
+      936,
+      761
+    ],
+    "scale": 0.49
+  },
+  {
+    "weapon": "Greatsword",
+    "frame": 4,
+    "view": "back",
+    "pivot": [
+      144,
+      272
+    ],
+    "source_bounds": [
+      64,
+      783,
+      247,
+      1012
+    ],
+    "scale": 0.49
+  },
+  {
+    "weapon": "Greatsword",
+    "frame": 5,
+    "view": "back",
+    "pivot": [
+      144,
+      272
+    ],
+    "source_bounds": [
+      286,
+      780,
+      470,
+      1013
+    ],
+    "scale": 0.49
+  },
+  {
+    "weapon": "Greatsword",
+    "frame": 6,
+    "view": "back",
+    "pivot": [
+      144,
+      272
+    ],
+    "source_bounds": [
+      517,
+      781,
+      700,
+      1014
+    ],
+    "scale": 0.49
+  },
+  {
+    "weapon": "Greatsword",
+    "frame": 7,
+    "view": "back",
+    "pivot": [
+      144,
+      272
+    ],
+    "source_bounds": [
+      741,
+      783,
+      928,
+      1014
+    ],
+    "scale": 0.49
+  },
+  {
+    "weapon": "Pistol",
+    "frame": 0,
+    "view": "front",
+    "pivot": [
+      144,
+      272
+    ],
+    "source_bounds": [
+      132,
+      1033,
+      219,
+      1257
+    ],
+    "scale": 0.49
+  },
+  {
+    "weapon": "Pistol",
+    "frame": 1,
+    "view": "front",
+    "pivot": [
+      144,
+      272
+    ],
+    "source_bounds": [
+      298,
+      1033,
+      443,
+      1259
+    ],
+    "scale": 0.49
+  },
+  {
+    "weapon": "Pistol",
+    "frame": 2,
+    "view": "front",
+    "pivot": [
+      144,
+      272
+    ],
+    "source_bounds": [
+      519,
+      1034,
+      670,
+      1259
+    ],
+    "scale": 0.49
+  },
+  {
+    "weapon": "Pistol",
+    "frame": 3,
+    "view": "front",
+    "pivot": [
+      144,
+      272
+    ],
+    "source_bounds": [
+      746,
+      1033,
+      894,
+      1259
+    ],
+    "scale": 0.49
+  },
+  {
+    "weapon": "Pistol",
+    "frame": 4,
+    "view": "back",
+    "pivot": [
+      144,
+      272
+    ],
+    "source_bounds": [
+      80,
+      1277,
+      212,
+      1507
+    ],
+    "scale": 0.49
+  },
+  {
+    "weapon": "Pistol",
+    "frame": 5,
+    "view": "back",
+    "pivot": [
+      144,
+      272
+    ],
+    "source_bounds": [
+      296,
+      1278,
+      440,
+      1507
+    ],
+    "scale": 0.49
+  },
+  {
+    "weapon": "Pistol",
+    "frame": 6,
+    "view": "back",
+    "pivot": [
+      144,
+      272
+    ],
+    "source_bounds": [
+      522,
+      1278,
+      667,
+      1507
+    ],
+    "scale": 0.49
+  },
+  {
+    "weapon": "Pistol",
+    "frame": 7,
+    "view": "back",
+    "pivot": [
+      144,
+      272
+    ],
+    "source_bounds": [
+      751,
+      1279,
+      894,
+      1507
+    ],
+    "scale": 0.49
+  }
+]

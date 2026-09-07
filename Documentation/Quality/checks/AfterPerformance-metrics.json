@@ -1,0 +1,21 @@
+{
+    "device": "NVIDIA GeForce RTX 4060 Ti",
+    "cpu": "AMD Ryzen 5 7500F 6-Core Processor ",
+    "api": "Direct3D12",
+    "unity": "6000.4.0f1",
+    "build": "Development",
+    "width": 1600,
+    "height": 900,
+    "frames": 2818,
+    "over33ms": 1398,
+    "kills": 6,
+    "attacks": 24,
+    "meanMs": 24.135207972008766,
+    "p95Ms": 46.88679885864258,
+    "p99Ms": 59.51719665527344,
+    "meanGcBytes": 1349.7523066004258,
+    "gpuMeanMs": 5.262864842105266,
+    "peakMemoryBytes": 609524199,
+    "maxBatches": -1,
+    "health": 100.0
+}

@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba859002da4c59446bf137455f8946fb, type: 3}
+  m_Name: GameTuning
+  m_EditorClassIdentifier: AfterSignal.Runtime::AfterSignal.GameTuning
+  moveSpeed: 7.6
+  acceleration: 34
+  jumpSpeed: 12.2
+  gravity: 30
+  dashSpeed: 19
+  ropeRange: 20
+  ropeReelSpeed: 6
+  ropeGravity: 13
+  aimAssistPixels: 110
+  maxHealth: 100
+  katanaDamage: 36
+  greatswordDamage: 68
+  pistolDamage: 32
+  skillDamage: 92
+  skillCost: 30
+  bossCoreDamage: 360
+  katana:
+    duration: 0.32
+    contact: 0.1
+    activeEnd: 0.17
+    buffer: 0.14
+    hitStop: 0.038
+    stagger: 0.21
+  greatsword:
+    duration: 0.56
+    contact: 0.23
+    activeEnd: 0.34
+    buffer: 0.14
+    hitStop: 0.065
+    stagger: 0.32
+  pistol:
+    duration: 0.24
+    contact: 0
+    activeEnd: 0.025
+    buffer: 0.14
+    hitStop: 0.014
+    stagger: 0.12

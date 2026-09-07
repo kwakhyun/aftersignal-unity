@@ -1,0 +1,50 @@
+{
+    "checks": [
+        {
+            "stage": "Station",
+            "passed": true,
+            "detail": "Power, six guards and train arrival",
+            "kills": 6,
+            "attacks": 16,
+            "ropes": 0,
+            "coreStrikes": 0,
+            "health": 96.0,
+            "seconds": 17.417118072509767
+        },
+        {
+            "stage": "Carriage",
+            "passed": true,
+            "detail": "Glass breach, ten guards, hatch release",
+            "kills": 10,
+            "attacks": 23,
+            "ropes": 0,
+            "coreStrikes": 0,
+            "health": 100.0,
+            "seconds": 16.987106323242189
+        },
+        {
+            "stage": "Roof",
+            "passed": true,
+            "detail": "Rope crossings, six guards, three capacitor/core cycles",
+            "kills": 7,
+            "attacks": 30,
+            "ropes": 8,
+            "coreStrikes": 3,
+            "health": 100.0,
+            "seconds": 24.003734588623048
+        },
+        {
+            "stage": "Haven",
+            "passed": true,
+            "detail": "Campaign ending, save and Noa epilogue",
+            "kills": 0,
+            "attacks": 0,
+            "ropes": 0,
+            "coreStrikes": 0,
+            "health": 100.0,
+            "seconds": 1.1033443212509156
+        }
+    ],
+    "errors": [],
+    "completed": true
+}

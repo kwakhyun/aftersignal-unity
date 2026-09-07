@@ -1,0 +1,205 @@
+{
+    "completed": true,
+    "checks": [
+        {
+            "stage": "Residence",
+            "detail": "GPU sprite shader produces actual mirrored silhouettes",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 0.3096686005592346,
+            "kills": 0,
+            "ropes": 0
+        },
+        {
+            "stage": "Residence",
+            "detail": "New campaign starts in Seoha's upper-floor room",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 0.3096686005592346,
+            "kills": 0,
+            "ropes": 0
+        },
+        {
+            "stage": "Residence",
+            "detail": "Leftward locomotion / weapon 0",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 4.475090980529785,
+            "kills": 0,
+            "ropes": 0
+        },
+        {
+            "stage": "Residence",
+            "detail": "Leftward locomotion / weapon 1",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 13.390359878540039,
+            "kills": 0,
+            "ropes": 0
+        },
+        {
+            "stage": "Residence",
+            "detail": "Leftward locomotion / weapon 2",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 23.08161735534668,
+            "kills": 0,
+            "ropes": 0
+        },
+        {
+            "stage": "Residence",
+            "detail": "Pistol consumed rounds and completed magazine reload (before 2)",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 33.148109436035159,
+            "kills": 0,
+            "ropes": 0
+        },
+        {
+            "stage": "Residence",
+            "detail": "Three weapon dash attacks and three distinct special skills",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 33.148109436035159,
+            "kills": 0,
+            "ropes": 0
+        },
+        {
+            "stage": "Residence",
+            "detail": "Elevator carries rider from residence to ground lobby",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 45.591880798339847,
+            "kills": 0,
+            "ropes": 0
+        },
+        {
+            "stage": "Residence",
+            "detail": "Emergency stair flight 1",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 50.607276916503909,
+            "kills": 0,
+            "ropes": 0
+        },
+        {
+            "stage": "Residence",
+            "detail": "Emergency stair flight 2",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 54.840763092041019,
+            "kills": 0,
+            "ropes": 0
+        },
+        {
+            "stage": "Residence",
+            "detail": "Emergency stair flight 3",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 59.090797424316409,
+            "kills": 0,
+            "ropes": 0
+        },
+        {
+            "stage": "Residence",
+            "detail": "Emergency stair flight 4",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 63.34083938598633,
+            "kills": 0,
+            "ropes": 0
+        },
+        {
+            "stage": "Residence",
+            "detail": "Emergency stair flight 5",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 67.57421875,
+            "kills": 0,
+            "ropes": 0
+        },
+        {
+            "stage": "Residence",
+            "detail": "Furniture, hinged door, elevator and five reversible stair flights",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 91.02648162841797,
+            "kills": 0,
+            "ropes": 0
+        },
+        {
+            "stage": "School",
+            "detail": "Facility interior, fitting citizen interaction and return door",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 14.033848762512207,
+            "kills": 0,
+            "ropes": 0
+        },
+        {
+            "stage": "Clinic",
+            "detail": "Facility interior, fitting citizen interaction and return door",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 9.643933296203614,
+            "kills": 0,
+            "ropes": 0
+        },
+        {
+            "stage": "Haven",
+            "detail": "Town reaches real depth street and three civic buildings",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 9.225290298461914,
+            "kills": 0,
+            "ropes": 0
+        },
+        {
+            "stage": "Headquarters",
+            "detail": "Facade mission stays locked before the original rail clear",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 6.749189376831055,
+            "kills": 0,
+            "ropes": 0
+        },
+        {
+            "stage": "Headquarters",
+            "detail": "Headquarters has commander, rail and restoration missions",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 6.749189376831055,
+            "kills": 0,
+            "ropes": 0
+        },
+        {
+            "stage": "Breach",
+            "detail": "Four rope ascents reach the upper-floor exterior",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 10.534971237182618,
+            "kills": 0,
+            "ropes": 4
+        },
+        {
+            "stage": "Breach",
+            "detail": "Break upper window, clear 14 guards, preserve record and unlock exit",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 27.416309356689454,
+            "kills": 14,
+            "ropes": 4
+        },
+        {
+            "stage": "Haven",
+            "detail": "Breach completion saved and returned to town",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 0.6033331751823425,
+            "kills": 0,
+            "ropes": 0
+        }
+    ],
+    "errors": [],
+    "fixtures": "Optional Breach unlock only; traversal and damage use ordinary controls."
+}

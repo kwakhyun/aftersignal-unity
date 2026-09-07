@@ -1,0 +1,60 @@
+{
+  "rail": {
+    "completed": true,
+    "checks": 4,
+    "errors": []
+  },
+  "expansion": {
+    "completed": true,
+    "checks": 19,
+    "errors": []
+  },
+  "residence": {
+    "completed": true,
+    "checks": 22,
+    "errors": []
+  },
+  "residenceVideo": {
+    "completed": true,
+    "checks": 22,
+    "errors": []
+  },
+  "effectsOn": {
+    "completed": true,
+    "checks": 2,
+    "errors": []
+  },
+  "effectsOff": {
+    "completed": true,
+    "checks": 2,
+    "errors": []
+  },
+  "fps15": {
+    "completed": true,
+    "checks": 2,
+    "errors": []
+  },
+  "fps120": {
+    "completed": true,
+    "checks": 2,
+    "errors": []
+  },
+  "EditMode": {
+    "passed": 17,
+    "failed": 0
+  },
+  "PlayMode": {
+    "passed": 28,
+    "failed": 0
+  },
+  "FocusedResidence": {
+    "completed": true,
+    "checks": 14,
+    "errors": []
+  },
+  "FocusedTower": {
+    "completed": true,
+    "checks": 1,
+    "errors": []
+  }
+}

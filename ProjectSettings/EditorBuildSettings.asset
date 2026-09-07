@@ -1,0 +1,84 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/AfterSignal/Scenes/01_NeonStation.unity
+    guid: ce703482e1cc9ca4c807b267db6a7566
+  - enabled: 1
+    path: Assets/AfterSignal/Scenes/02_NightCarriage.unity
+    guid: dee86cf30e147ea49b2b4b72bf40f54b
+  - enabled: 1
+    path: Assets/AfterSignal/Scenes/03_SkylineRoof.unity
+    guid: 75d3f9e0ea5398b459567030238c0175
+  - enabled: 1
+    path: Assets/AfterSignal/Scenes/04_Afterlight.unity
+    guid: d5274f744a268c74998bc20734a8fc6c
+  - enabled: 1
+    path: Assets/AfterSignal/Scenes/05_RainDistrict.unity
+    guid: 91a5bfb8578755147b70b5fdfb57d0b3
+  - enabled: 1
+    path: Assets/AfterSignal/Scenes/06_GlassAtrium.unity
+    guid: 7f3d832f72c26bc4a8b4a7fdc1337821
+  - enabled: 1
+    path: Assets/AfterSignal/Scenes/07_DrownedQuarter.unity
+    guid: cf43b10889c7e8d409fb31e0008a038c
+  - enabled: 1
+    path: Assets/AfterSignal/Scenes/08_DeadLine.unity
+    guid: 23c391955b14d9c4c943714813d65523
+  - enabled: 1
+    path: Assets/AfterSignal/Scenes/09_MemoryVault.unity
+    guid: 9dfd110e208036347927fb3495467529
+  - enabled: 1
+    path: Assets/AfterSignal/Scenes/10_VerticalArchive.unity
+    guid: c885c917098454f44ab731a04baffd93
+  - enabled: 1
+    path: Assets/AfterSignal/Scenes/11_SignalTower.unity
+    guid: dbc7f49623bb27244b1b1b7684995a8c
+  - enabled: 1
+    path: Assets/AfterSignal/Scenes/12_Skyline.unity
+    guid: 3a87e5c3649551e4e82a5010aa847fc3
+  - enabled: 1
+    path: Assets/AfterSignal/Scenes/13_Foundry.unity
+    guid: e2aee5bcf9b9ecd4fa12c3a62524c2e2
+  - enabled: 1
+    path: Assets/AfterSignal/Scenes/14_Crown.unity
+    guid: 631798fc7b8ad084b98e08005cf171f5
+  - enabled: 1
+    path: Assets/AfterSignal/Scenes/15_Aqueduct.unity
+    guid: 5eb09263cfc342e4ba686a58f2c77b55
+  - enabled: 1
+    path: Assets/AfterSignal/Scenes/16_Observatory.unity
+    guid: d254ba4893f4aec4cbb7feaf473e02c8
+  - enabled: 1
+    path: Assets/AfterSignal/Scenes/17_Origin.unity
+    guid: 4fd66ffe62eccc74ea489ee7bb2903d0
+  - enabled: 1
+    path: Assets/AfterSignal/Scenes/18_Harbor.unity
+    guid: e729d09206001de43ba0a027a954f62d
+  - enabled: 1
+    path: Assets/AfterSignal/Scenes/19_SeoResidence.unity
+    guid: 4ddd5d9bd0bf0ad4d8c9004abd17d242
+  - enabled: 1
+    path: Assets/AfterSignal/Scenes/20_AfterlightSchool.unity
+    guid: 7f236703a460c94428089803386b2a41
+  - enabled: 1
+    path: Assets/AfterSignal/Scenes/21_AfterlightClinic.unity
+    guid: 48ccf04c19eca5e47b30514ad774f6c5
+  - enabled: 1
+    path: Assets/AfterSignal/Scenes/22_SignalHeadquarters.unity
+    guid: d83ff3d279547e84cabe3e25a50a68c0
+  - enabled: 1
+    path: Assets/AfterSignal/Scenes/23_FacadeBreach.unity
+    guid: 48ff0062ac8b09a489f71d03132da82c
+  - enabled: 1
+    path: Assets/AfterSignal/Scenes/24_OpenCity.unity
+    guid: 2d5adb3f8392fc7468e2b2c749e425bf
+  - enabled: 1
+    path: Assets/AfterSignal/Scenes/25_CityInterior.unity
+    guid: 5d5171fa37bff114ca89e9f437d0f6a2
+  m_configObjects:
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

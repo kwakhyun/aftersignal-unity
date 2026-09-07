@@ -1,0 +1,26 @@
+[
+  {
+    "source": "Artifacts\\Residence\\Iteration5\\Residence-0",
+    "audioSeconds": 92.416,
+    "peak": 0.151580810546875,
+    "clippedSamples": 0,
+    "channels": 2,
+    "sampleRate": 48000
+  },
+  {
+    "source": "Artifacts\\Residence\\Iteration5\\Breach-5",
+    "audioSeconds": 29.013333333333332,
+    "peak": 0.229461669921875,
+    "clippedSamples": 0,
+    "channels": 2,
+    "sampleRate": 48000
+  },
+  {
+    "source": "Artifacts\\Residence\\RailVisual\\Roof",
+    "audioSeconds": 24.426666666666666,
+    "peak": 0.17913818359375,
+    "clippedSamples": 0,
+    "channels": 2,
+    "sampleRate": 48000
+  }
+]

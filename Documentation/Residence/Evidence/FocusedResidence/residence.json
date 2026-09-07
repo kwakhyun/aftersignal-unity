@@ -1,0 +1,133 @@
+{
+    "completed": true,
+    "checks": [
+        {
+            "stage": "Residence",
+            "detail": "GPU sprite shader produces actual mirrored silhouettes",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 0.6697120070457459,
+            "kills": 0,
+            "ropes": 0
+        },
+        {
+            "stage": "Residence",
+            "detail": "New campaign starts in Seoha's upper-floor room",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 0.6697120070457459,
+            "kills": 0,
+            "ropes": 0
+        },
+        {
+            "stage": "Residence",
+            "detail": "Leftward locomotion / weapon 0",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 4.869845390319824,
+            "kills": 0,
+            "ropes": 0
+        },
+        {
+            "stage": "Residence",
+            "detail": "Leftward locomotion / weapon 1",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 13.653239250183106,
+            "kills": 0,
+            "ropes": 0
+        },
+        {
+            "stage": "Residence",
+            "detail": "Leftward locomotion / weapon 2",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 22.637727737426759,
+            "kills": 0,
+            "ropes": 0
+        },
+        {
+            "stage": "Residence",
+            "detail": "Pistol consumed rounds and completed magazine reload (before 3)",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 32.50477600097656,
+            "kills": 0,
+            "ropes": 0
+        },
+        {
+            "stage": "Residence",
+            "detail": "Three weapon dash attacks and three distinct special skills",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 32.50477600097656,
+            "kills": 0,
+            "ropes": 0
+        },
+        {
+            "stage": "Residence",
+            "detail": "Elevator carries rider from residence to ground lobby",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 44.92179870605469,
+            "kills": 0,
+            "ropes": 0
+        },
+        {
+            "stage": "Residence",
+            "detail": "Emergency stair flight 1",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 49.95518112182617,
+            "kills": 0,
+            "ropes": 0
+        },
+        {
+            "stage": "Residence",
+            "detail": "Emergency stair flight 2",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 54.17193603515625,
+            "kills": 0,
+            "ropes": 0
+        },
+        {
+            "stage": "Residence",
+            "detail": "Emergency stair flight 3",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 58.42208480834961,
+            "kills": 0,
+            "ropes": 0
+        },
+        {
+            "stage": "Residence",
+            "detail": "Emergency stair flight 4",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 62.65545654296875,
+            "kills": 0,
+            "ropes": 0
+        },
+        {
+            "stage": "Residence",
+            "detail": "Emergency stair flight 5",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 66.90560913085938,
+            "kills": 0,
+            "ropes": 0
+        },
+        {
+            "stage": "Residence",
+            "detail": "Furniture, hinged door, elevator and five reversible stair flights",
+            "passed": true,
+            "health": 100.0,
+            "seconds": 90.32279968261719,
+            "kills": 0,
+            "ropes": 0
+        }
+    ],
+    "errors": [],
+    "fixtures": "Optional Breach unlock only; traversal and damage use ordinary controls."
+}
