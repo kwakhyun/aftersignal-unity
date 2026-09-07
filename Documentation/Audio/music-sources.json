@@ -1,0 +1,68 @@
+[
+  {
+    "file": "01_서하의집.wav",
+    "bytes": 23568402,
+    "sha256": "c0cd7fe0b66f43306c671775f173ade9fbc7baf41fd205974783372312647140",
+    "integrated_lufs": -15.21,
+    "true_peak_db": -2.77,
+    "playback_gain": 0.72527,
+    "duration_seconds": 122.68,
+    "loop_start_seconds": 0,
+    "loop_end_seconds": 121.1
+  },
+  {
+    "file": "02_애프터라이트.wav",
+    "bytes": 37991464,
+    "sha256": "740eebe9837821ebe7286c863e3194ab61833df77ba45e22734c7c0861ec3f80",
+    "integrated_lufs": -14.48,
+    "true_peak_db": -3.61,
+    "playback_gain": 0.666807,
+    "duration_seconds": 197.8,
+    "loop_start_seconds": 0,
+    "loop_end_seconds": 196.1
+  },
+  {
+    "file": "08_중앙역.wav",
+    "bytes": 34535442,
+    "sha256": "ded2af19d8d37318ff9b3e7323c13813d69834a7078ebe75e67815df2df59df1",
+    "integrated_lufs": -14.37,
+    "true_peak_db": -4.15,
+    "playback_gain": 0.658415,
+    "duration_seconds": 179.8,
+    "loop_start_seconds": 0.2,
+    "loop_end_seconds": 178.0
+  },
+  {
+    "file": "09_밤의객실.wav",
+    "bytes": 9252882,
+    "sha256": "a00ae0db4807fa8a3158161a40de8c396e5849149e460e22998a9cae828d6b64",
+    "integrated_lufs": -14.9,
+    "true_peak_db": -4.64,
+    "playback_gain": 0.699842,
+    "duration_seconds": 48.12,
+    "loop_start_seconds": 0.1,
+    "loop_end_seconds": 48.1
+  },
+  {
+    "file": "11_과부하지휘자.wav",
+    "bytes": 30449694,
+    "sha256": "d430f61d93bf0b089224b29e6bb6cda8b187aad2e3f28ee95c4505c01b861edf",
+    "integrated_lufs": -12.58,
+    "true_peak_db": -1.97,
+    "playback_gain": 0.535797,
+    "duration_seconds": 158.52,
+    "loop_start_seconds": 0.3,
+    "loop_end_seconds": 158.1
+  },
+  {
+    "file": "16_유리잔향.wav",
+    "bytes": 23007774,
+    "sha256": "59794ab05ca82f018be246e8d9ed1edf326eec09645d621bbdea0931756b016d",
+    "integrated_lufs": -12.76,
+    "true_peak_db": -0.45,
+    "playback_gain": 0.547016,
+    "duration_seconds": 119.76,
+    "loop_start_seconds": 0,
+    "loop_end_seconds": 119.7
+  }
+]

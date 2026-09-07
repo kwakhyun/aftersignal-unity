@@ -17,7 +17,7 @@ namespace AfterSignal
         Image hpBar,energyBar,bossBar,fade;
         GameObject modal,dialogueBox,bossPanel;
         RectTransform cursor,candidate,safeMarker;
-        Button primary,secondary,third;
+        Button primary,secondary,third,musicButton;
         Button motionButton,effectButton,postButton;GameObject settingsRow;
         Image hpTrail;float displayedHealth=100,nextText;
         static readonly string[] weaponNames={"01  ·  KATANA / 연속 검격","02  ·  GREATSWORD / 중검","03  ·  PISTOL / 조준 사격"};
@@ -35,7 +35,7 @@ namespace AfterSignal
             var events=new GameObject("EventSystem",typeof(EventSystem),typeof(InputSystemUIInputModule));
             BuildReferenceHud();
             modal=Panel(root,"Modal shade",0,0,1600,900,new Color(.025f,.045f,.07f,.82f)).gameObject;Stretch(modal.GetComponent<RectTransform>());
-            var card=Panel(modal.transform,"Menu",0,0,610,650,ink).rectTransform;Center(card,610,650);
+            var card=Panel(modal.transform,"Menu",0,0,610,700,ink).rectTransform;Center(card,610,700);
             Label(card,"AFTERSIGNAL  /  NIGHT LINE",40,30,530,24,13,mint,FontStyle.Bold);
             Panel(card,"Accent",40,74,64,3,mint);
             modalTitle=Label(card,"",40,96,530,115,44,white,FontStyle.Bold);
@@ -48,7 +48,14 @@ namespace AfterSignal
             effectButton=MakeButton(settingsRow.transform,"",180,0,171,38,()=>{PresentationSettings.Effects=PresentationSettings.Effects>0?0:.7f;PresentationSettings.Save();ConfigureModal("pause");});
             postButton=MakeButton(settingsRow.transform,"",360,0,170,38,()=>{PresentationSettings.Post=!PresentationSettings.Post;PresentationSettings.Save();ConfigureModal("pause");});
             foreach(var button in new[]{motionButton,effectButton,postButton})button.GetComponentInChildren<Text>().fontSize=14;
-            Label(card,"ESC  메뉴 닫기     ·     화면 연출은 일시정지 메뉴에서 조절",40,605,530,20,12,muted);
+            musicButton=MakeButton(card,"",40,590,530,38,()=>{
+                var music=SignalMusic.Instance;if(!music)return;
+                float level=music.MusicLevel;
+                music.SetMusicVolume(level<.01f?.3f:level<.31f?.55f:level<.56f?.8f:level<.81f?1:0);
+                ConfigureModal("pause");
+            });
+            musicButton.GetComponentInChildren<Text>().fontSize=16;
+            Label(card,"ESC  메뉴 닫기     ·     배경음악과 화면 연출 조절",40,655,530,20,12,muted);
             dialogueBox=Panel(root,"Dialogue",0,0,1020,230,ink).gameObject;CenterBottom(dialogueBox.GetComponent<RectTransform>(),90,1020,230);
             dialogueName=Label(dialogueBox.transform,"",30,23,920,28,14,mint,FontStyle.Bold);
             dialogueText=Label(dialogueBox.transform,"",30,67,952,95,23,white);
@@ -84,12 +91,15 @@ namespace AfterSignal
             string mode=game.Title?"title":game.Dead?"dead":game.Paused?"pause":"";
             modal.SetActive(mode!="");if(mode!=modalMode){modalMode=mode;ConfigureModal(mode);}
             dialogueBox.SetActive(game.Dialogue);if(game.Dialogue){dialogueName.text=game.DialogueTitle;dialogueText.text=game.DialogueText;}
-            UpdateUrbanHud();UpdateQuestHud();
+            UpdateUrbanHud();UpdateQuestHud();UpdateLifeHud();
             fade.gameObject.SetActive(game.Transition);fade.color=new Color(0,0,0,game.Fade);
         }
         void ConfigureModal(string mode)
         {
             if(mode=="")return;
+            musicButton.gameObject.SetActive(mode=="pause");
+            float musicLevel=SignalMusic.Instance?SignalMusic.Instance.MusicLevel:SignalMusic.DefaultLevel;
+            ButtonText(musicButton,musicLevel<.01f?"배경음악: 꺼짐  ·  클릭하여 변경":$"배경음악: {musicLevel*100:0}%  ·  클릭하여 변경");
             settingsRow.SetActive(mode=="pause");ButtonText(motionButton,PresentationSettings.Motion>0?"화면 충격: 켜짐":"화면 충격: 꺼짐");ButtonText(effectButton,PresentationSettings.Effects>0?"전투 효과: 켜짐":"전투 효과: 꺼짐");ButtonText(postButton,PresentationSettings.Post?"후처리: 켜짐":"후처리: 꺼짐");
             if(mode=="title"){
                 modalTitle.text="기억을 싣고\n밤을 가르다";modalBody.text="유령 열차를 추적하는 서하의 밤.\n검과 로프로 도시의 빼앗긴 기억을 되찾으세요.";

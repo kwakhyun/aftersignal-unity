@@ -1,0 +1,169 @@
+using UnityEngine;
+
+namespace AfterSignal
+{
+    public sealed class PoliceHelicopter : MonoBehaviour
+    {
+        public WorldActor Body { get; private set; }
+
+        WantedSystem system;
+        Transform rotor, tailRotor;
+        Light searchlight;
+        float clock, fireClock = 3, warning, fall;
+        Vector3 aim;
+        bool retreat;
+        public static PoliceHelicopter Create(WantedSystem owner, Vector3 at)
+        {
+            var go = new GameObject("POLICE / aerial response", typeof(WorldActor), typeof(PoliceHelicopter));
+            go.transform.position = at;
+            go.layer = 9;
+            var h = go.GetComponent<PoliceHelicopter>();
+            h.system = owner;
+            h.Body = go.GetComponent<WorldActor>();
+            h.Body.police = h.Body.helicopter = true;
+            h.Body.health = 260;
+            var c = go.AddComponent<SphereCollider>();
+            c.radius = 2.5f;
+            c.isTrigger = true;
+            WorldGeometry.Part(go.transform, "Armoured fuselage", Vector3.zero, new Vector3(3.4f, 2.3f, 6.2f), "DarkMetal", PrimitiveType.Sphere);
+            WorldGeometry.Part(go.transform, "Cockpit glazing", new Vector3(0, .35f, 2), new Vector3(2.8f, 1.55f, 2.4f), "DistrictWindow", PrimitiveType.Sphere);
+            WorldGeometry.Part(go.transform, "Tail boom", new Vector3(0, .4f, -4.8f), new Vector3(.5f, .6f, 5.5f), "DarkMetal");
+            WorldGeometry.Part(go.transform, "Tail fin", new Vector3(0, 1.2f, -7.4f), new Vector3(.18f, 2.2f, 1.4f), "DistrictBlue");
+            foreach (float side in new[]
+            {
+                -1f,
+                1f
+            }
+
+            )
+            {
+                WorldGeometry.Part(go.transform, "Landing skid", new Vector3(side * 1.8f, -1.55f, 0), new Vector3(.16f, .16f, 6.5f), "Chrome");
+                WorldGeometry.Part(go.transform, "Skid strut", new Vector3(side * 1.55f, -1, 1), new Vector3(.14f, 1, .14f), "Chrome");
+                WorldGeometry.Part(go.transform, "Skid strut", new Vector3(side * 1.55f, -1, -1.5f), new Vector3(.14f, 1, .14f), "Chrome");
+                WorldGeometry.Part(go.transform, "Door blue stripe", new Vector3(side * 1.6f, .1f, 0), new Vector3(.08f, .4f, 3), "DistrictBlue");
+            }
+
+            h.rotor = new GameObject("Main rotor").transform;
+            h.rotor.SetParent(go.transform, false);
+            h.rotor.localPosition = Vector3.up * 1.65f;
+            WorldGeometry.Part(h.rotor, "Rotor blade A", Vector3.zero, new Vector3(12, .08f, .32f), "Chrome");
+            WorldGeometry.Part(h.rotor, "Rotor blade B", Vector3.zero, new Vector3(.32f, .08f, 12), "Chrome");
+            h.tailRotor = new GameObject("Tail rotor").transform;
+            h.tailRotor.SetParent(go.transform, false);
+            h.tailRotor.localPosition = new Vector3(.4f, .8f, -7.1f);
+            WorldGeometry.Part(h.tailRotor, "Tail blades", Vector3.zero, new Vector3(.08f, 2.5f, .2f), "Chrome");
+            var spot = new GameObject("Searchlight");
+            spot.transform.SetParent(go.transform, false);
+            spot.transform.localPosition = new Vector3(0, -1, 1.8f);
+            h.searchlight = spot.AddComponent<Light>();
+            h.searchlight.type = LightType.Spot;
+            h.searchlight.range = 85;
+            h.searchlight.spotAngle = 32;
+            h.searchlight.intensity = 28;
+            h.searchlight.shadows = UnityEngine.LightShadows.None;
+            WorldGeometry.Part(go.transform, "Nose gun", new Vector3(0, -.75f, 3.3f), new Vector3(.18f, .2f, 1.5f), "Metal");
+            return h;
+        }
+
+        public bool CanSee()
+        {
+            var g = GameDirector.Instance;
+            return g && Body.Alive && Vector3.Distance(transform.position, g.Player.Shoulder) < 95 && !Physics.Linecast(transform.position, g.Player.Shoulder, 1, QueryTriggerInteraction.Ignore);
+        }
+
+        void Update()
+        {
+            var g = GameDirector.Instance;
+            if (!g || g.Blocked)
+                return;
+            float dt = Mathf.Min(.07f, Time.deltaTime);
+            clock += dt;
+            rotor.Rotate(0, (Body.Alive ? 1250 : 220) * dt, 0);
+            tailRotor.Rotate(1400 * dt, 0, 0);
+            if (!Body.Alive)
+            {
+                fall += dt;
+                transform.position += Vector3.down * fall * 12 * dt;
+                transform.Rotate(0, 25 * dt, 30 * dt);
+                if (fall > 4 || Physics.Raycast(transform.position, Vector3.down, 3, 1))
+                {
+                    VehicleExplosion.Create(transform.position, 4);
+                    Destroy(gameObject);
+                }
+
+                return;
+            }
+
+            if (retreat)
+            {
+                transform.position += new Vector3(0, 12, 20) * dt;
+                if (clock > 6)
+                    Destroy(gameObject);
+                return;
+            }
+
+            Vector3 player = g.Player.transform.position;
+            Vector3 target = system.LastSeen + new Vector3(Mathf.Cos(clock * .16f) * 28, Mathf.Max(28, player.y - system.LastSeen.y + 22), Mathf.Sin(clock * .16f) * 28);
+            if (Physics.Linecast(transform.position, target, out var obstruction, 1, QueryTriggerInteraction.Ignore))
+                target.y = Mathf.Max(target.y, obstruction.collider.bounds.max.y + 8);
+            transform.position = Vector3.MoveTowards(transform.position, target, 18 * dt);
+            var direction = player - transform.position;
+            direction.y = 0;
+            if (direction.sqrMagnitude > .1f)
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), dt * 2);
+            searchlight.transform.rotation = Quaternion.LookRotation(g.Player.Shoulder - searchlight.transform.position);
+            fireClock -= dt;
+            if (warning > 0)
+            {
+                warning -= dt;
+                if (warning <= 0)
+                {
+                    Fire(g);
+                    fireClock = WantedSystem.Level >= 5 ? 1.5f : 2.3f;
+                }
+            }
+            else if (fireClock <= 0 && CanSee())
+            {
+                aim = g.Player.Shoulder;
+                warning = .7f;
+                SignalEffects.Beam(transform.position + Vector3.down, aim, new Color(1, .2f, .12f, .5f), .015f, .7f);
+            }
+        }
+
+        void Fire(GameDirector g)
+        {
+            Vector3 start = transform.position + transform.forward * 3 - Vector3.up;
+            Vector3 direction = (aim - start).normalized;
+            var end = start + direction * 95;
+            if (Physics.Raycast(start, direction, out var hit, 95, (1 << 0) | (1 << 8), QueryTriggerInteraction.Ignore))
+            {
+                end = hit.point;
+                if (hit.collider.GetComponentInParent<PlayerMotor>())
+                    g.Player.ReceiveDamage(16, transform.position);
+                var car = hit.collider.GetComponentInParent<CityVehicle>();
+                if (car && UrbanSimulation.Instance && car == UrbanSimulation.Instance.Current)
+                    car.Damage(12, hit.point);
+            }
+
+            for (int i = 0; i < 3; i++)
+                SignalEffects.Beam(start + transform.right * (i - 1) * .12f, end, SignalEffects.Gold, .025f, .12f);
+            g.Audio.Play("pistol_overdrive", start, .22f, 1);
+        }
+
+        public void Crash()
+        {
+            var c = GetComponent<Collider>();
+            if (c)
+                c.enabled = false;
+            searchlight.enabled = false;
+            GameDirector.Instance?.Audio.Play("urban_explosion", transform.position, .3f, 2);
+        }
+
+        public void Withdraw()
+        {
+            retreat = true;
+            clock = 0;
+            searchlight.enabled = false;
+        }
+    }
+}

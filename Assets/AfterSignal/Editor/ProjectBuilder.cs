@@ -45,7 +45,7 @@ namespace AfterSignal.Editor
         static void BuildWindowsPlayer(BuildOptions mode)
         {
             PlayerSettings.SetUseDefaultGraphicsAPIs(BuildTarget.StandaloneWindows64,false);PlayerSettings.SetGraphicsAPIs(BuildTarget.StandaloneWindows64,new[]{GraphicsDeviceType.Direct3D11});PlayerSettings.useFlipModelSwapchain=false;
-            if(EditorBuildSettings.scenes.Length<4)CreateProject();Directory.CreateDirectory("Builds/Windows");Directory.CreateDirectory("Artifacts");PlayerSettings.bundleVersion="1.5.0";AssetDatabase.SaveAssets();
+            if(EditorBuildSettings.scenes.Length<4)CreateProject();Directory.CreateDirectory("Builds/Windows");Directory.CreateDirectory("Artifacts");PlayerSettings.bundleVersion="1.6.0";AssetDatabase.SaveAssets();
             var options=new BuildPlayerOptions {scenes=Array.ConvertAll(EditorBuildSettings.scenes,s=>s.path),locationPathName="Builds/Windows/AFTERSIGNAL.exe",target=BuildTarget.StandaloneWindows64,options=mode|BuildOptions.CleanBuildCache};
             var report=BuildPipeline.BuildPlayer(options);File.WriteAllText("Artifacts/build-result.json",JsonUtility.ToJson(new BuildResult {result=report.summary.result.ToString(),bytes=report.summary.totalSize,errors=report.summary.totalErrors,warnings=report.summary.totalWarnings},true));
             if(report.summary.result!=UnityEditor.Build.Reporting.BuildResult.Succeeded)throw new Exception("Windows build failed: "+report.summary.result);

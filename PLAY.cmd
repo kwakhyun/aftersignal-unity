@@ -4,4 +4,4 @@ if not exist "%~dp0Builds\Windows\AFTERSIGNAL.exe" (
   pause
   exit /b 1
 )
-start "" "%~dp0Builds\Windows\AFTERSIGNAL.exe"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0Tools\Play-WithDialogue.ps1"

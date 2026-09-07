@@ -4,6 +4,10 @@
 
 **새 작업은 [HANDOFF.md](HANDOFF.md)부터 읽으세요.** 적용된 기능, 실제 검증 결과, 아직 남은 시야·직접 조작·성능 과제를 구분했습니다. GitHub 소스에는 실행 파일과 대용량 QA 녹화가 포함되지 않으며, 로컬 빌드는 `Tools/Build-Windows.ps1 -Release`로 만듭니다.
 
+[코드 구조와 정리 기준](Documentation/PROJECT-STRUCTURE.md): 기능별 소스 폴더, 도시 생활 기능 분리, 미사용 생성 에셋 정리 도구를 안내합니다.
+
+**1.6 도시 생활 확장**: 앞뒤 대시, 건물 가림 투명화, 구조물 로프·옥상 전망, 다수의 시설 NPC, 재화·상점·호텔, 5단계 수배와 경찰차·헬기, 옷장·취침·낮과 밤을 추가했습니다. [도시 생활과 조작 안내](Documentation/Urban/CITY-LIFE-16.md)를 확인하세요. 비고정 NPC 대화는 `gpt-5.6-luna` 연결 코드를 포함하지만, API 키 저장이 승인되지 않아 실제 AI 호출은 아직 연결되지 않았습니다.
+
 **1.5 도시·차량 확장**: 790×660m 시내, 40개 시설 출입구와 16종 내부, 블록 고층 건물·사방 원경, 승용차·택시·버스·트럭, 실제 신호·횡단보도, 운전·주유·손상·폭발·차량 탈취를 적용했습니다. 도보는 근접 시점, 운전은 차량 뒤 추적 시점입니다. 메인 퀘스트 경로는 자동 표시됩니다. [도시와 조작 안내](Documentation/Urban/URBAN-15.md), [실행 검증](Documentation/Urban/VERIFICATION.md)을 확인하세요.
 
 ## 실행
@@ -62,7 +66,7 @@
 - `Assets/AfterSignal/Resources/GameTuning.asset` — 이동, 로프, 공격 수치.
 - `Assets/AfterSignal/Resources/Controls.inputactions` — Unity Input System 입력 에셋.
 - `Assets/AfterSignal/Shaders/PixelActor.shader` — URP 3D 렌더러용 도트 캐릭터 셰이더.
-- `Assets/AfterSignal/Editor/ProjectBuilder.cs`, `WorldBuilder.cs` — 씬과 에셋 생성 도구.
+- `Assets/AfterSignal/Editor/ProjectBuilder.cs`, `Editor/World/WorldBuilder.cs` — 씬과 에셋 생성 도구.
 - `Assets/AfterSignal/Tests/` — EditMode / PlayMode 검증.
 - `Packages/` — 버전 고정 manifest, lock, sources 목록. 이 PC의 UPM 폴더 이름 변경 오류를 피하기 위해 로컬에서는 embedded 패키지를 사용합니다. 대용량 SDK 사본은 Git에서 제외하며 `SETUP.cmd`가 동일 버전을 복원합니다. 게임 에셋은 모두 저장소에 포함됩니다.
 

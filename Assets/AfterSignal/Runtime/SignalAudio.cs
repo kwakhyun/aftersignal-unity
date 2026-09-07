@@ -11,16 +11,18 @@ namespace AfterSignal
         public int Played {get;private set;}
         public void Initialize()
         {
+            SignalMusic.Ensure();
             foreach(var clip in Resources.LoadAll<AudioClip>("Audio/Quality"))bank[clip.name]=clip;
             for(int i=0;i<voices.Length;i++){voices[i]=gameObject.AddComponent<AudioSource>();voices[i].playOnAwake=false;voices[i].spatialBlend=0;}
             ambience=gameObject.AddComponent<AudioSource>();ambience.loop=true;ambience.playOnAwake=false;ambience.spatialBlend=0;
             var g=GameDirector.Instance;string scene=g.stage==StageId.Station?"station":g.stage==StageId.Carriage?"train":g.stage==StageId.Roof?"roof":"town";
             bank.TryGetValue("ambient_"+scene,out var ambient);ambience.clip=ambient;SetVolume(PlayerPrefs.GetFloat("AFTERSIGNAL.Unity.Volume",.45f));if(ambient)ambience.Play();
         }
-        public void SetVolume(float value){Volume=Mathf.Clamp01(value);PlayerPrefs.SetFloat("AFTERSIGNAL.Unity.Volume",Volume);foreach(var v in voices)if(v)v.volume=Volume;if(ambience)ambience.volume=Volume*.085f;}
+        public void SetVolume(float value){Volume=Mathf.Clamp01(value);PlayerPrefs.SetFloat("AFTERSIGNAL.Unity.Volume",Volume);foreach(var v in voices)if(v)v.volume=Volume;if(ambience)ambience.volume=Volume*.085f;if(SignalMusic.Instance)SignalMusic.Instance.SetMasterVolume(Volume);}
         public void SetPaused(bool value)
         {
             if(paused==value)return;paused=value;
+            if(SignalMusic.Instance)SignalMusic.Instance.SetPaused(value);
             foreach(var v in voices)if(v){if(value)v.Pause();else v.UnPause();}
             if(ambience){if(value)ambience.Pause();else ambience.UnPause();}
         }

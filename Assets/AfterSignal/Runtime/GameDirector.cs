@@ -55,7 +55,7 @@ namespace AfterSignal
         void Start()
         {
             if(!tuning)tuning=Resources.Load<GameTuning>("GameTuning");
-            spawn=CivicWorld.Spawn(stage,spawn);checkpoint=spawn;
+            spawn=CivicWorld.Spawn(stage,spawn);spawn=CivicWorld.SafeSpawn(stage,spawn);checkpoint=spawn;
             Player=FindAnyObjectByType<PlayerMotor>();Player.Initialize(this);Player.Respawn(spawn);
             Input=gameObject.AddComponent<PlayerInputReader>();
             CameraRig=Camera.main.GetComponent<CameraRig>();CameraRig.director=this;CameraRig.Snap();
@@ -64,6 +64,7 @@ namespace AfterSignal
             if(System.Array.IndexOf(System.Environment.GetCommandLineArgs(),"-quality-effects-off")>=0){PresentationSettings.Effects=0;PresentationSettings.Motion=0;}
             foreach(var enemy in FindObjectsByType<EnemyBrain>()){Enemies.Add(enemy);enemy.Initialize(this);if(enemy.boss)Boss=enemy;}
             Glass.AddRange(FindObjectsByType<BreakableGlass>());
+            gameObject.AddComponent<CityLife>().Initialize(this);
             interactions=FindObjectsByType<InteractionPoint>();
             Hud=gameObject.AddComponent<SignalHud>();Hud.Initialize(this);
             bool pacingProbe=System.Array.IndexOf(System.Environment.GetCommandLineArgs(),"-quality-probe")>=0;
@@ -74,6 +75,8 @@ namespace AfterSignal
             var district=CampaignCatalog.Get(stage);if(district!=null){ShowDialogue(district.title,district.brief);gameObject.AddComponent<DistrictCheckpoint>();}
             gameObject.AddComponent<SceneLightBudget>();
             Ready=true;
+            CityLife.Instance.InstallErrandMarker();
+            if(System.Array.IndexOf(System.Environment.GetCommandLineArgs(),"-life-smoke")>=0)gameObject.AddComponent<CityLifeSmoke>();
             if(pacingProbe)gameObject.AddComponent<PacingProbe>();
             if(System.Array.IndexOf(System.Environment.GetCommandLineArgs(),"-quality-slice")>=0||System.Array.IndexOf(System.Environment.GetCommandLineArgs(),"-quality-campaign")>=0)gameObject.AddComponent<QualitySession>();
             if(System.Array.IndexOf(System.Environment.GetCommandLineArgs(),"-aftersignal-smoke")>=0)gameObject.AddComponent<RuntimeSmoke>();
@@ -87,20 +90,21 @@ namespace AfterSignal
         {
             if(!Ready)return;
             var control=Input.Read();
-            if(control.pause&&!Title&&!Dead&&!Transition){if(Dialogue)CloseDialogue();else SetPaused(!Paused);}
-            if(Dialogue&&control.interact){CloseDialogue();return;}
+            if(control.pause&&!Title&&!Dead&&!Transition){if(CityLife.Instance&&CityLife.Instance.Mode=="sleeping")return;if(Dialogue)CloseDialogue();else SetPaused(!Paused);}
+            if(Dialogue&&control.interact&&!(CityLife.Instance&&CityLife.Instance.Mode.Length>0)){CloseDialogue();return;}
             if(Blocked){Audio.SetPaused(Paused||Dead);return;}
             float dt=Mathf.Min(Time.deltaTime,.1f);Audio.SetPaused(false);inputSuppress-=dt;
             if(inputSuppress>0){control.attack=control.grapple=control.interact=false;}
             Elapsed+=dt;NoticeTimer=Mathf.Max(0,NoticeTimer-dt);coreCooldown-=dt;
             if(UrbanSimulation.Instance&&UrbanSimulation.Instance.enabled)UrbanSimulation.Instance.BeforeInput(ref control,dt);
+            CityLife.Instance?.BeforeInput(ref control,dt);
             float remaining=dt;
             while(remaining>.00001f){float step=Mathf.Min(.02f,remaining);if(UrbanSimulation.Instance&&UrbanSimulation.Instance.Driving)UrbanSimulation.Instance.Tick(control,step);else Player.Tick(control,step);foreach(var enemy in Enemies)if(enemy&&enemy.gameObject.activeSelf)enemy.Tick(step);control.jump=control.dash=control.skill=control.reload=false;control.weaponCycle=0;control.weapon=-1;remaining-=step;}
             if(stage==StageId.Station&&CampaignRules.CanBoard(Power,Cleared))Arrival=Mathf.MoveTowards(Arrival,1,dt/4f);
             if(stage==StageId.Carriage||stage==StageId.Roof){Speed=Mathf.MoveTowards(Speed,stage==StageId.Roof?34:27,dt*2);TravelDistance+=Speed*dt;}
             UpdateBoss(dt);
             Nearby=null;float best=float.MaxValue;
-            foreach(var point in interactions)if(point&&point.gameObject.activeSelf&&(!point.Used||point.kind==InteractionKind.Noa||point.kind==InteractionKind.Citizen)){
+            foreach(var point in InteractionPoint.All)if(point&&point.gameObject.activeInHierarchy&&(!point.Used||point.kind==InteractionKind.Noa||point.kind==InteractionKind.Citizen)&&(!point.npc||!point.npc.GetComponent<WorldActor>()||point.npc.GetComponent<WorldActor>().Alive)){
                 float distance=Vector3.Distance(point.transform.position,Player.Shoulder);
                 if(distance<point.radius&&distance<best){Nearby=point;best=distance;}
             }
@@ -127,25 +131,25 @@ namespace AfterSignal
         {
             Title=false;SkipTitle=true;inputSuppress=.2f;
             if(resume){int saved=Mathf.Clamp(PlayerPrefs.GetInt("AFTERSIGNAL.Unity.Stage",0),0,CampaignRules.Scenes.Length-1);if(saved!=0){SceneManager.LoadScene(CampaignRules.Scenes[saved]);return;}}
-            else {Memories=0;PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Stage",0);PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Memories",0);PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Completed",0);ResetExpansion();CivicWorld.ClearArrival();UrbanCatalog.Reset();
+            else {LifeState.Reset();Memories=0;PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Stage",0);PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Memories",0);PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Completed",0);ResetExpansion();CivicWorld.ClearArrival();UrbanCatalog.Reset();
                 var args=System.Environment.GetCommandLineArgs();if(System.Array.IndexOf(args,"-aftersignal-smoke")<0&&System.Array.IndexOf(args,"-expansion-smoke")<0){PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Stage",(int)StageId.Residence);PlayerPrefs.Save();SceneManager.LoadScene(CampaignRules.Scene(StageId.Residence));return;}}
             Toast("WASD 이동 · 왼쪽 클릭 공격 · 오른쪽 클릭 로프",5);
         }
         public void SetPaused(bool value){if(value==Paused)return;if(value){prePauseScale=Time.timeScale;Time.timeScale=0;}else Time.timeScale=prePauseScale;Paused=value;inputSuppress=.16f;Player.Rope.Release();}
         public void ShowDialogue(string title,string text){DialogueTitle=title;DialogueText=text;Player.Rope.Release();}
-        public void CloseDialogue(){DialogueText=null;inputSuppress=.18f;if(Audio)Audio.Play("ui_cancel",Player.Shoulder,.12f,1);}
+        public void CloseDialogue(){CityLife.Instance?.Close();DialogueText=null;inputSuppress=.18f;if(Audio)Audio.Play("ui_cancel",Player.Shoulder,.12f,1);}
         public void Toast(string text,float duration=3.2f){Notice=text;NoticeTimer=duration;}
         public void DamageNumber(Vector3 position,int amount,bool critical){if(Hud)Hud.AddDamage(position,amount,critical);}
-        public void EnemyDied(EnemyBrain enemy){Kills++;Player.Heal(enemy.boss?30:3);if(enemy.boss){Toast("컨덕터 정지 · 기억 코어를 회수하세요",6);ExposeTimer=WaveWarning=0;}else if(Cleared)Toast("구역 확보 · 다음 목표로 이동하세요");}
+        public void EnemyDied(EnemyBrain enemy){Kills++;LifeState.Earn(enemy.boss?350:25);Player.Heal(enemy.boss?30:3);if(enemy.boss){Toast("컨덕터 정지 · 기억 코어를 회수하세요",6);ExposeTimer=WaveWarning=0;}else if(Cleared)Toast("구역 확보 · 다음 목표로 이동하세요");}
         public void GlassBroken(){BrokenGlass=true;Toast("유리 격벽 파괴 · 다음 객실로 진입하세요");}
-        public void Die(){Dead=true;Player.Rope.Release();Time.timeScale=0;}
+        public void Die(){WantedSystem.Clear("");Dead=true;Player.Rope.Release();Time.timeScale=0;}
         public void Retry(){Time.timeScale=1;SkipTitle=true;SceneManager.LoadScene(CampaignRules.Scene(stage));}
         public void Restart(){Time.timeScale=1;SkipTitle=false;PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Stage",0);PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Memories",0);ResetExpansion();SceneManager.LoadScene(CampaignRules.Scene(StageId.Station));}
         static void ResetExpansion(){foreach(string key in new[]{"Chapters","Accepted","Jobs"})PlayerPrefs.DeleteKey("AFTERSIGNAL.Unity.Expansion."+key);}
         public void Travel(StageId next){if(Transition)return;StartCoroutine(TravelRoutine(next));}
         IEnumerator TravelRoutine(StageId next)
         {
-            Transition=true;Player.Rope.Release();UrbanSimulation.Instance?.SaveCar();
+            Transition=true;Player.Rope.Release();UrbanSimulation.Instance?.SaveCar();LifeState.Save();
             for(float t=0;t<.8f;t+=Time.unscaledDeltaTime){Fade=t/.8f;yield return null;}
             PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Stage",(int)next);PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Memories",Memories);PlayerPrefs.Save();
             SceneManager.LoadScene(CampaignRules.Scene(next));
