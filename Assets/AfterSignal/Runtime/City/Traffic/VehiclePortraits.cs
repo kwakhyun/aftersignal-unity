@@ -32,6 +32,7 @@ namespace AfterSignal
         }
         public static Sprite Driver(string role,int direction)
         {
+            if(role=="Worker"||role=="Soldier"||role=="Prisoner"||role.StartsWith("Facility"))return Passenger(role,direction);
             for(int group=0;group<roles.Length;group++)
             {
                 int row=Array.IndexOf(roles[group],role);

@@ -64,11 +64,12 @@ namespace AfterSignal
             if (struck)
             {
                 velocity.y -= 20 * dt;
+                var before=transform.position;
                 transform.position += velocity * dt;
-                if (transform.position.y < .04f)
+                if (NpcGroundSupport.Floor(transform.position,Mathf.Max(before.y,transform.position.y)+.35f,4,out float floor) && transform.position.y < floor+.04f)
                 {
                     var p = transform.position;
-                    p.y = .04f;
+                    p.y = floor+.04f;
                     transform.position = p;
                     velocity = Vector3.Lerp(velocity, Vector3.zero, dt * 9);
                     velocity.y = 0;
@@ -91,7 +92,7 @@ namespace AfterSignal
                 waiting = crossing && !enteredCrossing && !CityRoadNetwork.CanStartCrossing(delta.magnitude / speed);
                 if (waiting)
                 {
-                    if (poses != null && poses.Length > 0)
+                    if (!GetComponent<DirectionalPerson>() && poses != null && poses.Length > 0)
                         visual.sprite = poses[0];
                     return;
                 }
@@ -104,7 +105,7 @@ namespace AfterSignal
                     visual.flipX = delta.x < 0;
             }
 
-            if (poses != null && poses.Length > 0)
+            if (!GetComponent<DirectionalPerson>() && poses != null && poses.Length > 0)
                 visual.sprite = poses[struck || poses.Length == 1 ? 0 : 1 + (int)phase % Mathf.Max(1, poses.Length - 1)];
         }
 

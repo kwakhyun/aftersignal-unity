@@ -124,6 +124,7 @@ namespace AfterSignal.Editor
             foreach(var f in root.GetComponentsInChildren<MeshFilter>())
             {
                 var r=f.GetComponent<MeshRenderer>();if(!r||!r.enabled||!f.sharedMesh||!f.sharedMesh.isReadable||f.GetComponentInParent<MultiFloorLift>()||f.GetComponentInParent<NeonTransit>()||f.GetComponentInParent<KelpCurrent>()||f.GetComponentInParent<CollapsibleBuilding>()||f.GetComponentInParent<BreakableStreetProp>())continue;
+                if(f.GetComponentInParent<BreakableGlass>())continue;
                 var usable=f.GetComponentInParent<UsableProp>();if(usable&&usable.use==PropUse.Television)continue;
                 Vector3 c=r.bounds.center;string cell=Mathf.FloorToInt(c.x/100)+"_"+Mathf.FloorToInt(c.y/60)+"_"+Mathf.FloorToInt(c.z/100);
                 for(int sub=0;sub<f.sharedMesh.subMeshCount;sub++)

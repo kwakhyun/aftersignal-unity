@@ -176,6 +176,7 @@ namespace AfterSignal
 
         void Advance(Vector3 delta, float dt, bool ai)
         {
+            RecoverContact();
             Vector3 old = transform.position;
             float length = delta.magnitude;
             impactCooldown -= dt;
@@ -189,6 +190,8 @@ namespace AfterSignal
                     var h = hits[i];
                     if (!h.collider || h.collider.transform.IsChildOf(transform))
                         continue;
+                    if(h.distance<=.01f&&MovingOut(h.collider,delta))continue;
+                    if(h.normal.y>.65f)continue;
                     if(h.distance<length+.1f && h.collider.GetComponentInParent<BreakableStreetProp>() && StructuralImpact.Hit(this,h.collider,h.point,Mathf.Abs(speed)))continue;
                     if (h.distance < allowed + .08f)
                     {
@@ -224,6 +227,7 @@ namespace AfterSignal
                         var other = hit.GetComponentInParent<CityVehicle>();
                         if (other)
                             force = (Forward * speed - other.Forward * other.speed).magnitude;
+                        PushVehicle(other,delta,force);
                         if (!ai || force > 10)
                         {
                             Damage(Mathf.Max(3, (force - 3) * (force - 3) * .22f), transform.position + Forward * HalfLength);
@@ -311,6 +315,7 @@ namespace AfterSignal
         void Update()
         {
             if(exploded)return;
+            if(!GameDirector.Instance||!GameDirector.Instance.Blocked)TickCollisionDrift(Mathf.Min(.05f,Time.deltaTime));
             AudioLevel();
             var g = GameDirector.Instance;
             if (engine)

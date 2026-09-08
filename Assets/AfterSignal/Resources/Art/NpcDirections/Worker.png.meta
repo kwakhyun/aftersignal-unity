@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 138.34135
+  spritePixelsToUnits: 147.83655
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
@@ -128,10 +128,10 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 940
-        width: 313
+        width: 312
         height: 314
       alignment: 9
-      pivot: {x: 0.4810348, y: 0.012738854}
+      pivot: {x: 0.48142952, y: 0.0031847134}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -148,12 +148,12 @@ TextureImporter:
       name: Worker-01
       rect:
         serializedVersion: 2
-        x: 313
+        x: 312
         y: 940
         width: 314
         height: 314
       alignment: 9
-      pivot: {x: 0.43837982, y: 0.00955414}
+      pivot: {x: 0.44207892, y: 0.006369427}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -170,12 +170,12 @@ TextureImporter:
       name: Worker-02
       rect:
         serializedVersion: 2
-        x: 627
+        x: 626
         y: 940
         width: 313
         height: 314
       alignment: 9
-      pivot: {x: 0.4060975, y: 0.00955414}
+      pivot: {x: 0.40639573, y: 0.0031847134}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -192,12 +192,12 @@ TextureImporter:
       name: Worker-03
       rect:
         serializedVersion: 2
-        x: 940
+        x: 939
         y: 940
-        width: 314
+        width: 315
         height: 314
       alignment: 9
-      pivot: {x: 0.46914065, y: 0.012738854}
+      pivot: {x: 0.47100663, y: 0.006369427}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -216,10 +216,10 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 627
-        width: 313
+        width: 312
         height: 313
       alignment: 9
-      pivot: {x: 0.463025, y: 0.05111821}
+      pivot: {x: 0.46608487, y: 0.0031948881}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -236,12 +236,12 @@ TextureImporter:
       name: Worker-05
       rect:
         serializedVersion: 2
-        x: 313
+        x: 312
         y: 627
         width: 314
         height: 313
       alignment: 9
-      pivot: {x: 0.4150805, y: 0.05111821}
+      pivot: {x: 0.4209608, y: 0.019169329}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -258,12 +258,12 @@ TextureImporter:
       name: Worker-06
       rect:
         serializedVersion: 2
-        x: 627
+        x: 626
         y: 627
         width: 313
         height: 313
       alignment: 9
-      pivot: {x: 0.40771323, y: 0.05111821}
+      pivot: {x: 0.4145006, y: 0.019169329}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -280,12 +280,12 @@ TextureImporter:
       name: Worker-07
       rect:
         serializedVersion: 2
-        x: 940
+        x: 939
         y: 627
-        width: 314
+        width: 315
         height: 313
       alignment: 9
-      pivot: {x: 0.45341596, y: 0.044728436}
+      pivot: {x: 0.45116997, y: 0.0031948881}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -303,11 +303,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 322
-        width: 313
-        height: 305
+        y: 325
+        width: 312
+        height: 302
       alignment: 9
-      pivot: {x: 0.4781748, y: 0.05901639}
+      pivot: {x: 0.4792584, y: 0.013245033}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -324,12 +324,12 @@ TextureImporter:
       name: Worker-09
       rect:
         serializedVersion: 2
-        x: 313
-        y: 322
+        x: 312
+        y: 327
         width: 314
-        height: 305
+        height: 300
       alignment: 9
-      pivot: {x: 0.43342495, y: 0.052459016}
+      pivot: {x: 0.43761584, y: 0.006666667}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -346,12 +346,12 @@ TextureImporter:
       name: Worker-10
       rect:
         serializedVersion: 2
-        x: 627
-        y: 322
+        x: 626
+        y: 325
         width: 313
-        height: 305
+        height: 302
       alignment: 9
-      pivot: {x: 0.42210668, y: 0.052459016}
+      pivot: {x: 0.42555374, y: 0.013245033}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -368,12 +368,12 @@ TextureImporter:
       name: Worker-11
       rect:
         serializedVersion: 2
-        x: 940
-        y: 321
-        width: 314
-        height: 306
+        x: 939
+        y: 324
+        width: 315
+        height: 303
       alignment: 9
-      pivot: {x: 0.4611166, y: 0.055555556}
+      pivot: {x: 0.46244812, y: 0.0066006603}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -392,10 +392,10 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 313
-        height: 322
+        width: 312
+        height: 325
       alignment: 9
-      pivot: {x: 0.4655665, y: 0.11801242}
+      pivot: {x: 0.46677575, y: 0.006153846}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -412,12 +412,12 @@ TextureImporter:
       name: Worker-13
       rect:
         serializedVersion: 2
-        x: 313
+        x: 312
         y: 0
         width: 314
-        height: 322
+        height: 327
       alignment: 9
-      pivot: {x: 0.4527169, y: 0.12111801}
+      pivot: {x: 0.45092857, y: 0.003058104}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -434,12 +434,12 @@ TextureImporter:
       name: Worker-14
       rect:
         serializedVersion: 2
-        x: 627
+        x: 626
         y: 0
         width: 313
-        height: 322
+        height: 325
       alignment: 9
-      pivot: {x: 0.41954708, y: 0.11801242}
+      pivot: {x: 0.42175168, y: 0.024615385}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -456,12 +456,12 @@ TextureImporter:
       name: Worker-15
       rect:
         serializedVersion: 2
-        x: 940
+        x: 939
         y: 0
-        width: 314
-        height: 321
+        width: 315
+        height: 324
       alignment: 9
-      pivot: {x: 0.38406536, y: 0.115264796}
+      pivot: {x: 0.38967755, y: 0.018518519}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []

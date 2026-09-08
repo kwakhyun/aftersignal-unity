@@ -58,9 +58,10 @@ namespace AfterSignal
 
     public static class VehicleSeats
     {
-        public static int Count(CityVehicle c) => c.type == CityVehicleType.Bus ? 15 : c.type == CityVehicleType.Airliner ? 26 : c.type == CityVehicleType.Boat ? 15 : c.type == CityVehicleType.Motorcycle || c.type == CityVehicleType.Fighter || c.type == CityVehicleType.Tank ? 1 : c.type == CityVehicleType.CombatHelicopter ? 4 : c.type == CityVehicleType.Truck ? 2 : 4;
+        public static int Count(CityVehicle c) => c.GetComponent<CityTaxiService>()&&c.IsWatercraft?13:c.type == CityVehicleType.Bus ? 15 : c.type == CityVehicleType.Airliner ? 26 : c.type == CityVehicleType.Boat ? 15 : c.type == CityVehicleType.Motorcycle || c.type == CityVehicleType.Fighter || c.type == CityVehicleType.Tank ? 1 : c.type == CityVehicleType.CombatHelicopter ? 4 : c.type == CityVehicleType.Truck ? 2 : 4;
         public static Vector3 Local(CityVehicle c, int seat)
         {
+            var taxi=c.GetComponent<CityTaxiService>();if(taxi)return taxi.Air?new Vector3(seat<2?1.7f:-.7f,1.43f,seat%2==0?-.55f:.55f):seat==0?new Vector3(4,1.55f,0):new Vector3(-4+(seat-1)/2*1.25f,1.47f,seat%2==0?-1.2f:1.2f);
             var authored=c.GetComponent<AuthoredCraft>();if(authored)return authored.helm+new Vector3(seat==0?0:-8+seat*1.1f,0,seat==0?0:seat%2==0?-7:7);
             if (c.type == CityVehicleType.Airliner) return seat < 2 ? new Vector3(10,2.3f,seat==0?-.7f:.7f) : new Vector3(6-(seat-2)/4*2.4f,1.8f,((seat-2)%4-1.5f)*.8f);
             if (c.type == CityVehicleType.Boat) return seat == 0 ? new Vector3(3.5f,2.5f,-.7f) : new Vector3(1-(seat-1)/2*1.1f,1.55f,seat%2==0?-1.2f:1.2f);
@@ -72,7 +73,7 @@ namespace AfterSignal
             if (c.type == CityVehicleType.Truck) return new Vector3(2.8f,1.52f,seat==0?-.53f:.53f);
             return new Vector3(seat<2?.3f:-.68f,c.type==CityVehicleType.SportsCar?.66f:.78f,seat%2==0?-.43f:.43f);
         }
-        public static Vector3 Door(CityVehicle c) => c.GetComponent<AuthoredCraft>()?c.GetComponent<AuthoredCraft>().BoardingPoint:c.transform.TransformPoint(c.type==CityVehicleType.Airliner?new Vector3(8,0,-3.4f):c.type==CityVehicleType.Boat?new Vector3(0,1.4f,3.3f):new Vector3(0,0,-c.HalfWidth-1));
+        public static Vector3 Door(CityVehicle c) => c.GetComponent<CityTaxiService>()&&c.IsAircraft?c.transform.TransformPoint(new Vector3(0,0,-5.2f)):c.GetComponent<AuthoredCraft>()?c.GetComponent<AuthoredCraft>().BoardingPoint:c.transform.TransformPoint(c.type==CityVehicleType.Airliner?new Vector3(8,0,-3.4f):c.type==CityVehicleType.Boat?new Vector3(0,1.4f,3.3f):new Vector3(0,0,-c.HalfWidth-1));
         public static string Name(CityVehicle c,int seat) => seat==0 ? c.IsAircraft ? "조종석" : c.IsWatercraft ? "선장석" : "운전석" : c.IsSpecial || c.type==CityVehicleType.Bus ? "승객석 "+seat : seat==1?"조수석":seat==2?"뒷좌석 왼쪽":"뒷좌석 오른쪽";
         public static string Title(CityVehicleType t) => new[]{"세단","택시","시내버스","트럭","루멘 바이크","오로라 스포츠카","블루워터 여객선","루멘 에어 여객기","레이븐 전투헬기","스펙터 전투기","아이언 전차"}[(int)t];
         public static string Controls(CityVehicle c) => c.type==CityVehicleType.Tank ? "W/S 전후진 · A/D 궤도 선회 · 마우스 포탑 · 좌/우클릭 주포/기관총 · C 시점" : c.IsAircraft ? "W/S 추력 · A/D 선회 · SPACE 상승 / CTRL 하강 · SHIFT 가속 · C 시점"+(c.type==CityVehicleType.Airliner?"":" · 우클릭 미사일 / R 장전")+" · F 하차" : c.IsWatercraft ? "W/S 추진 · A/D 키 · SHIFT 가속 · SPACE 제동 · C 시점 · F 하선" : "W/S 가속·후진 · A/D 조향 · SHIFT 가속 · SPACE 제동 · C 시점 · E 하차";

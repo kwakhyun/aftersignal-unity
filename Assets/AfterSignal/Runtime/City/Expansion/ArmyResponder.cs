@@ -11,7 +11,7 @@ namespace AfterSignal
             var a=go.GetComponent<ArmyResponder>();a.incident=incident;a.variation=variant;a.Body=go.GetComponent<WorldActor>();a.Body.military=true;a.Body.health=150;
             a.controller=go.GetComponent<CharacterController>();a.controller.radius=.34f;a.controller.height=2.1f;a.controller.center=Vector3.up*1.05f;a.controller.stepOffset=.3f;
             var visual=new GameObject("Uniform",typeof(SpriteRenderer));visual.transform.SetParent(go.transform,false);
-            var r=visual.GetComponent<SpriteRenderer>();r.sprite=PeopleArt.Get("Swat",0);r.sharedMaterial=Resources.Load<Material>("Materials/PixelActor");PeopleArt.Attach(go,"Swat");return a;
+            var r=visual.GetComponent<SpriteRenderer>();r.sprite=PeopleArt.Get("Soldier",0);r.sharedMaterial=Resources.Load<Material>("Materials/PixelActor");PeopleArt.Attach(go,"Soldier");return a;
         }
         void Update()
         {

@@ -10,7 +10,8 @@ namespace AfterSignal
             var detail=vehicle.gameObject.AddComponent<VehicleDetails>();detail.car=vehicle;
             if(!vehicle.GetComponent<AuthoredCraft>())
             {
-                var asset=Resources.Load<GameObject>("WorldAssets/"+VehicleFleet.ModelName(vehicle.type)+"/"+VehicleFleet.ModelName(vehicle.type));if(!asset)return;
+                var taxi=vehicle.GetComponent<CityTaxiService>();string modelName=taxi?(taxi.Air?"AirTaxi":"WaterTaxi"):VehicleFleet.ModelName(vehicle.type);
+                var asset=Resources.Load<GameObject>("WorldAssets/"+modelName+"/"+modelName);if(!asset)return;
                 Material basePaint=Resources.Load<Material>("Materials/SedanIvory");
                 foreach(var renderer in vehicle.GetComponentsInChildren<MeshRenderer>())if(renderer.name=="Sculpted chassis"&&renderer.sharedMaterial)basePaint=renderer.sharedMaterial;
                 foreach(var r in vehicle.GetComponentsInChildren<MeshRenderer>())
@@ -27,11 +28,12 @@ namespace AfterSignal
                     string key=r.sharedMaterial?r.sharedMaterial.name:r.name;
                     string mat=key.StartsWith("BodyPaint")?vehicle.GetComponent<PoliceCar>()?"DistrictIvory":vehicle.type==CityVehicleType.Taxi?"TaxiPaint":"SedanRed":key.StartsWith("TrimRubber")?"Rubber":key.StartsWith("BrushedAlloy")?"Chrome":key.StartsWith("Glazing")?"Glass":key.StartsWith("Headlamp")?"CyanFX":"RedFX";
                     r.sharedMaterial=Resources.Load<Material>("Materials/"+mat)??Resources.Load<Material>("Materials/Chrome");
-                    if(key.StartsWith("BodyPaint")){r.name="Sculpted chassis";if(!vehicle.GetComponent<PoliceCar>()&&vehicle.type!=CityVehicleType.Taxi)r.sharedMaterial=VehiclePaint.For(vehicle.type,basePaint);}
+                    if(key.StartsWith("BodyPaint")){r.name="Sculpted chassis";if(taxi)r.sharedMaterial=Resources.Load<Material>("Materials/SedanIvory");else if(!vehicle.GetComponent<PoliceCar>()&&vehicle.type!=CityVehicleType.Taxi)r.sharedMaterial=VehiclePaint.For(vehicle.type,basePaint);}
                     if(key.StartsWith("Headlamp")||key.StartsWith("Taillamp"))r.sharedMaterial=VehiclePaint.Lens(key.StartsWith("Taillamp"));
                     if(key.StartsWith("Glazing"))r.name="Windshield and side windows";
                 }
                 var list=new System.Collections.Generic.List<Transform>();foreach(var t in model.GetComponentsInChildren<Transform>())if(t.name.StartsWith("Wheel assembly"))list.Add(t);detail.wheels=list.ToArray();foreach(var w in detail.wheels){var motion=w.gameObject.AddComponent<VehicleWheel>();motion.Initialize(vehicle); }
+                if(taxi){var lod=model.AddComponent<LODGroup>();lod.SetLODs(new[]{new LOD(.008f,model.GetComponentsInChildren<Renderer>())});lod.RecalculateBounds();}
             }
             else
             {

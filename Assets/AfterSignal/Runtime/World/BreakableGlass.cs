@@ -4,8 +4,12 @@ namespace AfterSignal
 {
     public sealed class BreakableGlass : MonoBehaviour
     {
+        public static readonly System.Collections.Generic.List<BreakableGlass> All=new();
         public float health = 64;
+        public bool campaign=true;
         public bool Broken { get; private set; }
+        void OnEnable(){if(!All.Contains(this))All.Add(this);}
+        void OnDisable(){All.Remove(this);}
 
         public void Hit(float amount)
         {
@@ -19,13 +23,13 @@ namespace AfterSignal
             }
 
             Broken = true;
-            GetComponent<Collider>().enabled = false;
-            GetComponent<Renderer>().enabled = false;
-            SignalEffects.Glass(transform.position, transform.localScale);
+            var hit=GetComponent<Collider>();if(hit)hit.enabled=false;
+            var visual=GetComponent<Renderer>();if(visual)visual.enabled=false;
+            SignalEffects.Glass(transform.position, transform.lossyScale);
             var game = GameDirector.Instance;
             if (game)
             {
-                game.GlassBroken();
+                if(campaign)game.GlassBroken();
                 game.Audio.PlayCue(1300, .28f, .18f);
             }
         }

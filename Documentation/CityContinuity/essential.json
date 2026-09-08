@@ -1,0 +1,26 @@
+{
+    "completed": true,
+    "highrises": 424,
+    "waterTaxis": 32,
+    "airTaxis": 24,
+    "passed": [
+        "Every generated high-rise registers a 10–30 floor entrance",
+        "24 autonomous air taxis and 32 water taxis are operating",
+        "Taxi fleets use their dedicated coachwork and have no weapons",
+        "Water and air taxi routes advance independently",
+        "The E boarding input charges the taxi fare and uses a passenger seat",
+        "A citizen pushed beneath a raised floor recovers onto that floor",
+        "Death preserves the same character atlas region instead of replacing the citizen",
+        "Dedicated worker and soldier sheets import all 16 poses with separate textures",
+        "A vehicle touching a wall can reverse out without remaining stuck",
+        "The character controller climbs a complete interior stair flight without hitting a blocked step",
+        "A high-rise opens a populated, furnished interior with the full floor count",
+        "Physical window destruction removes both the pane collision and visible glass",
+        "The lift physically carries Seo from the lobby to the highest floor",
+        "High-rise detail streams at most four floors while travelling",
+        "Tower facade windows retain a shattered opening for ballistic passage",
+        "Marine research entrance uses the relocated footprint clear of the Nova road",
+        "The original coast has a continuous rendered ocean surface under its water taxi routes"
+    ],
+    "errors": []
+}

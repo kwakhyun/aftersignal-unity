@@ -191,6 +191,14 @@ namespace AfterSignal
 
                 if (nearest && !(CityBusService.Instance && CityBusService.Instance.Riding))
                 {
+                    var taxi=nearest.GetComponent<CityTaxiService>();
+                    if(taxi)
+                    {
+                        Prompt=(taxi.Air?"공중 무인택시 · 120 C":"수상택시 · 35 C")+" · E 탑승";
+                        if(input.interact||input.passenger){input.interact=input.passenger=false;taxi.Board();}
+                    }
+                    else
+                    {
                     Prompt = VehicleSeats.Title(nearest.type)+" · E "+(nearest.IsAircraft?"조종석":nearest.IsWatercraft?"선장석":"운전석")+(VehicleSeats.Count(nearest)>1?" / G 조수석·승객석":"");
                     var scheduled=nearest.GetComponent<PassengerRoute>();if(scheduled)Prompt+=" · "+scheduled.Status;
                     var service=nearest.GetComponent<IntercityService>();if(service)Prompt+=" · "+service.Status+" / G 승차권 구매";
@@ -200,6 +208,7 @@ namespace AfterSignal
                     {
                         input.interact = false;
                         Enter(nearest);
+                    }
                     }
                 }
             }

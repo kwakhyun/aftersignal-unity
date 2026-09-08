@@ -6,7 +6,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Mesh75040
+  m_Name: Facility access lane
   serializedVersion: 12
   m_SubMeshes:
   - serializedVersion: 2
@@ -17,8 +17,8 @@ Mesh:
     firstVertex: 0
     vertexCount: 4
     localAABB:
-      m_Center: {x: 552.74133, y: 0.082499996, z: -2496.482}
-      m_Extent: {x: 3.3293762, y: 0.017499998, z: 36.53894}
+      m_Center: {x: 1810.9873, y: 0.082499996, z: -3102.5386}
+      m_Extent: {x: 3.4867554, y: 0.017499998, z: 52.585327}
   m_Shapes:
     vertices: []
     shapes: []
@@ -97,7 +97,7 @@ Mesh:
       format: 0
       dimension: 0
     m_DataSize: 128
-    _typelessdata: 5e5a0944b81e853d844e1ec5e81237b7ffff7f3f485dfbb90000000000000000489a0a44b81e853d56501ec5b21337b7feff7f3f485dfbb90000203f000000009dc40944cccccc3d17bf19c5b21337b7feff7f3f485dfbb9000000004cf7114187040b44cccccc3de9c019c57c1437b7feff7f3f485dfbb90000203f4cf71141
+    _typelessdata: 332fe244b81e853dfb3145c55d87d136feff7f3fbd92aeb900000000000000002bcfe244b81e853d7b3045c54686d136feff7f3fbd92aeb90000203f0000000004f0e144cccccc3dc0a03ec54686d136feff7f3fbd92aeb900000000e0305241fc8fe244cccccc3d409f3ec52f85d136feff7f3fbd92aeb90000203fe0305241
   m_CompressedMesh:
     m_Vertices:
       m_NumItems: 0
@@ -151,8 +151,8 @@ Mesh:
       m_BitSize: 0
     m_UVInfo: 0
   m_LocalAABB:
-    m_Center: {x: 552.74133, y: 0.082499996, z: -2496.482}
-    m_Extent: {x: 3.3293762, y: 0.017499998, z: 36.53894}
+    m_Center: {x: 1810.9873, y: 0.082499996, z: -3102.5386}
+    m_Extent: {x: 3.4867554, y: 0.017499998, z: 52.585327}
   m_MeshUsageFlags: 0
   m_CookingOptions: 30
   m_BakedConvexCollisionMesh: 

@@ -5,8 +5,15 @@ namespace AfterSignal
     {
         public void LiftServices(MultiFloorLift lift)
         {
-            Panel("service","승강기","이동할 층을 선택하세요.");
-            for(int i=0;i<lift.floors;i++){int floor=i;Option((i+1)+"층",()=>{Dismiss();lift.Go(floor);});}
+            LiftPage(lift,lift.CurrentFloor/5);
+        }
+        void LiftPage(MultiFloorLift lift,int page)
+        {
+            int first=page*5,last=Mathf.Min(lift.floors,first+5);
+            Panel("service","승강기 · 현재 "+(lift.CurrentFloor+1)+"층",(first+1)+"–"+last+"층 / 총 "+lift.floors+"층 · 이동할 층을 선택하세요.");
+            for(int i=first;i<last;i++){int floor=i;Option((i+1)+"층"+(lift.floorNames!=null&&i<lift.floorNames.Length?" · "+lift.floorNames[i]:""),()=>{Dismiss();lift.Go(floor);});}
+            if(page>0)Option("◀ 아래층 목록",()=>LiftPage(lift,page-1));
+            if(last<lift.floors)Option("위층 목록 ▶",()=>LiftPage(lift,page+1));
         }
         public void CustodyServices()
         {

@@ -6,7 +6,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Mesh75059
+  m_Name: Upper station footbridge
   serializedVersion: 12
   m_SubMeshes:
   - serializedVersion: 2
@@ -17,7 +17,7 @@ Mesh:
     firstVertex: 0
     vertexCount: 4
     localAABB:
-      m_Center: {x: 1828.5, y: 17.4, z: -2547}
+      m_Center: {x: 358.5, y: 17.4, z: -3827}
       m_Extent: {x: 1.5, y: 0.6000004, z: 1.8569336}
   m_Shapes:
     vertices: []
@@ -97,7 +97,7 @@ Mesh:
       format: 0
       dimension: 0
     m_DataSize: 128
-    _typelessdata: 00c0e44466668641b64d1fc5f326be3ea5b06d3f00000000000000000000000000c0e444666686414a121fc5f326be3ea5b06d3f000000000000003f000000000060e44400009041b64d1fc5f326be3ea5b06d3f000000000000000054cace3e0060e444000090414a121fc5f326be3ea5b06d3f000000000000003f54cace3e
+    _typelessdata: 0000b44366668641b64d6fc5f326be3ea5b06d3f0000000000000000000000000000b443666686414a126fc5f326be3ea5b06d3f000000000000003f000000000080b24300009041b64d6fc5f326be3ea5b06d3f000000000000000054cace3e0080b243000090414a126fc5f326be3ea5b06d3f000000000000003f54cace3e
   m_CompressedMesh:
     m_Vertices:
       m_NumItems: 0
@@ -151,7 +151,7 @@ Mesh:
       m_BitSize: 0
     m_UVInfo: 0
   m_LocalAABB:
-    m_Center: {x: 1828.5, y: 17.4, z: -2547}
+    m_Center: {x: 358.5, y: 17.4, z: -3827}
     m_Extent: {x: 1.5, y: 0.6000004, z: 1.8569336}
   m_MeshUsageFlags: 0
   m_CookingOptions: 30

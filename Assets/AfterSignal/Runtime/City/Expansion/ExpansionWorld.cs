@@ -7,6 +7,7 @@ namespace AfterSignal
         public static readonly string[] Names={"루멘 해변","블루워터 항만","애프터라이트 국제공항","홍련 야시장","환승역 광장","오로라 전망공원","동부 물류센터","해변 호텔","항만 진료소","동부 변전소","루멘 방위기지","애프터라이트 교도소","해양 여객터미널","도시기억관리청","노바 해협도시","크로마 수로시장","펠라직 해양연구소","오벨리스크 기록금고","스카이워드 시민의회","에코 수중 관측소","노바 공항","조수 발전 관제소"};
         public static readonly Vector3[] Places={new Vector3(570,0,-545),new Vector3(1730,0,-475),new Vector3(1730,0,525),new Vector3(980,0,-225),new Vector3(880,0,70),new Vector3(860,0,630),new Vector3(1360,0,-276),new Vector3(1100,0,-421),new Vector3(1910,0,-310),new Vector3(1370,0,-88),new Vector3(420,0,720),new Vector3(1180,0,737),new Vector3(1250,0,-673),new Vector3(1270,0,284),new Vector3(920,0,-2460),new Vector3(610,0,-2810),new Vector3(1360,0,-2810),new Vector3(1610,0,-3470),new Vector3(680,0,-3700),new Vector3(980,-28,-2180),new Vector3(1790,0,-3940),new Vector3(470,0,-4010)};
         public static int Selected=-1;
+        static ExpansionWorld(){for(int i=0;i<NeonHarbor.Sites.Length;i++)Places[14+i]=NeonHarbor.Sites[i];}
         public static void Install(GameDirector game)
         {
             if(game.stage!=StageId.UrbanCity)return;game.stageLength=ExpansionRoads.Width;game.halfDepth=-NeonHarbor.South;
@@ -15,7 +16,7 @@ namespace AfterSignal
             var renewal=Resources.Load<GameObject>("WorldAssets/CivicRenewal");if(renewal)Instantiate(renewal,expanded?expanded.transform:null);
             var harbor=Resources.Load<GameObject>("WorldAssets/NeonHarbor");if(harbor)Instantiate(harbor,expanded?expanded.transform:null);
             var terminals=Resources.Load<GameObject>("WorldAssets/TransitFacilities");if(terminals)Instantiate(terminals,expanded?expanded.transform:null);
-            game.gameObject.AddComponent<VehicleFleet>();game.gameObject.AddComponent<OceanLife>();game.gameObject.AddComponent<PrisonSystem>();
+            game.gameObject.AddComponent<VehicleFleet>();game.gameObject.AddComponent<OceanLife>();game.gameObject.AddComponent<PrisonSystem>();game.gameObject.AddComponent<TaxiNetwork>();
             Camera.main.farClipPlane=5400;
         }
         public int Population{get;private set;}
@@ -40,9 +41,14 @@ namespace AfterSignal
             int role=(seed.firstRole+i%Mathf.Max(1,seed.roleCount))%FacilityPeople.Jobs.Length;
             string art=seed.arts!=null&&seed.arts.Length>0?seed.arts[i%seed.arts.Length]:FacilityPeople.Key(role);
             string job=seed.jobs!=null&&seed.jobs.Length>0?seed.jobs[i%seed.jobs.Length]:FacilityPeople.Jobs[role];
+            bool prisoner=job.Contains("수감자")&&seed.title.Contains("수감자");
+            bool soldier=job.Contains("기지")||job.Contains("정비병")||job.Contains("작전 장교");
+            if(prisoner)art="Prisoner";else if(soldier)art="Soldier";else if(art=="Prisoner")art="Worker";
             go.transform.position=SpawnPosition(seed,i);var sr=go.GetComponent<SpriteRenderer>();sr.sharedMaterial=actorMaterial;sr.sprite=PeopleArt.Get(art,0);
             var npc=go.GetComponent<CityNpc>();npc.Configure(6000+district.first+i,job,null,seed.title+"에서 생활한다. 주변 시설과 교통편을 잘 안다. 실제 위치와 직업에 맞게 대화한다.");
             PeopleArt.Attach(go,art);var c=go.GetComponent<FacilityCitizen>();c.origin=go.transform.position;c.radius=seed.radius;c.district=seed.title;c.serial=district.first+i;
+            if(soldier)go.GetComponent<WorldActor>().military=true;
+            if(prisoner){var routine=go.AddComponent<CivicRoutine>();routine.Initialize(job,go.transform.position);routine.prisoner=true;routine.work=c.origin;routine.rest=c.origin+Vector3.right*.4f;c.enabled=false;}
             if(district.health[i]<0)go.GetComponent<WorldActor>().health=0;
             else if(district.health[i]>0)go.GetComponent<WorldActor>().health=district.health[i];
             return c;

@@ -16,7 +16,7 @@ namespace AfterSignal.Editor
         public static void BuildMobility()
         {
             AssetDatabase.Refresh();EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single);
-            materials.Clear();boxes.Clear();meshId=3000;ImportMaterials();MakeMaterials();
+            materials.Clear();boxes.Clear();meshId=106000;ImportMaterials();MakeMaterials();
             root=new GameObject("MOBILITY / inhabited outer districts").transform;
             ConnectorRoads();BuildSeabed();MilitaryBase();PrisonCampus();PassengerPier();InfillBlocks();
             CombinePresentation();SaveGeneratedMeshes();PrefabUtility.SaveAsPrefabAsset(root.gameObject,Output+"MobilityDistricts.prefab");Object.DestroyImmediate(root.gameObject);
@@ -173,7 +173,7 @@ namespace AfterSignal.Editor
                         // Each block has a public frontage and a service alley.
                         Box(root,"Neighborhood forecourt",at+new Vector3(0,-.04f,-20),new Vector3(42,.1f,12),"Pavement");
                         Parking(at+new Vector3(0,.04f,-29),6,0,false);
-                        Crowd(b,titles[serial%6],new Vector3(-6,.12f,-5),8,serial%24,3,5);foreach(var seed in b.GetComponentsInChildren<FacilityCrowd>())ApplyRoomRoles(seed,serial%6);
+                        Crowd(b,titles[serial%6],new Vector3(-6,.12f,-5),8,serial%24,3,5);foreach(var seed in b.GetComponentsInChildren<FacilityCrowd>())ApplyRoomRoles(seed,serial%6==5?1:serial%6);
                         serial++;Physics.SyncTransforms();
                     }
                 }
@@ -188,7 +188,7 @@ namespace AfterSignal.Editor
             for(int side=-1;side<=1;side+=2)
             {
                 Box(p,"Structural side return",new Vector3(side*w*.5f,h*.5f,0),new Vector3(.3f,h,d),"Cladding");
-                Box(p,"Entrance wall",new Vector3(side*(w*.25f+1.7f),1.95f,-d*.5f),new Vector3(w*.5f-3.4f,3.9f,.22f),"Glazing");
+                WindowWall(p,new Vector3(side*(w*.25f+1.7f),1.95f,-d*.5f),w*.5f-3.4f,3.9f);
                 Beam(p,"Entrance jamb",new Vector3(side*3.4f,0,-d*.5f-.03f),new Vector3(side*3.4f,3.8f,-d*.5f-.03f),.13f,"Steel");
             }
             Box(p,"Rear structural wall",new Vector3(0,h*.5f,d*.5f),new Vector3(w,h,.3f),"Cladding");
@@ -208,14 +208,16 @@ namespace AfterSignal.Editor
                     Box(p,"Rear upper landing",new Vector3(w*.5f-6,y-.12f,d*.5f-2),new Vector3(12,.24f,4),"TerminalFloor");
                 }
                 Box(p,"Front facade floor belt",new Vector3(0,y+3.9f,-d*.5f),new Vector3(w+.6f,.3f,.8f),"Steel");
-                if(level>0)Box(p,"Upper curtain wall",new Vector3(0,y+1.9f,-d*.5f),new Vector3(w-.5f,3.7f,.08f),"Glazing");
+                if(level>0)WindowWall(p,new Vector3(0,y+1.9f,-d*.5f),w-.5f,3.7f);
                 for(int column=0;column<Mathf.FloorToInt(w/6);column++)Box(p,"Facade vertical mullion",new Vector3(-w*.5f+column*6,y+2,-d*.5f-.06f),new Vector3(.11f,4,.14f),"Steel",false);
                 Text(p,(level+1)+"F  /  "+title,new Vector3(-6,y+3.1f,0),.19f,"NeonCyan",180);
                 LiftButton(p,new Vector3(w*.5f-2.65f,y+1.2f,d*.5f-2),lift,level,"승강기 호출 · "+(level+1)+"층");
                 if(level<floors-1)
                 {
                     float run=d*.5f-4;
-                    for(int step=0;step<24;step++)Box(p,"Stair tread",new Vector3(w*.5f-8,y+(step+1)*4.2f/24*.5f,(step+.5f)*run/24),new Vector3(3.1f,(step+1)*4.2f/24,run/24+.012f),"Pavement");
+                    for(int step=0;step<24;step++)Box(p,"Stair tread",new Vector3(w*.5f-8,y+(step+1)*4.2f/24*.5f,(step+.5f)*run/24),new Vector3(3.1f,(step+1)*4.2f/24,run/24+.012f),"Pavement",false);
+                    var ramp=Box(p,"Continuous stair collision ramp",new Vector3(w*.5f-8,y+2.1f-.1f,run*.5f),new Vector3(3.1f,.2f,Mathf.Sqrt(run*run+4.2f*4.2f)),"Pavement");
+                    ramp.transform.localRotation=Quaternion.Euler(-Mathf.Atan2(4.2f,run)*Mathf.Rad2Deg,0,0);ramp.GetComponent<MeshRenderer>().enabled=false;
                     for(int side=-1;side<=1;side+=2)Beam(p,"Stair handrail",new Vector3(w*.5f-8+side*1.55f,y+1,0),new Vector3(w*.5f-8+side*1.55f,y+5.2f,run),.06f,"Aluminium");
                 }
                 Furnish(p,new Vector3(-6,y,-1),w-15,d-5,theme,level);
@@ -232,7 +234,7 @@ namespace AfterSignal.Editor
         }
         static void ApplyRoomRoles(FacilityCrowd seed,int theme)
         {
-            seed.arts=theme==4?new[]{"Doctor","Nurse","PatientMan","PatientWoman"}:theme==5?new[]{"Swat","OfficeMan","OfficeWoman"}:theme==6?new[]{"Swat","Worker"}:theme==7?new[]{"Worker","CivilianMan"}:theme==2?new[]{"Bartender","CivilianMan","CivilianWoman"}:theme==3?new[]{"Worker","OfficeMan"}:theme==1?new[]{"OfficeMan","OfficeWoman"}:new[]{"CivilianMan","CivilianWoman","ElderMan","ElderWoman"};
+            seed.arts=theme==4?new[]{"Doctor","Nurse","PatientMan","PatientWoman"}:theme==5?new[]{"Soldier","OfficeMan","OfficeWoman"}:theme==6?new[]{"Soldier","Worker"}:theme==7?new[]{"Prisoner"}:theme==2?new[]{"Bartender","CivilianMan","CivilianWoman"}:theme==3?new[]{"Worker","OfficeMan"}:theme==1?new[]{"OfficeMan","OfficeWoman"}:new[]{"CivilianMan","CivilianWoman","ElderMan","ElderWoman"};
             seed.jobs=theme==4?new[]{"의사","간호사","환자","환자"}:theme==5?new[]{"기지 경계병","작전 장교","신호 분석관"}:theme==6?new[]{"기지 병사","정비병"}:theme==7?new[]{"수감자"}:theme==2?new[]{"바리스타","손님","손님"}:theme==3?new[]{"정비사","물류 담당자"}:theme==1?new[]{"회사원"}:new[]{"주민"};
         }
         static void LiftButton(Transform p,Vector3 at,MultiFloorLift lift,int level,string title)

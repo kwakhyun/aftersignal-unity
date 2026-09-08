@@ -21,6 +21,7 @@ namespace AfterSignal
             if (!All.Contains(this))
                 All.Add(this);
         }
+        void Start(){if(!helicopter&&!monster&&!GetComponent<NpcGroundSupport>())gameObject.AddComponent<NpcGroundSupport>();}
 
         void OnDisable()
         {
@@ -53,6 +54,7 @@ namespace AfterSignal
             if(!source)LastPlayerHit=Time.time;
             if(!police&&!gang&&!monster&&!military){CitySafety.Shock(transform.position);CitySafety.Alarm(transform.position,source,GetComponent<CityNpc>());}
             health = Mathf.Max(protectedResident ? 1 : 0, health - amount);
+            if(!Alive)GetComponent<DirectionalPerson>()?.PreserveAppearance();
             if(!Alive&&blade&&!helicopter&&Random.value<.62f)SeveredSprite.Create(this,force);
             if(Alive&&!police&&!gang&&!helicopter&&!protectedResident&&!monster&&!military)CivilianDefense.React(this,source);
             NpcVoice.React(GetComponent<CityNpc>(),health<=0);

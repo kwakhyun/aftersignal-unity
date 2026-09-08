@@ -32,6 +32,7 @@ namespace AfterSignal
             if (Physics.Raycast(transform.position, direction, out var wall, step, 1 << 0, QueryTriggerInteraction.Ignore) && !wall.collider.GetComponentInParent<BreakableGlass>())
             {
                 var vehicle=wall.collider.GetComponentInParent<CityVehicle>();
+                wall.collider.GetComponentInParent<FacadeGlass>()?.Hit(wall.point,damage);
                 if(vehicle)vehicle.Damage(damage,wall.point);
                 Destroy(gameObject);
                 return;
@@ -60,7 +61,7 @@ namespace AfterSignal
                     }
                 }
 
-            foreach (var glass in game.Glass)
+            foreach (var glass in BreakableGlass.All)
                 if (glass && !glass.Broken && !glassHit.Contains(glass) && Vector3.Distance(glass.transform.position, transform.position) < 2)
                 {
                     glassHit.Add(glass);

@@ -321,6 +321,7 @@ namespace AfterSignal
                 if (!swingStarted)
                 {
                     swingStarted = true;
+                    FacadeGlass.Strike(Shoulder,AttackHeading,range,damage);
                     SignalEffects.Slash(Shoulder, AttackHeading, range, Weapon == WeaponId.Greatsword ? SignalEffects.Gold : SignalEffects.Cyan, Combo);
                     Director.Audio.Play(Weapon == WeaponId.Greatsword ? "heavy_swing" : "blade_swing", Shoulder, .22f, 1);
                 }
@@ -339,7 +340,7 @@ namespace AfterSignal
                         }
                     }
 
-                foreach (var glass in Director.Glass)
+                foreach (var glass in BreakableGlass.All)
                     if (glass && !glass.Broken && !shattered.Contains(glass) && Vector3.Distance(Shoulder, glass.transform.position) < range + 1.1f)
                     {
                         shattered.Add(glass);

@@ -9,6 +9,7 @@ namespace AfterSignal
         public Renderer[] Presentation=>presentation??=GetComponentsInChildren<Renderer>();
         public bool Collapsed{get;private set;}
         public static int Collapses{get;private set;}
+        void Start(){if(!GetComponent<HighriseBuilding>())gameObject.AddComponent<HighriseBuilding>();if(!GetComponent<FacadeGlass>())gameObject.AddComponent<FacadeGlass>();}
         public void Collapse(Vector3 point,Vector3 direction)
         {
             if(Collapsed)return;Collapsed=true;Collapses++;

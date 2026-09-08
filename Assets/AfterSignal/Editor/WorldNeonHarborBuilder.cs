@@ -127,6 +127,8 @@ namespace AfterSignal.Editor
         }
         static Transform NovaPublic(string name,Vector3 at,float w,float d,int floors,int theme,FacilityFunction function,int role)
         {
+            at=ClearRoadFootprint(at,w,d);
+            novaOccupied.Add(at);
             var p=OpenBuilding(root,name,at,w,d,floors,theme);novaBuildings++;novaInteriors++;
             for(int f=0;f<floors;f++)
             {

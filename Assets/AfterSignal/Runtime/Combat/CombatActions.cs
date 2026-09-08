@@ -108,6 +108,7 @@ namespace AfterSignal
             if (Ballistics.Cast(muzzle, direction, Ballistics.Range, transform, out var hit))
             {
                 end = hit.point;
+                hit.collider.GetComponentInParent<FacadeGlass>()?.Hit(hit.point,damage);
                 var enemy = hit.collider.GetComponentInParent<EnemyBrain>();
                 if (enemy && enemy.Alive)
                 {
@@ -185,7 +186,7 @@ namespace AfterSignal
                         }
                     }
 
-                foreach (var glass in Director.Glass)
+                foreach (var glass in BreakableGlass.All)
                     if (glass && !glass.Broken && Vector3.Distance(center, glass.transform.position) < 6.7f)
                         glass.Hit(Tuning.skillDamage);
                 WorldActor.Strike(center + Vector3.up, Vector3.zero, 6.2f, Tuning.skillDamage, worldStruck);

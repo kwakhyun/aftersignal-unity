@@ -196,7 +196,7 @@ namespace AfterSignal
                 for(int i=0;i<3;i++)
                 {
                     float x=51+i*8;for(int bar=0;bar<9;bar++)Box(root,"Custody steel bars",new Vector3(x-3.5f+bar*.85f,1.5f,8),new Vector3(.07f,3,.08f),"VehicleAlloy");
-                    Bed(new Vector3(x,0,24));var p=Person("Worker","수감자 "+(i+1),"수감자",new Vector3(x,.1f,17));p.prisoner=true;p.rest=new Vector3(x,.1f,22);p.work=new Vector3(x,.1f,13);
+                    Bed(new Vector3(x,0,24));var p=Person("Prisoner","수감자 "+(i+1),"수감자",new Vector3(x,.1f,17));p.prisoner=true;p.rest=new Vector3(x,.1f,22);p.work=new Vector3(x,.1f,13);
                 }
                 Sign(root,"경찰 유치장",new Vector3(61,3.8f,8),13);
             }

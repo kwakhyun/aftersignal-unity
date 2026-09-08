@@ -6,19 +6,19 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Mesh75301
+  m_Name: District batch 9_0_-30_PaintAmber
   serializedVersion: 12
   m_SubMeshes:
   - serializedVersion: 2
     firstByte: 0
-    indexCount: 6
+    indexCount: 18
     topology: 0
     baseVertex: 0
     firstVertex: 0
-    vertexCount: 4
+    vertexCount: 12
     localAABB:
-      m_Center: {x: 901, y: 0.099999994, z: -2789.25}
-      m_Extent: {x: 1.0681152, y: 0, z: 4.2661133}
+      m_Center: {x: 920, y: 0.099999994, z: -2946.5}
+      m_Extent: {x: 0.070007324, y: 0, z: 31.5}
   m_Shapes:
     vertices: []
     shapes: []
@@ -35,10 +35,10 @@ Mesh:
   m_KeepVertices: 0
   m_KeepIndices: 0
   m_IndexFormat: 1
-  m_IndexBuffer: 000000000200000001000000010000000200000003000000
+  m_IndexBuffer: 000000000200000001000000010000000200000003000000040000000600000005000000050000000600000007000000080000000a00000009000000090000000a0000000b000000
   m_VertexData:
     serializedVersion: 3
-    m_VertexCount: 4
+    m_VertexCount: 12
     m_Channels:
     - stream: 0
       offset: 0
@@ -96,8 +96,8 @@ Mesh:
       offset: 0
       format: 0
       dimension: 0
-    m_DataSize: 128
-    _typelessdata: 5c046144cccccc3dbe0f2ec5000000000000803f000000000000000000000000a4fb6044cccccc3d42102ec5000000000000803f00000000295c8f3c000000005c846144cccccc3dbe972ec5000000000000803f0000000000000000c8b68b3fa47b6144cccccc3d42982ec5000000000000803f00000000295c8f3cc8b68b3f
+    m_DataSize: 384
+    _typelessdata: 7b046644cccccc3d003036c5000000000000803f00000000000000000000000085fb6544cccccc3d003036c5000000000000803f00000000295c8f3c000000007b046644cccccc3d00c036c5000000000000803f00000000000000000000903f85fb6544cccccc3d00c036c5000000000000803f00000000295c8f3c0000903f7b046644cccccc3d00e037c5000000000000803f00000000000000000000000085fb6544cccccc3d00e037c5000000000000803f00000000295c8f3c000000007b046644cccccc3d007038c5000000000000803f00000000000000000000903f85fb6544cccccc3d007038c5000000000000803f00000000295c8f3c0000903f7b046644cccccc3d009039c5000000000000803f00000000000000000000000085fb6544cccccc3d009039c5000000000000803f00000000295c8f3c000000007b046644cccccc3d00203ac5000000000000803f00000000000000000000903f85fb6544cccccc3d00203ac5000000000000803f00000000295c8f3c0000903f
   m_CompressedMesh:
     m_Vertices:
       m_NumItems: 0
@@ -151,8 +151,8 @@ Mesh:
       m_BitSize: 0
     m_UVInfo: 0
   m_LocalAABB:
-    m_Center: {x: 901, y: 0.099999994, z: -2789.25}
-    m_Extent: {x: 1.0681152, y: 0, z: 4.2661133}
+    m_Center: {x: 920, y: 0.099999994, z: -2946.5}
+    m_Extent: {x: 0.070007324, y: 0, z: 31.5}
   m_MeshUsageFlags: 0
   m_CookingOptions: 30
   m_BakedConvexCollisionMesh: 

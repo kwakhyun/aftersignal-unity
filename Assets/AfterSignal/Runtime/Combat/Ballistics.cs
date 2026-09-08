@@ -14,6 +14,7 @@ namespace AfterSignal
             {
                 var c=hit.collider;
                 if(owner && c.transform.IsChildOf(owner))continue;
+                var facade=c.GetComponentInParent<FacadeGlass>();if(facade&&facade.OpenAt(hit.point))continue;
                 var actor=c.GetComponentInParent<WorldActor>();
                 if(actor&&!actor.Alive)continue;
                 if(c.isTrigger&&!actor&&!c.GetComponentInParent<EnemyBrain>()&&!c.GetComponentInParent<CityVehicle>()&&!c.GetComponentInParent<BreakableGlass>())continue;

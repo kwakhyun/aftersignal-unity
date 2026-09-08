@@ -8,11 +8,13 @@ namespace AfterSignal.Editor
     public sealed class DirectionalSheetImporter : AssetPostprocessor
     {
         bool Match => assetPath.Contains("/Resources/Art/SeoMotion/") || assetPath.Contains("/Resources/Art/NpcDirections/");
-        public override uint GetVersion() => 3;
-        static bool Background(Color32 c) => c.a < 32 || Mathf.Min(c.r, Mathf.Min(c.g,c.b)) > 235 && Mathf.Max(c.r,Mathf.Max(c.g,c.b))-Mathf.Min(c.r,Mathf.Min(c.g,c.b)) < 14;
+        public override uint GetVersion() => 4;
+        bool checker;
+        bool Background(Color32 c) => c.a < 32 || Mathf.Min(c.r, Mathf.Min(c.g,c.b)) > (checker?118:235) && Mathf.Max(c.r,Mathf.Max(c.g,c.b))-Mathf.Min(c.r,Mathf.Min(c.g,c.b)) < (checker?8:14);
         void OnPreprocessTexture()
         {
             if (!Match) return;
+            checker=assetPath.EndsWith("/Worker.png")||assetPath.EndsWith("/Soldier.png");
             var importer = (TextureImporter)assetImporter;
             importer.textureType=TextureImporterType.Sprite; importer.spriteImportMode=SpriteImportMode.Multiple;
             importer.mipmapEnabled=false; importer.filterMode=FilterMode.Point; importer.alphaIsTransparency=true;
@@ -46,7 +48,7 @@ namespace AfterSignal.Editor
 #pragma warning restore CS0618
             UnityEngine.Object.DestroyImmediate(tex);
         }
-        static int[] Cuts(Texture2D tex,Color32[] pixels,bool horizontal,int count,int from,int to)
+        int[] Cuts(Texture2D tex,Color32[] pixels,bool horizontal,int count,int from,int to)
         {
             int length=horizontal?tex.width:tex.height;
             var cuts=new int[count+1];cuts[count]=length;
@@ -64,7 +66,7 @@ namespace AfterSignal.Editor
             }
             return cuts;
         }
-        static int Columns(Texture2D tex,Color32[] pixels)
+        int Columns(Texture2D tex,Color32[] pixels)
         {
             int spans=0,start=-1;
             for(int x=0;x<=tex.width;x++)
@@ -79,6 +81,7 @@ namespace AfterSignal.Editor
         void OnPostprocessTexture(Texture2D tex)
         {
             if(!Match)return;
+            checker=assetPath.EndsWith("/Worker.png")||assetPath.EndsWith("/Soldier.png");
             var p=tex.GetPixels32();var queue=new int[p.Length];var visited=new bool[p.Length];int head=0,tail=0;
             // Seed only the outer boundary. A grid line can cross white clothing or pale hair.
             for(int n=0;n<p.Length;n++)if((p[n].a==0||n%tex.width==0||n%tex.width==tex.width-1||n<tex.width||n>=p.Length-tex.width)&&Background(p[n]))

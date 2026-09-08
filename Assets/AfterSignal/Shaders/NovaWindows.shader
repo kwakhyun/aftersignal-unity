@@ -11,10 +11,12 @@ Shader "AfterSignal/NovaWindows"
  CBUFFER_START(UnityPerMaterial)
  float4 _BaseColor,_EmissionColor;
  CBUFFER_END
+ int _BreakCount;float4 _BreakCenters[32];
  struct A{float4 p:POSITION;float3 n:NORMAL;UNITY_VERTEX_INPUT_INSTANCE_ID};struct V{float4 p:SV_POSITION;float3 w:TEXCOORD0;float3 n:TEXCOORD1;float fog:TEXCOORD2;};
  V vert(A i){V o;UNITY_SETUP_INSTANCE_ID(i);o.w=TransformObjectToWorld(i.p.xyz);o.n=TransformObjectToWorldNormal(i.n);o.p=TransformWorldToHClip(o.w);o.fog=ComputeFogFactor(o.p.z);return o;}
  half4 frag(V i):SV_Target
  {
+  [loop] for(int b=0;b<_BreakCount;b++)clip(distance(i.w,_BreakCenters[b].xyz)-_BreakCenters[b].w);
   float3 n=normalize(i.n);float side=abs(n.x)>.5?i.w.z:i.w.x;
   float2 cell=floor(float2(side/2.8,i.w.y/4));float rand=frac(sin(dot(cell,float2(127.1,311.7)))*43758.5453);
   float jamb=smoothstep(.018,.05,frac(side/2.8))*smoothstep(.018,.05,1-frac(side/2.8));

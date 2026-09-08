@@ -55,7 +55,16 @@ report=[]
 for kind,name in enumerate(names):
  bpy.ops.object.select_all(action='SELECT');bpy.ops.object.delete(use_global=False)
  poly,rings=rings_for(kind)
- if kind==6:
+ if kind==0:
+  # Leeza SOHO reference: two independently twisted volumes and a tall daylight atrium.
+  parts=[]
+  for side in [-1,1]:
+   half=[]
+   for i in range(17):
+    z=i/16;angle=z*.44;half.append((z,.38*(1-z*.15),.92*(1-z*.15),angle,side*.265*math.cos(angle),side*.265*math.sin(angle)))
+   parts.append(loft('Twisted atrium wing',polygon(16),half,glass))
+  for z in [.27,.5,.73,.9]:parts.append(loft('Atrium inhabited sky bridge',chamfer,[(z,.30,.28,z*.44,0,0),(z+.025,.30,.28,z*.44,0,0)],shell))
+ elif kind==6:
   parts=[]
   for s in [-1,1]:parts.append(loft('Gate pier',chamfer,[(0,.32,.8,0,s*.3,0),(.9,.3,.68,0,s*.3,0),(1,.28,.6,0,s*.3,0)],glass))
   parts.append(loft('Elevated inhabited bridge',chamfer,[(.75,.91,.62,0,0,0),(.9,.91,.62,0,0,0)],glass))
@@ -66,7 +75,7 @@ for kind,name in enumerate(names):
  for p in parts:
   c=p.copy();c.data=p.data.copy();c.name='Collision hull';bpy.context.collection.objects.link(c);coll.append(c)
   l=p.copy();l.data=p.data.copy();l.data.materials.clear();l.data.materials.append(glass);l.name='Distant envelope';bpy.context.collection.objects.link(l);low.append(l)
- if kind!=6:
+ if kind not in [0,6]:
   for i in range(1,19):
    z=i/19;r=interp(rings,z);band=[(z-.004,r[1]*1.015,r[2]*1.015,r[3],r[4],r[5]),(z+.004,r[1]*1.015,r[2]*1.015,r[3],r[4],r[5])];near.append(loft('Recessed slab edge',poly,band,metal if i%4 else shell))
   for j in range(0,len(poly),max(1,len(poly)//8)):
@@ -74,9 +83,37 @@ for kind,name in enumerate(names):
     def pt(r):
      x,y=poly[j];z,sx,sy,ang,dx,dy=r;return (x*sx*math.cos(ang)-y*sy*math.sin(ang)+dx,x*sx*math.sin(ang)+y*sy*math.cos(ang)+dy,z)
     near.append(beam('Load-bearing exoskeleton',pt(a),pt(b),.006,shell))
- else:
+ elif kind==6:
   for s in [-1,1]:
    for i in range(1,18):near.append(cube('Bridge pier slab',(s*.3,0,i/18),(.32,.7,.005),metal))
+ if kind==0:
+  for side in [-1,1]:
+   for j in range(16):
+    a=j*math.tau/16
+    for z in [.05,.25,.5,.75]:
+     def point(t):
+      ang=t*.44;xx=math.cos(a)*.48*.38*(1-t*.15)+side*.265;yy=math.sin(a)*.48*.92*(1-t*.15)
+      return (xx*math.cos(ang)-yy*math.sin(ang),xx*math.sin(ang)+yy*math.cos(ang),t)
+     near.append(beam('Twisting atrium rib',point(z),point(min(1,z+.25)),.0035,metal))
+ if kind in [1,4]:
+  # MVRDV Valley reference: occupied terraces, irregular setbacks, substantial planting.
+  for level,z in enumerate([.2,.41,.69,.87]):
+   r=interp(rings,z);span=r[1]*.8
+   for s in [-1,1]:
+    near.append(cube('Cantilever inhabited terrace',(r[4],s*r[2]*.49,z),(span,.14,.014),shell))
+    near.append(cube('Terrace glass balustrade',(r[4],s*(r[2]*.49+.06),z+.025),(span,.006,.05),glass))
+    for j in range(6):
+     x=r[4]-span*.4+j*span*.16
+     near.append(cube('Terrace planter',(x,s*r[2]*.49,z+.016),(.06,.055,.027),metal))
+     near.append(loft('Clipped sky garden canopy',polygon(8),[(z+.025,.11,.10,0,x,s*r[2]*.49),(z+.075,.08,.07,0,x,s*r[2]*.49)],leaf))
+ if kind in [2,3,5,7]:
+  # Triangulated bracing and recessed solar screens give facades depth at street distance.
+  for j in range(len(poly)):
+   for k in range(5):
+    za=.12+k*.16;zb=za+.16;ra=interp(rings,za);rb=interp(rings,zb)
+    def facade_pt(r,n):
+     x,y=poly[n%len(poly)];z,sx,sy,a,dx,dy=r;return (x*sx*math.cos(a)-y*sy*math.sin(a)+dx,x*sx*math.sin(a)+y*sy*math.cos(a)+dy,z)
+    near.append(beam('Diagrid sunshade',facade_pt(ra,j),facade_pt(rb,j+(1 if k%2==0 else -1)),.003,metal))
  # Base plinth, ventilation, geometric retail canopy, fins and roof gardens.
  near.append(loft('Sculpted street podium',chamfer,[(0,1,1,0,0,0),(.055,1,1,0,0,0),(.07,.91,.92,0,0,0)],shell))
  for s in [-1,1]:

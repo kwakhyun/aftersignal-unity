@@ -6,19 +6,19 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Mesh75055
+  m_Name: Skyrail guideway
   serializedVersion: 12
   m_SubMeshes:
   - serializedVersion: 2
     firstByte: 0
-    indexCount: 6
+    indexCount: 24
     topology: 0
     baseVertex: 0
     firstVertex: 0
-    vertexCount: 4
+    vertexCount: 10
     localAABB:
-      m_Center: {x: 1572.0494, y: 0.082499996, z: -3600.471}
-      m_Extent: {x: 22.61316, y: 0.017499998, z: 26.271484}
+      m_Center: {x: 1084.5708, y: 18, z: -3179.6929}
+      m_Extent: {x: 737.07086, y: 0, z: 642.19275}
   m_Shapes:
     vertices: []
     shapes: []
@@ -35,10 +35,10 @@ Mesh:
   m_KeepVertices: 1
   m_KeepIndices: 1
   m_IndexFormat: 0
-  m_IndexBuffer: 000002000100010002000300
+  m_IndexBuffer: 000002000100010002000300020004000300030004000500040006000500050006000700060008000700070008000900
   m_VertexData:
     serializedVersion: 3
-    m_VertexCount: 4
+    m_VertexCount: 10
     m_Channels:
     - stream: 0
       offset: 0
@@ -96,8 +96,8 @@ Mesh:
       offset: 0
       format: 0
       dimension: 0
-    m_DataSize: 128
-    _typelessdata: 3455c744b81e853d9f965fc59f2eb739feff7f3f7945da390000000000000000a4dac644b81e853d31635fc5992eb739fcff7f3f7b45da390000203f000000008628c244cccccc3de1ab62c5992eb739fcff7f3f7b45da390000000038cb0041f6adc144cccccc3d737862c5972eb739feff7f3f8045da390000203f38cb0041
+    m_DataSize: 320
+    _typelessdata: 0000af430000904100981ec5000000000000803f0000000000000000000000000000af430000904100e81ec5000000000000803f000000000000203f0000000089b4e34400009041d5a11ec5000000000000803f000000000000000000c03743774be344000090412bde1ec5000000000000803f000000000000203f00c0374389b4e344000090412bde6ec500000000ffff7f3f000000000000000000e0ab43774be34400009041d5a16ec500000000ffff7f3f000000000000203f00e0ab43dc2dae43000090412bde6ec5000000000000803f000000000000000000e0034424d2af4300009041d5a16ec5000000000000803f000000000000203f00e0034400c0ad430000904100c01ec5000000000000803f000000000000000000e02b440040b0430000904100c01ec5000000000000803f000000000000203f00e02b44
   m_CompressedMesh:
     m_Vertices:
       m_NumItems: 0
@@ -151,8 +151,8 @@ Mesh:
       m_BitSize: 0
     m_UVInfo: 0
   m_LocalAABB:
-    m_Center: {x: 1572.0494, y: 0.082499996, z: -3600.471}
-    m_Extent: {x: 22.61316, y: 0.017499998, z: 26.271484}
+    m_Center: {x: 1084.5708, y: 18, z: -3179.6929}
+    m_Extent: {x: 737.07086, y: 0, z: 642.19275}
   m_MeshUsageFlags: 0
   m_CookingOptions: 30
   m_BakedConvexCollisionMesh: 

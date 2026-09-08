@@ -1,5 +1,19 @@
 # 다음 Codex 작업을 위한 인계 — 2026-09-08
 
+## 최신 작업: NPC·고층 건물·택시·접촉 보정
+
+이전 전체 변경사항을 `2dc22dce`로 main에 커밋·푸시했다. 새 변경사항은 작업 트리에 있다. 세부 구현·조작·범위·건축 참고는 `Documentation/CityContinuity/README.md`.
+
+`NpcGroundSupport`, 사망 전 스프라이트 보관, 남색 Worker/전용 Soldier/교도소 전용 Prisoner, 기존 4방향 도트 스타일 매핑을 적용했다. `HighriseBuilding`/`HighriseInterior`는 424개 고층 타워의 10–30층 진입·승강기·최대 4층 스트리밍·직원·실내 가구를 처리한다. `FacadeGlass`는 타워 커튼월의 파손 위치를 셰이더에 전달하고 E로 해당 층 진입을 제공한다. 열린 시설의 `BreakableGlass`는 실제 개별 판의 충돌을 제거한다. 일반 타워의 큰 충돌체 자체를 파손 구멍 모양으로 다시 생성하는 것은 아니다.
+
+`MultiFloorLift`는 탑승자 이동 중 객실 충돌체를 잠시 제외해 상승 바닥이 캐릭터 내부로 들어가던 문제를 수정했다. `VehicleContactRecovery`는 실제 겹침과 sweep 여유 간격을 모두 처리한다. 최초 네이티브 검증의 차량 후진·승강기 실패를 수정했다. **최종 17개 기능 확인 전부 통과**, `Artifacts/CityContinuity/Final/continuity.json` 및 `Documentation/CityContinuity/essential.json`. 최종 빌드 오류 0/경고 45, `PLAY.cmd` → `Builds/CityContinuity/AFTERSIGNAL.exe`. 빌드 로그는 `Artifacts/continuity-final-build.log`.
+
+`CityTaxiService`/`TaxiNetwork`: 공중 무인 24대, 수상 32대. 전용 Blender 모델과 지정 노선·정차 탑승(120/35 C), F 하차·C 객실 시점. 공중 택시에는 운전자와 무장이 없다. `OceanLife.Surface`는 기존 해안 프리팹에 빠진 수면을 복구한다. 노바 도로와 겹치던 공공시설을 옮기고 지도 좌표도 변경했다. `BuildContinuityDistricts`로 MobilityDistricts와 NeonHarbor를 재생성했다.
+
+서하 3D는 **미완료·미적용**. MPFB/MakeHuman CC0 코어 인체로 새 시안과 163개 뼈대·가중치를 만들고 5차례 검수했지만 머리·측면·팔/손·의상 품질이 부족하다. `Artifacts/CharacterLab/Seo-Trial.blend`와 렌더링, `Tools/CityContinuity` 생성기를 남겼다. 게임에 적용하거나 전체 3D 액션을 완료했다고 보고하지 말 것. MB-Lab/Hunyuan3D 자산은 사용하지 않았다.
+
+미사용 생성 메시 1,923개(507,980,278바이트)의 일괄 삭제는 자동 승인 검토가 `blocked by policy`로 거부하여 파일을 남겼다. `Artifacts/unused-generated-meshes.json`은 읽기 전용 조사 결과다.
+
 ## 최신 작업: 지역 지도·도시 간 여객 교통·미래형 건축
 
 작업 시작 전 전체 변경사항을 `270c1e30`으로 main에 커밋·푸시했다. 아래 후속 작업은 현재 작업 트리에 있으며 아직 커밋하지 않았다. `Documentation/FutureCity/README.md`에 조작·도구·제작 원본을 정리했다.

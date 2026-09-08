@@ -28,6 +28,7 @@ namespace AfterSignal
         {if(camera==Camera.main)ApplyWaterCamera();}
         void Start()
         {
+            EnsureCoastalSurface();
             var rng=new System.Random(3721);
             for(int i=0;i<430;i++)
             {
@@ -77,7 +78,7 @@ namespace AfterSignal
             }
             else if(g.stage==StageId.UrbanCity){if(underwaterFog){RenderSettings.fogMode=landFogMode;underwaterFog=false;}Camera.main.clearFlags=CameraClearFlags.Skybox;}
         }
-        void OnDestroy(){if(GameDirector.Instance&&GameDirector.Instance.Player)ExitWater(GameDirector.Instance.Player);Swimming=false;Oxygen=90;if(waterVeil)Destroy(waterVeil.gameObject);if(waterVeilMaterial)Destroy(waterVeilMaterial);}
+        void OnDestroy(){if(GameDirector.Instance&&GameDirector.Instance.Player)ExitWater(GameDirector.Instance.Player);Swimming=false;Oxygen=90;if(waterVeil)Destroy(waterVeil.gameObject);if(waterVeilMaterial)Destroy(waterVeilMaterial);if(coastalSurface)Destroy(coastalSurface);}
     }
     public sealed class MarineAnimal : MonoBehaviour
     {
