@@ -1,0 +1,3140 @@
+{
+    "buildings": [
+        {
+            "name": "Future Oval / 11",
+            "source": "AfterlightExpansion",
+            "center": {
+                "x": 1030.0,
+                "y": 14.867997169494629,
+                "z": 210.0
+            },
+            "size": {
+                "x": 28.419921875,
+                "y": 29.735998153686525,
+                "z": 34.29997253417969
+            },
+            "movable": true
+        },
+        {
+            "name": "Future Lantern / 13",
+            "source": "AfterlightExpansion",
+            "center": {
+                "x": 1300.0,
+                "y": 23.894994735717775,
+                "z": 246.0
+            },
+            "size": {
+                "x": 33.3201904296875,
+                "y": 47.78999328613281,
+                "z": 34.29997253417969
+            },
+            "movable": true
+        },
+        {
+            "name": "Future TwinGate / 14",
+            "source": "AfterlightExpansion",
+            "center": {
+                "x": 1282.0,
+                "y": 60.002994537353519,
+                "z": -168.0
+            },
+            "size": {
+                "x": 33.3201904296875,
+                "y": 120.0060043334961,
+                "z": 26.46001434326172
+            },
+            "movable": true
+        },
+        {
+            "name": "Future Orbital / 15",
+            "source": "AfterlightExpansion",
+            "center": {
+                "x": 1030.0,
+                "y": 15.398996353149414,
+                "z": -42.0
+            },
+            "size": {
+                "x": 30.1375732421875,
+                "y": 30.79800033569336,
+                "z": 38.4405517578125
+            },
+            "movable": true
+        },
+        {
+            "name": "Future Helix / 16",
+            "source": "AfterlightExpansion",
+            "center": {
+                "x": 1408.0,
+                "y": 17.193750381469728,
+                "z": 228.0
+            },
+            "size": {
+                "x": 32.32470703125,
+                "y": 50.57249069213867,
+                "z": 51.400665283203128
+            },
+            "movable": true
+        },
+        {
+            "name": "Future Cascade / 17",
+            "source": "AfterlightExpansion",
+            "center": {
+                "x": 1192.0,
+                "y": 32.921993255615237,
+                "z": 210.0
+            },
+            "size": {
+                "x": 23.8726806640625,
+                "y": 65.843994140625,
+                "z": 39.20001220703125
+            },
+            "movable": true
+        },
+        {
+            "name": "Future Prism / 18",
+            "source": "AfterlightExpansion",
+            "center": {
+                "x": 418.0,
+                "y": 34.484188079833987,
+                "z": 480.0
+            },
+            "size": {
+                "x": 33.48138427734375,
+                "y": 69.09162139892578,
+                "z": 34.574920654296878
+            },
+            "movable": true
+        },
+        {
+            "name": "Future Oval / 19",
+            "source": "AfterlightExpansion",
+            "center": {
+                "x": 418.0,
+                "y": 39.82499313354492,
+                "z": 372.0
+            },
+            "size": {
+                "x": 27.439971923828126,
+                "y": 79.64999389648438,
+                "z": 29.4000244140625
+            },
+            "movable": true
+        },
+        {
+            "name": "Future Lantern / 21",
+            "source": "AfterlightExpansion",
+            "center": {
+                "x": 1282.0,
+                "y": 10.61999797821045,
+                "z": -204.0
+            },
+            "size": {
+                "x": 25.97900390625,
+                "y": 21.239999771118165,
+                "z": 27.488632202148439
+            },
+            "movable": true
+        },
+        {
+            "name": "Future TwinGate / 22",
+            "source": "AfterlightExpansion",
+            "center": {
+                "x": 1642.0,
+                "y": 40.88699722290039,
+                "z": -204.0
+            },
+            "size": {
+                "x": 21.56005859375,
+                "y": 81.77400207519531,
+                "z": 35.28001403808594
+            },
+            "movable": true
+        },
+        {
+            "name": "Future Orbital / 23",
+            "source": "AfterlightExpansion",
+            "center": {
+                "x": 1768.0,
+                "y": 16.460996627807618,
+                "z": -186.0
+            },
+            "size": {
+                "x": 26.4599609375,
+                "y": 32.9219970703125,
+                "z": 23.519981384277345
+            },
+            "movable": true
+        },
+        {
+            "name": "Future Helix / 24",
+            "source": "AfterlightExpansion",
+            "center": {
+                "x": 1894.0,
+                "y": 21.492189407348634,
+                "z": -204.0
+            },
+            "size": {
+                "x": 41.617431640625,
+                "y": 63.215614318847659,
+                "z": 40.105712890625
+            },
+            "movable": true
+        },
+        {
+            "name": "Future Cascade / 25",
+            "source": "AfterlightExpansion",
+            "center": {
+                "x": 1102.0,
+                "y": 36.63899612426758,
+                "z": -42.0
+            },
+            "size": {
+                "x": 21.88330078125,
+                "y": 73.27799987792969,
+                "z": 35.84000015258789
+            },
+            "movable": true
+        },
+        {
+            "name": "Future Prism / 26",
+            "source": "AfterlightExpansion",
+            "center": {
+                "x": 1678.0,
+                "y": 32.362083435058597,
+                "z": -186.0
+            },
+            "size": {
+                "x": 21.984375,
+                "y": 64.83982849121094,
+                "z": 27.440000534057618
+            },
+            "movable": true
+        },
+        {
+            "name": "Future Oval / 27",
+            "source": "AfterlightExpansion",
+            "center": {
+                "x": 1804.0,
+                "y": 42.4799919128418,
+                "z": -204.0
+            },
+            "size": {
+                "x": 32.40185546875,
+                "y": 84.95999145507813,
+                "z": 36.176055908203128
+            },
+            "movable": true
+        },
+        {
+            "name": "Future Cantilever / 28",
+            "source": "AfterlightExpansion",
+            "center": {
+                "x": 2074.0,
+                "y": 18.05399513244629,
+                "z": -24.0
+            },
+            "size": {
+                "x": 31.8302001953125,
+                "y": 36.107994079589847,
+                "z": 36.086402893066409
+            },
+            "movable": true
+        },
+        {
+            "name": "Future Lantern / 29",
+            "source": "AfterlightExpansion",
+            "center": {
+                "x": 1084.0,
+                "y": 28.142995834350587,
+                "z": 48.0
+            },
+            "size": {
+                "x": 21.56005859375,
+                "y": 56.2859992980957,
+                "z": 23.519996643066408
+            },
+            "movable": true
+        },
+        {
+            "name": "Future TwinGate / 30",
+            "source": "AfterlightExpansion",
+            "center": {
+                "x": 1408.0,
+                "y": 38.231990814208987,
+                "z": 138.0
+            },
+            "size": {
+                "x": 31.5869140625,
+                "y": 76.4639892578125,
+                "z": 32.34171676635742
+            },
+            "movable": true
+        },
+        {
+            "name": "Future Orbital / 31",
+            "source": "AfterlightExpansion",
+            "center": {
+                "x": 1678.0,
+                "y": 23.894994735717775,
+                "z": 174.0
+            },
+            "size": {
+                "x": 21.56005859375,
+                "y": 47.78999710083008,
+                "z": 35.279998779296878
+            },
+            "movable": true
+        },
+        {
+            "name": "Future Helix / 32",
+            "source": "AfterlightExpansion",
+            "center": {
+                "x": 1840.0,
+                "y": 27.510000228881837,
+                "z": 156.0
+            },
+            "size": {
+                "x": 30.095458984375,
+                "y": 80.91598510742188,
+                "z": 28.688751220703126
+            },
+            "movable": true
+        },
+        {
+            "name": "Future Cascade / 33",
+            "source": "AfterlightExpansion",
+            "center": {
+                "x": 1984.0,
+                "y": 44.072994232177737,
+                "z": 174.0
+            },
+            "size": {
+                "x": 37.6551513671875,
+                "y": 88.14599609375,
+                "z": 37.292625427246097
+            },
+            "movable": true
+        },
+        {
+            "name": "Future Cantilever / 36",
+            "source": "AfterlightExpansion",
+            "center": {
+                "x": 1174.0,
+                "y": 11.15099811553955,
+                "z": 480.0
+            },
+            "size": {
+                "x": 26.4068603515625,
+                "y": 22.302000045776368,
+                "z": 28.081756591796876
+            },
+            "movable": true
+        },
+        {
+            "name": "Future Lantern / 37",
+            "source": "AfterlightExpansion",
+            "center": {
+                "x": 1318.0,
+                "y": 21.2399959564209,
+                "z": 210.0
+            },
+            "size": {
+                "x": 26.4599609375,
+                "y": 42.47999572753906,
+                "z": 27.439971923828126
+            },
+            "movable": true
+        },
+        {
+            "name": "Future TwinGate / 38",
+            "source": "AfterlightExpansion",
+            "center": {
+                "x": 1462.0,
+                "y": 31.328996658325197,
+                "z": 138.0
+            },
+            "size": {
+                "x": 31.3599853515625,
+                "y": 62.65800094604492,
+                "z": 31.3599853515625
+            },
+            "movable": true
+        },
+        {
+            "name": "Future Orbital / 39",
+            "source": "AfterlightExpansion",
+            "center": {
+                "x": 1696.0,
+                "y": 41.41799545288086,
+                "z": 318.0
+            },
+            "size": {
+                "x": 28.4241943359375,
+                "y": 82.83599853515625,
+                "z": 38.991607666015628
+            },
+            "movable": true
+        },
+        {
+            "name": "정비 공방 / 부품상가 / walk-in multistorey",
+            "source": "MobilityDistricts",
+            "center": {
+                "x": 166.0,
+                "y": 4.599999904632568,
+                "z": 606.0
+            },
+            "size": {
+                "x": 32.60003662109375,
+                "y": 9.899999618530274,
+                "z": 31.25
+            },
+            "movable": true
+        },
+        {
+            "name": "해양 연구 진료소 / walk-in multistorey",
+            "source": "MobilityDistricts",
+            "center": {
+                "x": 112.0,
+                "y": 6.6999993324279789,
+                "z": 606.0
+            },
+            "size": {
+                "x": 32.60003662109375,
+                "y": 14.099998474121094,
+                "z": 31.25
+            },
+            "movable": true
+        },
+        {
+            "name": "오로라 공동주택 / walk-in multistorey",
+            "source": "MobilityDistricts",
+            "center": {
+                "x": 364.0,
+                "y": 4.599999904632568,
+                "z": 606.0
+            },
+            "size": {
+                "x": 32.5999755859375,
+                "y": 9.899999618530274,
+                "z": 31.25
+            },
+            "movable": true
+        },
+        {
+            "name": "COAST CAFE / 베이커리 / walk-in multistorey",
+            "source": "MobilityDistricts",
+            "center": {
+                "x": 1336.0,
+                "y": 8.799999237060547,
+                "z": -168.0
+            },
+            "size": {
+                "x": 32.60009765625,
+                "y": 18.299999237060548,
+                "z": 31.25
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 4 / Cantilever",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1750.0,
+                "y": 104.07598114013672,
+                "z": -3356.0
+            },
+            "size": {
+                "x": 37.798828125,
+                "y": 208.15199279785157,
+                "z": 42.1005859375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 5 / Lantern",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 760.0,
+                "y": 62.657989501953128,
+                "z": -3662.0
+            },
+            "size": {
+                "x": 37.239990234375,
+                "y": 125.31599426269531,
+                "z": 41.16015625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 8 / Helix",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 670.0,
+                "y": 43.37803268432617,
+                "z": -2996.0
+            },
+            "size": {
+                "x": 52.4814453125,
+                "y": 95.68820190429688,
+                "z": 49.1259765625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 9 / Cascade",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 670.0,
+                "y": 32.390995025634769,
+                "z": -3104.0
+            },
+            "size": {
+                "x": 41.54669189453125,
+                "y": 64.78199768066406,
+                "z": 38.11962890625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 10 / Prism",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 958.0,
+                "y": 12.732622146606446,
+                "z": -3140.0
+            },
+            "size": {
+                "x": 32.9766845703125,
+                "y": 25.51074981689453,
+                "z": 27.43994140625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 11 / Oval",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 958.0,
+                "y": 110.9789810180664,
+                "z": -3014.0
+            },
+            "size": {
+                "x": 29.40008544921875,
+                "y": 221.95799255371095,
+                "z": 25.47998046875
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 12 / Cantilever",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 958.0,
+                "y": 64.25098419189453,
+                "z": -2960.0
+            },
+            "size": {
+                "x": 34.1204833984375,
+                "y": 128.50198364257813,
+                "z": 38.14697265625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 14 / TwinGate",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 310.0,
+                "y": 29.735994338989259,
+                "z": -2960.0
+            },
+            "size": {
+                "x": 36.260040283203128,
+                "y": 59.47199630737305,
+                "z": 25.480224609375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 15 / Orbital",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 310.0,
+                "y": 19.646997451782228,
+                "z": -2996.0
+            },
+            "size": {
+                "x": 37.542205810546878,
+                "y": 39.29399871826172,
+                "z": 34.52294921875
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 16 / Helix",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 634.0,
+                "y": 61.45221710205078,
+                "z": -2942.0
+            },
+            "size": {
+                "x": 46.1201171875,
+                "y": 135.55828857421876,
+                "z": 45.8505859375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 17 / Cascade",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 544.0,
+                "y": 10.619997024536133,
+                "z": -3104.0
+            },
+            "size": {
+                "x": 26.85687255859375,
+                "y": 21.240001678466798,
+                "z": 35.83984375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 18 / Prism",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 508.0,
+                "y": 31.301029205322267,
+                "z": -3086.0
+            },
+            "size": {
+                "x": 28.34893798828125,
+                "y": 62.71392822265625,
+                "z": 27.991943359375
+            },
+            "movable": true
+        },
+        {
+            "name": "NOVA CLINIC / 진료소 / walk-in multistorey",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 724.0,
+                "y": 6.6999993324279789,
+                "z": -3014.0
+            },
+            "size": {
+                "x": 34.5999755859375,
+                "y": 14.099998474121094,
+                "z": 33.25
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 21 / Lantern",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 310.0,
+                "y": 16.460996627807618,
+                "z": -2906.0
+            },
+            "size": {
+                "x": 40.010406494140628,
+                "y": 32.9219970703125,
+                "z": 33.217041015625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 22 / TwinGate",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 310.0,
+                "y": 129.56398010253907,
+                "z": -2852.0
+            },
+            "size": {
+                "x": 33.32000732421875,
+                "y": 259.12799072265627,
+                "z": 29.39990234375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 23 / Orbital",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 472.0,
+                "y": 23.363996505737306,
+                "z": -2762.0
+            },
+            "size": {
+                "x": 25.479949951171876,
+                "y": 46.727996826171878,
+                "z": 32.340087890625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 24 / Helix",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 382.0,
+                "y": 53.70613098144531,
+                "z": -3104.0
+            },
+            "size": {
+                "x": 57.13299560546875,
+                "y": 118.47109985351563,
+                "z": 43.88623046875
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 27 / Oval",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 202.0,
+                "y": 32.390995025634769,
+                "z": -2852.0
+            },
+            "size": {
+                "x": 31.9342041015625,
+                "y": 64.78199768066406,
+                "z": 29.670166015625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 28 / Cantilever",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 382.0,
+                "y": 43.541988372802737,
+                "z": -2708.0
+            },
+            "size": {
+                "x": 28.846343994140626,
+                "y": 87.083984375,
+                "z": 31.07421875
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 29 / Lantern",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 598.0,
+                "y": 16.460996627807618,
+                "z": -2708.0
+            },
+            "size": {
+                "x": 34.300018310546878,
+                "y": 32.9219970703125,
+                "z": 23.52001953125
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 30 / TwinGate",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 688.0,
+                "y": 21.770994186401368,
+                "z": -2816.0
+            },
+            "size": {
+                "x": 33.64764404296875,
+                "y": 43.5419921875,
+                "z": 29.11865234375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 31 / Orbital",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 760.0,
+                "y": 13.805997848510743,
+                "z": -2726.0
+            },
+            "size": {
+                "x": 33.3199462890625,
+                "y": 27.61199951171875,
+                "z": 26.460205078125
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 32 / Helix",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 976.0,
+                "y": 54.73894119262695,
+                "z": -2852.0
+            },
+            "size": {
+                "x": 47.71044921875,
+                "y": 120.74937438964844,
+                "z": 50.76318359375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 37 / Lantern",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 814.0,
+                "y": 28.142995834350587,
+                "z": -2726.0
+            },
+            "size": {
+                "x": 29.39996337890625,
+                "y": 56.2859992980957,
+                "z": 23.52001953125
+            },
+            "movable": true
+        },
+        {
+            "name": "LANTERN / 식당 / walk-in multistorey",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 724.0,
+                "y": 8.799999237060547,
+                "z": -2690.0
+            },
+            "size": {
+                "x": 34.5999755859375,
+                "y": 18.299999237060548,
+                "z": 33.25
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 64 / Helix",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1516.0,
+                "y": 58.353782653808597,
+                "z": -3104.0
+            },
+            "size": {
+                "x": 47.71044921875,
+                "y": 128.72340393066407,
+                "z": 49.1259765625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 65 / Cascade",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1246.0,
+                "y": 18.05399513244629,
+                "z": -3284.0
+            },
+            "size": {
+                "x": 27.8515625,
+                "y": 36.10799789428711,
+                "z": 36.9599609375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 66 / Prism",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1282.0,
+                "y": 107.1662368774414,
+                "z": -3284.0
+            },
+            "size": {
+                "x": 29.571533203125,
+                "y": 214.71548461914063,
+                "z": 33.74365234375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 67 / Oval",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1372.0,
+                "y": 17.52299690246582,
+                "z": -3014.0
+            },
+            "size": {
+                "x": 33.320068359375,
+                "y": 35.045997619628909,
+                "z": 24.5
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 68 / Cantilever",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1426.0,
+                "y": 37.700992584228519,
+                "z": -3014.0
+            },
+            "size": {
+                "x": 36.8038330078125,
+                "y": 75.40199279785156,
+                "z": 30.07177734375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 69 / Lantern",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1480.0,
+                "y": 28.673994064331056,
+                "z": -2996.0
+            },
+            "size": {
+                "x": 31.2393798828125,
+                "y": 57.34799575805664,
+                "z": 35.013671875
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 70 / TwinGate",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1570.0,
+                "y": 14.336997032165528,
+                "z": -3086.0
+            },
+            "size": {
+                "x": 25.47998046875,
+                "y": 28.67399787902832,
+                "z": 26.4599609375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 79 / Orbital",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1318.0,
+                "y": 12.743996620178223,
+                "z": -2924.0
+            },
+            "size": {
+                "x": 35.280029296875,
+                "y": 25.488000869750978,
+                "z": 30.380126953125
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 80 / Helix",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1426.0,
+                "y": 55.25535583496094,
+                "z": -2744.0
+            },
+            "size": {
+                "x": 49.30078125,
+                "y": 121.88853454589844,
+                "z": 52.400390625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 81 / Cascade",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 994.0,
+                "y": 24.956995010375978,
+                "z": -2906.0
+            },
+            "size": {
+                "x": 30.5697021484375,
+                "y": 49.913997650146487,
+                "z": 38.9248046875
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 83 / Oval",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1570.0,
+                "y": 12.212998390197754,
+                "z": -2942.0
+            },
+            "size": {
+                "x": 24.5,
+                "y": 24.426000595092775,
+                "z": 31.35986328125
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 84 / Cantilever",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1660.0,
+                "y": 54.692989349365237,
+                "z": -3086.0
+            },
+            "size": {
+                "x": 40.4453125,
+                "y": 109.38599395751953,
+                "z": 32.93798828125
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 85 / Lantern",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1750.0,
+                "y": 32.921993255615237,
+                "z": -3086.0
+            },
+            "size": {
+                "x": 33.320068359375,
+                "y": 65.843994140625,
+                "z": 32.340087890625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 86 / TwinGate",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1822.0,
+                "y": 30.266996383666993,
+                "z": -3086.0
+            },
+            "size": {
+                "x": 33.3201904296875,
+                "y": 60.534000396728519,
+                "z": 32.340087890625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 87 / Orbital",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1876.0,
+                "y": 24.956995010375978,
+                "z": -3086.0
+            },
+            "size": {
+                "x": 39.0517578125,
+                "y": 49.91399383544922,
+                "z": 33.012939453125
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 89 / Cascade",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 994.0,
+                "y": 20.177995681762697,
+                "z": -2798.0
+            },
+            "size": {
+                "x": 36.8038330078125,
+                "y": 40.35599899291992,
+                "z": 36.9599609375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 90 / Prism",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 994.0,
+                "y": 30.239978790283204,
+                "z": -2744.0
+            },
+            "size": {
+                "x": 38.164794921875,
+                "y": 60.588035583496097,
+                "z": 34.655029296875
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 91 / Oval",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1318.0,
+                "y": 24.425996780395509,
+                "z": -2888.0
+            },
+            "size": {
+                "x": 29.4000244140625,
+                "y": 48.85199737548828,
+                "z": 23.519775390625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 92 / Cantilever",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1300.0,
+                "y": 38.762996673583987,
+                "z": -2816.0
+            },
+            "size": {
+                "x": 36.803955078125,
+                "y": 77.5260009765625,
+                "z": 24.057861328125
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 94 / TwinGate",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1570.0,
+                "y": 34.51499557495117,
+                "z": -2870.0
+            },
+            "size": {
+                "x": 36.260009765625,
+                "y": 69.02999877929688,
+                "z": 28.419677734375
+            },
+            "movable": true
+        },
+        {
+            "name": "VIOLET / 음악 바 / walk-in multistorey",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1606.0,
+                "y": 8.799999237060547,
+                "z": -3086.0
+            },
+            "size": {
+                "x": 34.60009765625,
+                "y": 18.299999237060548,
+                "z": 33.25
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 96 / Helix",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1858.0,
+                "y": 64.03423309326172,
+                "z": -3140.0
+            },
+            "size": {
+                "x": 41.88720703125,
+                "y": 141.25399780273438,
+                "z": 48.05078125
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 97 / Cascade",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1876.0,
+                "y": 34.51499557495117,
+                "z": -2906.0
+            },
+            "size": {
+                "x": 28.84619140625,
+                "y": 69.02999877929688,
+                "z": 28.000244140625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 98 / Prism",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 2020.0,
+                "y": 29.178926467895509,
+                "z": -2924.0
+            },
+            "size": {
+                "x": 31.977294921875,
+                "y": 58.46213912963867,
+                "z": 32.340087890625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 100 / Cantilever",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 994.0,
+                "y": 53.09999084472656,
+                "z": -2960.0
+            },
+            "size": {
+                "x": 24.8673095703125,
+                "y": 106.19999694824219,
+                "z": 29.06982421875
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 101 / Lantern",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 994.0,
+                "y": 16.99199867248535,
+                "z": -2690.0
+            },
+            "size": {
+                "x": 36.2601318359375,
+                "y": 33.98400115966797,
+                "z": 28.419677734375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 102 / TwinGate",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1480.0,
+                "y": 29.735994338989259,
+                "z": -2744.0
+            },
+            "size": {
+                "x": 36.58349609375,
+                "y": 59.47199630737305,
+                "z": 34.31884765625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 104 / Helix",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1534.0,
+                "y": 37.697574615478519,
+                "z": -2744.0
+            },
+            "size": {
+                "x": 47.71044921875,
+                "y": 83.1575927734375,
+                "z": 44.212890625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 105 / Cascade",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 2020.0,
+                "y": 28.673994064331056,
+                "z": -2852.0
+            },
+            "size": {
+                "x": 31.8170166015625,
+                "y": 57.34799575805664,
+                "z": 36.051513671875
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 106 / Prism",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1876.0,
+                "y": 16.446304321289064,
+                "z": -2870.0
+            },
+            "size": {
+                "x": 27.980224609375,
+                "y": 32.951385498046878,
+                "z": 24.500244140625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 113 / Cascade",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1876.0,
+                "y": 11.681997299194336,
+                "z": -2798.0
+            },
+            "size": {
+                "x": 24.8673095703125,
+                "y": 23.364002227783204,
+                "z": 35.83984375
+            },
+            "movable": true
+        },
+        {
+            "name": "CANAL HOUSE / 주거동 / walk-in multistorey",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1858.0,
+                "y": 4.599999904632568,
+                "z": -2582.0
+            },
+            "size": {
+                "x": 34.60009765625,
+                "y": 9.899999618530274,
+                "z": 33.25
+            },
+            "movable": true
+        },
+        {
+            "name": "HORIZON / 기술 공방 / walk-in multistorey",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 796.0,
+                "y": 4.599999904632568,
+                "z": -4004.0
+            },
+            "size": {
+                "x": 34.599853515625,
+                "y": 9.899999618530274,
+                "z": 33.25
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 182 / TwinGate",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 814.0,
+                "y": 26.549997329711915,
+                "z": -3824.0
+            },
+            "size": {
+                "x": 28.4200439453125,
+                "y": 53.10000228881836,
+                "z": 26.4599609375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 183 / Orbital",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 814.0,
+                "y": 23.363996505737306,
+                "z": -3788.0
+            },
+            "size": {
+                "x": 33.70770263671875,
+                "y": 46.727996826171878,
+                "z": 33.707763671875
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 187 / Oval",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 814.0,
+                "y": 96.64197540283203,
+                "z": -3752.0
+            },
+            "size": {
+                "x": 23.52008056640625,
+                "y": 193.28396606445313,
+                "z": 24.499755859375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 188 / Cantilever",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 814.0,
+                "y": 50.97599411010742,
+                "z": -3716.0
+            },
+            "size": {
+                "x": 36.803955078125,
+                "y": 101.9520034790039,
+                "z": 30.071533203125
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 189 / Lantern",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 814.0,
+                "y": 24.425996780395509,
+                "z": -3662.0
+            },
+            "size": {
+                "x": 36.78729248046875,
+                "y": 48.85199737548828,
+                "z": 35.278076171875
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 192 / Helix",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 724.0,
+                "y": 66.099853515625,
+                "z": -3734.0
+            },
+            "size": {
+                "x": 49.251708984375,
+                "y": 145.81057739257813,
+                "z": 41.96435546875
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 193 / Cascade",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 670.0,
+                "y": 12.212997436523438,
+                "z": -3734.0
+            },
+            "size": {
+                "x": 26.85693359375,
+                "y": 24.426002502441408,
+                "z": 32.480224609375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 194 / Prism",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 760.0,
+                "y": 25.995769500732423,
+                "z": -3914.0
+            },
+            "size": {
+                "x": 23.98297119140625,
+                "y": 52.084449768066409,
+                "z": 27.439697265625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 197 / Lantern",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 670.0,
+                "y": 15.398996353149414,
+                "z": -3626.0
+            },
+            "size": {
+                "x": 26.4599609375,
+                "y": 30.79800033569336,
+                "z": 31.360107421875
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 198 / TwinGate",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 634.0,
+                "y": 83.89798736572266,
+                "z": -3734.0
+            },
+            "size": {
+                "x": 30.42449951171875,
+                "y": 167.79598999023438,
+                "z": 31.17919921875
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 199 / Orbital",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 670.0,
+                "y": 22.3019962310791,
+                "z": -3770.0
+            },
+            "size": {
+                "x": 34.29998779296875,
+                "y": 44.60399627685547,
+                "z": 27.440185546875
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 204 / Cantilever",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 616.0,
+                "y": 65.31299591064453,
+                "z": -3698.0
+            },
+            "size": {
+                "x": 34.1907958984375,
+                "y": 130.62600708007813,
+                "z": 29.736572265625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 205 / Lantern",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 688.0,
+                "y": 27.080995559692384,
+                "z": -3464.0
+            },
+            "size": {
+                "x": 24.5,
+                "y": 54.1619987487793,
+                "z": 30.3798828125
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 206 / TwinGate",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 562.0,
+                "y": 30.266996383666993,
+                "z": -3662.0
+            },
+            "size": {
+                "x": 35.280029296875,
+                "y": 60.534000396728519,
+                "z": 31.35986328125
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 207 / Orbital",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1282.0,
+                "y": 11.681998252868653,
+                "z": -3662.0
+            },
+            "size": {
+                "x": 34.46270751953125,
+                "y": 23.36400032043457,
+                "z": 32.953125
+            },
+            "movable": true
+        },
+        {
+            "name": "VIOLET / 음악 바 / walk-in multistorey",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 346.0,
+                "y": 8.799999237060547,
+                "z": -3500.0
+            },
+            "size": {
+                "x": 34.5999755859375,
+                "y": 18.299999237060548,
+                "z": 33.25
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 212 / Cantilever",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 580.0,
+                "y": 55.7549934387207,
+                "z": -3446.0
+            },
+            "size": {
+                "x": 34.814453125,
+                "y": 111.51000213623047,
+                "z": 31.07421875
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 213 / Lantern",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 598.0,
+                "y": 28.673994064331056,
+                "z": -3734.0
+            },
+            "size": {
+                "x": 29.26220703125,
+                "y": 57.34799575805664,
+                "z": 30.017333984375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 214 / TwinGate",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 634.0,
+                "y": 29.20499610900879,
+                "z": -3608.0
+            },
+            "size": {
+                "x": 27.43994140625,
+                "y": 58.40999984741211,
+                "z": 26.460205078125
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 215 / Orbital",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 688.0,
+                "y": 26.01899528503418,
+                "z": -3284.0
+            },
+            "size": {
+                "x": 23.52001953125,
+                "y": 52.03799819946289,
+                "z": 31.35986328125
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 216 / Helix",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1156.0,
+                "y": 65.06704711914063,
+                "z": -3968.0
+            },
+            "size": {
+                "x": 52.98291015625,
+                "y": 143.53228759765626,
+                "z": 51.7021484375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 217 / Cascade",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 508.0,
+                "y": 26.01899528503418,
+                "z": -3698.0
+            },
+            "size": {
+                "x": 32.8250732421875,
+                "y": 52.03799819946289,
+                "z": 36.9599609375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 218 / Prism",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 598.0,
+                "y": 27.056821823120118,
+                "z": -3608.0
+            },
+            "size": {
+                "x": 24.98236083984375,
+                "y": 54.21034622192383,
+                "z": 23.519775390625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 220 / Cantilever",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 616.0,
+                "y": 120.0059814453125,
+                "z": -3302.0
+            },
+            "size": {
+                "x": 30.83575439453125,
+                "y": 240.01199340820313,
+                "z": 28.067138671875
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 221 / Lantern",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 562.0,
+                "y": 32.921993255615237,
+                "z": -3698.0
+            },
+            "size": {
+                "x": 33.3199462890625,
+                "y": 65.843994140625,
+                "z": 24.5
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 222 / TwinGate",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 562.0,
+                "y": 29.735994338989259,
+                "z": -3302.0
+            },
+            "size": {
+                "x": 39.399169921875,
+                "y": 59.47199630737305,
+                "z": 30.34130859375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 223 / Orbital",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 652.0,
+                "y": 24.956995010375978,
+                "z": -3284.0
+            },
+            "size": {
+                "x": 24.5,
+                "y": 49.91399383544922,
+                "z": 23.52001953125
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 224 / Helix",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1390.0,
+                "y": 63.001426696777347,
+                "z": -3716.0
+            },
+            "size": {
+                "x": 49.30078125,
+                "y": 138.9757080078125,
+                "z": 45.8505859375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 226 / Prism",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 292.0,
+                "y": 31.83155632019043,
+                "z": -3446.0
+            },
+            "size": {
+                "x": 28.9794921875,
+                "y": 63.776878356933597,
+                "z": 31.35986328125
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 227 / Oval",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 454.0,
+                "y": 13.805997848510743,
+                "z": -3302.0
+            },
+            "size": {
+                "x": 25.480010986328126,
+                "y": 27.61199951171875,
+                "z": 27.439697265625
+            },
+            "movable": true
+        },
+        {
+            "name": "CANAL HOUSE / 주거동 / walk-in multistorey",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 490.0,
+                "y": 4.599999904632568,
+                "z": -3284.0
+            },
+            "size": {
+                "x": 34.5999755859375,
+                "y": 9.899999618530274,
+                "z": 33.25
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 229 / Lantern",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 418.0,
+                "y": 25.48799705505371,
+                "z": -3302.0
+            },
+            "size": {
+                "x": 35.280029296875,
+                "y": 50.97599792480469,
+                "z": 24.5
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 230 / TwinGate",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 364.0,
+                "y": 19.646997451782228,
+                "z": -3284.0
+            },
+            "size": {
+                "x": 34.300048828125,
+                "y": 39.29399871826172,
+                "z": 31.35986328125
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 231 / Orbital",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 778.0,
+                "y": 129.56398010253907,
+                "z": -3014.0
+            },
+            "size": {
+                "x": 28.50732421875,
+                "y": 259.12799072265627,
+                "z": 30.772216796875
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 232 / Helix",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 994.0,
+                "y": 40.279605865478519,
+                "z": -4004.0
+            },
+            "size": {
+                "x": 41.34912109375,
+                "y": 88.85333251953125,
+                "z": 42.57568359375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 233 / Cascade",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1354.0,
+                "y": 15.929996490478516,
+                "z": -3518.0
+            },
+            "size": {
+                "x": 34.814453125,
+                "y": 31.860000610351564,
+                "z": 31.35986328125
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 241 / Cascade",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 454.0,
+                "y": 32.921993255615237,
+                "z": -3104.0
+            },
+            "size": {
+                "x": 33.81982421875,
+                "y": 65.843994140625,
+                "z": 28.000244140625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 242 / Prism",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 994.0,
+                "y": 117.7767562866211,
+                "z": -3014.0
+            },
+            "size": {
+                "x": 26.98089599609375,
+                "y": 235.9744415283203,
+                "z": 28.419677734375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 243 / Oval",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 310.0,
+                "y": 16.460996627807618,
+                "z": -3284.0
+            },
+            "size": {
+                "x": 33.56414794921875,
+                "y": 32.9219970703125,
+                "z": 37.338134765625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 244 / Cantilever",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 328.0,
+                "y": 43.010990142822269,
+                "z": -3086.0
+            },
+            "size": {
+                "x": 36.803955078125,
+                "y": 86.02198791503906,
+                "z": 33.0791015625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 245 / Lantern",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 886.0,
+                "y": 11.15099811553955,
+                "z": -2960.0
+            },
+            "size": {
+                "x": 29.4000244140625,
+                "y": 22.302000045776368,
+                "z": 27.440185546875
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 248 / Helix",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1210.0,
+                "y": 43.89443588256836,
+                "z": -3968.0
+            },
+            "size": {
+                "x": 42.939453125,
+                "y": 96.82733154296875,
+                "z": 54.0380859375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 249 / Cascade",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1372.0,
+                "y": 31.859994888305665,
+                "z": -4040.0
+            },
+            "size": {
+                "x": 40.2996826171875,
+                "y": 63.71999740600586,
+                "z": 40.992919921875
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 250 / Prism",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1318.0,
+                "y": 11.141044616699219,
+                "z": -4040.0
+            },
+            "size": {
+                "x": 28.9796142578125,
+                "y": 22.32190704345703,
+                "z": 28.419921875
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 251 / Oval",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1426.0,
+                "y": 22.3019962310791,
+                "z": -4040.0
+            },
+            "size": {
+                "x": 25.47998046875,
+                "y": 44.60399627685547,
+                "z": 25.480224609375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 254 / TwinGate",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1210.0,
+                "y": 21.770994186401368,
+                "z": -4058.0
+            },
+            "size": {
+                "x": 36.260009765625,
+                "y": 43.5419921875,
+                "z": 29.399658203125
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 255 / Orbital",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1462.0,
+                "y": 30.26699447631836,
+                "z": -4040.0
+            },
+            "size": {
+                "x": 31.1795654296875,
+                "y": 60.53399658203125,
+                "z": 30.42431640625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 256 / Helix",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1714.0,
+                "y": 42.86162567138672,
+                "z": -3914.0
+            },
+            "size": {
+                "x": 49.30078125,
+                "y": 94.54904174804688,
+                "z": 52.400390625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 257 / Cascade",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1516.0,
+                "y": 28.673994064331056,
+                "z": -4040.0
+            },
+            "size": {
+                "x": 35.80908203125,
+                "y": 57.34799575805664,
+                "z": 33.599853515625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 258 / Prism",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1570.0,
+                "y": 26.526296615600587,
+                "z": -4040.0
+            },
+            "size": {
+                "x": 38.97998046875,
+                "y": 53.14739990234375,
+                "z": 38.48974609375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 259 / Oval",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1696.0,
+                "y": 33.9839973449707,
+                "z": -3968.0
+            },
+            "size": {
+                "x": 36.260009765625,
+                "y": 67.96800231933594,
+                "z": 29.399658203125
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 260 / Cantilever",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1696.0,
+                "y": 45.13499069213867,
+                "z": -3806.0
+            },
+            "size": {
+                "x": 26.85693359375,
+                "y": 90.26998901367188,
+                "z": 24.0576171875
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 263 / Orbital",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1444.0,
+                "y": 16.460996627807618,
+                "z": -3716.0
+            },
+            "size": {
+                "x": 25.47998046875,
+                "y": 32.9219970703125,
+                "z": 28.419921875
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 264 / Helix",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1588.0,
+                "y": 107.9286880493164,
+                "z": -3572.0
+            },
+            "size": {
+                "x": 55.7841796875,
+                "y": 238.08135986328126,
+                "z": 47.02587890625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 265 / Cascade",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1480.0,
+                "y": 23.894994735717775,
+                "z": -3716.0
+            },
+            "size": {
+                "x": 33.81982421875,
+                "y": 47.78999710083008,
+                "z": 31.360107421875
+            },
+            "movable": true
+        },
+        {
+            "name": "LANTERN / 식당 / walk-in multistorey",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1534.0,
+                "y": 8.799999237060547,
+                "z": -3680.0
+            },
+            "size": {
+                "x": 34.60009765625,
+                "y": 18.299999237060548,
+                "z": 33.25
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 267 / Oval",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1624.0,
+                "y": 21.2399959564209,
+                "z": -4040.0
+            },
+            "size": {
+                "x": 35.277587890625,
+                "y": 42.47999572753906,
+                "z": 36.787109375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 268 / Cantilever",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1750.0,
+                "y": 62.12698745727539,
+                "z": -3860.0
+            },
+            "size": {
+                "x": 24.867431640625,
+                "y": 124.25399017333985,
+                "z": 31.07421875
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 273 / Cascade",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1534.0,
+                "y": 28.142995834350587,
+                "z": -3536.0
+            },
+            "size": {
+                "x": 40.2996826171875,
+                "y": 56.2859992980957,
+                "z": 40.992919921875
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 274 / Prism",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1642.0,
+                "y": 20.159984588623048,
+                "z": -3572.0
+            },
+            "size": {
+                "x": 33.97607421875,
+                "y": 40.39202117919922,
+                "z": 32.33984375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 275 / Oval",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1696.0,
+                "y": 129.56398010253907,
+                "z": -4004.0
+            },
+            "size": {
+                "x": 35.280029296875,
+                "y": 259.12799072265627,
+                "z": 30.3798828125
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 276 / Cantilever",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1588.0,
+                "y": 47.25899124145508,
+                "z": -3716.0
+            },
+            "size": {
+                "x": 35.163818359375,
+                "y": 94.51799011230469,
+                "z": 29.94287109375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 279 / Orbital",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 994.0,
+                "y": 25.48799705505371,
+                "z": -4058.0
+            },
+            "size": {
+                "x": 30.4844970703125,
+                "y": 50.97599792480469,
+                "z": 35.7685546875
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 280 / Helix",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1750.0,
+                "y": 39.246788024902347,
+                "z": -3986.0
+            },
+            "size": {
+                "x": 42.939453125,
+                "y": 86.57502746582031,
+                "z": 52.400390625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 281 / Cascade",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1336.0,
+                "y": 12.212997436523438,
+                "z": -3572.0
+            },
+            "size": {
+                "x": 25.8623046875,
+                "y": 24.426002502441408,
+                "z": 34.72021484375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 282 / Prism",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1678.0,
+                "y": 21.751562118530275,
+                "z": -4058.0
+            },
+            "size": {
+                "x": 42.482177734375,
+                "y": 43.58086395263672,
+                "z": 37.4033203125
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 283 / Oval",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1714.0,
+                "y": 16.460996627807618,
+                "z": -3698.0
+            },
+            "size": {
+                "x": 31.3602294921875,
+                "y": 32.9219970703125,
+                "z": 24.5
+            },
+            "movable": true
+        },
+        {
+            "name": "HORIZON / 기술 공방 / walk-in multistorey",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1462.0,
+                "y": 4.599999904632568,
+                "z": -3446.0
+            },
+            "size": {
+                "x": 34.60009765625,
+                "y": 9.899999618530274,
+                "z": 33.25
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 290 / Prism",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1156.0,
+                "y": 13.793673515319825,
+                "z": -4058.0
+            },
+            "size": {
+                "x": 28.9796142578125,
+                "y": 27.636646270751954,
+                "z": 32.33984375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 291 / Oval",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 940.0,
+                "y": 11.681998252868653,
+                "z": -4058.0
+            },
+            "size": {
+                "x": 40.3575439453125,
+                "y": 23.36400032043457,
+                "z": 30.544921875
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 292 / Cantilever",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1480.0,
+                "y": 64.25098419189453,
+                "z": -3284.0
+            },
+            "size": {
+                "x": 25.8623046875,
+                "y": 128.50198364257813,
+                "z": 32.07666015625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 295 / Orbital",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1804.0,
+                "y": 23.894994735717775,
+                "z": -3698.0
+            },
+            "size": {
+                "x": 34.300048828125,
+                "y": 47.78999328613281,
+                "z": 26.460205078125
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 296 / Helix",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1822.0,
+                "y": 48.54208755493164,
+                "z": -3986.0
+            },
+            "size": {
+                "x": 58.8427734375,
+                "y": 107.07965087890625,
+                "z": 40.9375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 297 / Cascade",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 2020.0,
+                "y": 87.08397674560547,
+                "z": -3680.0
+            },
+            "size": {
+                "x": 33.7216796875,
+                "y": 174.16796875,
+                "z": 40.640625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 298 / Prism",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 2020.0,
+                "y": 31.83155632019043,
+                "z": -3626.0
+            },
+            "size": {
+                "x": 28.9794921875,
+                "y": 63.776878356933597,
+                "z": 28.419677734375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 299 / Oval",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 2020.0,
+                "y": 23.363996505737306,
+                "z": -3734.0
+            },
+            "size": {
+                "x": 24.5001220703125,
+                "y": 46.727996826171878,
+                "z": 32.340087890625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 300 / Cantilever",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 904.0,
+                "y": 64.78199005126953,
+                "z": -3986.0
+            },
+            "size": {
+                "x": 28.35302734375,
+                "y": 129.56399536132813,
+                "z": 28.4951171875
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 301 / Lantern",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1588.0,
+                "y": 21.2399959564209,
+                "z": -3518.0
+            },
+            "size": {
+                "x": 34.300048828125,
+                "y": 42.47999572753906,
+                "z": 26.4599609375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 302 / TwinGate",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1156.0,
+                "y": 32.390995025634769,
+                "z": -3752.0
+            },
+            "size": {
+                "x": 34.3001708984375,
+                "y": 64.78199768066406,
+                "z": 25.480224609375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 306 / Prism",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 2020.0,
+                "y": 33.95366287231445,
+                "z": -3590.0
+            },
+            "size": {
+                "x": 33.6436767578125,
+                "y": 68.02867889404297,
+                "z": 30.9482421875
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 307 / Oval",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1768.0,
+                "y": 29.20499610900879,
+                "z": -3302.0
+            },
+            "size": {
+                "x": 36.260009765625,
+                "y": 58.40999984741211,
+                "z": 32.33984375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 308 / Cantilever",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1912.0,
+                "y": 89.2079849243164,
+                "z": -3698.0
+            },
+            "size": {
+                "x": 23.8726806640625,
+                "y": 178.41598510742188,
+                "z": 26.0625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 309 / Lantern",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1930.0,
+                "y": 16.460996627807618,
+                "z": -3284.0
+            },
+            "size": {
+                "x": 40.9691162109375,
+                "y": 32.9219970703125,
+                "z": 33.4208984375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 310 / TwinGate",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 2020.0,
+                "y": 23.363996505737306,
+                "z": -3554.0
+            },
+            "size": {
+                "x": 28.4197998046875,
+                "y": 46.727996826171878,
+                "z": 28.419677734375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 311 / Orbital",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1516.0,
+                "y": 31.859994888305665,
+                "z": -3284.0
+            },
+            "size": {
+                "x": 29.3997802734375,
+                "y": 63.71999740600586,
+                "z": 32.33984375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 312 / Helix",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1804.0,
+                "y": 63.51782989501953,
+                "z": -4040.0
+            },
+            "size": {
+                "x": 49.56201171875,
+                "y": 140.11485290527345,
+                "z": 46.76953125
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 313 / Cascade",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1552.0,
+                "y": 14.867996215820313,
+                "z": -3284.0
+            },
+            "size": {
+                "x": 23.8726806640625,
+                "y": 29.736000061035158,
+                "z": 35.840087890625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 314 / Prism",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1642.0,
+                "y": 28.64839744567871,
+                "z": -3536.0
+            },
+            "size": {
+                "x": 33.97607421875,
+                "y": 57.39918518066406,
+                "z": 24.500244140625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 316 / Cantilever",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1714.0,
+                "y": 52.56898880004883,
+                "z": -3284.0
+            },
+            "size": {
+                "x": 35.80908203125,
+                "y": 105.13799285888672,
+                "z": 31.07421875
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 317 / Lantern",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1804.0,
+                "y": 18.05399513244629,
+                "z": -3770.0
+            },
+            "size": {
+                "x": 32.340087890625,
+                "y": 36.107994079589847,
+                "z": 26.4599609375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 318 / TwinGate",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 2020.0,
+                "y": 16.99199867248535,
+                "z": -3500.0
+            },
+            "size": {
+                "x": 33.91162109375,
+                "y": 33.98400115966797,
+                "z": 34.66650390625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 319 / Orbital",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 2020.0,
+                "y": 83.36699676513672,
+                "z": -3464.0
+            },
+            "size": {
+                "x": 28.419921875,
+                "y": 166.7340087890625,
+                "z": 26.460205078125
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 320 / Helix",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1894.0,
+                "y": 63.001426696777347,
+                "z": -3986.0
+            },
+            "size": {
+                "x": 42.939453125,
+                "y": 138.9757080078125,
+                "z": 54.0380859375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 321 / Cascade",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1588.0,
+                "y": 31.859994888305665,
+                "z": -3284.0
+            },
+            "size": {
+                "x": 31.542724609375,
+                "y": 63.71999740600586,
+                "z": 39.13134765625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 322 / Prism",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1624.0,
+                "y": 31.83155632019043,
+                "z": -3284.0
+            },
+            "size": {
+                "x": 26.98095703125,
+                "y": 63.776878356933597,
+                "z": 32.33984375
+            },
+            "movable": true
+        },
+        {
+            "name": "VIOLET / 음악 바 / walk-in multistorey",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1660.0,
+                "y": 8.799999237060547,
+                "z": -3284.0
+            },
+            "size": {
+                "x": 34.60009765625,
+                "y": 18.299999237060548,
+                "z": 33.25
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 324 / Cantilever",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1822.0,
+                "y": 68.49898529052735,
+                "z": -3284.0
+            },
+            "size": {
+                "x": 32.453125,
+                "y": 136.99798583984376,
+                "z": 30.30322265625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 325 / Lantern",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 2020.0,
+                "y": 24.425996780395509,
+                "z": -3428.0
+            },
+            "size": {
+                "x": 30.3798828125,
+                "y": 48.85199737548828,
+                "z": 26.460205078125
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 326 / TwinGate",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 2020.0,
+                "y": 30.79799461364746,
+                "z": -3392.0
+            },
+            "size": {
+                "x": 27.43994140625,
+                "y": 61.59599685668945,
+                "z": 30.3798828125
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 327 / Orbital",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 2020.0,
+                "y": 19.115995407104493,
+                "z": -3338.0
+            },
+            "size": {
+                "x": 33.15673828125,
+                "y": 38.23199462890625,
+                "z": 35.42138671875
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 328 / Helix",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 652.0,
+                "y": 40.279605865478519,
+                "z": -4058.0
+            },
+            "size": {
+                "x": 41.34912109375,
+                "y": 88.85333251953125,
+                "z": 45.8505859375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 330 / Prism",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1876.0,
+                "y": 123.0820083618164,
+                "z": -3284.0
+            },
+            "size": {
+                "x": 37.146240234375,
+                "y": 246.60391235351563,
+                "z": 29.862548828125
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 331 / Oval",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 2020.0,
+                "y": 24.956995010375978,
+                "z": -3302.0
+            },
+            "size": {
+                "x": 30.3798828125,
+                "y": 49.91399383544922,
+                "z": 23.519775390625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 332 / Cantilever",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1948.0,
+                "y": 67.4369888305664,
+                "z": -3698.0
+            },
+            "size": {
+                "x": 23.872802734375,
+                "y": 134.87399291992188,
+                "z": 24.057861328125
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 333 / Lantern",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1930.0,
+                "y": 26.549997329711915,
+                "z": -4040.0
+            },
+            "size": {
+                "x": 35.8284912109375,
+                "y": 53.10000228881836,
+                "z": 35.073486328125
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 335 / Orbital",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1516.0,
+                "y": 11.15099811553955,
+                "z": -3014.0
+            },
+            "size": {
+                "x": 29.3997802734375,
+                "y": 22.302000045776368,
+                "z": 23.519775390625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 336 / Helix",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1480.0,
+                "y": 54.22254180908203,
+                "z": -2618.0
+            },
+            "size": {
+                "x": 45.205078125,
+                "y": 119.61024475097656,
+                "z": 51.3828125
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 337 / Cascade",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1930.0,
+                "y": 20.70899772644043,
+                "z": -3104.0
+            },
+            "size": {
+                "x": 32.8251953125,
+                "y": 41.417999267578128,
+                "z": 30.240234375
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 1029 / Lantern",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1732.0,
+                "y": 28.142995834350587,
+                "z": 336.0
+            },
+            "size": {
+                "x": 30.424560546875,
+                "y": 56.2859992980957,
+                "z": 31.179351806640626
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 1037 / Lantern",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 760.0,
+                "y": 13.27499771118164,
+                "z": 390.0
+            },
+            "size": {
+                "x": 25.47998046875,
+                "y": 26.549999237060548,
+                "z": 26.459991455078126
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 1053 / Lantern",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1264.0,
+                "y": 28.142995834350587,
+                "z": 642.0
+            },
+            "size": {
+                "x": 30.4244384765625,
+                "y": 56.2859992980957,
+                "z": 31.17938232421875
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 1054 / TwinGate",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1588.0,
+                "y": 9.557997703552246,
+                "z": 246.0
+            },
+            "size": {
+                "x": 25.4798583984375,
+                "y": 19.115999221801759,
+                "z": 26.46002197265625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 1055 / Orbital",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1624.0,
+                "y": 13.27499771118164,
+                "z": 246.0
+            },
+            "size": {
+                "x": 25.4801025390625,
+                "y": 26.549999237060548,
+                "z": 26.46002197265625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 1056 / Helix",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1840.0,
+                "y": 16.52496337890625,
+                "z": 210.0
+            },
+            "size": {
+                "x": 43.23583984375,
+                "y": 36.45264434814453,
+                "z": 44.91168212890625
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 1094 / TwinGate",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1066.0,
+                "y": 24.425996780395509,
+                "z": -42.0
+            },
+            "size": {
+                "x": 25.4798583984375,
+                "y": 48.85199737548828,
+                "z": 26.460002899169923
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 1095 / Orbital",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1030.0,
+                "y": 28.142995834350587,
+                "z": -114.0
+            },
+            "size": {
+                "x": 30.424560546875,
+                "y": 56.2859992980957,
+                "z": 31.17938232421875
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 1097 / Cascade",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1156.0,
+                "y": 13.27499771118164,
+                "z": -294.0
+            },
+            "size": {
+                "x": 25.8623046875,
+                "y": 26.549999237060548,
+                "z": 30.239974975585939
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 1103 / Orbital",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1606.0,
+                "y": 13.27499771118164,
+                "z": 156.0
+            },
+            "size": {
+                "x": 25.4801025390625,
+                "y": 26.549999237060548,
+                "z": 26.459991455078126
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 1104 / Helix",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1426.0,
+                "y": 16.52496337890625,
+                "z": -186.0
+            },
+            "size": {
+                "x": 43.236083984375,
+                "y": 36.45264434814453,
+                "z": 44.911712646484378
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 1106 / Prism",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1462.0,
+                "y": 24.404193878173829,
+                "z": 30.0
+            },
+            "size": {
+                "x": 25.9815673828125,
+                "y": 48.895606994628909,
+                "z": 26.46000099182129
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 1108 / Cantilever",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1462.0,
+                "y": 9.557997703552246,
+                "z": -42.0
+            },
+            "size": {
+                "x": 25.8623046875,
+                "y": 19.115999221801759,
+                "z": 27.064796447753908
+            },
+            "movable": true
+        },
+        {
+            "name": "Nova building 1110 / TwinGate",
+            "source": "NeonHarbor",
+            "center": {
+                "x": 1462.0,
+                "y": 16.99199867248535,
+                "z": -132.0
+            },
+            "size": {
+                "x": 30.4246826171875,
+                "y": 33.98400115966797,
+                "z": 31.179397583007814
+            },
+            "movable": true
+        }
+    ],
+    "roads": []
+}

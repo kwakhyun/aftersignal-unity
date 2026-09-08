@@ -13,6 +13,8 @@ namespace AfterSignal
         IEnumerator Start()
         {
             while(!FourCityWorld.Instance.Built)yield return null;
+            var homeCar=UrbanSimulation.Instance.Spawn(RegionalCatalog.HomeQuarter+new Vector3(16,.1f,-25),false,(int)CityVehicleType.Sedan);homeCar.gameObject.AddComponent<RegionalParked>();homeCar.name="새벽 골목 / 이웃 주차 차량";
+            var homeBike=UrbanSimulation.Instance.Spawn(RegionalCatalog.HomeQuarter+new Vector3(10,.1f,-18),false,(int)CityVehicleType.Motorcycle);homeBike.owned=true;homeBike.gameObject.AddComponent<RegionalParked>();homeBike.name="서하의 집 앞 루멘 바이크";
             foreach(var venue in FourCityWorld.Instance.Facilities)
             {
                 var v=venue.Definition;
@@ -45,19 +47,16 @@ namespace AfterSignal
         }
         public void TriggerConflict(Vector3 desired)
         {
+            if(!RiftIncursion.Instance||RiftIncursion.Instance.Active||!ResponseDispatch.TryOrigin(desired,true,false,Battles%4,out desired))return;
             Vector3 at=desired;float best=float.MaxValue;
             foreach(var road in FourCityCatalog.Roads)for(int i=1;i<road.Length;i++)
             {var p=FourCityCatalog.Closest(desired,road[i-1],road[i]);if(FourCityCatalog.CityAt(p)!=2||RegionalCatalog.InRift(p,50))continue;float d=(desired-p).sqrMagnitude;if(d<best){best=d;at=p;}}
-            for(int i=0;i<12;i++)
+            for(int i=0;i<5;i++)
             {
                 var p=at+new Vector3((i%3-1)*3,.1f,5+i/3*3);if(!CityGangWar.FindGround(p,out var ground))continue;
-                units.Add(i%5==4?RiftCreature.Create(ground,i%3).Body:ErebosThreat.Spawn(ground,false,84000+Battles*100+i,transform));
+                units.Add(ErebosThreat.Spawn(ground,false,84000+Battles*100+i,transform));
             }
-            for(int i=0;i<8;i++)
-            {
-                var p=at+new Vector3((i%4-1.5f)*3,.1f,-20-i/4*3);if(!CityGangWar.FindGround(p,out var ground))continue;
-                var soldier=ArmyResponder.Create(ground,i,null);PeopleArt.Attach(soldier.gameObject,"Swat");soldier.gameObject.AddComponent<RegionalUniform>().art="Swat";soldier.name="에레보스 특수격리대";units.Add(soldier.Body);NpcSpeech.Say(soldier,"접촉! 잠식체를 차단한다!",3);
-            }
+            RiftIncursion.Instance.Trigger(at);
             Battles++;GameDirector.Instance?.Toast("에레보스 격리선 교전 · 특수부대와 잠식체 충돌",5);
         }
         void OnDestroy(){RegionalErrand.Reset();if(Instance==this)Instance=null;}
@@ -73,9 +72,9 @@ namespace AfterSignal
         {
             var g=GameDirector.Instance;if(!bound||!g||g.Blocked||Time.time<next)return;next=Time.time+2;
             bool near=RegionalCatalog.Slum(g.Player.transform.position);
-            if(near&&patrol.Count==0)for(int i=0;i<12;i++)
+            if(near&&patrol.Count==0)for(int i=0;i<5;i++)
             {
-                var p=new Vector3(i<6?270:1930,.1f,2570+i%6*145);if(CityGangWar.FindGround(p,out var safe)){var officer=PoliceOfficer.Create(WantedSystem.Instance,safe,1+i%2,i);officer.Ambient=true;officer.name="새벽 저지대 집중 순찰";patrol.Add(officer.Body);CitySafety.Instance?.Patrol.Add(officer);}
+                var p=RegionalCatalog.HomeQuarter+new Vector3(-36+i*15,.1f,-20);if(CityGangWar.FindGround(p,out var safe)){var officer=PoliceOfficer.Create(WantedSystem.Instance,safe,1+i%2,i);officer.Ambient=true;officer.name="새벽 저지대 집중 순찰";patrol.Add(officer.Body);CitySafety.Instance?.Patrol.Add(officer);}
             }
             foreach(var p in patrol)if(p)p.gameObject.SetActive(near||WantedSystem.Level>0);
             gangs.RemoveAll(x=>!x||!x.Alive);

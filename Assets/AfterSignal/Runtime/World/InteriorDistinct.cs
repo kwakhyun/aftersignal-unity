@@ -10,6 +10,7 @@ namespace AfterSignal
         {
             yield return null;yield return null;yield return null;
             var g=GameDirector.Instance;site=g.stage==StageId.UrbanInterior?UrbanCatalog.Current:(int)g.stage;
+            if(g.stage==StageId.Residence)yield break;
             kind=g.stage==StageId.Clinic?4:g.stage==StageId.School?5:g.stage==StageId.Headquarters?14:g.stage==StageId.Residence?0:UrbanCatalog.Kind(site);
             details=new GameObject("Interior identity / "+site+" / "+kind).transform;
             accent=new Material(Resources.Load<Material>("Materials/Enamel"));accent.SetColor("_BaseColor",Color.HSVToRGB(Mathf.Repeat(kind*.087f+site*.018f,1),.2f+site%3*.08f,.53f+site%4*.07f));

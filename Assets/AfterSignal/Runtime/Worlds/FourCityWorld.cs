@@ -25,7 +25,7 @@ namespace AfterSignal
             for(int i=0;i<FourCityCatalog.Venues.Length;i++)
             {var v=FourCityCatalog.Venues[i];var r=Root(v.title,v.position);var venue=r.gameObject.AddComponent<VenueRuntime>();venue.Initialize(i);Facilities.Add(venue);Track(r);yield return null;}
             for(int city=0;city<4;city++){BuildNeighborhood(city);yield return null;}
-            BuildUnderseaShell();RegionalTerrain.PressureDistrict(transform);gameObject.AddComponent<RegionalWorld>();Physics.SyncTransforms();Built=true;
+            BuildUnderseaShell();gameObject.AddComponent<RegionalWorld>();Physics.SyncTransforms();Built=true;
             FourCityCampaign.Instance?.BuildObjectives();
         }
         void Track(Transform root)
@@ -36,9 +36,9 @@ namespace AfterSignal
         }
         void BuildGround()
         {
-            foreach(var r in FourCityCatalog.Land){var root=Root("Expanded city foundation",new(r.center.x,0,r.center.y));if(RegionalTerrain.Foundation(r,root))continue;var g=new CityGeometry(root);g.Box("Continuous city ground",new(0,-2,0),new(r.width,4,r.height),"NovaConcrete",true);g.Finish();}
+            foreach(var r in FourCityCatalog.Land){var root=Root("Expanded city foundation",new(r.center.x,0,r.center.y));if(RegionalTerrain.Foundation(r,root))continue;var g=new CityGeometry(root);g.Box("Continuous city ground",new(0,-2.08f,0),new(r.width,4,r.height),"NovaConcrete",true);g.Finish();}
             var seabed=Root("Nereid basin",new(3900,-110,-4470));var bed=new CityGeometry(seabed);bed.Box("Deep basin",Vector3.zero,new(2850,4,2950),"NovaSeabed",true);bed.Finish();
-            var deck=GameObject.CreatePrimitive(PrimitiveType.Cylinder);deck.name="Nereid sealed continuous foundation";deck.transform.SetParent(transform);deck.transform.position=FourCityCatalog.Centers[3]-Vector3.up*.25f;deck.transform.localScale=new Vector3(2060,.25f,1860);Destroy(deck.GetComponent<Collider>());deck.AddComponent<MeshCollider>().sharedMesh=deck.GetComponent<MeshFilter>().sharedMesh;deck.GetComponent<Renderer>().sharedMaterial=CityGeometry.Material("DeepDeck");
+            var deck=GameObject.CreatePrimitive(PrimitiveType.Cylinder);deck.name="Nereid sealed continuous foundation";deck.transform.SetParent(transform);deck.transform.position=FourCityCatalog.Centers[3]-Vector3.up*.37f;deck.transform.localScale=new Vector3(2060,.25f,1860);Destroy(deck.GetComponent<Collider>());deck.AddComponent<MeshCollider>().sharedMesh=deck.GetComponent<MeshFilter>().sharedMesh;deck.GetComponent<Renderer>().sharedMaterial=CityGeometry.Material("DeepDeck");
             Water(new Rect(2199,FourCityCatalog.South,FourCityCatalog.East-2199,400-FourCityCatalog.South));Water(new Rect(0,FourCityCatalog.South,2200,-4549-FourCityCatalog.South));
         }
         void Water(Rect r)
@@ -52,7 +52,7 @@ namespace AfterSignal
                 for(int i=1;i<road.Length;i++)
                 {
                     var a=road[i-1]-root.position;var b=road[i]-root.position;var d=b-a;float length=d.magnitude;var q=Quaternion.LookRotation(d);
-                    g.Box("Continuous road collider",(a+b)*.5f-Vector3.up*.12f,new(18,.24f,length+.15f),"Asphalt",true,q);
+                    g.Box("Continuous road collider",(a+b)*.5f-Vector3.up*.05f,new(18,.24f,length),"Asphalt",true,q);
                     for(int s=-1;s<=1;s+=2){g.Box("Raised pavement",(a+b)*.5f+q*new Vector3(s*11,.05f,0),new(4,.1f,length),"Pavement",true,q);g.Box("Road edge",(a+b)*.5f+q*new Vector3(s*8.7f,.018f,0),new(.13f,.02f,length),"PaintWhite");}
                     for(float t=4;t<length;t+=12)g.Box("Centre dash",a+d*t/length+Vector3.up*.025f,new(.12f,.025f,5),"PaintAmber",false,q);
                     if(road[i].y<-.5f&&(road[i-1].y> -61||road[i].y> -61))
@@ -77,6 +77,7 @@ namespace AfterSignal
         }
         void BuildNeighborhood(int city)
         {
+            if(city<2)return; // Existing authored city blocks are relocated into free infill lots by CompactCityBuilder.
             var rng=new System.Random(9171+city*76);int count=city==2?1300:city==3?700:1200;var occupied=new List<Rect>();
             for(int i=0;i<count;i++)
             {

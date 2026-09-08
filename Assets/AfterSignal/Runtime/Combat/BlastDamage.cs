@@ -5,10 +5,10 @@ namespace AfterSignal
     public sealed class BlastDamage:MonoBehaviour
     {
         public static int Detonations {get;private set;}
-        float radius,damage;WorldActor source;CityVehicle excluded;bool done;
-        public static void Create(Vector3 at,float radius,float damage,WorldActor source=null,CityVehicle excluded=null)
+        float radius,damage;WorldActor source;CityVehicle excluded,direct;BlastPayload payload;bool done;
+        public static void Create(Vector3 at,float radius,float damage,WorldActor source=null,CityVehicle excluded=null,BlastPayload payload=BlastPayload.Conventional,CityVehicle direct=null)
         {
-            var go=new GameObject("Blast damage wave");go.transform.position=at;var b=go.AddComponent<BlastDamage>();b.radius=radius;b.damage=damage;b.source=source;b.excluded=excluded;
+            var go=new GameObject("Blast damage wave");go.transform.position=at;var b=go.AddComponent<BlastDamage>();b.radius=radius;b.damage=damage;b.source=source;b.excluded=excluded;b.payload=payload;b.direct=direct;
         }
         public static bool Exposed(Vector3 origin,Vector3 target,Transform victim,CityVehicle excluded=null)
         {
@@ -24,8 +24,8 @@ namespace AfterSignal
             {
                 if(!actor||!actor.Alive)continue;float distance=Vector3.Distance(origin,actor.Center);
                 if(distance>radius||!Exposed(origin,actor.Center,actor.transform,excluded))continue;
-                var d=(actor.Center-origin).normalized;actor.Damage(damage*Mathf.Lerp(1,.18f,distance/radius),d*12,source);
-                if(!actor.helicopter)CivilianImpact.Launch(actor,d,Mathf.Lerp(22,7,distance/radius));
+                var d=(actor.Center-origin).normalized;actor.Damage(damage*(actor.monster&&payload!=BlastPayload.Conventional?8:1)*Mathf.Lerp(1,.18f,distance/radius),d*12,source);
+                if(!actor.helicopter&&!actor.monster)CivilianImpact.Launch(actor,d,Mathf.Lerp(22,7,distance/radius));
             }
             var g=GameDirector.Instance;
             if(g)
@@ -35,7 +35,7 @@ namespace AfterSignal
             }
             var sim=UrbanSimulation.Instance;
             if(sim)foreach(var car in new List<CityVehicle>(sim.Cars))
-            {if(!car||car==excluded||car.Wrecked)continue;float d=Vector3.Distance(origin,car.transform.position+Vector3.up);if(d<radius&&Exposed(origin,car.transform.position+Vector3.up,car.transform,excluded))car.Damage(damage*Mathf.Lerp(.85f,.15f,d/radius),car.transform.position,source);}
+            {if(!car||car==excluded||car.Wrecked)continue;var point=WarheadDamage.HullPoint(car,origin);float d=Vector3.Distance(origin,point);if(car==direct||(d<radius&&Exposed(origin,point,car.transform,excluded)))car.Damage(WarheadDamage.Against(car,payload,damage)*(car==direct?1:Mathf.Lerp(.85f,.15f,Mathf.Clamp01(d/radius))),point,source);}
             Destroy(gameObject);
         }
     }

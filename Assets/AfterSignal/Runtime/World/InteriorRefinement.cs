@@ -7,7 +7,7 @@ namespace AfterSignal
         IEnumerator Start()
         {
             yield return null;yield return null;
-            var g=GameDirector.Instance;if(!g||!CivicWorld.Interior(g.stage))yield break;
+            var g=GameDirector.Instance;if(!g||!CivicWorld.Interior(g.stage)||g.stage==StageId.Residence)yield break;
             // Preserve the established playable floor plan and routines; detail their actual furnishings.
             var parent=new GameObject("Interior / furniture hardware and architectural finishes").transform;
             var renderers=FindObjectsByType<MeshRenderer>(FindObjectsSortMode.None);

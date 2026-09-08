@@ -4,17 +4,17 @@ namespace AfterSignal
 {
     public static class RegionalCatalog
     {
-        public static readonly Vector3 HomeQuarter=new(430,0,2670), RiftCenter=new(3850,0,-1030),PressureAnnex=new(5320,-62,-4500);
+        public static readonly Vector3 HomeQuarter=new(220,0,435), RiftCenter=new(3850,0,-1030),PressureAnnex=new(3900,-62,-4480);
         public static readonly Vector3[] Islands={new(390,.05f,-1320),new(2350,.05f,-1840),new(3500,.05f,-2740),new(5050,.05f,-2890)};
-        public static readonly string[] IslandNames={"솔바람 어촌","러스티 조선섬","오키드 생태섬","유리등대 해상마을"};
-        public static bool Slum(Vector3 p)=>p.z>2450&&p.z<3440&&p.x>170&&p.x<2050;
+        public static readonly string[] IslandNames={"솔라리스 해상지구","크롬야드 조선섬","오키드 바이오아크","프리즘 항해도시"};
+        public static bool Slum(Vector3 p)=>p.z>350&&p.z<570&&p.x>100&&p.x<380;
         public static bool Island(Vector3 p){foreach(var i in Islands){var d=p-i;if(d.x*d.x/(210*210)+d.z*d.z/(165*165)<1)return true;}return false;}
-        public static bool Dry(Vector3 p){var d=p-PressureAnnex;return d.y>=-.5f&&d.y<50&&d.x*d.x/(720*720)+d.z*d.z/(720*720)+d.y*d.y/2500<1;}
+        public static bool Dry(Vector3 p)=>false; // Public facilities now share the original pressure dome.
         public static bool InRift(Vector3 p,float margin=0)=>Vector2.Distance(new(p.x,p.z),new(RiftCenter.x,RiftCenter.z))<210+margin;
         public static void Append(List<CityVenue> venues)
         {
             void Add(string id,string title,int city,VenueKind kind,float x,float z,float w,float d,int n,string text)=>venues.Add(new(id,title,city,kind,x,city==3?-62:0,z,w,d,n,text));
-            Add("dawn-lowlands","새벽 저지대 · 서하의 고향",0,VenueKind.Slum,1100,2940,1800,940,180,"고층 부촌의 방벽 아래 자리한 애프터라이트 외곽. 새벽 주거동, 이웃의 골목, 공동 식당, 고물상, 암시장이 이어진다. 서하는 이곳에서 자랐으며 주민들과 오랜 신뢰를 나눈다.");
+            Add("dawn-lowlands","새벽 저지대 · 서하의 고향",0,VenueKind.Slum,1100,2940,280,220,84,"고층 부촌의 방벽 아래 자리한 애프터라이트 외곽. 새벽 주거동, 이웃의 골목, 공동 식당, 고물상, 암시장이 이어진다. 서하는 이곳에서 자랐으며 주민들과 오랜 신뢰를 나눈다.");
             Add("nova-fort","노바 해협 방위사령부",1,VenueKind.Military,480,-5900,370,270,36,"항공 격납고와 계단식 지휘동, 방파제 훈련장, 차량 정비고를 갖춘 노바 독립 방위기지.");
             Add("nova-prison","노바 링 교정시설",1,VenueKind.Prison,1900,-5920,330,270,42,"원형 감시 회랑과 중정 운동장, 면회·수용·교정 교육 구역이 분리된 교도소.");
             Add("nova-cityhall","노바 조수 시청",1,VenueKind.CityHall,1180,-6230,190,175,65,"층마다 뒤로 물러나는 유리 의회, 공개 민원홀과 항만을 내려다보는 시민 테라스.");
@@ -39,7 +39,7 @@ namespace AfterSignal
             Add("erebos-ruined-prison","파괴된 에레보스 교도소",2,VenueKind.Prison,4600,-1750,260,230,0,"뜯겨 나간 감시탑과 끊어진 수용동, 비어 있는 운동장에 잠식된 수감자들이 배회한다.");
             Add("erebos-ruined-hall","붕괴한 에레보스 시청",2,VenueKind.CityHall,4210,-1870,180,150,0,"갈라진 의회 지붕과 공중에 떠 있는 기록실. 파괴 전 도시 행정의 흔적.");
             Add("erebos-sinkhole","영점 싱크홀",2,VenueKind.Sinkhole,3850,-1030,480,480,0,"직경 420m의 거대한 붕괴구. 끊어진 도로와 부유 잔해 아래에서 정체불명의 신호가 올라온다.");
-            for(int i=0;i<Islands.Length;i++)Add("strait-island-"+i,IslandNames[i],i==0?0:1,VenueKind.Island,Islands[i].x,Islands[i].z,420,330,48+i*9,i==0?"목조 수상가옥과 그물 건조장, 어시장과 작은 방파제 마을.":i==1?"재활용 선체와 크레인, 용접 작업장과 컨테이너 주거가 섞인 조선섬.":i==2?"수경 재배 온실과 풍력 발전, 순환 자원을 사용하는 녹색 공동체.":"해상 등대를 중심으로 유리 지붕 주거와 관광 카페가 모인 항해자 마을.");
+            for(int i=0;i<Islands.Length;i++)Add("strait-island-"+i,IslandNames[i],i==0?0:1,VenueKind.Island,Islands[i].x,Islands[i].z,420,330,48+i*9,i==0?"태양광 리브 지붕과 해수 담수화 설비, 스마트 주거 모듈과 자율운항 선착장이 연결된 해상 지구.":i==1?"로봇 조선소와 자기부상 화물 포트, 네온 작업장과 첨단 모듈 주거가 연결된 조선섬.":i==2?"수경 재배 온실과 풍력 발전, 순환 자원을 사용하는 녹색 공동체.":"해상 등대를 중심으로 유리 지붕 주거와 관광 카페가 모인 항해자 마을.");
         }
         public static void AddRoad(List<Vector3[]> roads,params Vector3[] points)
         {
@@ -60,14 +60,7 @@ namespace AfterSignal
         }
         public static void Roads(List<Vector3[]> roads)
         {
-            AddRoad(roads,new(650,0,2240),new(650,0,2480),new(260,0,2540),new(260,0,3360),new(1940,0,3360),new(1940,0,2500),new(1830,0,2240));
-            AddRoad(roads,new(260,0,2870),new(950,0,2860),new(1420,0,2990),new(1940,0,3010));
-            AddRoad(roads,new(950,0,2500),new(950,0,3360));
-            AddRoad(roads,new(240,0,-5580),new(220,0,-5720),new(250,0,-6200),new(220,0,-6700),new(340,0,-7080),new(1740,0,-7080),new(2330,0,-7000),new(2350,0,-5750),new(2000,0,-5580));
-            AddRoad(roads,new(250,0,-6110),new(1030,0,-6070),new(1490,0,-6130),new(2350,0,-6150));
-            AddRoad(roads,new(220,0,-6640),new(840,0,-6590),new(1440,0,-6590),new(2350,0,-6590));
-            AddRoad(roads,new(1490,0,-5580),new(1490,0,-6130),new(1440,0,-6590),new(1440,0,-7080));
-            AddRoad(roads,new(4620,-62,-4390),new(4790,-62,-4480),new(4860,-62,-4480),new(5020,-62,-4380),new(5700,-62,-4380),new(5980,-62,-4500),new(5700,-62,-4780),new(5000,-62,-4780),new(4860,-62,-4480));
+            AddRoad(roads,new(180,0,280),new(180,0,334),new(240,0,334),new(240,0,348));
         }
     }
 }

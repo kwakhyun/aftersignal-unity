@@ -12,11 +12,10 @@ namespace AfterSignal
             for(int i=0;i<96;i++)
             {
                 float a=i*Mathf.PI*2/96,b=(i+1)*Mathf.PI*2/96;
-                Face(Vector3.zero,P(b,.85f,0),P(a,.85f,0),Vector3.zero,seed==1?"Concrete":"IslandSand");
+                Face(Vector3.zero,P(b,.85f,0),P(a,.85f,0),Vector3.zero,seed==1?"Concrete":"NovaConcrete");
                 Face(P(a,.85f,0),P(b,.85f,0),P(b,1,-1.4f),P(a,1,-1.4f),"IslandSand");
                 Face(P(a,1,-1.4f),P(b,1,-1.4f),P(b,1.07f,-12),P(a,1.07f,-12),"NovaObsidian");
                 if(i%3==0){var p=P(a,.92f,-.9f);g.Dome(p,new Vector3(4+i%5,2+i%3,3+i%4),"Concrete",8,3,false);}
-                if(seed!=1&&i%6==0){var p=P(a,.72f,0);g.Beam(p,p+new Vector3(1,10,0),.3f,"Wood");for(int branch=0;branch<6;branch++){float angle=branch*Mathf.PI/3;g.Beam(p+new Vector3(1,10,0),p+new Vector3(Mathf.Cos(angle)*5,8,Mathf.Sin(angle)*5),.7f,"CanopyLeaf");}}
             }
             var collider=new GameObject("Island continuous irregular shoreline");collider.transform.SetParent(g.root,false);var mesh=new Mesh{name="Island land and beach collision"};mesh.SetVertices(vertices);mesh.SetTriangles(triangles,0);mesh.RecalculateBounds();mesh.RecalculateNormals();collider.AddComponent<MeshCollider>().sharedMesh=mesh;collider.AddComponent<CityMeshOwner>().meshes.Add(mesh);
         }
@@ -38,14 +37,6 @@ namespace AfterSignal
                 var p=P(a,210);var q=P(b,210);var r=P(b,rb);var s=P(a,ra);g.Quad(p,q,r,s,"NovaConcrete");int start=verts.Count;verts.AddRange(new[]{p,q,r,s});tri.AddRange(new[]{start,start+1,start+2,start,start+2,start+3});
             }
             g.Finish();var mesh=new Mesh{name="Walkable sinkhole rim"};mesh.SetVertices(verts);mesh.SetTriangles(tri,0);mesh.RecalculateNormals();mesh.RecalculateBounds();root.gameObject.AddComponent<MeshCollider>().sharedMesh=mesh;root.GetComponent<CityMeshOwner>().meshes.Add(mesh);return true;
-        }
-        public static void PressureDistrict(Transform parent)
-        {
-            var root=new GameObject("Nereid civic pressure annex").transform;root.SetParent(parent,false);root.position=RegionalCatalog.PressureAnnex;
-            var deck=GameObject.CreatePrimitive(PrimitiveType.Cylinder);deck.name="Continuous annex pressure deck";deck.transform.SetParent(root,false);deck.transform.localPosition=Vector3.down*.3f;deck.transform.localScale=new(1440,.3f,1440);Object.Destroy(deck.GetComponent<Collider>());deck.AddComponent<MeshCollider>().sharedMesh=deck.GetComponent<MeshFilter>().sharedMesh;deck.GetComponent<Renderer>().sharedMaterial=CityGeometry.Material("DeepDeck");
-            var g=new CityGeometry(root);g.Dome(Vector3.zero,new(720,50,720),"PressureGlass",48,10,false);
-            for(int i=0;i<40;i++){float a=i*Mathf.PI*2/40;g.Beam(new(Mathf.Cos(a)*713,0,Mathf.Sin(a)*713),new(Mathf.Cos(a)*470,38,Mathf.Sin(a)*470),.65f,"FutureSilver");}
-            g.Ring(Vector3.up*38,470,470,.35f,"NeonCyan",64);g.Finish();
         }
         public static void Sinkhole(CityGeometry g,VenueRuntime venue)
         {

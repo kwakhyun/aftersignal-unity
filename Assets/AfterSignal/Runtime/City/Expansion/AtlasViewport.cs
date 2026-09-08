@@ -53,7 +53,7 @@ namespace AfterSignal
             vh.Clear();Quad(vh,rectTransform.rect,new Color(.025f,.085f,.12f));
             Land(vh,new Rect(0,-660,2200,1760),new Color(.07f,.15f,.17f));
             foreach(var land in NeonHarbor.Land)Land(vh,land,new Color(.085f,.17f,.2f));
-            for(int i=0;i<FourCityCatalog.Land.Length;i++)Land(vh,FourCityCatalog.Land[i],i==2?new Color(.17f,.105f,.20f):new Color(.08f,.17f,.18f));
+            for(int i=0;i<FourCityCatalog.Land.Length;i++)Land(vh,FourCityCatalog.Land[i],FourCityCatalog.Land[i].xMin>2600?new Color(.17f,.105f,.20f):new Color(.08f,.17f,.18f));
             Disc(vh,FourCityCatalog.Centers[3],1030,930,new Color(.06f,.21f,.29f),64);
             if(!mini&&Span<1900)foreach(var building in HighriseBuilding.All)if(building){var b=building.Bounds;Land(vh,new Rect(b.min.x,b.min.z,b.size.x,b.size.z),new Color(.17f,.28f,.31f));}
             foreach(var venue in FourCityCatalog.Venues){var color=FourCityAtlasSelection.Color(venue.kind)*.28f;color.a=1;Land(vh,new Rect(venue.position.x-venue.size.x*.5f,venue.position.z-venue.size.y*.5f,venue.size.x,venue.size.y),color);if(venue.Sport)Disc(vh,venue.position,venue.size.x*.32f,venue.size.y*.32f,new Color(.1f,.28f,.22f),24);}

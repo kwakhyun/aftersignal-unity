@@ -85,7 +85,7 @@ namespace AfterSignal
                 var look=GetComponent<DirectionalPerson>();if(look)look.enabled=false;
                 velocity=Vector3.ProjectOnPlane(transform.position-origin,Vector3.up).normalized*3+Vector3.up*3;
             }
-            else {npc.Panic(danger,18);NpcSpeech.Say(npc,"차에서 내려요! 빨리 피해요!",4,8);}
+            else {npc.Panic(danger,18);NpcSpeech.Say(npc,NpcDialogueBank.Line(npc,"evacuate"),4,8);}
         }
         void Update()
         {

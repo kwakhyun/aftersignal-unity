@@ -9,6 +9,7 @@ namespace AfterSignal
         readonly List<Call> calls=new();
         public int ConfirmedFatalities{get;private set;}
         public int PendingCalls=>calls.Count;
+        public const int MilitaryFatalityThreshold=30;
         float violenceUntil;
         void Awake()=>Instance=this;
         public static void Forget(){if(Instance){Instance.calls.Clear();Instance.ConfirmedFatalities=0;Instance.violenceUntil=0;}}
@@ -24,6 +25,7 @@ namespace AfterSignal
         {
             if(!Instance)return;
             var g=GameDirector.Instance;if(!g||g.Player.Health<=0||g.Dead)return;
+            fatal=fatal&&victim&&!victim.police&&!victim.military&&!victim.gang&&!victim.monster;
             FacilitySecurity.Alert(where);
             WorldActor civilian=null;
             foreach(var witness in WorldActor.All)
@@ -40,7 +42,7 @@ namespace AfterSignal
             var existing=Instance.calls.Find(c=>c.witness==witness);
             if(existing!=null){existing.severity=Mathf.Min(170,existing.severity+severity);existing.fatalities+=fatalities;return;}
             Instance.calls.Add(new Call{witness=witness,point=point,severity=severity,remaining=5,fatalities=fatalities});
-            NpcSpeech.Say(witness,"경찰이죠? 여기 범죄 현장이에요! 빨리 와주세요!",4);
+            NpcSpeech.Say(witness,NpcDialogueBank.Line(witness.GetComponent<CityNpc>(),"report"),4);
             GameDirector.Instance?.Toast("목격자가 신고하고 있습니다",2);
         }
         void Confirm(float severity,Vector3 point,int fatalities)
@@ -59,7 +61,7 @@ namespace AfterSignal
                 call.remaining-=Time.deltaTime;if(call.remaining>0)continue;
                 Confirm(call.severity,call.point,call.fatalities);calls.RemoveAt(i);
             }
-            if(ConfirmedFatalities>=8&&WantedSystem.Level>=5&&g.stage==StageId.UrbanCity&&!g.GetComponent<MilitaryResponse>())g.gameObject.AddComponent<MilitaryResponse>();
+            if(Time.time<violenceUntil&&ConfirmedFatalities>=MilitaryFatalityThreshold&&WantedSystem.Level>=5&&g.stage==StageId.UrbanCity&&!g.GetComponent<MilitaryResponse>())g.gameObject.AddComponent<MilitaryResponse>();
         }
         void OnDestroy(){if(Instance==this)Instance=null;}
     }

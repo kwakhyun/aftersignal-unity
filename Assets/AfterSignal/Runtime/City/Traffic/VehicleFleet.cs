@@ -6,7 +6,7 @@ namespace AfterSignal
     public sealed class VehicleFleet : MonoBehaviour
     {
         public static string ModelName(CityVehicleType type) => type==CityVehicleType.Sedan||type==CityVehicleType.Taxi?"FutureSedan":type==CityVehicleType.Bus?"FutureBus":type==CityVehicleType.Truck?"FutureTruck":type==CityVehicleType.SportsCar?"FutureSportsCar":type==CityVehicleType.Motorcycle?"FutureMotorcycle":type.ToString();
-        public static bool Persistent(CityVehicle c) => c.IsSpecial || c.GetComponent<RegionalParked>() || c.GetComponent<ParkingAssignment>() || c.GetComponent<TacticalTransport>() || c.GetComponent<MilitaryVehicleAI>() || c.type == CityVehicleType.Tank;
+        public static bool Persistent(CityVehicle c) => c.IsSpecial || c.GetComponent<PersonalMotorcycle>() || c.GetComponent<RegionalParked>() || c.GetComponent<ParkingAssignment>() || c.GetComponent<TacticalTransport>() || c.GetComponent<MilitaryVehicleAI>() || c.type == CityVehicleType.Tank;
         public static void Configure(CityVehicle c, int variant)
         {
             if (variant < 4) return;

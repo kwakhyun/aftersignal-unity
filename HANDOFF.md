@@ -1,4 +1,34 @@
-# 다음 Codex 작업을 위한 인계 — 2026-09-08
+# 다음 Codex 작업을 위한 인계 — 2026-09-09
+
+## 최신 작업: 기존 도시 안으로 시설·빈민가 통합
+
+활성 실행 대상은 `Builds/CompactCities/AFTERSIGNAL.exe`, `PLAY.cmd`로 실행한다. 이번 요청에는 커밋·푸시가 없어 기존 미커밋 전투 캠페인 변경과 함께 로컬에 유지했다. 상세 내용은 `Documentation/CompactCities/README.md`, 배포·검증 기록은 같은 폴더 `validation.json`.
+
+`CompactCityLayout.json`이 시설 36곳의 최종 위치다. 애프터라이트 8곳, 노바 20곳, 네레이드 8곳을 원래 도시 영역 안에 넣었다. 기존 빌딩 209개와 상호작용 하위 요소, 별도 배치 외관을 함께 빈 부지로 이동했다. `Documentation/CompactCities/prefab-layout-v1.json`은 이미 적용한 이동을 반복하지 않도록 하는 스탬프다. 해당 스탬프만 삭제하고 Prepare를 재실행하지 말 것. 도시 땅은 새로 늘리지 않았고 애프터라이트 북쪽·노바 남쪽 확장 지면과 수중 공공기관 별도 돔을 제거했다.
+
+새벽 골목은 원래 애프터라이트 북서쪽 280×220m 안에 작은 주택 172채, 좁은 골목, 허름한 점포와 전선·옥상 설비를 만든다. HomeQuarter=(220,0,435). 서하 집은 작은 단층 주택이며 `CompactHome`이 Residence의 과거 WORLD를 비활성화하고 지상 실내를 생성한다. 침대·옷장·금고·직접 출입구를 유지했다. 구형 HavenQuarter 프리팹은 삭제했다. 섬 4곳은 태양광 모듈 주택·보행 데크·바이오 설비·순환 교통로와 스마트 항구로 개편했다.
+
+건물 이동 필터가 그 밑 보도 조각까지 옮긴 것을 화면에서 발견했다. Ground는 건물 이동 대상에서 제외해야 한다. `Compact-GroundManifest.py`는 14a5ed78 원본 메시 GUID를 읽고 `CompactCityBuilder.RepairGround`가 새 시설 부지 밖 수평 바닥을 원위치로 복구한다. 252개 배치 수정 완료. 490개 CompactMeshes 중 다른 건물 구조·외관 이동은 유지한다. 바닥·광장·도로의 겹치는 높이도 분리했다.
+
+ESC는 지도부터 닫고, V 또는 일시정지 메뉴로 서하 바이크를 부른다. 실내와 착지 불가 위치에서는 외부 평지에 나올 때까지 호출을 보류한다. 옥상 전망 단축키는 P로 변경. LocalCityRoutes는 원래 도시 길·시설 연결로·네레이드 길·섬 순환도로를 통합하고, 차량 예산은 플레이어 주변을 기준으로 계산한다. 잠식 도시는 일반 시민 보충에서 제외한다. 이전 외곽의 의뢰 목표와 차량 저장 위치는 CompactCityLayout.Migrate로 옮긴다.
+
+최종 기능 확인 `Artifacts/CompactCities/Final/result.json`: 91항목 통과, 오류 0. 노바 근처 주민 246/교통 4, 네레이드 122/6, 스마트 섬 82/4. 위치·바닥·집 주변 차량 탑승·바이크 호출/탑승·ESC·작은 집 시설 확인과 6개 렌더 캡처를 진행했다. 이후 변경은 P 단축키 안내 문구와 기존 지역 진단의 옛 배치 기대값 정리뿐이다. 배포 빌드 로그 `Artifacts/CompactCities/build-shipping.log`. 사용자의 기존 실행 중 게임은 종료하지 않았다.
+
+## 최신 작업: 미사일 취약성·원거리 출동·잠식 거신·전투 캠페인
+
+시작 시 기존 변경 전체 178파일을 `14a5ed78` (main)에 커밋하고 origin/main으로 정상 푸시했다. 그 이후 이번 구현은 로컬 작업 트리에 있다. 활성 실행 파일은 `Builds/IncursionCampaign/AFTERSIGNAL.exe`, PLAY.cmd로 실행한다. `Documentation/IncursionCampaign/README.md`, `REFERENCES.md`, `validation.json` 참고.
+
+WarheadDamage/BlastPayload로 일반 충돌·총탄과 미사일/포탄을 분리했다. 폭발에 실제 맞은 차량을 전달하고 차체 최근접점을 사용한다. 군 탄두의 WorldActor source를 끝까지 유지한다. 빈 주차 차량 Enter는 신고하지 않으며 점유 차량 강탈만 신고한다. 군 투입 임계값은 확인된 민간인 사망 30명이다.
+
+ResponseDispatch는 공통 도로 그래프 9,813노드와 카메라 밖/차폐된 원거리 합류 지점을 사용한다. 경찰·군 차량은 ResponseDrive로 접근하며, TacticalTransport와 군 트럭은 현장에 도착한 후에만 하차한다. MilitaryResponse는 괴물 사건 44초, 범죄 사건 55초 동원 대기 뒤 수송차/전차/항공기를 순차 출동시킨다. 네레이드 내부에는 지상 지원을 보낸다. RegionalWorld의 에레보스 교전도 RiftIncursion 경유로 바꿔 즉시 특수대 생성 경로를 없앴다.
+
+RiftCreature 전용 원본 3종은 `Tools/WorldExpansion/create_rift_titans.py`로 작성한 Blender/FBX다. Blender Z-up 변환은 model 로컬 회전에 보존하고 바깥 form을 이동 방향으로 회전할 것. 원본 루트 회전을 identity로 덮으면 누워 버린다. 대형 거신은 외피/공격 후 취약 시간, 시민 우선 탐색, 광역 타격, 예고 후 대공 레이저를 사용한다. 실험 결과 3모델의 크기·바로 선 머리 높이·헬기 피격을 확인했다.
+
+CityGangWar.FindGround는 요청 높이를 기준으로 바닥을 찾고, 첫 후보는 반드시 요청 좌표 그대로다. 절대 높이 0m 제한은 수중 NPC 생성을 막고, 첫 후보에 -0.75m를 더하는 코드는 이동 NPC를 옆으로 계속 밀어낸다. CampaignBattle의 호위 경로는 이를 수정한 바닥 검사와 PursuitPath를 사용한다.
+
+CityChronicle main01~main30의 id와 3단계 저장 구조는 유지하면서 90개 전투 단계로 교체했다. 현장에 70m 이내 접근하면 자동 시작, 엄폐물·경비대·파괴 장치·구출 대상·보스와 전투 HUD/교신 생성. 돌파, 방어, 파괴, 호위, 탈출, 보스전이 연결된다. 첫 작전의 세 단계 완료와 main02 자동 추적까지 native에서 통과했다. 서브 의뢰는 유지한다. 대사 188개 추가로 StreetVoices 총 552개.
+
+기능 실행 결과는 `Artifacts/IncursionCampaign/Release/result.json` (57항목 통과, 런타임 오류 0), HUD 최종 확인은 `Artifacts/IncursionCampaign/UI/result.json`에 기록한다. 최종 빌드 로그 `Artifacts/IncursionCampaign/build-ui.log`. 사용자의 기존 실행 중 게임을 종료하지 않았고 진단 실행은 LifeState/CityChronicle 저장을 억제한다. 이번 변경 후 전체 30작전을 수동 완주한 것은 아니며 첫 작전의 실제 완료 경로와 각 작전 지역 바닥을 필수 확인했다.
 
 ## 최신 작업: 차량 디자인·새벽 저지대·지역 기관·섬 확장
 

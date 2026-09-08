@@ -55,6 +55,7 @@ namespace AfterSignal
         void Awake(){Instance=this;Time.timeScale=1;FramePacing.Apply();Physics.IgnoreLayerCollision(8,9,false);Physics.IgnoreLayerCollision(9,9,true);}
         void Start()
         {
+            CompactHome.Prepare(this);
             ExpansionWorld.Install(this);
             if(!tuning)tuning=Resources.Load<GameTuning>("GameTuning");
             spawn=CivicWorld.Spawn(stage,spawn);spawn=CivicWorld.SafeSpawn(stage,spawn);checkpoint=spawn;
@@ -97,10 +98,12 @@ namespace AfterSignal
         {
             if(!Ready)return;
             var control=Input.Read();
+            if(control.pause&&UrbanSimulation.Instance&&UrbanSimulation.Instance.MapOpen){UrbanSimulation.Instance.CloseMap();return;}
             if(control.journal&&(!Blocked||CityLife.Instance.Mode=="journal")){if(CityLife.Instance.Mode=="journal")CityLife.Instance.Dismiss();else CityLife.Instance.StoryJournal();return;}
             if(control.pause&&!Title&&!Dead&&!Transition&&!CityCinematic.Active){if(CityLife.Instance&&CityLife.Instance.Mode=="sleeping")return;if(Dialogue)CloseDialogue();else SetPaused(!Paused);}
             if(Dialogue&&control.interact&&!(CityLife.Instance&&CityLife.Instance.Mode.Length>0)){CloseDialogue();return;}
             if(Blocked){Audio.SetPaused(Paused||Dead);return;}
+            if(control.summonBike){UrbanSimulation.RequestBike();control.summonBike=false;}
             float dt=Mathf.Min(Time.deltaTime,.1f);Audio.SetPaused(false);inputSuppress-=dt;
             if(inputSuppress>0){control.attack=control.grapple=control.interact=false;}
             Elapsed+=dt;NoticeTimer=Mathf.Max(0,NoticeTimer-dt);coreCooldown-=dt;
@@ -120,10 +123,10 @@ namespace AfterSignal
         public string Objective
         {
             get {
-                if(stage==StageId.UrbanCity)return "M 도시 지도 · E 차량 탑승 / 건물 출입 · 주유소에서 연료 보충";
+                if(stage==StageId.UrbanCity)return "M 지도 / ESC 닫기 · E 탑승 / 출입 · V 서하 바이크 호출";
                 if(stage==StageId.UrbanInterior&&ResidentialWorld.VisitHome>=0)return ResidentialWorld.VisitTitle+" · E / ESC";
                 if(stage==StageId.UrbanInterior)return UrbanCatalog.Name(UrbanCatalog.Current)+" · 직원과 대화 / 출입문으로 돌아가기";
-                if(stage==StageId.Residence)return Player.transform.position.y>18?"내 방을 둘러보고 현관문 열기 · E / 승강기 또는 비상계단으로 1층":"1층 출입구에서 E · 애프터라이트로 외출";
+                if(stage==StageId.Residence)return "새벽 골목의 작은 집 · 침대 / 옷장 / 금고 · 현관 E 외출";
                 if(stage==StageId.School)return "학교 도서실과 교실 탐색 · 교사와 대화 / 출입구 E";
                 if(stage==StageId.Clinic)return "접수와 진료실 · 의료진에게 치료받기 / 출입구 E";
                 if(stage==StageId.Headquarters)return "작전 단말 · 중앙역 조사 / 외벽 기록 회수 작전";

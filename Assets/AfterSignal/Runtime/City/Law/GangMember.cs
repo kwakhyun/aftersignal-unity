@@ -7,6 +7,8 @@ namespace AfterSignal
         public WorldActor Body { get; private set; }
         public int ShotsFired { get; private set; }
         public bool AttackingPlayer=>playerTarget;
+        public bool CampaignUnit;
+        public int CampaignWeapon;
         public WorldActor Target { get; private set; }
         public void GoTo(Vector3 point){home=point;}
         GameDirector game;
@@ -71,7 +73,7 @@ namespace AfterSignal
             {
                 search = .4f;
                 var next = FactionCombat.NearestOpponent(Body, 44);
-                bool attackPlayer = provoked > 0 && FactionCombat.Visible(Body.Center, game.Player.Shoulder, 32)
+                bool attackPlayer = CampaignUnit || provoked > 0 && FactionCombat.Visible(Body.Center, game.Player.Shoulder, 32)
                     && (!next || (game.Player.Shoulder - Body.Center).sqrMagnitude < (next.Center - Body.Center).sqrMagnitude);
                 if (next != Target || playerTarget != attackPlayer) aim = 0;
                 Target = next;
@@ -95,11 +97,11 @@ namespace AfterSignal
                     {
                         actor.Pose(3, facing);
                         Vector3 muzzle = Body.Center+Vector3.up*.35f+(shotTarget-Body.Center).normalized*.65f;
-                        FactionCombat.Fire(Body, muzzle, shotTarget, 30, 10, SignalEffects.Red, playerTarget);
-                        game.Audio.PlayGun(GunshotKind.GangPistol, muzzle);
+                        FactionCombat.Fire(Body, muzzle, shotTarget, 40, CampaignUnit?CampaignWeapon==1?15:8:10, SignalEffects.Red, playerTarget);
+                        game.Audio.PlayGun(CampaignUnit?CampaignWeapon==1?GunshotKind.Shotgun:GunshotKind.Rifle:GunshotKind.GangPistol, muzzle);
                         ShotsFired++;
                         recoil = .2f;
-                        cooldown = 1.5f;
+                        cooldown = CampaignUnit?CampaignWeapon==1?1.5f:.48f:1.5f;
                     }
                 }
                 else if (visible && delta.magnitude < 23 && cooldown <= 0)

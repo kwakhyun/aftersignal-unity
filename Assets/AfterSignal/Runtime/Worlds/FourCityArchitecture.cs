@@ -9,7 +9,7 @@ namespace AfterSignal
             if(v.kind==VenueKind.Sinkhole){RegionalTerrain.Sinkhole(g,venue);g.Finish();return;}
             if(v.kind==VenueKind.Slum){RegionalSettlements.Slum(g,venue);g.Finish();return;}
             if(v.kind==VenueKind.Island){RegionalSettlements.Island(g,venue);g.Finish();return;}
-            g.Box("Venue plaza",new(0,-.12f,0),new(w+.5f,.24f,d+.5f),v.city==3?"DeepDeck":"Pavement",true);
+            g.Box("Venue plaza",new(0,-.12f,0),new(w+.5f,.16f,d+.5f),v.city==3?"DeepDeck":"Pavement",true);
             for(int s=-1;s<=1;s+=2){g.Box("Entry wayfinding strip",new(s*4,.025f,-d*.5f+10),new(.3f,.03f,25),"NeonCyan");g.Beam(new(s*10,0,-d*.5f+5),new(s*10,6,-d*.5f+5),.4f,"FutureCopper");}
             g.Sign(v.title,new(0,5,-d*.5f+4),.45f);
             if(Regional(v))RegionalBuilding(g,venue);

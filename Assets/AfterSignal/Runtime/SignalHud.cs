@@ -18,7 +18,7 @@ namespace AfterSignal
         Image hpBar,energyBar,bossBar,fade;
         GameObject modal,dialogueBox,bossPanel;
         RectTransform cursor,candidate,safeMarker;
-        Button primary,secondary,third,musicButton,sfxButton,homeButton;
+        Button primary,secondary,third,musicButton,sfxButton,homeButton,bikeButton;
         Button motionButton,effectButton,postButton,graphicsButton;GameObject settingsRow;
         Image hpTrail;float displayedHealth=100,nextText;
         static readonly string[] weaponNames={"01  ·  KATANA / 연속 검격","02  ·  GREATSWORD / 중검","03  ·  PISTOL / 조준 사격"};
@@ -43,8 +43,9 @@ namespace AfterSignal
             modalBody=Label(card,"",40,223,530,102,18,muted);
             primary=MakeButton(card,"",40,350,530,58,()=>Primary());
             secondary=MakeButton(card,"",40,423,530,48,()=>Secondary());
-            third=MakeButton(card,"",40,486,340,44,()=>Third());
-            homeButton=MakeButton(card,"집으로 복귀",390,486,180,44,CashLocations.ReturnHome);
+            third=MakeButton(card,"",40,486,190,44,()=>Third());
+            homeButton=MakeButton(card,"집으로 복귀",240,486,155,44,CashLocations.ReturnHome);
+            bikeButton=MakeButton(card,"V · 바이크 호출",405,486,165,44,()=>{game.SetPaused(false);UrbanSimulation.RequestBike();});
             settingsRow=Panel(card,"Presentation options",40,541,530,42,Color.clear).gameObject;
             motionButton=MakeButton(settingsRow.transform,"",0,0,171,38,()=>{PresentationSettings.Motion=PresentationSettings.Motion>0?0:.65f;PresentationSettings.Save();ConfigureModal("pause");});
             effectButton=MakeButton(settingsRow.transform,"",180,0,171,38,()=>{PresentationSettings.Effects=PresentationSettings.Effects>0?0:.7f;PresentationSettings.Save();ConfigureModal("pause");});
@@ -84,6 +85,7 @@ namespace AfterSignal
             var district=CampaignCatalog.Get(game.stage);if(district!=null&&district.chapter>0){int first=district.chapter==5?22:district.chapter==2?4:district.chapter==3?11:14,count=district.chapter==5?1:district.chapter==2?7:3;area.text=$"CH {district.chapter:00}  ·  {(int)game.stage-first+1}/{count}  /  {district.title}";}
             }
             notice.text=game.NoticeTimer>0&&!game.Blocked?game.Notice:"";
+            notice.rectTransform.anchoredPosition=new Vector2(0,CampaignBattle.Active?-96:-200);
             prompt.text=!game.Blocked&&game.Nearby?$"[ E ]   {game.Nearby.title}":"";
             anchorHint.text=game.Blocked?"":game.Player.Rope.Attached?"오른쪽 버튼 유지 · W 감기 / S 풀기 · SPACE 도약 · 버튼을 놓아 관성 이동":game.Player.Rope.Candidate?"오른쪽 클릭 유지 · 표시된 앵커에 로프 발사":"";
             Cursor.visible=!game.CameraRig.CanLook;cursor.gameObject.SetActive(game.CameraRig.CanLook);
@@ -107,7 +109,7 @@ namespace AfterSignal
         {
             if(mode=="")return;
             musicButton.gameObject.SetActive(mode=="pause");
-            homeButton.gameObject.SetActive(mode=="pause");
+            homeButton.gameObject.SetActive(mode=="pause");bikeButton.gameObject.SetActive(mode=="pause");
             sfxButton.gameObject.SetActive(mode=="pause");
             graphicsButton.gameObject.SetActive(mode=="pause");ButtonText(graphicsButton,"그래픽: "+FidelityPresentation.PresetName+"  ·  클릭하여 변경");
             ButtonText(sfxButton,game.Audio.SfxVolume<.01f?"효과음: 꺼짐  ·  클릭하여 켜기":$"효과음: {game.Audio.SfxVolume*100:0}%  ·  클릭하여 조절");

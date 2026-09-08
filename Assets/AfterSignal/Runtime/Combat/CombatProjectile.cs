@@ -3,7 +3,7 @@ namespace AfterSignal
 {
     public sealed class CombatProjectile:MonoBehaviour
     {
-        Vector3 velocity;PlayerMotor owner;float fuse,damage;bool grenade,done;
+        Vector3 velocity;PlayerMotor owner;float fuse,damage;bool grenade,done;CityVehicle direct;
         public static CombatProjectile Launch(PlayerMotor owner,bool grenade,float damage)
         {
             var go=new GameObject(grenade?"Thrown fragmentation grenade":"LANCER rocket");go.transform.position=owner.Muzzle;
@@ -21,7 +21,7 @@ namespace AfterSignal
             if(Ballistics.Cast(transform.position,step.normalized,step.magnitude+.12f,owner.transform,out var hit))
             {
                 transform.position=hit.point+hit.normal*.13f;
-                if(!grenade){Detonate();return;}
+                if(!grenade){direct=hit.collider.GetComponentInParent<CityVehicle>();Detonate();return;}
                 velocity=Vector3.Reflect(velocity,hit.normal)*.42f;if(velocity.magnitude<1.1f)velocity=Vector3.zero;
             }
             else transform.position+=step;
@@ -31,7 +31,7 @@ namespace AfterSignal
         }
         public void Detonate()
         {
-            if(done)return;done=true;VehicleExplosion.Create(transform.position,grenade?2.2f:3.2f);BlastDamage.Create(transform.position,grenade?7:10,damage);
+            if(done)return;done=true;VehicleExplosion.Create(transform.position,grenade?2.2f:3.2f);BlastDamage.Create(transform.position,grenade?7:10,damage,null,null,grenade?BlastPayload.Conventional:BlastPayload.Missile,direct);
             owner?.Director.Audio.Play("urban_explosion",transform.position,.48f,3);Destroy(gameObject);
         }
     }

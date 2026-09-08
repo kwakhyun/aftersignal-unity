@@ -10,7 +10,7 @@ namespace AfterSignal
         IEnumerator Start()
         {
             yield return new WaitForSeconds(1.5f);var g=GameDirector.Instance;
-            if(g.stage==StageId.Residence){Make(new Vector3(3,22.1f,3.7f),true,false);yield break;}
+            if(g.stage==StageId.Residence){Make(new Vector3(2,.1f,2.8f),true,false);yield break;}
             if(!CivicWorld.Interior(g.stage))yield break;
             int kind=g.stage==StageId.Clinic?4:g.stage==StageId.UrbanInterior?UrbanCatalog.Kind(UrbanCatalog.Current):-1;
             if(kind!=3&&kind!=4&&kind!=7&&kind!=9&&kind!=15&&kind!=0)yield break;
@@ -54,7 +54,7 @@ namespace AfterSignal
             if(g.Dead||WantedSystem.Level>0||PrisonSystem.Instance&&PrisonSystem.Instance.Jailed||CrimeObservation.Instance&&CrimeObservation.Instance.PendingCalls>0){g.SetPaused(false);g.Toast("추격·신고·수감 상태에서는 집으로 복귀할 수 없습니다.",4);return;}
             if(UrbanSimulation.Instance&&UrbanSimulation.Instance.Current)UrbanSimulation.Instance.EmergencyExit(UrbanSimulation.Instance.Current);
             CityLife.Instance?.Dismiss();g.SetPaused(false);ResidentialWorld.VisitHome=-1;ResidentialWorld.VisitResident=-1;
-            CivicWorld.Travel(g,StageId.Residence,new Vector3(8,22.15f,-1));
+            CivicWorld.Travel(g,StageId.Residence,CompactHome.Spawn);
         }
         void OnDestroy(){if(Instance==this)Instance=null;}
     }

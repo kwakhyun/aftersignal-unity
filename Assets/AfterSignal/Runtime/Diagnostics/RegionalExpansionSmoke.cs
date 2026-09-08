@@ -28,8 +28,8 @@ namespace AfterSignal
             var world=FourCityWorld.Instance;var sim=UrbanSimulation.Instance;
             report.houses=RegionalSettlements.Houses;report.venues=world.Facilities.Count;report.regionalPopulation=FourCityCatalog.Venues.Skip(28).Sum(v=>v.visitors);
             Check(FourCityCatalog.Venues.Select(v=>v.id).Distinct().Count()==FourCityCatalog.Venues.Length,"Unique facility ids preserve campaign indices");
-            Check(report.houses>180,"Large lowland district contains over 180 furnished dwellings");
-            var slum=world.Find("dawn-lowlands");Check(slum.transform.Find("Original Haven hometown"),"Original hometown architecture and doors are retained in the lowlands");
+            Check(report.houses>=100&&report.houses<210,"Compact village contains densely arranged small dwellings");
+            var slum=world.Find("dawn-lowlands");Check(!slum.transform.Find("Original Haven hometown")&&slum.transform.Find("Seoha small house entrance"),"Rebuilt small-house village replaces the detached hometown");
             Check(slum.GetComponentsInChildren<InteractionPoint>().Any(p=>p.destination==StageId.Residence),"Integrated hometown retains Seoha's residence entrance");
             Check(game.stageLength>=FourCityCatalog.East&&game.halfDepth>=-FourCityCatalog.South,"Movement bounds cover all regional extensions");
             foreach(var v in world.Facilities.Where(v=>v.Definition.kind>=VenueKind.Police||v.Definition.id=="nova-medical"))
@@ -43,7 +43,7 @@ namespace AfterSignal
             bool overRift=false;foreach(var road in FourCityCatalog.Roads)for(int i=1;i<road.Length;i++)if(RegionalCatalog.InRift(FourCityCatalog.Closest(RegionalCatalog.RiftCenter,road[i-1],road[i]),12))overRift=true;
             Check(!overRift,"Roads detour around the open sinkhole");
             Check(!Physics.Raycast(RegionalCatalog.RiftCenter+new Vector3(5,2,5),Vector3.down,20,1,QueryTriggerInteraction.Ignore),"Sinkhole has a physical opening without a hidden surface slab");
-            Check(FourCityCatalog.Dry(RegionalCatalog.PressureAnnex+Vector3.up*2),"New underwater public district has breathable pressure volume");
+            Check(FourCityCatalog.Dry(RegionalCatalog.PressureAnnex+Vector3.up*2),"Public facilities share the original underwater pressure volume");
             var cars=new List<CityVehicle>();
             for(int group=0;group<3;group++)
             {

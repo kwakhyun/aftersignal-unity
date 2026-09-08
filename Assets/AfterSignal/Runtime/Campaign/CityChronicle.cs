@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 namespace AfterSignal
 {
-    [Serializable] public sealed class StoryStep { public int site; public string kind,person,label,line; public bool world;public Vector3 position; }
+    [Serializable] public sealed class StoryStep { public int site; public string kind,person,label,line,battleMode,outro; public int waves=1,enemyCount=4;public float duration=40;public bool world;public Vector3 position; }
     [Serializable] public sealed class StoryQuest { public string id,title,arc,after,summary; public bool main;public int unlockAt,reward;public StoryStep[] steps; }
     [Serializable] public sealed class StoryCatalog { public StoryQuest[] quests; }
     [Serializable] public sealed class StoryEntry { public string id; public int step,choice;public bool accepted,rewarded; }
@@ -29,6 +29,7 @@ namespace AfterSignal
         void Awake()
         {
             Instance=this;game=GetComponent<GameDirector>();Quests=JsonUtility.FromJson<StoryCatalog>(Resources.Load<TextAsset>("Story/CityChronicle").text).quests;
+            foreach(var quest in Quests)foreach(var step in quest.steps)if(step.world)step.position=CompactCityLayout.Migrate(step.position);
             try{Progress=JsonUtility.FromJson<StorySave>(PlayerPrefs.GetString(SaveKey,""));}catch{Progress=null;}
             if(Progress==null)Progress=new StorySave();if(Progress.entries==null)Progress.entries=new List<StoryEntry>();
             foreach(var q in Quests){var e=Entry(q);e.step=Mathf.Clamp(e.step,0,q.steps.Length);}
@@ -46,7 +47,7 @@ namespace AfterSignal
             if(game.stage==StageId.UrbanInterior)return ResidentialWorld.VisitHome<0&&UrbanCatalog.Current==step.site;
             return game.stage==StageId.Residence&&step.site==0||game.stage==StageId.School&&step.site==5||game.stage==StageId.Clinic&&step.site==4||game.stage==StageId.Headquarters&&step.site==14;
         }
-        Vector3 LocalTarget()=>CurrentStep!=null&&CurrentStep.world?CurrentStep.position:game.stage==StageId.Residence?new Vector3(18,22.1f,-5):new Vector3(18,.1f,-3);
+        Vector3 LocalTarget()=>CurrentStep!=null&&CurrentStep.world?CurrentStep.position:game.stage==StageId.Residence?new Vector3(8,.1f,-3):new Vector3(18,.1f,-3);
         void Update()
         {
             if(!game||!game.Ready)return;
@@ -60,6 +61,12 @@ namespace AfterSignal
             if(combatStarted&&guards.Count>0&&guards.All(g=>!g||!g.Body.Alive)){combatStarted=false;ReadCurrent();}
             if(Time.time<next)return;next=Time.time+.4f;
             var step=CurrentStep;if(step==null||!AtSite(step)){if(marker)Refresh();return;}
+            if(step.kind=="battle")
+            {
+                if(marker){Destroy(marker);marker=null;markerKey=null;}
+                if(!CampaignBattle.Active&&Vector3.Distance(game.Player.transform.position,step.position)<70)CampaignBattle.Begin(this,step);
+                return;
+            }
             string key=Tracked.id+":"+Entry(Tracked).step;
             if(markerKey!=key){Refresh();Spawn(step);markerKey=key;}
         }

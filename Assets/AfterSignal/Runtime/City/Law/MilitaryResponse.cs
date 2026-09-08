@@ -5,39 +5,49 @@ namespace AfterSignal
 {
     public sealed class MilitaryResponse:MonoBehaviour
     {
-        readonly List<CityVehicle> vehicles=new();readonly List<PoliceOfficer> soldiers=new();
+        readonly List<CityVehicle> vehicles=new();readonly List<WorldActor> soldiers=new();
+        public RiftIncursion Incident {get;private set;}
         public int VehicleCount=>vehicles.Count;
         public int SoldierCount=>soldiers.Count;
+        public Vector3 Target=>Incident?Incident.Position:WantedSystem.Instance.LastSeen;
+        public bool Active=>!withdrawn&&(Incident?Incident.Active:WantedSystem.Level>0);
         bool withdrawn,fullyDeployed;
+        public static MilitaryResponse ForIncident(RiftIncursion incident)
+        {var r=new GameObject("국방 출동 지휘 / 잠식체").AddComponent<MilitaryResponse>();r.Incident=incident;return r;}
         IEnumerator Start()
         {
-            GameDirector.Instance.Toast("대규모 민간인 피해 · 군 긴급대응부대 출동",6);
-            var kinds=new[]{CityVehicleType.Truck,CityVehicleType.Truck,CityVehicleType.Tank,CityVehicleType.CombatHelicopter,CityVehicleType.Fighter};
-            for(int i=0;i<kinds.Length;i++)
+            GameDirector.Instance.Toast(Incident?"방위기지에 긴급 지원 요청 · 중장비 출동 준비":"민간인 대규모 희생 확인 · 방위기지 출동 준비",6);
+            float wait=Incident?44:55;
+            while(wait>0&&Active){if(!GameDirector.Instance.Blocked)wait-=Time.deltaTime;yield return null;}
+            var kinds=new[]{CityVehicleType.Truck,CityVehicleType.Truck,CityVehicleType.Tank,CityVehicleType.Tank,CityVehicleType.CombatHelicopter,CityVehicleType.Fighter};
+            if(Target.y< -30){kinds[4]=CityVehicleType.Tank;kinds[5]=CityVehicleType.Truck;}
+            for(int i=0;i<kinds.Length&&Active;i++)
             {
-                if(withdrawn)yield break;
-                var g=GameDirector.Instance;var target=WantedSystem.Instance.LastSeen;
-                var at=target+new Vector3(-85-i*16,0,40+i*12);
-                if(kinds[i]==CityVehicleType.CombatHelicopter)at.y=Mathf.Max(65,target.y+55);
-                else if(kinds[i]==CityVehicleType.Fighter){at+=Vector3.left*160;at.y=Mathf.Max(150,target.y+130);}
-                else if(CityGangWar.FindGround(at,out var safe))at=safe;else at=ExpansionRoads.Sidewalk(at);
-                var car=UrbanSimulation.Instance.Spawn(at,false,(int)kinds[i]);car.name="군 긴급대응 / "+VehicleSeats.Title(kinds[i]);car.occupied=true;car.InitializeDurability();car.health=car.MaxHealth;
-                var unit=car.gameObject.AddComponent<MilitaryVehicleAI>();unit.Initialize(car,this);vehicles.Add(car);
-                yield return new WaitForSeconds(2.5f);
+                bool aircraft=kinds[i]==CityVehicleType.CombatHelicopter||kinds[i]==CityVehicleType.Fighter;Vector3 at;
+                while(Active&&!ResponseDispatch.TryOrigin(Target,true,aircraft,i,out _))yield return new WaitForSeconds(3);
+                if(!Active||!ResponseDispatch.TryOrigin(Target,true,aircraft,i,out at))yield break;
+                var car=UrbanSimulation.Instance.Spawn(at,false,(int)kinds[i]);car.name="방위기지 출동 / "+VehicleSeats.Title(kinds[i]);car.occupied=true;car.InitializeDurability();car.health=car.MaxHealth;
+                car.transform.rotation=Quaternion.Euler(0,Vector3.SignedAngle(Vector3.right,Vector3.ProjectOnPlane(Target-at,Vector3.up),Vector3.up),0);
+                car.gameObject.AddComponent<MilitaryVehicleAI>().Initialize(car,this);vehicles.Add(car);
+                yield return new WaitForSeconds(i<2?7:14);
             }
             fullyDeployed=true;
         }
         public void Deploy(Vector3 at,int index)
         {
-            if(!CityGangWar.FindGround(at,out var safe))return;
-            var soldier=PoliceOfficer.Create(WantedSystem.Instance,safe,4,index);soldier.name="군 긴급대응 소총수";soldier.Body.military=true;PeopleArt.Attach(soldier.gameObject,"Soldier");soldiers.Add(soldier);WantedSystem.Instance.Officers.Add(soldier);
+            if(!Active||!CityGangWar.FindGround(at,out var safe))return;
+            WorldActor body;
+            if(Incident)body=ArmyResponder.Create(safe,index,Incident).Body;
+            else{var s=PoliceOfficer.Create(WantedSystem.Instance,safe,4,index);s.name="군 긴급대응 소총수";s.Body.military=true;PeopleArt.Attach(s.gameObject,"Soldier");WantedSystem.Instance.Officers.Add(s);body=s.Body;}
+            soldiers.Add(body);NpcSpeech.Say(body,NpcDialogueBank.Line(null,"deployment"),4,5);
         }
         public void Withdraw()
         {
-            withdrawn=true;StopAllCoroutines();foreach(var s in soldiers)if(s)s.Withdraw();
-            foreach(var v in vehicles)if(v){var ai=v.GetComponent<MilitaryVehicleAI>();if(ai)Destroy(ai);if(!v.owned)Destroy(v.gameObject,8);}
-            Destroy(this);
+            if(withdrawn)return;withdrawn=true;StopAllCoroutines();
+            foreach(var s in soldiers)if(s){var officer=s.GetComponent<PoliceOfficer>();if(officer)officer.Withdraw();else Destroy(s.gameObject,18);}
+            foreach(var v in vehicles)if(v){var ai=v.GetComponent<MilitaryVehicleAI>();if(ai)Destroy(ai);if(!v.owned)Destroy(v.gameObject,18);}
+            if(Incident)Destroy(gameObject);else Destroy(this);
         }
-        void Update(){if(!withdrawn&&WantedSystem.Level==0)Withdraw();else if(fullyDeployed&&!vehicles.Exists(v=>v&&!v.Wrecked)&&!soldiers.Exists(s=>s&&s.Body.Alive))Destroy(this);}
+        void Update(){if(!withdrawn&&!Active)Withdraw();else if(fullyDeployed&&!vehicles.Exists(v=>v&&!v.Wrecked)&&!soldiers.Exists(s=>s&&s.Alive))Withdraw();}
     }
 }

@@ -20,10 +20,10 @@ namespace AfterSignal
     }
     public static class FourCityCatalog
     {
-        public const float East=6200, North=3600, South=-7300;
+        public const float East=5500, North=1100, South=-5550;
         public static readonly string[] CityNames={"애프터라이트","노바 시티","에레보스 · 잠식도시","네레이드 · 수중도시"};
-        public static readonly Vector3[] Centers={new(1120,0,1650),new(1110,0,-5020),new(3850,0,-900),new(3900,-62,-4480)};
-        public static readonly Rect[] Land={new(0,1095,2200,1255),new(180,-5650,1860,1470),new(2700,-2100,2500,2500),new(100,2349,2050,1160),new(70,-7200,2380,1621)};
+        public static readonly Vector3[] Centers={new(1050,0,160),new(1110,0,-3290),new(3850,0,-900),new(3900,-62,-4480)};
+        public static readonly Rect[] Land={new(2700,-2100,2500,2500)};
         public static readonly CityVenue[] Venues=CreateVenues();
         static CityVenue[] CreateVenues(){var list=new List<CityVenue>{
             new("lumen-garden","루멘 크라운 식물원",0,VenueKind.Garden,350,0,1450,260,250,42,"유리 아치 아래 열대 정원과 빛의 폭포, 공중 산책로를 잇는 도심 온실."),
@@ -54,20 +54,12 @@ namespace AfterSignal
             new("nereid-hospital","심해 종합의료원",3,VenueKind.Hospital,4390,-62,-4640,150,130,65,"감압 치료·진료·입원·응급 복원 기능을 제공하는 의료원."),
             new("nereid-hotel","아비스 그랜드 레지던스",3,VenueKind.Hotel,3960,-62,-5020,165,130,82,"심해 전망 객실과 식당, 주민 공동 거실을 갖춘 주거 호텔."),
             new("nereid-archive","블루 아카이브",3,VenueKind.Archive,4410,-62,-5020,150,130,60,"잠식 이전의 기록을 보존한 도서관. 에레보스 사건을 연결하는 핵심 장소.")
-        };RegionalCatalog.Append(list);return list.ToArray();}
+        };RegionalCatalog.Append(list);CompactCityLayout.Apply(list);return list.ToArray();}
         public static readonly Vector3[][] Roads=MakeRoads();
         static Vector3[][] MakeRoads()
         {
             var r=new List<Vector3[]>();
             void Add(params Vector3[] p)=>RegionalCatalog.AddRoad(r,p);
-            Add(new(880,0,1050),new(880,0,1200),new(2100,0,1200));
-            foreach(float x in new[]{160f,650,930,2100})Add(new(x,0,1200),new(x,0,2240));
-            Add(new(1450,0,1200),new(1450,0,1720),new(1830,0,1720),new(1830,0,2240));
-            foreach(float z in new[]{1720f,2240})Add(new(160,0,z),new(2100,0,z));
-            Add(new(2000,0,-4050),new(2090,0,-4270),new(2000,0,-4800),new(2000,0,-5580));
-            Add(new(240,0,-4150),new(240,0,-5580));
-            foreach(float z in new[]{-4290f,-4810,-5580})Add(new(240,0,z),new(2000,0,z));
-            Add(new(1490,0,-4290),new(1490,0,-5580));
             Add(new(2120,0,60),new(2380,0,130),new(2700,0,130),new(3000,0,130),new(4970,0,130));
             foreach(float x in new[]{3010f,3510,3970,4720,5000})Add(new(x,0,130),new(x,0,-1950));
             foreach(float z in new[]{-220f,-820,-1400,-1950})Add(new(2770,0,z),new(5000,0,z));
@@ -77,7 +69,7 @@ namespace AfterSignal
             Add(new(3250,-62,-4880),new(4550,-62,-4880));
             foreach(float x in new[]{3280f,3810,4620})Add(new(x,-62,-3900),new(x,-62,-5200));
             RegionalCatalog.Roads(r);
-            var mainRoads=r.ToArray();
+            var allMain=new List<Vector3[]>(r);allMain.AddRange(ExpansionRoads.Roads);var mainRoads=allMain.ToArray();
             foreach(var v in Venues)
             {
                 if(v.kind==VenueKind.Island||v.kind==VenueKind.Sinkhole||v.kind==VenueKind.Slum)continue;
@@ -90,7 +82,7 @@ namespace AfterSignal
                         if(Mathf.Abs(candidate.y-a.y)>1)continue;bool clear=true;
                         foreach(var other in Venues)
                         {
-                            if(other.city!=v.city)continue;
+                            if(other.city!=v.city||other.kind==VenueKind.Slum||other.kind==VenueKind.Island)continue;
                             float width=other.Sport||other.kind==VenueKind.Amusement?other.size.x*.49f:Mathf.Min(96,other.size.x*.72f)*.5f;
                             float depth=other.Sport||other.kind==VenueKind.Amusement?other.size.y*.49f:Mathf.Min(88,other.size.y*.66f)*.5f;
                             float margin=other==v?2:12;var rect=new Rect(other.position.x-width-margin,other.position.z-depth-margin,width*2+margin*2,depth*2+margin*2);

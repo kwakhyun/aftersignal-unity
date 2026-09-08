@@ -7,7 +7,7 @@ namespace AfterSignal
         public static string Role(CityVenue v,bool staff,int i)
         {
             if(v.kind==VenueKind.Slum)return LowlandJobs[i%LowlandJobs.Length];
-            if(v.kind==VenueKind.Island)return new[]{"어부","선장","조선공","해양 재배사","섬마을 상인","등대 관리인","섬 주민"}[i%7];
+            if(v.kind==VenueKind.Island)return new[]{"양식 드론 운영자","자율항해 선장","로봇 조선 기술자","해양 바이오 연구원","해상 물류 상인","항로 데이터 관리자","해상도시 주민"}[i%7];
             if(v.kind==VenueKind.Prison)return staff?"교도관":"수용자";
             if(v.kind==VenueKind.Military)return i%3==0?"작전 장교":i%3==1?"기지 정비병":"경계 대원";
             if(v.kind==VenueKind.Police)return staff?i%3==0?"수사관":i%3==1?"경찰 행정 직원":"순찰 경찰":"민원 방문객";

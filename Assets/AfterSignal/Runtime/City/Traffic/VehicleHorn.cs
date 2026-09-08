@@ -21,7 +21,7 @@ namespace AfterSignal
             {
                 foreach(var npc in FindObjectsByType<CityNpc>())
                     if(npc&&(npc.transform.position-transform.position).sqrMagnitude<22*22&&npc.GetComponent<WorldActor>().Alive)
-                    {var local=transform.InverseTransformPoint(npc.transform.position);if(Mathf.Abs(local.z)<car.HalfWidth+2&&local.x>0)npc.Panic(transform.position,1.6f);NpcSpeech.Say(npc,Random.value<.5f?"알았어요, 지나가세요!":"조심해서 운전해요!",2);}
+                    {var local=transform.InverseTransformPoint(npc.transform.position);if(Mathf.Abs(local.z)<car.HalfWidth+2&&local.x>0)npc.Panic(transform.position,1.6f);NpcSpeech.Say(npc,NpcDialogueBank.Line(npc,"horn"),2);}
                 var sim=UrbanSimulation.Instance;if(sim)foreach(var other in sim.Cars)
                     if(other&&other!=car&&other.traffic&&(other.transform.position-transform.position).sqrMagnitude<30*30){var horn=other.GetComponent<VehicleHorn>();if(horn&&Random.value<.35f)horn.reply=Time.time+Random.Range(.8f,1.8f);}
             }

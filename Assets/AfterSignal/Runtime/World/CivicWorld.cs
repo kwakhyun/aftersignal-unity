@@ -13,7 +13,8 @@ namespace AfterSignal
         public static Vector3 TownDoor(StageId stage) => stage == StageId.Residence ? new Vector3(16, .15f, 14) : stage == StageId.School ? new Vector3(64, .15f, 19) : stage == StageId.Clinic ? new Vector3(113, .15f, 19) : new Vector3(178, .15f, 19);
         public static void Travel(GameDirector game, StageId destination, Vector3 point)
         {
-            if(destination==StageId.Haven){destination=StageId.UrbanCity;point+=RegionalCatalog.HomeQuarter;}
+            if(destination==StageId.Haven){destination=StageId.UrbanCity;point=CompactHome.Exit;}
+            if(destination==StageId.Residence)point=CompactHome.Spawn;
             arrivalStage = destination;
             arrival = point;
             pending = true;

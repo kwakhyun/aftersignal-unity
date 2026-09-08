@@ -24,7 +24,7 @@ namespace AfterSignal
             if(!game)yield break;
             root=new GameObject("Community spaces and routines").transform;root.SetParent(transform,false);
             if(game.stage==StageId.UrbanCity){CityExteriors();yield break;}
-            if(game.stage==StageId.Residence){Neighbors();yield break;}
+            if(game.stage==StageId.Residence)yield break;
             if(!CivicWorld.Interior(game.stage))yield break;
             if(game.stage==StageId.UrbanInterior&&ResidentialWorld.VisitHome>=0){HomeRoutines();yield break;}
             int type=game.stage==StageId.School?5:game.stage==StageId.Clinic?4:game.stage==StageId.Headquarters?14:UrbanCatalog.Kind(UrbanCatalog.Current);

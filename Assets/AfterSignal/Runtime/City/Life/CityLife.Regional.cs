@@ -23,7 +23,7 @@ namespace AfterSignal
                 Option("암시장 거래",()=>BlackMarket(service));
                 Option("비공식 운송 의뢰",()=>{Dismiss();RegionalErrand.Accept(live);});
                 Option("이웃 심부름 정산",()=>{Dismiss();RegionalErrand.Complete();});
-                Option("서하의 집으로",()=>{Dismiss();CivicWorld.Travel(game,StageId.Residence,new Vector3(8,22.15f,-1));});
+                Option("서하의 집으로",()=>{Dismiss();CivicWorld.Travel(game,StageId.Residence,CompactHome.Spawn);});
             }
             else if(v.kind==VenueKind.Island){Option("선박 이용 안내",()=>game.Toast("부두 옆 보트는 E로 조종합니다. 순환 여객선이 정차하면 G로 승객 탑승, F로 하선하세요.",7));Option("마을 식사 · 18 C",()=>Buy(18,()=>game.Player.Heal(30)));}
             else if(v.kind==VenueKind.Sinkhole){Option("붕괴구 관측",()=>{Dismiss();live?.Observe();game.Toast("기록: 공동 지하 신호망의 노드들이 한 지점으로 수렴하고 있다.",7);});}

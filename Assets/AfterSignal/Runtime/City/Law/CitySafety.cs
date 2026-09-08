@@ -34,6 +34,7 @@ namespace AfterSignal
         {
             // Player reports belong to CrimeObservation; accidents have no suspect.
             if(!suspect||suspect.environmental)return;
+            if(suspect.monster)return; // Giant incursions have delayed military logistics, not instant police reinforcements.
             int id=suspect?suspect.GetInstanceID():-1;
             if(reported.Contains(id))return;
             reported.Add(id);Reports++;

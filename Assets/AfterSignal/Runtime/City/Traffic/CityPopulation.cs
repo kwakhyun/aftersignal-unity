@@ -47,7 +47,7 @@ namespace AfterSignal
         {
             var center = game.Player.transform.position;
             if(game.stage==StageId.UrbanCity&&ExpansionRoads.Outside(center))
-            {var p=ExpansionRoads.Sidewalk(center+new Vector3(Random.Range(-100,100),0,Random.Range(-100,100)));return p;}
+            {var p=LocalCityRoutes.Sidewalk(center+new Vector3(Random.Range(-100,100),0,Random.Range(-100,100)));return p;}
             for (int tries = 0; tries < 30; tries++)
             {
                 Vector3 p;
@@ -90,7 +90,9 @@ namespace AfterSignal
 
         CityPedestrian Spawn(bool hidden)
         {
-            CityPedestrian c = Citizens.Find(p => !p.gameObject.activeSelf);
+            var p = Position(hidden);
+            if(!CityGangWar.FindGround(p,out p))return null;
+            CityPedestrian c = Citizens.Find(person => !person.gameObject.activeSelf);
             if (!c)
             {
                 if (Citizens.Count >= 72)
@@ -103,7 +105,6 @@ namespace AfterSignal
                 go.AddComponent<CityNpc>().Configure(1000 + Citizens.Count);
             }
 
-            var p = Position(hidden);
             c.ResetAt(p, p, sprites[(Citizens.IndexOf(c) / 3) % 4]);
             c.speed = Random.Range(1.8f, 2f);
             SetDestination(c);
@@ -112,7 +113,7 @@ namespace AfterSignal
 
         void SetDestination(CityPedestrian c)
         {
-            if(game.stage==StageId.UrbanCity&&ExpansionRoads.Outside(c.transform.position)){c.WalkTo(ExpansionRoads.Sidewalk(c.transform.position,Random.value>.5f?4:-4),false);return;}
+            if(game.stage==StageId.UrbanCity&&ExpansionRoads.Outside(c.transform.position)){c.WalkTo(LocalCityRoutes.Sidewalk(c.transform.position,Random.value>.5f?4:-4),false);return;}
             if (game.stage == StageId.Haven)
             {
                 c.WalkTo(new Vector3(Mathf.Clamp(c.transform.position.x + Random.Range(-24, 24), 5, 222), .06f, c.transform.position.z), false);
@@ -155,7 +156,7 @@ namespace AfterSignal
                 foreach (var c in Citizens)
                     if (c.gameObject.activeSelf)
                         count++;
-                if (count < (game.stage == StageId.Haven ? 18 : ResidentialWorld.AtHome(LifeState.Hour) ? 16 : 40))
+                if ((game.stage!=StageId.UrbanCity||FourCityCatalog.CityAt(game.Player.transform.position)!=2)&&count < (game.stage == StageId.Haven ? 18 : ResidentialWorld.AtHome(LifeState.Hour) ? 16 : 40))
                     Spawn(true);
             }
         }
@@ -163,6 +164,7 @@ namespace AfterSignal
         public void Eject(Vector3 p)
         {
             var c = Spawn(false);
+            if(!c)return;
             if (c)
             {
                 var safe = game.stage == StageId.UrbanCity ? CityRoadNetwork.Sidewalk(p) : p + Vector3.forward * 3;

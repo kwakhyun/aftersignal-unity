@@ -116,9 +116,9 @@ namespace AfterSignal
         {
             for (int i = 0; i < 16; i++)
             {
-                var p = desired + new Vector3((i % 4 - 1) * .75f, 0, i / 4 * .9f);
+                var p = desired + (i==0?Vector3.zero:new Vector3((i % 4 - 1) * .75f, 0, i / 4 * .9f));
                 if (!Physics.Raycast(p + Vector3.up * 3, Vector3.down, out var floor, 5, 1, QueryTriggerInteraction.Ignore)
-                    || floor.normal.y < .8f || Mathf.Abs(floor.point.y) > .5f) continue;
+                    || floor.normal.y < .8f || Mathf.Abs(floor.point.y-desired.y) > 2) continue;
                 p.y = floor.point.y + .08f;
                 if (Physics.CheckCapsule(p + Vector3.up * .45f, p + Vector3.up * 1.7f, .38f, 1, QueryTriggerInteraction.Ignore)) continue;
                 position = p;

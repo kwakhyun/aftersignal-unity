@@ -1,0 +1,33 @@
+{
+  "date": "2026-09-09",
+  "player": "Builds/CompactCities/AFTERSIGNAL.exe",
+  "build": {
+    "result": "Succeeded",
+    "bytes": 2006221826,
+    "errors": 0,
+    "warnings": 47
+  },
+  "buildLog": "Artifacts/CompactCities/build-shipping.log",
+  "nativeReport": "Artifacts/CompactCities/Final/result.json",
+  "nativeCompleted": true,
+  "passed": 91,
+  "errors": [],
+  "relocatedFacilities": 36,
+  "relocatedBuildings": 209,
+  "villageDwellings": 172,
+  "newCityLandAdded": 0,
+  "groundBatchesRestored": 252,
+  "screenshots": [
+    "DawnAlley",
+    "AfterlightInfill",
+    "NovaInfill",
+    "NereidInfill",
+    "SmartIsland",
+    "SeohaHome"
+  ],
+  "postNativeChanges": [
+    "Correct roof-panorama hint from V to P",
+    "Update legacy regional diagnostics for compact layout"
+  ],
+  "verificationScope": "Targeted native checks and six rendered views; no full-game regression run"
+}

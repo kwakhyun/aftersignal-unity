@@ -128,7 +128,7 @@ namespace AfterSignal
             if (point.kind == InteractionKind.Viewpoint)
             {
                 Panorama = true;
-                game.Toast("옥상 전망 · ← → 시점 회전 / ↑ ↓ 높이 / V 돌아가기", 5);
+                game.Toast("옥상 전망 · ← → 시점 회전 / ↑ ↓ 높이 / P 돌아가기", 5);
                 return true;
             }
 
@@ -156,7 +156,7 @@ namespace AfterSignal
         public void BeforeInput(ref ControlFrame control, float dt)
         {
             var keyboard = Keyboard.current;
-            if (keyboard != null && keyboard.vKey.wasPressedThisFrame && game.stage == StageId.UrbanCity && game.Player.Grounded && game.Player.transform.position.y > 10)
+            if (keyboard != null && keyboard.pKey.wasPressedThisFrame && game.stage == StageId.UrbanCity && game.Player.Grounded && game.Player.transform.position.y > 10)
                 Panorama = !Panorama;
             if (!Panorama)
                 return;

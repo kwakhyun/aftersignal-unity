@@ -8,18 +8,23 @@ namespace AfterSignal
         static readonly List<TacticalTransport> all=new();
         public static bool Pending=>all.Exists(t=>t&&t.remaining>0&&t.car&&!t.car.Wrecked);
         public int Deployed{get;private set;}
-        CityVehicle car;WantedSystem owner;int remaining;float elapsed,release;Transform ramp;bool withdrawing;
-        public static TacticalTransport Create(WantedSystem system,Vector3 at,int count)
+        readonly ResponseDrive route=new();
+        CityVehicle car;WantedSystem owner;int remaining,rank=4;float elapsed,release;Transform ramp;bool withdrawing,patrol;
+        public static TacticalTransport Create(WantedSystem system,Vector3 at,int count,int rank=4)
         {
-            var vehicle=UrbanSimulation.Instance.Spawn(at,false,3);vehicle.name="특수대응팀 장갑차";
+            CityVehicle vehicle;
+            if(rank<3){var p=PoliceCar.Create(system,at);p.enabled=false;system.Cars.Add(p);vehicle=p.Vehicle;}
+            else vehicle=UrbanSimulation.Instance.Spawn(at,false,3);
+            vehicle.name=rank<3?"경찰서 출동 순찰차":"특수대응팀 장갑차";
             var t=vehicle.gameObject.AddComponent<TacticalTransport>();t.car=vehicle;t.owner=system;t.remaining=count;
-            vehicle.InitializeDurability();vehicle.health=vehicle.MaxHealth;vehicle.occupied=true;return t;
+            t.rank=rank;t.patrol=rank<3;vehicle.InitializeDurability();vehicle.health=vehicle.MaxHealth;vehicle.occupied=true;return t;
         }
         void OnEnable()=>all.Add(this);
         void OnDisable()=>all.Remove(this);
         IEnumerator Start()
         {
             yield return null;
+            if(patrol){car.GetComponent<VehicleCabin>()?.SetPassengers(remaining);yield break;}
             foreach(var renderer in GetComponentsInChildren<MeshRenderer>())if(renderer.name=="Sculpted chassis"||renderer.name.Contains("Cargo")||renderer.name.Contains("roof"))renderer.enabled=false;
             var root=new GameObject("Tactical armoured body").transform;root.SetParent(transform,false);
             WorldGeometry.Part(root,"Armoured troop compartment",new Vector3(-1,1.65f,0),new Vector3(5,2.5f,2.65f),"DarkMetal");
@@ -45,14 +50,14 @@ namespace AfterSignal
             if(UrbanSimulation.Instance.Current==car){remaining=0;return;}
             elapsed+=Time.deltaTime;
             var delta=owner.LastSeen-transform.position;delta.y=0;
-            if(delta.magnitude>24&&elapsed<18&&remaining>0)
-            {var input=ControlFrame.Empty;input.move=new Vector2(Mathf.Clamp(Vector3.SignedAngle(car.Forward,delta,Vector3.up)/30,-1,1),.55f);car.Drive(input,Mathf.Min(.05f,Time.deltaTime));return;}
+            if(delta.magnitude>24&&remaining>0)
+            {route.Drive(car,owner.LastSeen,Mathf.Min(.05f,Time.deltaTime),24);return;}
             car.speed=0;if(ramp)ramp.localRotation=Quaternion.RotateTowards(ramp.localRotation,Quaternion.Euler(0,0,88),Time.deltaTime*70);
             if(remaining<=0||elapsed<2)return;
             release-=Time.deltaTime;if(release>0)return;release=.65f;
             Vector3 door=transform.position-car.Forward*(car.HalfLength+1.7f)+transform.forward*((Deployed%2==0?1:-1)*.65f);
             if(!CityGangWar.FindGround(door,out var ground))return;
-            var officer=PoliceOfficer.Create(owner,ground,4,Deployed);owner.Officers.Add(officer);NpcSpeech.Say(officer,"하차! 엄폐하고 용의자를 제압해!",3);
+            var officer=PoliceOfficer.Create(owner,ground,rank,Deployed);owner.Officers.Add(officer);NpcSpeech.Say(officer,NpcDialogueBank.Line(null,"deployment"),3);
             remaining--;Deployed++;car.GetComponent<VehicleCabin>()?.SetPassengers(remaining);
         }
         public void Withdraw(){remaining=0;withdrawing=true;var lights=GetComponent<ResponseLightbar>();if(lights)lights.enabled=false;}

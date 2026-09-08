@@ -13,7 +13,8 @@ namespace AfterSignal
         public float LastPlayerHit {get;private set;}=-100;
         bool deathHandled;
         public bool Alive => health > 0;
-        public Vector3 Center => transform.position + Vector3.up * (helicopter ? 0 : 1.1f);
+        public RiftCreature Titan;
+        public Vector3 Center => Titan ? Titan.AimCenter : transform.position + Vector3.up * (helicopter ? 0 : 1.1f);
 
         float hurt;
         void OnEnable()
@@ -30,7 +31,7 @@ namespace AfterSignal
 
         void LateUpdate()
         {
-            if(Alive){if(!helicopter&&!GetComponent<NpcBody>())gameObject.AddComponent<NpcBody>();return;}
+            if(Alive){if(!helicopter&&!monster&&!GetComponent<NpcBody>())gameObject.AddComponent<NpcBody>();return;}
             if(!helicopter&&!GetComponent<CorpseBlood>())CorpseBlood.Attach(gameObject);
             if(!deathHandled){deathHandled=true;CreditDrop.From(this);}
         }
@@ -51,6 +52,7 @@ namespace AfterSignal
             if (!Alive || amount <= 0 || Time.time < hurt)
                 return;
             hurt = Time.time + .08f;
+            if(Titan)amount*=Titan.Armour;
             float before = health;
             if(!source)LastPlayerHit=Time.time;
             if(!police&&!gang&&!monster&&!military){CitySafety.Shock(transform.position);CitySafety.Alarm(transform.position,source,GetComponent<CityNpc>());}
@@ -110,7 +112,7 @@ namespace AfterSignal
             if (!Alive || Time.time < hurt)
                 return;
             Damage(speed >= 12 ? 100 : speed * 4, direction * Mathf.Max(3, speed));
-            if(!helicopter&&speed>3)CivilianImpact.Launch(this,direction,speed);
+            if(!helicopter&&!monster&&speed>3)CivilianImpact.Launch(this,direction,speed);
         }
 
         public static void Strike(Vector3 origin, Vector3 direction, float range, float damage, HashSet<WorldActor> struck, bool blade=false)

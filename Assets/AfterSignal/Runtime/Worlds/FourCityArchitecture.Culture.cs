@@ -119,7 +119,7 @@ namespace AfterSignal
             venue.viewPoint=new(20,height+.12f,-8);venue.lookPoint=new(0,height+8,0);venue.activityPoints.Add(venue.viewPoint);
         }
         public static Vector3 Track(float progress)
-        {float a=progress*Mathf.PI*2;return new Vector3(Mathf.Cos(a)*(245+22*Mathf.Sin(a*3)),.08f,Mathf.Sin(a)*(133+12*Mathf.Cos(a*2)));}
+        {float a=progress*Mathf.PI*2;return new Vector3(Mathf.Cos(a)*(211+16*Mathf.Sin(a*3)),.08f,Mathf.Sin(a)*(119+9*Mathf.Cos(a*2)));}
         static void Circuit(CityGeometry g,VenueRuntime venue)
         {
             for(int i=0;i<192;i++)
@@ -131,7 +131,7 @@ namespace AfterSignal
         }
         static void Park(CityGeometry g,VenueRuntime venue)
         {
-            g.Ring(Vector3.up*.04f,170,110,5,"TerminalFloor");
+            g.Ring(Vector3.up*.04f,155,95,5,"TerminalFloor");
             for(int garden=0;garden<6;garden++)
             {
                 var center=new Vector3(-150+garden*60,0,83);g.Cylinder(center,18,.18f,"FutureCopper",32);g.Cylinder(center+Vector3.up*.18f,17.8f,.04f,"GardenSoil",32);
@@ -140,8 +140,8 @@ namespace AfterSignal
             }
             g.Box("Park central pedestrian avenue",new(-45,.02f,4),new(8,.04f,220),"TerminalFloor");g.Box("Garden promenade",new(0,.025f,57),new(325,.05f,8),"TerminalFloor");
             for(int side=-1;side<=1;side+=2)for(int light=0;light<12;light++){var p=new Vector3(-45+side*5,0,-101+light*18);g.Beam(p,p+Vector3.up*4,.12f,"FutureSilver");g.Cylinder(p+Vector3.up*4,.4f,.16f,"NeonWarm",12);}
-            for(int i=0;i<12;i++){float a=i*Mathf.PI/6;var p=new Vector3(Mathf.Cos(a)*175,0,Mathf.Sin(a)*113);Planter(g,p);Bench(g,p+new Vector3(0,0,4));venue.activityPoints.Add(p+Vector3.up*.08f);}
-            for(int n=0;n<6;n++){var p=new Vector3(-100+n*40,0,-132);g.Box("Park shop",p+Vector3.up*2,new(26,4,12),"FutureCeramic",true);g.Box("Park shop awning",p+new Vector3(0,4,-7),new(28,.3f,5),n%2==0?"SeatCoral":"SeatBlue");Counter(g,p+new Vector3(0,0,-8));venue.staffPoints.Add(p+new Vector3(0,.08f,-6));}
+            for(int i=0;i<12;i++){float a=i*Mathf.PI/6;var p=new Vector3(Mathf.Cos(a)*153,0,Mathf.Sin(a)*99);Planter(g,p);Bench(g,p+new Vector3(0,0,4));venue.activityPoints.Add(p+Vector3.up*.08f);}
+            for(int n=0;n<6;n++){var p=new Vector3(-100+n*40,0,-106);g.Box("Park shop",p+Vector3.up*2,new(26,4,12),"FutureCeramic",true);g.Box("Park shop awning",p+new Vector3(0,4,-7),new(28,.3f,5),n%2==0?"SeatCoral":"SeatBlue");Counter(g,p+new Vector3(0,0,-8));venue.staffPoints.Add(p+new Vector3(0,.08f,-6));}
             venue.CreateRides();venue.viewPoint=new(-130,.15f,-70);venue.lookPoint=new(-105,26,10);
         }
     }

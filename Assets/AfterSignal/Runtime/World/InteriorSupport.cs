@@ -14,21 +14,8 @@ namespace AfterSignal
         {
             var floor=new GameObject("Interior structural collision floor",typeof(BoxCollider));floor.layer=0;floor.transform.SetParent(transform,false);
             foundation=floor.GetComponent<BoxCollider>();Resize();
-            if(game.stage==StageId.Residence)
-            {
-                // Keep the 3.6m elevator shaft open through the sixth-floor safety slab.
-                Slab(new Vector3(18.6f,21.75f,0),new Vector3(43.2f,.5f,30));
-                Slab(new Vector3(47.9f,21.75f,0),new Vector3(8.2f,.5f,30));
-                Slab(new Vector3(42,21.75f,-8.4f),new Vector3(3.6f,.5f,13.2f));
-                Slab(new Vector3(42,21.75f,8.4f),new Vector3(3.6f,.5f,13.2f));
-            }
             lastSafe=CivicWorld.SafeSpawn(game.stage,game.spawn);
             Physics.SyncTransforms();
-        }
-        void Slab(Vector3 center,Vector3 size)
-        {
-            var room=new GameObject("Apartment slab outside elevator shaft",typeof(BoxCollider));room.transform.SetParent(transform,false);
-            room.GetComponent<BoxCollider>().center=center;room.GetComponent<BoxCollider>().size=size;
         }
         void Resize(){foundation.center=new Vector3(game.stageLength*.5f,-.55f,0);foundation.size=new Vector3(game.stageLength+2,1.1f,game.halfDepth*2+2);}
         void LateUpdate()

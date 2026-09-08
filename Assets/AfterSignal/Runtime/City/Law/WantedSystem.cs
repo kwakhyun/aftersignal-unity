@@ -22,7 +22,7 @@ namespace AfterSignal
         public PoliceHelicopter Helicopter;
         public Vector3 LastSeen { get; private set; }
         public bool Seen { get; private set; }
-        public float EscapeTime => 18 + Level * 8;
+        public float EscapeTime => 36 + Level * 10;
 
         public int ActiveOfficers
         {
@@ -37,7 +37,7 @@ namespace AfterSignal
         }
 
         GameDirector game;
-        float dispatchClock = 2, incidentClock;
+        float dispatchClock = 12, incidentClock, responseAge;
         int deployed, carCount;
         bool engaged;
         public void Initialize(GameDirector owner)
@@ -63,7 +63,7 @@ namespace AfterSignal
                 Instance.incidentClock = 2;
                 Instance.engaged = true;
                 if (old == 0)
-                    Instance.dispatchClock = 1.2f;
+                    {Instance.dispatchClock = Level>=3?20:12;Instance.responseAge=0;}
             }
 
             if (Level != old)
@@ -107,7 +107,7 @@ namespace AfterSignal
             if (!game || !game.Ready || game.Blocked || Level == 0)
                 return;
             float dt = Mathf.Min(.1f, Time.deltaTime);
-            incidentClock -= dt;
+            incidentClock -= dt;responseAge+=dt;
             Seen = incidentClock > 0;
             foreach (var body in WorldActor.All)
                 if (body && body.police && body.Alive)
@@ -131,12 +131,12 @@ namespace AfterSignal
             }
 
             dispatchClock -= dt;
-            if (dispatchClock <= 0 && deployed < Strength[Level])
+            if (dispatchClock <= 0 && deployed < Strength[Level] && (Level<3||responseAge>=20))
             {
-                if(Level>=3&&game.stage==StageId.UrbanCity&&UrbanSimulation.Instance)
+                if(game.stage==StageId.UrbanCity&&UrbanSimulation.Instance)
                 {
-                    int squad=Mathf.Min(4,Strength[Level]-deployed);
-                    TacticalTransport.Create(this,SpawnPoint(deployed),squad);deployed+=squad;dispatchClock=5;
+                    int squad=Mathf.Min(Level>=3?4:2,Strength[Level]-deployed);dispatchClock=5;
+                    if(ResponseDispatch.TryOrigin(LastSeen,false,false,deployed,out var origin)){TacticalTransport.Create(this,origin,squad,Level>=3?4:Level);deployed+=squad;dispatchClock=12;}
                 }
                 else
                 {
@@ -153,8 +153,8 @@ namespace AfterSignal
                 }
             }
 
-            if (Level >= 4 && !Helicopter && game.stage == StageId.UrbanCity)
-                Helicopter = PoliceHelicopter.Create(this, LastSeen + new Vector3(-45, 48, 35));
+            if (Level >= 4 && responseAge>32 && !Helicopter && game.stage == StageId.UrbanCity && ResponseDispatch.TryOrigin(LastSeen,false,true,0,out var helipad))
+                Helicopter = PoliceHelicopter.Create(this,helipad);
             bool aircraftAlive = Helicopter && Helicopter.Body.Alive;
             if (engaged && deployed >= Strength[Level] && ActiveOfficers == 0 && !aircraftAlive && !TacticalTransport.Pending && !GetComponent<MilitaryResponse>())
             {

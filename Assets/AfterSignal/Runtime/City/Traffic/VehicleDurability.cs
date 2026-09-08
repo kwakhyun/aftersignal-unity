@@ -6,7 +6,7 @@ namespace AfterSignal
         public static float Capacity(CityVehicle car)
         {
             if(car.GetComponent<AuthoredCraft>())return 50000;
-            if(car.GetComponent<TacticalTransport>())return 6500;
+            if(car.GetComponent<TacticalTransport>()&&!car.GetComponent<PoliceCar>())return 6500;
             return car.type switch {
                 CityVehicleType.Motorcycle=>600, CityVehicleType.SportsCar=>1000,
                 CityVehicleType.Bus=>2200, CityVehicleType.Truck=>2800,
@@ -26,7 +26,7 @@ namespace AfterSignal
     public sealed partial class CityVehicle
     {
         public int durabilityVersion;
-        bool playerDamage;WorldActor lastAttacker;
+        bool playerDamage;WorldActor lastAttacker;float collisionSpeechAt;
         public WorldActor DamageSource=>playerDamage?null:lastAttacker?lastAttacker:TrafficDamageSource.Environment;
         internal void RecordDamageSource(WorldActor source){playerDamage=!source;lastAttacker=source;}
         public float MaxHealth=>VehicleDurability.Capacity(this);
@@ -39,6 +39,7 @@ namespace AfterSignal
         public void CollisionDamage(float closingSpeed,Vector3 point,CityVehicle other=null)
         {
             InitializeDurability();
+            if(closingSpeed>3&&occupied&&Time.time>collisionSpeechAt){collisionSpeechAt=Time.time+7;NpcSpeech.Say(this,NpcDialogueBank.Line(null,"collision"),4,4);}
             var sim=UrbanSimulation.Instance;var game=GameDirector.Instance;
             bool player=sim&&sim.Current&&(sim.Current==this||sim.Current==other);
             Damage(VehicleDurability.CollisionDamage(closingSpeed,MaxHealth),point,player?null:TrafficDamageSource.Environment,false);

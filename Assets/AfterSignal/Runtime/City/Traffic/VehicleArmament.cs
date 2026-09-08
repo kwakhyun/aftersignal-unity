@@ -24,6 +24,8 @@ namespace AfterSignal
             if(turret)turretRest=turret.localRotation;if(elevation)barrelRest=elevation.localRotation;
         }
         public void Resupply(){Shells=32;Missiles=8;reserve=24;}
+        public Vector3 AimForAI(Vector3 point,float dt)
+        {Aim=point;if(!turret)ResolveRig();AimTurret(dt);return muzzle?muzzle.position:transform.position+Vector3.up*3;}
         public void Tick(ControlFrame input,float dt)
         {
             if(!car)car=GetComponent<CityVehicle>();if(!car||car.Wrecked||!Camera.main)return;
