@@ -45,6 +45,8 @@ namespace AfterSignal
                     var c = overlaps[i];
                     if (!c || c.GetComponentInParent<CityVehicle>())
                         continue;
+                    var structure=c.GetComponentInParent<CollapsibleBuilding>();
+                    if(structure){foreach(var r in structure.Presentation)Mark(r);continue;}
                     var group = c.GetComponentInParent<CityBuildingCutaway>();
                     if (group && group.upper != null)
                     {
@@ -62,6 +64,8 @@ namespace AfterSignal
                         continue;
                     if (c.bounds.max.y < g.Player.transform.position.y + .12f)
                         continue;
+                    var structure=c.GetComponentInParent<CollapsibleBuilding>();
+                    if(structure){foreach(var r in structure.Presentation)Mark(r);continue;}
                     var group = c.GetComponentInParent<CityBuildingCutaway>();
                     if (group && group.upper != null)
                     {

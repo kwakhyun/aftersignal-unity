@@ -12,7 +12,7 @@ namespace AfterSignal
         public int PassengerCount {get;private set;}
         static readonly string[] passengerRoles={"CivilianMan","CivilianWoman","OfficeMan","OfficeWoman","Worker","ElderMan","ElderWoman","TeacherMan","TeacherWoman","Doctor","Nurse","Bartender","PatientMan","PatientWoman"};
         readonly List<string> identities=new List<string>();
-        int boardingSerial;
+        int boardingSerial;float visualClock;
         
         public void Initialize(CityVehicle owner)
         {
@@ -33,7 +33,7 @@ namespace AfterSignal
                 if(n=="bus saloon") mesh.enabled=false;
             }
             bool bus=car.type==CityVehicleType.Bus;
-            if(bus)
+            if(bus&&!Resources.Load<GameObject>("WorldAssets/FutureBus/FutureBus"))
             {
                 Detail("Saloon floor",new Vector3(0,1,0),new Vector3(8.6f,.12f,2.25f),"WarmWood");
                 for(int side=-1;side<=1;side+=2)
@@ -80,6 +80,11 @@ namespace AfterSignal
             for(int i=PassengerCount+1;i<=next;i++)identities[i]=car.GetComponent<PoliceCar>()?"Police":car.IsAircraft?FacilityPeople.Key(4+(boardingSerial++ + i)%4):passengerRoles[(boardingSerial++ + i)%passengerRoles.Length];
             PassengerCount=next;
         }
+        public void SetManifest(List<string> manifest)
+        {
+            PassengerCount=Mathf.Min(manifest.Count,occupants.Count-2);
+            for(int i=0;i<PassengerCount;i++)identities[i+1]=manifest[i];
+        }
         public List<string> ReleaseOccupants(bool playerDriver)
         {
             var result=new List<string>();
@@ -90,13 +95,16 @@ namespace AfterSignal
         void LateUpdate()
         {
             if(!car)return;
+            var camera=Camera.main;bool nearby=camera&&(transform.position-camera.transform.position).sqrMagnitude<180*180;
+            if(Time.time<visualClock)return;visualClock=Time.time+(nearby?0:.75f);
             bool seo=UrbanSimulation.Instance&&UrbanSimulation.Instance.Current==car;
             bool rider=CityBusService.Instance&&CityBusService.Instance.Riding==car;
             for(int i=0;i<occupants.Count;i++)
             {
                 var r=occupants[i];
                 bool isSeo=seo&&i==UrbanSimulation.Instance.SeatIndex||rider&&i==occupants.Count-1;
-                r.enabled=!car.Wrecked&&(isSeo||(i==0?car.occupied:i<=PassengerCount));
+                r.enabled=(nearby||seo||rider)&&!car.Wrecked&&(isSeo||(i==0?car.occupied:i<=PassengerCount));
+                if(!nearby&&!isSeo)continue;
                 if(isSeo&&GameDirector.Instance&&GameDirector.Instance.CameraRig.FirstPersonVehicle)r.enabled=false;
                 string identity=identities[i];
                 var stolen=car.GetComponent<StolenVehicle>();

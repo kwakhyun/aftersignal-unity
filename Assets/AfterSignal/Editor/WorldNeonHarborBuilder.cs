@@ -12,7 +12,7 @@ namespace AfterSignal.Editor
         [MenuItem("AFTERSIGNAL/World/Build Nova Strait expansion")]
         public static void BuildNeonHarbor()
         {
-            AssetDatabase.Refresh();EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single);materials.Clear();boxes.Clear();meshId=18000;ImportMaterials();MakeMaterials();
+            AssetDatabase.Refresh();EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single);materials.Clear();boxes.Clear();meshId=75000;ImportMaterials();MakeMaterials();
             Mat("NovaObsidian","#14212d",.6f,.45f);Mat("NovaPorcelain","#b9c9c5",.35f,.4f);Mat("NovaCopper","#ac6f55",.68f,.5f);Mat("NovaViolet","#39334f",.48f,.38f);Mat("NovaTeal","#31575e",.52f,.43f);Mat("NovaConcrete","#6a7279",.08f,.3f);
             Mat("NovaNeonViolet","#b85cff",.1f,.4f,2);Mat("NovaNeonIce","#81ffe7",.1f,.4f,2);Mat("NovaNeonAmber","#ffab48",.1f,.4f,1.6f);Mat("NovaWindow","#376676",.5f,.78f,.22f);
             FinishNovaMaterials();
@@ -90,7 +90,7 @@ namespace AfterSignal.Editor
                     {
                         var at=road[i]+side*s*15;
                         if(at.y>1){Beam(root,"Bridge support",at+Vector3.down*(at.y+7),at,.65f,"NovaConcrete",true);continue;}
-                        var pole=Group("Nova street furnishing",at);Beam(pole,"Street lamp pole",Vector3.zero,Vector3.up*7,.13f,"Steel");Beam(pole,"Road light arm",Vector3.up*7,Vector3.up*7-side*s*2.6f,.12f,"Steel");Box(pole,"LED fixture",Vector3.up*6.95f-side*s*2.5f,new Vector3(.5f,.12f,1.2f),i%2==0?"NovaNeonIce":"NovaNeonViolet",false);
+                        var pole=Group("Nova street furnishing",at);StreetBreakable(pole,120000,.17f,7);Beam(pole,"Street lamp pole",Vector3.zero,Vector3.up*7,.13f,"Steel");Beam(pole,"Road light arm",Vector3.up*7,Vector3.up*7-side*s*2.6f,.12f,"Steel");Box(pole,"LED fixture",Vector3.up*6.95f-side*s*2.5f,new Vector3(.5f,.12f,1.2f),i%2==0?"NovaNeonIce":"NovaNeonViolet",false);
                         if(i%15==3){Prop(pole,new Vector3(2,0,0),PropUse.Vending);Box(pole,"Public information pillar",new Vector3(-2,1.4f,0),new Vector3(.5f,2.8f,1.2f),"NovaObsidian");Box(pole,"Route panel",new Vector3(-2.26f,1.6f,0),new Vector3(.03f,1.8f,.9f),"NovaNeonIce",false);}
                     }
                     if(i%10==3&&NeonHarbor.OnIsland(road[i]+side*18)&&road[i].y<1)Crowd(root,"노바 대로 시민",road[i]+side*18,6,24+i%24,4,6);
@@ -170,30 +170,7 @@ namespace AfterSignal.Editor
         }
         static void NovaTower(Vector3 at,float w,float d,float h,int serial)
         {
-            var p=Group("Nova building "+serial,at);novaBuildings++;
-            string skin=new[]{"NovaObsidian","NovaPorcelain","NovaCopper","NovaViolet","NovaTeal","NovaConcrete"}[serial%6];string neon=serial%3==0?"NovaNeonViolet":serial%3==1?"NovaNeonIce":"NovaNeonAmber";
-            Box(p,"Load bearing volume",Vector3.up*h*.5f,new Vector3(w,h,d),skin);
-            Box(p,"Retail podium",Vector3.up*3,new Vector3(w+2,6,d+2),"NovaObsidian");
-            for(int s=-1;s<=1;s+=2)
-            {
-                Box(p,"Shopfront glazing",new Vector3(s*(w*.5f+1.01f),2.6f,0),new Vector3(.06f,3.2f,d-5),"NovaWindow",false);
-                Box(p,"Corner light spine",new Vector3(s*w*.5f,h*.5f,-d*.5f-.14f),new Vector3(.2f,h,.22f),neon,false);
-                for(int f=1;f<Mathf.FloorToInt(h/4);f++)
-                {
-                    float y=f*4;
-                    Box(p,"Recessed window band",new Vector3(0,y+1,-s*(d*.5f+.015f)),new Vector3(w-2,1.8f,.06f),f%5==0?neon:"NovaWindow",false);
-                    Box(p,"Facade slab band",new Vector3(0,y,-s*(d*.5f+.1f)),new Vector3(w+.3f,.18f,.3f),skin,false);
-                    if(f%3==0&&serial%3==0){Box(p,"Cantilever balcony",new Vector3(s*(w*.5f+1),y,0),new Vector3(2.4f,.2f,d*.64f),"NovaConcrete",false);Box(p,"Balcony glass rail",new Vector3(s*(w*.5f+2.1f),y+.6f,0),new Vector3(.1f,1.2f,d*.64f),"Glazing",false);}
-                }
-                for(int col=1;col<7;col++)Box(p,"Vertical mullion",new Vector3(-w*.5f+col*w/7,h*.5f,s*(d*.5f+.12f)),new Vector3(.22f,h,.18f),skin,false);
-            }
-            float crown=serial%5==0?8:2;
-            Box(p,"Stepped crown",new Vector3(0,h+crown*.5f,0),new Vector3(w*.8f,crown,d*.76f),skin);
-            for(int j=0;j<3;j++){Box(p,"Rooftop air handling unit",new Vector3(-w*.22f+j*w*.22f,h+crown+1,0),new Vector3(3,2,4),"Steel",false);Box(p,"Fan grille",new Vector3(-w*.22f+j*w*.22f,h+crown+2.05f,0),new Vector3(2.1f,.12f,2.1f),"Rubber",false,PrimitiveType.Cylinder);}
-            if(serial%8==0){Beam(p,"Telecom mast",new Vector3(0,h+crown,0),new Vector3(0,h+crown+12,0),.18f,"Steel");for(int j=0;j<3;j++)Box(p,"Sector antenna",new Vector3(0,h+crown+5+j*2,.5f),new Vector3(.7f,1.4f,.18f),"NovaPorcelain",false);}
-            Box(p,"Shop sign backing",new Vector3(0,5.5f,-d*.5f-1.08f),new Vector3(w*.65f,1.35f,.18f),"NovaObsidian",false);
-            Text(p,new[]{"CHROMA","NOVA SYSTEMS","PELAGIC","KIRI NOODLE","AETHER","MOON WELL","DATA / 24","VIOLET"}[serial%8],new Vector3(0,5.55f,-d*.5f-1.2f),.33f,neon,180);
-            for(int j=0;j<3;j++){Box(p,"Utility pipe",new Vector3(w*.5f+.12f,3+j*.3f,d*.3f),new Vector3(.14f,5,.14f),"Aluminium",false);}
+            var p=FutureTower(root,at,w,d,h,serial);p.name="Nova building "+serial+" / "+futureForms[serial%8];novaBuildings++;
         }
         static void NovaMarket(Vector3 at,int serial)
         {

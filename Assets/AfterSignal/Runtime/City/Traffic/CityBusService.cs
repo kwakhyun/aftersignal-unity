@@ -41,7 +41,8 @@ namespace AfterSignal
             if(Riding)
             {
                 var line=Riding.GetComponent<CityBusLine>();
-                Prompt="시내버스 "+(line.row+101)+"번 · 다음 정류장 "+line.NextStopName+" · E 하차벨";
+                Prompt="시내버스 "+(line.row+101)+"번 · 다음 정류장 "+line.NextStopName+" · E 하차벨 / F 뛰어내리기";
+                if(input.exit){JumpOff();input.exit=false;return;}
                 if(input.interact){requestedStop=true;input.interact=false;game.Toast("하차벨을 눌렀습니다. 다음 정류장에서 내려요.");}
                 if(line.Stopped&&requestedStop)Leave();
                 if(Riding){input=ControlFrame.Empty;game.Player.transform.position=Riding.transform.position+Vector3.up*1.2f;}
@@ -78,6 +79,13 @@ namespace AfterSignal
             for(int i=0;i<hero.Length;i++){heroVisible[i]=hero[i].enabled;hero[i].enabled=false;}
             game.Player.transform.position=Riding.transform.position+Vector3.up*1.2f;game.CameraRig.Snap();
             return true;
+        }
+        public void JumpOff()
+        {
+            if(!Riding)return;var bus=Riding;var at=bus.transform.position+bus.transform.forward*(bus.HalfWidth+2)+Vector3.up;
+            var velocity=bus.Forward*bus.speed+bus.transform.forward*3+Vector3.up*3;
+            Riding=null;requestedStop=false;game.Player.Respawn(at,false);game.Player.Velocity=velocity;
+            if(hero!=null)for(int i=0;i<hero.Length;i++)if(hero[i])hero[i].enabled=heroVisible[i];game.Toast("이동 중 버스에서 뛰어내렸습니다");
         }
         public void EmergencyLeave(CityVehicle car)
         {

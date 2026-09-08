@@ -8,6 +8,7 @@ namespace AfterSignal
         float throttle, verticalSpeed;
         Transform model, rotor,tailRotor;Quaternion modelRest=Quaternion.identity;float rotorSpeed;
         public float Throttle => throttle;
+        public void CutThrottle(){throttle=0;}
         public void Initialize(CityVehicle vehicle)
         {
             car=vehicle;model=transform.Find("Detailed vehicle coachwork");
@@ -40,7 +41,7 @@ namespace AfterSignal
                 verticalSpeed=Mathf.MoveTowards(verticalSpeed,lift,dt*12);
                 delta+=Vector3.up*verticalSpeed*dt;
                 if(VehicleGround.Sample(car,old,.2f,4,out var floor)&&old.y+delta.y<floor.point.y+.12f)
-                {delta.y=floor.point.y+.12f-old.y;if(verticalSpeed< -10&&car.speed>38)car.Damage(-verticalSpeed*2,old);verticalSpeed=0;}
+                {delta.y=floor.point.y+.12f-old.y;if(verticalSpeed< -10)car.Damage(-verticalSpeed*(car.speed>38?12:3),old);verticalSpeed=0;}
             }
             else
             {
@@ -51,13 +52,7 @@ namespace AfterSignal
             float len=delta.magnitude;
             if(len>.001f)
             {
-                foreach(var hit in Physics.BoxCastAll(old+Vector3.up*(car.IsWatercraft?1.5f:2),new Vector3(car.HalfLength*.85f,car.IsWatercraft?.8f:1,car.HalfWidth*.8f),delta/len,transform.rotation,len+.15f,1,QueryTriggerInteraction.Ignore))
-                {
-                    if(hit.collider.transform.IsChildOf(transform)||hit.normal.y>.7f)continue;
-                    delta=delta.normalized*Mathf.Max(0,hit.distance-.2f);
-                    if(Mathf.Abs(car.speed)>9)car.Damage(Mathf.Abs(car.speed)*.4f,hit.point);
-                    car.speed=0;throttle=0;break;
-                }
+                if(StructuralImpact.CheckCraft(car,delta)){delta=Vector3.zero;throttle=0;if(car.Wrecked)return;}
                 var p=old+delta;p.x=Mathf.Clamp(p.x,8,2192);p.z=Mathf.Clamp(p.z,NeonHarbor.South+10,1088);p.y=Mathf.Clamp(p.y,-3,520);transform.position=p;
                 car.fuel=Mathf.Max(0,car.fuel-(old-p).magnitude*.0018f);
             }

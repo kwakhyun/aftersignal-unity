@@ -1,5 +1,19 @@
 # 다음 Codex 작업을 위한 인계 — 2026-09-08
 
+## 최신 작업: 지역 지도·도시 간 여객 교통·미래형 건축
+
+작업 시작 전 전체 변경사항을 `270c1e30`으로 main에 커밋·푸시했다. 아래 후속 작업은 현재 작업 트리에 있으며 아직 커밋하지 않았다. `Documentation/FutureCity/README.md`에 조작·도구·제작 원본을 정리했다.
+
+`AtlasViewport`가 현재 위치 기준 820m 지도와 360m 미니맵을 표시한다. 휠 확대, 드래그, 시설/교통 필터, 목적지 목록, 임의 경유지 지정, 내 위치 복귀를 제공한다. `IntercityService`의 항공편 2대와 여객선은 두 도시 사이를 실제 운항한다. 고유한 승객 엔티티가 게이트까지 이동하고 객실에 동일한 외형으로 표시된 후 도착지에서 하차한다. G 탑승권 구매(항공 240 C / 선박 80 C), F 모든 탈것에서 이동 중 탈출. 서하의 탈출 관성과 조종자 없는 탈것의 감속·하강을 처리했다.
+
+`StructuralImpact`, `BreakableStreetProp`, `CollapsibleBuilding`이 차량 중량·속도에 따른 가로등/나무 충돌과 고속 항공기 충돌 시 건물 붕괴를 처리한다. 저장되는 MonoBehaviour는 클래스와 같은 파일명으로 분리해야 한다. 처음에는 다중 클래스 파일의 컴포넌트가 임베디드 MonoScript/누락 스크립트로 저장되어 네이티브 장면 로드가 종료되었다. 파일 분리와 scene/prefab의 GUID 참조 복구 후 실제 도시 진입을 확인했다.
+
+Blender로 8개 건축 프로필과 근거리/원거리/충돌 메시, 미래형 세단·스포츠카·바이크·버스·트럭을 제작했다. 도시의 590개 일반 타워에 독립된 메시/충돌/LOD를 적용했다. 기존 시설 입구와 실내 동선은 보존했다. 물은 깊이 기반 흡수·굴절·환경 반사·거품·불규칙 잔물결을 사용한다. 물리 기반 파괴나 광선 추적 반사는 아니다. Material Maker 1.7은 공식 릴리스에서 설치했으며 `ART-TOOLS.cmd`로 Blender/Material Maker를 실행한다. Material Maker CLI 텍스처 생성은 적용하지 않았다.
+
+주변 구역 주민 생성/해제, 생존·체력 유지, 먼 차량 객실 갱신 제한, 비할당 충돌 검사, 건물/가로등 LOD를 적용했다. GUID 참조가 없는 생성 메시 9,914개와 메타(2.82GB)를 제거했다. `Tools/WorldExpansion/audit_unused_meshes.py`는 읽기 전용 재검사 도구다. 원본 음악과 서하 스프라이트는 유지하며 철회된 서하 3D 실험을 재적용하지 않았다.
+
+게임플레이 필수 확인 15개와 마지막 지도 표시 순서·수면 수정 확인 5개 통과. 결과 `Documentation/FutureCity/essential-gameplay.json`, `essential-presentation.json`. 공항의 짧은 90프레임 구간 평균 16.53ms는 전체 도시 성능 보장을 의미하지 않는다. 최종 Windows 빌드 `Builds/FutureCity/AFTERSIGNAL.exe`(오류 0, 경고 45, 1.58GB). `Builds/active-player.txt` 및 `PLAY.cmd`가 이 파일을 실행한다. 이전 Unity 실행 오류를 해결하고 실제 실행까지 확인했다.
+
 ## 최신 작업: 노바 해협과 탈것 조종석
 
 이번 요청 시작 시 기존 변경 전체를 main의 `dbc0255c`로 커밋하고 origin/main에 푸시했다. 그 이후 작업은 [Documentation/NEON-HARBOR.md](Documentation/NEON-HARBOR.md)에 정리했다. 실행 파일은 `Builds/NeonRelease/AFTERSIGNAL.exe`, `PLAY.cmd`가 active-player를 통해 선택한다. 아래 이전 작업의 커밋·빌드 경로 안내는 당시 기록이다.

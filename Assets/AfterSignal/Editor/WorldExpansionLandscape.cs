@@ -20,7 +20,7 @@ namespace AfterSignal.Editor
         static void BuildRoads()
         {
             var p=Group("Roads / waterfront, ring roads and diagonal connectors",Vector3.zero);
-            for(int r=0;r<ExpansionRoads.Roads.Count;r++)
+            for(int r=0;r<Mathf.Min(17,ExpansionRoads.Roads.Count);r++)
             {
                 var path=ExpansionRoads.Roads[r];var road=Group("Route "+r,Vector3.zero,p);
                 Ribbon(road,"Asphalt carriageway",path,22,0,0,"Asphalt",true);
@@ -86,37 +86,15 @@ namespace AfterSignal.Editor
         }
         static void Tower(Transform parent,Vector3 at,float w,float d,float height,int serial)
         {
-            var p=Group("Mixed-use tower "+serial,at,parent);p.localRotation=Quaternion.Euler(0,serial%3==0?14:serial%3==1?-9:0,0);
-            Box(p,"Structural core",new Vector3(0,height/2,0),new Vector3(w,height,d),"WindowDark");
-            for(int face=0;face<4;face++)
-            {
-                bool front=face<2;float side=face%2==0?-1:1;
-                var panel=Box(p,"Textured recessed facade",front?new Vector3(0,height/2,side*(d/2+.02f)):new Vector3(side*(w/2+.02f),height/2,0),new Vector3(front?w:d,height,1),"UrbanFacade"+(serial%8),false,PrimitiveType.Quad);
-                panel.transform.localRotation=Quaternion.Euler(0,front?(side<0?0:180):(side<0?90:-90),0);
-            }
-            Box(p,"Roof parapet",new Vector3(0,height+.5f,0),new Vector3(w+1,1,d+1),"Steel");
-            for(int floor=0;floor<Mathf.Min(16,(int)height/4);floor++)
-            {
-                float y=floor*4+1;
-                Box(p,"Floor slab front",new Vector3(0,y,d*.5f+.1f),new Vector3(w+.8f,.25f,.45f),"Aluminium",false);Box(p,"Floor slab rear",new Vector3(0,y,-d*.5f-.1f),new Vector3(w+.8f,.25f,.45f),"Aluminium",false);
-                for(int j=0;j<4;j++)
-                {
-                    float x=(j-1.5f)*(w/4);
-                    Model("modular_urban_apartments_facade",p,new Vector3(x,y,-d*.5f-.18f),1.5f,180,"window_centered_large_01");
-                    Box(p,"Office warm glazing",new Vector3(x,y+1.3f,d*.5f+.04f),new Vector3(w/4-.6f,2.2f,.04f),(floor+j+serial)%5==0?"NeonWarm":"WindowDark",false);
-                }
-                for(int s=-1;s<=1;s+=2){if(floor==0)Box(p,"Vertical facade fin",new Vector3(s*w*.5f, height*.5f,0),new Vector3(.32f,height,d+.7f),"Steel",false);if(floor%3==0){Box(p,"Balcony",new Vector3(s*(w*.5f+1),y,0),new Vector3(2,.22f,d*.5f),"Cladding");for(int rail=0;rail<5;rail++)Beam(p,"Balcony railing",new Vector3(s*(w*.5f+1.9f),y,rail*3-d*.23f),new Vector3(s*(w*.5f+1.9f),y+1.1f,rail*3-d*.23f),.07f,"Aluminium");}}
-            }
-            for(int i=0;i<3;i++){Box(p,"Rooftop plant enclosure",new Vector3(-w*.25f+i*5,height+1.2f,0),new Vector3(3,2.2f,4),"Aluminium");for(int k=0;k<5;k++)Box(p,"Vent louvers",new Vector3(-w*.25f+i*5,height+.4f+k*.3f,-2.02f),new Vector3(2.6f,.09f,.1f),"Steel",false);}
-            Beam(p,"Antenna mast",new Vector3(w*.3f,height,0),new Vector3(w*.3f,height+10,0),.15f,"Steel");Box(p,"Obstruction beacon",new Vector3(w*.3f,height+10,0),Vector3.one*.4f,"NeonRose",false,PrimitiveType.Sphere);
-            for(int s=-1;s<=1;s+=2)Box(p,"Vertical neon edge",new Vector3(s*w*.49f,height*.6f,-d*.5f-.4f),new Vector3(.14f,height*.75f,.08f),serial%2==0?"NeonCyan":"NeonRose",false);
-            Text(p,new[]{"LUMEN","SIGNAL","AURORA","NEON WORKS","AFTERLIGHT"}[serial%5],new Vector3(0,5.8f,-d*.5f-.45f),.44f,"NeonCyan",180);
-            Model("modular_urban_apartments_facade",p,new Vector3(0,0,-d*.5f-.3f),1.5f,180,"door_centered_large_01");
-            for(int s=-1;s<=1;s+=2){Model("industrial_wall_lamp",p,new Vector3(s*5,3,-d*.5f-.5f),2,180);Model("painted_wooden_bench",p,new Vector3(s*7,0,-d*.5f-3),1.3f,180);}
-            if(serial%3==0)Lamp(p,new Vector3(0,4,-d*.5f-2),serial%2==0?new Color(.1f,.85f,1):new Color(1,.13f,.4f),8,14);
+            FutureTower(parent,at,w,d,height,serial);
         }
         static void Tree(Transform p,Vector3 at,float height)
-        {Beam(p,"Tree trunk",at,at+Vector3.up*height,.24f,"Trunk",true);for(int i=0;i<5;i++){float a=i*1.256f;var b=at+new Vector3(Mathf.Cos(a)*2,height*.85f,Mathf.Sin(a)*2);Beam(p,"Branch",at+Vector3.up*height*.65f,b,.12f,"Trunk");Box(p,"Tree crown",b,new Vector3(3.2f,2.6f,3.4f),"Leaf",false,PrimitiveType.Sphere);}}
+        {
+            var holder=Group("Breakable coastal tree",at,p);
+            Beam(holder,"Tree trunk",Vector3.zero,Vector3.up*height,.24f,"Trunk",true);
+            for(int i=0;i<5;i++){float a=i*1.256f;var tip=new Vector3(Mathf.Cos(a)*2,height*.85f,Mathf.Sin(a)*2);Beam(holder,"Branch",Vector3.up*height*.65f,tip,.12f,"Trunk");Box(holder,"Tree crown",tip,new Vector3(3.2f,2.6f,3.4f),"Leaf",false,PrimitiveType.Sphere);}
+            StreetBreakable(holder,420000,.3f,height);
+        }
         static void Stall(Transform p,int i)
         {Box(p,"Counter",new Vector3(0,.6f,0),new Vector3(7,1.2f,3),"Steel");Box(p,"Canvas awning",new Vector3(0,3.4f,0),new Vector3(8,.14f,6),i%2==0?"CargoRed":"CargoBlue",false);for(int s=-1;s<=1;s+=2)Beam(p,"Awning pole",new Vector3(s*3.5f,0,1.2f),new Vector3(s*3.5f,3.4f,1.2f),.06f,"Aluminium");for(int j=0;j<5;j++){Box(p,"Bowl",new Vector3(j*1.2f-2.4f,1.3f,-.7f),new Vector3(.55f,.15f,.55f),"Cladding",false,PrimitiveType.Sphere);Box(p,"Food pot",new Vector3(j*1.2f-2.4f,1.35f,.55f),new Vector3(.45f,.22f,.45f),"Aluminium",false,PrimitiveType.Cylinder);}Text(p,new[]{"NOODLES","NIGHT CAFE","RAMEN","SPARE PARTS"}[i%4],new Vector3(0,2.8f,-2.4f),.24f,"NeonWarm",180);}
     }

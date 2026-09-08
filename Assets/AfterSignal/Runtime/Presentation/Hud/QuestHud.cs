@@ -14,7 +14,7 @@ namespace AfterSignal
         string mainLabel;
         bool hasGoal;
         List<Vector3> roadRoute;
-        CityMapRoute miniRoute, largeRoute;
+        bool customMapGoal; Vector3 mapGoal;
         void UpdateQuestHud()
         {
             if (!mainRouteText)
@@ -41,6 +41,8 @@ namespace AfterSignal
                 nextQuest = Time.unscaledTime + .5f;
                 hasGoal = QuestGuidance.Resolve(game, questPoints, out mainGoal, out mainLabel);
                 if(game.stage==StageId.UrbanCity&&ExpansionWorld.Selected>=0){hasGoal=true;mainGoal=ExpansionWorld.Places[ExpansionWorld.Selected];mainLabel=ExpansionWorld.Names[ExpansionWorld.Selected];}
+                if(game.stage==StageId.UrbanCity&&selectedSite>=0){hasGoal=true;mainGoal=UrbanCatalog.Door(selectedSite);mainLabel=UrbanCatalog.Name(selectedSite);}
+                if(game.stage==StageId.UrbanCity&&customMapGoal){hasGoal=true;mainGoal=mapGoal;mainLabel="지도 경유지";}
                 if (questLine && hasGoal)
                 {
                     roadRoute = CityRoadNetwork.Navigation(game.Player.transform.position, mainGoal);
@@ -52,8 +54,7 @@ namespace AfterSignal
                         questLine.SetPosition(i, p);
                     }
 
-                    miniRoute?.SetRoute(roadRoute);
-                    largeRoute?.SetRoute(roadRoute);
+                    atlas?.SetRoute(roadRoute);miniAtlas?.SetRoute(roadRoute);
                 }
             }
 
@@ -90,16 +91,5 @@ namespace AfterSignal
             mainRoutePin.text = roadRoute != null ? "◆  메인 경로" : "◆  " + distance.ToString("0") + " m";
         }
 
-        CityMapRoute AddMapRoute(Transform parent, bool large)
-        {
-            var go = new GameObject("Main quest route", typeof(RectTransform), typeof(CityMapRoute));
-            go.transform.SetParent(parent, false);
-            var line = go.GetComponent<CityMapRoute>();
-            line.large = large;
-            line.color = new Color(1, .76f, .3f, .85f);
-            line.raycastTarget = false;
-            Rect(line.rectTransform, large ? 55 : 20, large ? 125 : 29, large ? 790 : 272, large ? 550 : 116);
-            return line;
-        }
     }
 }

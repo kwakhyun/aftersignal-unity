@@ -189,6 +189,7 @@ namespace AfterSignal
                     var h = hits[i];
                     if (!h.collider || h.collider.transform.IsChildOf(transform))
                         continue;
+                    if(h.distance<length+.1f && h.collider.GetComponentInParent<BreakableStreetProp>() && StructuralImpact.Hit(this,h.collider,h.point,Mathf.Abs(speed)))continue;
                     if (h.distance < allowed + .08f)
                     {
                         allowed = Mathf.Min(allowed, Mathf.Max(0, h.distance - .08f));

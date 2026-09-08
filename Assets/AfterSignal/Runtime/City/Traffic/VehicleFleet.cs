@@ -5,7 +5,7 @@ namespace AfterSignal
 {
     public sealed class VehicleFleet : MonoBehaviour
     {
-        public static string ModelName(CityVehicleType type) => (int)type < 4 ? "DetailedSedan" : type.ToString();
+        public static string ModelName(CityVehicleType type) => type==CityVehicleType.Sedan||type==CityVehicleType.Taxi?"FutureSedan":type==CityVehicleType.Bus?"FutureBus":type==CityVehicleType.Truck?"FutureTruck":type==CityVehicleType.SportsCar?"FutureSportsCar":type==CityVehicleType.Motorcycle?"FutureMotorcycle":type.ToString();
         public static bool Persistent(CityVehicle c) => c.IsSpecial || c.GetComponent<ParkingAssignment>() || c.type == CityVehicleType.Tank;
         public static void Configure(CityVehicle c, int variant)
         {
@@ -40,12 +40,13 @@ namespace AfterSignal
             if(cargoPrefab){var vessel=Instantiate(cargoPrefab);cargo=vessel.GetComponent<CityVehicle>();cargo.transform.position=new Vector3(1730,0,-615);sim.Cars.Add(cargo);foreach(var t in vessel.GetComponentsInChildren<Transform>())t.gameObject.isStatic=false;}
             yield return null;
             if(cargo)cargo.gameObject.AddComponent<PassengerRoute>().Initialize(cargo,false);
-            ferry.gameObject.AddComponent<CrossStraitFerry>().Initialize(ferry);
+            ferry.gameObject.AddComponent<IntercityService>().Initialize(ferry,false);
             Add(CityVehicleType.Boat,new Vector3(870,OceanLife.Surface,-2380),-90);
             Add(CityVehicleType.SportsCar,new Vector3(900,.1f,-2440),0);
             Add(CityVehicleType.Motorcycle,new Vector3(907,.1f,-2440),0);
             Add(CityVehicleType.CombatHelicopter,new Vector3(1280,.15f,-2780),0);
-            plane.gameObject.AddComponent<PassengerRoute>().Initialize(plane, true);
+            plane.gameObject.AddComponent<IntercityService>().Initialize(plane,true);
+            foreach(var candidate in sim.Cars)if(candidate&&candidate.type==CityVehicleType.Airliner&&NeonHarbor.Region(candidate.transform.position)){candidate.gameObject.AddComponent<IntercityService>().Initialize(candidate,true,true);break;}
         }
         CityVehicle Add(CityVehicleType kind, Vector3 at, float yaw)
         {

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace AfterSignal
 {
-    public sealed class UrbanSimulation : MonoBehaviour
+    public sealed partial class UrbanSimulation : MonoBehaviour
     {
         public static UrbanSimulation Instance { get; private set; }
 
@@ -21,6 +21,7 @@ namespace AfterSignal
         public string Prompt { get; private set; }
         public bool MapOpen { get; private set; }
 
+        public void CloseMap()=>MapOpen=false;
         GameDirector game;
         Renderer[] playerRenderers;
         bool[] rendererStates;
@@ -116,6 +117,7 @@ namespace AfterSignal
 
         public void BeforeInput(ref ControlFrame input, float dt)
         {
+            if(MapOpen&&!input.map){input.move=Vector2.zero;input.attack=input.interact=input.passenger=input.exit=false;}
             CityBusService.Instance?.BeforeInput(ref input);
             if (input.map)
                 MapOpen = !MapOpen;
@@ -171,7 +173,7 @@ namespace AfterSignal
                 if(!armed||SeatIndex>0)input.attack=false;
                 input.grapple = input.dash = input.skill = false;
                 if(!armed||SeatIndex>0){input.reload=false;input.secondaryFire=false;}
-                var crossing=Current?Current.GetComponent<CrossStraitFerry>():null;if(crossing)Prompt+=" · "+crossing.Status;
+                var intercity=Current?Current.GetComponent<IntercityService>():null;if(intercity)Prompt+=" · "+intercity.Status;
             }
             else
             {
@@ -191,7 +193,8 @@ namespace AfterSignal
                 {
                     Prompt = VehicleSeats.Title(nearest.type)+" · E "+(nearest.IsAircraft?"조종석":nearest.IsWatercraft?"선장석":"운전석")+(VehicleSeats.Count(nearest)>1?" / G 조수석·승객석":"");
                     var scheduled=nearest.GetComponent<PassengerRoute>();if(scheduled)Prompt+=" · "+scheduled.Status;
-                    var strait=nearest.GetComponent<CrossStraitFerry>();if(strait)Prompt+=" · "+strait.Status;
+                    var service=nearest.GetComponent<IntercityService>();if(service)Prompt+=" · "+service.Status+" / G 승차권 구매";
+                    if(input.passenger&&service){input.passenger=false;service.BuyTicket();}
                     if(input.passenger&&VehicleSeats.Count(nearest)>1){input.passenger=false;int count=nearest.GetComponent<VehicleCabin>()?nearest.GetComponent<VehicleCabin>().PassengerCount:0;Enter(nearest,Mathf.Clamp(count+1,1,VehicleSeats.Count(nearest)-1));}
                     if (input.interact)
                     {
@@ -314,14 +317,7 @@ namespace AfterSignal
         {
             if (!Current)
                 return false;
-            if (Mathf.Abs(Current.speed) > 2)
-            {
-                game.Toast("먼저 SPACE로 정차하세요");
-                return false;
-            }
-
-            if(Current.IsAircraft&&Current.transform.position.y>3 && !VehicleGround.Sample(Current,Current.transform.position,0,3,out _))
-            {game.Toast("착륙 후 하차할 수 있습니다.");return false;}
+            if(Mathf.Abs(Current.speed)>2 || Current.IsAircraft&&Current.transform.position.y>3&&!VehicleGround.Sample(Current,Current.transform.position,0,3,out _))return BailOut();
             Vector3 point = Vector3.zero;
             bool found = false;
             foreach (var offset in new[]
@@ -334,8 +330,7 @@ namespace AfterSignal
             )
             {
                 var p = Current.IsSpecial?VehicleSeats.Door(Current):Current.transform.position + offset;
-                var ferry=Current.GetComponent<CrossStraitFerry>();
-                if(ferry&&ferry.Boarding)p=NeonHarbor.Region(Current.transform.position)?new Vector3(927.4f,.1f,-2390):new Vector3(1250,.1f,-664);
+                var intercity=Current.GetComponent<IntercityService>();if(intercity&&intercity.Boarding)p=intercity.ExitPoint;
                 if(VehicleGround.Sample(Current,p,3,8,out var floor))p.y=floor.point.y+.06f;
                 else if(Current.IsWatercraft)p.y=OceanLife.Surface;
                 if (Physics.CheckCapsule(p + Vector3.up * .4f, p + Vector3.up * 1.7f, .34f, 1, QueryTriggerInteraction.Ignore))
@@ -351,7 +346,7 @@ namespace AfterSignal
                 return false;
             }
 
-            Current.speed = 0;
+            if(SeatIndex==0)Current.speed = 0;
             if(SeatIndex==0)Current.occupied = false;
             game.Audio.Play("urban_door", point, .25f, 1);
             Current = null;

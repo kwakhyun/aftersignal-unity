@@ -39,9 +39,19 @@ namespace AfterSignal
                     Body+="\n예금 "+LifeState.Savings+" C";Option("500 C 예금",()=>{bool ok=LifeState.Deposit(500);FacilityServices(kind,title);Body+=ok?"\n예금 완료":"\n현금이 부족합니다.";Revision++;});Option("500 C 인출",()=>{bool ok=LifeState.Withdraw(500);FacilityServices(kind,title);Body+=ok?"\n인출 완료":"\n예금이 부족합니다.";Revision++;});break;
                 case FacilityFunction.Bar:Buy("시그널 칵테일 / 60 C",60,()=>game.Player.RestoreEnergy(90));Job("오픈 준비·재고 관리 / 210 C","bar",210,1);break;
                 case FacilityFunction.Garage:Option("차량 수리·튜닝",Garage);Job("공구·부품 점검 / 240 C","repair",240,1);break;
-                case FacilityFunction.Airport:Job("수하물 보안 검사 / 280 C","airport",280,2);Option("운항 안내",()=>{Body="계류장의 여객기는 E 조종 / G 승객 탑승. NPC 기장이 정차 후 이륙해 도시를 순환합니다.";Revision++;});break;
-                case FacilityFunction.Ferry:Job("선박 안전 점검 / 250 C","harbour",250,1);Option("승선 안내",()=>{Body="부두 끝에서 E 선장석 / G 승객석. 노바 해협 여객선은 애프터라이트와 노바를 왕복하며 양쪽 여객항에서 40초간 정박합니다. C 조종석 시점, 정박 중 F 하선.";Revision++;});break;
+                case FacilityFunction.Airport:Job("수하물 보안 검사 / 280 C","airport",280,2);TransitOptions(true);break;
+                case FacilityFunction.Ferry:Job("선박 안전 점검 / 250 C","harbour",250,1);TransitOptions(false);break;
                 case FacilityFunction.Military:Job("통신·보급·무장 점검 / 300 C","military",300,2);Option("방위 장비 보급",()=>Armory());break;
+            }
+        }
+        void TransitOptions(bool aircraft)
+        {
+            Body+="\n"+(aircraft?"도시 간 항공편 / 240 C":"도시 간 여객선 / 80 C")+" · G 승차권 구매 · F 이동 중 탈출";
+            bool nova=NeonHarbor.Region(game.Player.transform.position);
+            foreach(var line in IntercityService.All)if(line&&line.Aircraft==aircraft)
+            {
+                var selected=line;Option(line.Status,()=>{Body=selected.Status+"\n승객이 모두 탑승하면 출발합니다. 탑승구에서 G로 승차권을 구매하세요.";Revision++;});
+                if(line.AtNova==nova)Option("탑승구로 안내",()=>{Dismiss();game.Player.Respawn(selected.Terminal(nova),false);game.CameraRig.Snap();});
             }
         }
     }

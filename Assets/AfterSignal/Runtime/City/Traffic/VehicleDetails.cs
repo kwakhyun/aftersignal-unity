@@ -8,7 +8,7 @@ namespace AfterSignal
         {
             if(vehicle.GetComponent<VehicleDetails>()||vehicle.GetComponent<AuthoredCraft>())return;
             var detail=vehicle.gameObject.AddComponent<VehicleDetails>();detail.car=vehicle;
-            if(vehicle.type==CityVehicleType.Sedan||vehicle.type==CityVehicleType.Taxi || (int)vehicle.type >= 4)
+            if(!vehicle.GetComponent<AuthoredCraft>())
             {
                 var asset=Resources.Load<GameObject>("WorldAssets/"+VehicleFleet.ModelName(vehicle.type)+"/"+VehicleFleet.ModelName(vehicle.type));if(!asset)return;
                 Material basePaint=Resources.Load<Material>("Materials/SedanIvory");

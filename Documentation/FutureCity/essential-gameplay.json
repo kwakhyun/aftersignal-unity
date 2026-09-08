@@ -1,0 +1,26 @@
+{
+    "completed": true,
+    "registeredResidents": 3298,
+    "residentObjects": 0,
+    "activeResidents": 0,
+    "buildingProfiles": 590,
+    "meanFrameMs": 16.534677505493165,
+    "passed": [
+        "District residents stream near the player instead of instantiating the entire population",
+        "Map opens zoomed around the current player position",
+        "Map zoom preserves the world location under the pointer",
+        "Dragging explores the map without moving the player",
+        "Authored future buildings use independent collision and distance LOD meshes",
+        "All eleven transport types allow moving bailouts and preserve momentum",
+        "Sedan, taxi, bus, truck, motorcycle and sports car load their future coachwork",
+        "A light vehicle collides with a street fixture and takes damage without destroying it",
+        "Tank mass destroys the same fixture and retains most of its armour",
+        "A high-speed aircraft impact destroys the aircraft and starts building collapse",
+        "Both airports and the seaports have operating intercity services",
+        "Ferry passengers board, cross the sea and disembark at the destination",
+        "An airliner taxis, takes off, crosses between cities, lands and unloads its citizens",
+        "Player buys a ticket, occupies a reserved passenger seat and pays the fare",
+        "Depth-aware refractive ocean shader is supported and receives the opaque scene texture"
+    ],
+    "errors": []
+}

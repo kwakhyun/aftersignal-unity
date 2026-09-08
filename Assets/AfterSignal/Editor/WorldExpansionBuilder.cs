@@ -11,7 +11,7 @@ namespace AfterSignal.Editor
         [MenuItem("AFTERSIGNAL/World/Build coastal expansion")]
         public static void Build()
         {
-            AssetDatabase.Refresh();materials.Clear();boxes.Clear();meshId=0;Directory.CreateDirectory(Output+"Generated");
+            AssetDatabase.Refresh();materials.Clear();boxes.Clear();meshId=65000;Directory.CreateDirectory(Output+"Generated");
             ImportMaterials();
             root=new GameObject("AFTERLIGHT / coastal metropolitan expansion",typeof(ExpansionWorld)).transform;
             MakeMaterials();BuildTerrain();BuildRoads();BuildNeighborhoods();BuildAirport();BuildHarbor();BuildCoast();BuildServices();
@@ -102,6 +102,7 @@ namespace AfterSignal.Editor
             var model=UnityEngine.Object.Instantiate(source,container,false);model.transform.localPosition=Vector3.zero;
             foreach(var r in model.GetComponentsInChildren<MeshRenderer>()){r.sharedMaterials=r.sharedMaterials.Select(m=>m&&materials.TryGetValue(m.name,out var replacement)?replacement:materials["Steel"]).ToArray();r.gameObject.isStatic=true;}
             var filters=model.GetComponentsInChildren<MeshFilter>();if(filters.Length>0){Bounds b=filters[0].sharedMesh.bounds;foreach(var f in filters)b.Encapsulate(f.sharedMesh.bounds);model.transform.localPosition=-new Vector3(b.center.x,b.min.y,b.center.z);}
+            if(asset=="street_lamp_01")StreetBreakable(container,120000,.17f,7);
             return container.gameObject;
         }
         static Transform Text(Transform p,string words,Vector3 at,float size,string mat,float yaw=0)
@@ -122,7 +123,7 @@ namespace AfterSignal.Editor
             var groups=new Dictionary<string,List<CombineInstance>>();var paints=new Dictionary<string,Material>();
             foreach(var f in root.GetComponentsInChildren<MeshFilter>())
             {
-                var r=f.GetComponent<MeshRenderer>();if(!r||!r.enabled||!f.sharedMesh||!f.sharedMesh.isReadable||f.GetComponentInParent<MultiFloorLift>()||f.GetComponentInParent<NeonTransit>()||f.GetComponentInParent<KelpCurrent>())continue;
+                var r=f.GetComponent<MeshRenderer>();if(!r||!r.enabled||!f.sharedMesh||!f.sharedMesh.isReadable||f.GetComponentInParent<MultiFloorLift>()||f.GetComponentInParent<NeonTransit>()||f.GetComponentInParent<KelpCurrent>()||f.GetComponentInParent<CollapsibleBuilding>()||f.GetComponentInParent<BreakableStreetProp>())continue;
                 var usable=f.GetComponentInParent<UsableProp>();if(usable&&usable.use==PropUse.Television)continue;
                 Vector3 c=r.bounds.center;string cell=Mathf.FloorToInt(c.x/100)+"_"+Mathf.FloorToInt(c.y/60)+"_"+Mathf.FloorToInt(c.z/100);
                 for(int sub=0;sub<f.sharedMesh.subMeshCount;sub++)

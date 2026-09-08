@@ -21,6 +21,7 @@ namespace AfterSignal
             if(fatal){if(State==Reaction.Destroyed)return;Evacuate(true,danger);State=Reaction.Destroyed;return;}
             if(State==Reaction.Evacuated||State==Reaction.Destroyed)return;
             if(!car.occupied&&(!car.GetComponent<VehicleCabin>()||car.GetComponent<VehicleCabin>().PassengerCount==0)||car.GetComponent<PoliceCar>()||car.GetComponent<StolenVehicle>()||UrbanSimulation.Instance&&UrbanSimulation.Instance.Current==car)return;
+            var intercity=car.GetComponent<IntercityService>();if(intercity&&!intercity.Boarding)return;
             CitySafety.Shock(car.transform.position);
             if(car.health<28||Mathf.Abs(car.speed)<2.5f||!car.traffic||car.route==null||car.route.Length<2)
                 Evacuate(false,danger);
@@ -40,6 +41,7 @@ namespace AfterSignal
         void Evacuate(bool fallen,Vector3 danger)
         {
             var cabin=car.GetComponent<VehicleCabin>();
+            var service=car.GetComponent<IntercityService>();if(service&&fallen){service.ReleaseAfterCrash();cabin?.SetPassengers(0);}
             var stolen=car.GetComponent<StolenVehicle>();
             bool realDriver=stolen&&stolen.Driver;
             if(realDriver&&fallen){stolen.Driver.GetComponent<GangCrime>()?.EjectFromWreck(car);Ejected++;}

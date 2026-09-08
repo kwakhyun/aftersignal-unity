@@ -31,7 +31,7 @@ namespace AfterSignal
             Check(Enumerable.Range(24,24).All(role=>Enumerable.Range(0,4).All(d=>FacilityPeople.Get(FacilityPeople.Key(role),d))),"All 24 new NPC archetypes load four directional sprites");
             Check(NeonHarbor.Land.All(r=>Physics.Raycast(new Vector3(r.center.x,3,r.center.y),Vector3.down,6,1))&&OceanLife.Contains(new Vector3(1060,-2,-2850)),"Four islands have solid ground and central canal remains water");
             Check(NeonHarbor.Roads.All(r=>r.All(p=>p.x>0&&p.z>NeonHarbor.South))&&ExpansionRoads.Roads.Count==28,"New roads and bridges participate in the city road network");
-            var ferry=FindAnyObjectByType<CrossStraitFerry>();
+            var ferry=FindObjectsByType<IntercityService>().FirstOrDefault(s=>!s.Aircraft);
             var deck=GameObject.CreatePrimitive(PrimitiveType.Cube);deck.name="Essential isolated vehicle deck";deck.transform.position=new Vector3(1100,199.5f,-1600);deck.transform.localScale=new Vector3(300,1,160);deck.GetComponent<Renderer>().sharedMaterial=Resources.Load<Material>("WorldAssets/Generated/Asphalt");
             bool audio=true,views=true;
             for(int i=0;i<11;i++)
@@ -79,8 +79,8 @@ namespace AfterSignal
             yield return View("nova-interior",new Vector3(1345,.2f,-2800),new Vector3(1345,2,-2800),new Vector3(1368,2,-2778));
             LifeState.Hours=15;yield return View("underwater-archive",new Vector3(980,-25,-2180),new Vector3(992,-22,-2204),new Vector3(980,-24,-2180));
             g.Player.Respawn(new Vector3(927.4f,.2f,-2390));g.CameraRig.enabled=true;g.CameraRig.Snap();
-            while(ferry&&ferry.Crossings==0&&Time.realtimeSinceStartup-began<265)yield return new WaitForSeconds(1);
-            Check(ferry&&ferry.Crossings>0&&NeonHarbor.Region(ferry.transform.position),"NPC ferry completes an actual ocean crossing and docks at Nova");
+            while(ferry&&ferry.Arrivals==0&&Time.realtimeSinceStartup-began<265)yield return new WaitForSeconds(1);
+            Check(ferry&&ferry.Arrivals>0&&NeonHarbor.Region(ferry.transform.position),"NPC ferry completes an actual ocean crossing and docks at Nova");
             Finish();
         }
         IEnumerator View(string name,Vector3 player,Vector3 eye,Vector3 at){GameDirector.Instance.Player.Respawn(player);Camera.main.transform.position=eye;Camera.main.transform.LookAt(at);yield return new WaitForSeconds(1);Capture(name);}

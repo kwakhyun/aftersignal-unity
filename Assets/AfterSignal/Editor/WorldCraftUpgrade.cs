@@ -13,7 +13,7 @@ namespace AfterSignal.Editor
             var ship=instance.GetComponentsInChildren<Transform>().FirstOrDefault(t=>t.name.StartsWith("MV AFTERGLOW"));
             if(!ship){PrefabUtility.UnloadPrefabContents(instance);return;}
             var batches=instance.transform.Find("Batched district geometry");if(batches)Object.DestroyImmediate(batches.gameObject);
-            foreach(var r in instance.GetComponentsInChildren<MeshRenderer>())r.enabled=true;
+            foreach(var r in instance.GetComponentsInChildren<MeshRenderer>())if(!r.name.StartsWith("Collision"))r.enabled=true;
             // Preserve the actual detailed cargo ship, while removing it from static world batches.
             var cargo=Object.Instantiate(ship.gameObject);cargo.transform.position=Vector3.zero;
             var car=cargo.AddComponent<CityVehicle>();car.type=CityVehicleType.Boat;cargo.AddComponent<AuthoredCraft>();
@@ -22,7 +22,7 @@ namespace AfterSignal.Editor
             {
                 var marker=new GameObject("Boardable aircraft parking",typeof(CraftSpawn));marker.transform.SetParent(plane.parent,false);marker.transform.position=plane.position;marker.transform.rotation=Quaternion.Euler(0,90,0);Object.DestroyImmediate(plane.gameObject);
             }
-            root=instance.transform;meshId=6000;CombinePresentation();SaveGeneratedMeshes();PrefabUtility.SaveAsPrefabAsset(instance,path);PrefabUtility.UnloadPrefabContents(instance);
+            root=instance.transform;meshId=70000;CombinePresentation();SaveGeneratedMeshes();PrefabUtility.SaveAsPrefabAsset(instance,path);PrefabUtility.UnloadPrefabContents(instance);
             Debug.Log("MOBILITY CRAFT: original four airport stands now spawn drivable aircraft; detailed cargo vessel is steerable.");
         }
     }

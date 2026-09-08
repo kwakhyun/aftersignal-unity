@@ -1,0 +1,16 @@
+{
+    "completed": true,
+    "registeredResidents": 3298,
+    "residentObjects": 0,
+    "activeResidents": 0,
+    "buildingProfiles": 0,
+    "meanFrameMs": 0.0,
+    "passed": [
+        "District residents stream near the player instead of instantiating the entire population",
+        "Map opens zoomed around the current player position",
+        "Map zoom preserves the world location under the pointer",
+        "Dragging explores the map without moving the player",
+        "Revised ocean shader compiles and receives the opaque scene texture"
+    ],
+    "errors": []
+}

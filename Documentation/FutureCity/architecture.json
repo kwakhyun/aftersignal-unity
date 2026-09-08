@@ -1,0 +1,34 @@
+[
+  {
+    "profile": "Helix",
+    "vertices": 2648
+  },
+  {
+    "profile": "Cascade",
+    "vertices": 1208
+  },
+  {
+    "profile": "Prism",
+    "vertices": 800
+  },
+  {
+    "profile": "Oval",
+    "vertices": 1904
+  },
+  {
+    "profile": "Cantilever",
+    "vertices": 1688
+  },
+  {
+    "profile": "Lantern",
+    "vertices": 1088
+  },
+  {
+    "profile": "TwinGate",
+    "vertices": 760
+  },
+  {
+    "profile": "Orbital",
+    "vertices": 1664
+  }
+]

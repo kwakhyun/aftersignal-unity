@@ -37,7 +37,7 @@ namespace AfterSignal
         }
         void InitializeWaterAudio()
         {
-            if(Camera.main)Camera.main.GetComponent<UnityEngine.Rendering.Universal.UniversalAdditionalCameraData>().requiresDepthTexture=true;
+            if(Camera.main){var data=Camera.main.GetComponent<UnityEngine.Rendering.Universal.UniversalAdditionalCameraData>();data.requiresDepthTexture=true;data.requiresColorTexture=true;}
             var veil=GameObject.CreatePrimitive(PrimitiveType.Quad);veil.name="Underwater distance absorption";veil.layer=2;Destroy(veil.GetComponent<Collider>());waterVeil=veil.transform;waterVeil.SetParent(Camera.main.transform,false);
             waterVeilMaterial=new Material(Resources.Load<Shader>("Shaders/UnderwaterHaze"));var vr=veil.GetComponent<MeshRenderer>();vr.sharedMaterial=waterVeilMaterial;vr.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;vr.receiveShadows=false;veil.SetActive(false);
             underwater=gameObject.AddComponent<AudioSource>();underwater.clip=Resources.Load<AudioClip>("Audio/Transport/underwater");underwater.loop=true;underwater.spatialBlend=0;underwater.volume=0;if(underwater.clip)underwater.Play();

@@ -4,8 +4,8 @@ namespace AfterSignal
     public sealed class ExpansionWorld:MonoBehaviour
     {
         public static ExpansionWorld Instance{get;private set;}
-        public static readonly string[] Names={"루멘 해변","블루워터 항만","애프터라이트 국제공항","홍련 야시장","환승역 광장","오로라 전망공원","동부 물류센터","해변 호텔","항만 진료소","동부 변전소","루멘 방위기지","애프터라이트 교도소","해양 여객터미널","도시기억관리청","노바 해협도시"};
-        public static readonly Vector3[] Places={new Vector3(570,0,-545),new Vector3(1730,0,-475),new Vector3(1730,0,525),new Vector3(980,0,-225),new Vector3(880,0,70),new Vector3(860,0,630),new Vector3(1360,0,-276),new Vector3(1100,0,-421),new Vector3(1910,0,-310),new Vector3(1370,0,-88),new Vector3(420,0,720),new Vector3(1180,0,737),new Vector3(1250,0,-673),new Vector3(1270,0,284),new Vector3(920,0,-2460)};
+        public static readonly string[] Names={"루멘 해변","블루워터 항만","애프터라이트 국제공항","홍련 야시장","환승역 광장","오로라 전망공원","동부 물류센터","해변 호텔","항만 진료소","동부 변전소","루멘 방위기지","애프터라이트 교도소","해양 여객터미널","도시기억관리청","노바 해협도시","크로마 수로시장","펠라직 해양연구소","오벨리스크 기록금고","스카이워드 시민의회","에코 수중 관측소","노바 공항","조수 발전 관제소"};
+        public static readonly Vector3[] Places={new Vector3(570,0,-545),new Vector3(1730,0,-475),new Vector3(1730,0,525),new Vector3(980,0,-225),new Vector3(880,0,70),new Vector3(860,0,630),new Vector3(1360,0,-276),new Vector3(1100,0,-421),new Vector3(1910,0,-310),new Vector3(1370,0,-88),new Vector3(420,0,720),new Vector3(1180,0,737),new Vector3(1250,0,-673),new Vector3(1270,0,284),new Vector3(920,0,-2460),new Vector3(610,0,-2810),new Vector3(1360,0,-2810),new Vector3(1610,0,-3470),new Vector3(680,0,-3700),new Vector3(980,-28,-2180),new Vector3(1790,0,-3940),new Vector3(470,0,-4010)};
         public static int Selected=-1;
         public static void Install(GameDirector game)
         {
@@ -14,29 +14,38 @@ namespace AfterSignal
             var addon=Resources.Load<GameObject>("WorldAssets/MobilityDistricts");if(addon)Instantiate(addon,expanded?expanded.transform:null);
             var renewal=Resources.Load<GameObject>("WorldAssets/CivicRenewal");if(renewal)Instantiate(renewal,expanded?expanded.transform:null);
             var harbor=Resources.Load<GameObject>("WorldAssets/NeonHarbor");if(harbor)Instantiate(harbor,expanded?expanded.transform:null);
+            var terminals=Resources.Load<GameObject>("WorldAssets/TransitFacilities");if(terminals)Instantiate(terminals,expanded?expanded.transform:null);
             game.gameObject.AddComponent<VehicleFleet>();game.gameObject.AddComponent<OceanLife>();game.gameObject.AddComponent<PrisonSystem>();
             Camera.main.farClipPlane=5400;
         }
         public int Population{get;private set;}
-        readonly List<FacilityCitizen> people=new List<FacilityCitizen>();float next;
+        sealed class DistrictResidents
+        {
+            public FacilityCrowd seed;public int first;public readonly List<FacilityCitizen> live=new();public float[] health;public int created;
+        }
+        readonly List<DistrictResidents> districts=new();float next;Material actorMaterial;
+        public int ResidentObjects{get;private set;}
+        public int ActiveResidents{get;private set;}
         void Awake(){Instance=this;}
         void Start()
         {
+            actorMaterial=Resources.Load<Material>("Materials/PixelActor");
             foreach(var seed in GetComponentsInChildren<FacilityCrowd>())
-            {
-                for(int i=0;i<seed.count;i++)
-                {
-                    var go=new GameObject("Citizen / "+seed.title+" / "+i,typeof(SpriteRenderer),typeof(CityNpc),typeof(FacilityCitizen));go.transform.SetParent(seed.transform,false);
-                    int role=(seed.firstRole+i%seed.roleCount)%FacilityPeople.Jobs.Length;
-                    string art=seed.arts!=null&&seed.arts.Length>0?seed.arts[i%seed.arts.Length]:FacilityPeople.Key(role);
-                    string job=seed.jobs!=null&&seed.jobs.Length>0?seed.jobs[i%seed.jobs.Length]:FacilityPeople.Jobs[role];
-                    go.transform.position=SpawnPosition(seed,i);
-                    var sr=go.GetComponent<SpriteRenderer>();sr.sharedMaterial=Resources.Load<Material>("Materials/PixelActor");sr.sprite=PeopleArt.Get(art,0);
-                    var npc=go.GetComponent<CityNpc>();npc.Configure(6000+Population,job,null,seed.title+"에서 생활한다. 주변 시설과 교통편을 잘 안다. 실제 위치와 직업에 맞게 대화한다.");
-                    PeopleArt.Attach(go,art);var c=go.GetComponent<FacilityCitizen>();c.origin=go.transform.position;c.radius=seed.radius;c.district=seed.title;c.serial=Population;
-                    people.Add(c);Population++;
-                }
-            }
+            {districts.Add(new DistrictResidents{seed=seed,first=Population,health=new float[seed.count]});Population+=seed.count;}
+        }
+        FacilityCitizen SpawnResident(DistrictResidents district,int i)
+        {
+            if(district.health[i]<0)return null;
+            var seed=district.seed;var go=new GameObject("Citizen / "+seed.title+" / "+i,typeof(SpriteRenderer),typeof(CityNpc),typeof(FacilityCitizen));go.transform.SetParent(seed.transform,false);
+            int role=(seed.firstRole+i%Mathf.Max(1,seed.roleCount))%FacilityPeople.Jobs.Length;
+            string art=seed.arts!=null&&seed.arts.Length>0?seed.arts[i%seed.arts.Length]:FacilityPeople.Key(role);
+            string job=seed.jobs!=null&&seed.jobs.Length>0?seed.jobs[i%seed.jobs.Length]:FacilityPeople.Jobs[role];
+            go.transform.position=SpawnPosition(seed,i);var sr=go.GetComponent<SpriteRenderer>();sr.sharedMaterial=actorMaterial;sr.sprite=PeopleArt.Get(art,0);
+            var npc=go.GetComponent<CityNpc>();npc.Configure(6000+district.first+i,job,null,seed.title+"에서 생활한다. 주변 시설과 교통편을 잘 안다. 실제 위치와 직업에 맞게 대화한다.");
+            PeopleArt.Attach(go,art);var c=go.GetComponent<FacilityCitizen>();c.origin=go.transform.position;c.radius=seed.radius;c.district=seed.title;c.serial=district.first+i;
+            if(district.health[i]<0)go.GetComponent<WorldActor>().health=0;
+            else if(district.health[i]>0)go.GetComponent<WorldActor>().health=district.health[i];
+            return c;
         }
         static Vector3 SpawnPosition(FacilityCrowd seed,int index)
         {
@@ -52,8 +61,20 @@ namespace AfterSignal
         }
         void Update()
         {
-            var g=GameDirector.Instance;if(!g||!g.Ready||Time.time<next)return;next=Time.time+1;
-            foreach(var p in people)if(p){bool nearby=(p.transform.position-g.Player.transform.position).sqrMagnitude<210*210;p.gameObject.SetActive(nearby);}
+            var g=GameDirector.Instance;if(!g||!g.Ready||Time.time<next)return;next=Time.time+.2f;
+            int budget=20;ResidentObjects=ActiveResidents=0;var player=g.Player.transform.position;
+            foreach(var district in districts)
+            {
+                if(!district.seed)continue;float distance=(district.seed.transform.position-player).sqrMagnitude;
+                if(distance>600*600&&district.live.Count>0)
+                {
+                    for(int i=0;i<district.live.Count;i++)if(district.live[i]){var body=district.live[i].GetComponent<WorldActor>();district.health[i]=body&&body.Alive?body.health:-1;Destroy(district.live[i].gameObject);}
+                    district.live.Clear();district.created=0;continue;
+                }
+                if(distance<250*250)while(district.created<district.seed.count&&budget>0)
+                {district.live.Add(SpawnResident(district,district.created++));budget--;}
+                foreach(var c in district.live)if(c){bool active=(c.transform.position-player).sqrMagnitude<210*210;if(c.gameObject.activeSelf!=active)c.gameObject.SetActive(active);ResidentObjects++;if(active)ActiveResidents++;}
+            }
         }
         void OnDestroy(){if(Instance==this)Instance=null;}
     }

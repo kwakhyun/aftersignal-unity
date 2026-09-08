@@ -6,69 +6,57 @@ namespace AfterSignal
     public sealed partial class SignalHud
     {
         GameObject cityMapOverlay;
-        RectTransform cityMapPin, cityMiniPin;
         Text drivingInfo, cityDestination;
         int selectedSite = -1;
         float nextCityText;
+        AtlasViewport atlas, miniAtlas;
+        bool wasMapOpen;
+        Text atlasScale;
         void BuildUrbanMap(Transform parent)
         {
-            Label(parent, "애프터라이트   /   M 전체 지도", 12, 8, 296, 20, 12, mint, FontStyle.Bold);
-            AddExpansionMap(parent,false);
-            for (int i = 0; i < UrbanCatalog.SiteCount; i++)
-            {
-                var p = UrbanCatalog.Center(i);
-                int kind = UrbanCatalog.Kind(i);
-                Panel(parent, "Facility", 20 + ExpansionRoads.Map(p).x * 272, 145 - ExpansionRoads.Map(p).y * 116, 3, 3, kind == 11 ? new Color(1, .61f, .26f) : new Color(.51f, .65f, .7f));
-            }
-
-            miniRoute = AddMapRoute(parent, false);
-            cityMiniPin = Label(parent, "◆", 0, 0, 14, 16, 13, new Color(1, .84f, .36f)).rectTransform;
+            Label(parent, "AFTERLIGHT / N ↑    M 지도 탐색",12,8,296,20,12,mint,FontStyle.Bold);
+            miniAtlas=CreateAtlas(parent,20,32,272,116,true);
         }
-
-        void AddExpansionMap(Transform parent,bool large)
+        AtlasViewport CreateAtlas(Transform parent,float x,float y,float w,float h,bool mini)
         {
-            var go=new GameObject("Geographic street atlas",typeof(RectTransform),typeof(ExpansionMapGraphic));go.transform.SetParent(parent,false);
-            var map=go.GetComponent<ExpansionMapGraphic>();map.raycastTarget=false;Rect(map.rectTransform,large?55:20,large?125:29,large?790:272,large?550:116);
+            var go=new GameObject("Local street atlas",typeof(RectTransform),typeof(AtlasViewport));go.transform.SetParent(parent,false);
+            var map=go.GetComponent<AtlasViewport>();Rect(map.rectTransform,x,y,w,h);map.mini=mini;map.raycastTarget=!mini;map.Focus(game.Player.transform.position,mini?360:820);
+            map.Select=(id,expanded)=>{selectedSite=expanded?-1:id;ExpansionWorld.Selected=expanded?id:-1;map.follow=false;map.Focus(expanded?ExpansionWorld.Places[id]:UrbanCatalog.Center(id));customMapGoal=false;};
+            map.Waypoint=p=>{mapGoal=p;customMapGoal=true;selectedSite=-1;ExpansionWorld.Selected=-1;game.Toast("지도 경유지를 지정했습니다");};return map;
         }
-
         void EnsureCityHud()
         {
-            if (drivingInfo)
-                return;
-            drivingInfo = Label(root, "", 0, 0, 720, 90, 21, white, FontStyle.Bold);
-            CenterBottom(drivingInfo.rectTransform, 45, 720, 90);
-            drivingInfo.alignment = TextAnchor.MiddleCenter;
-            if (game.stage != StageId.UrbanCity)
-                return;
-            cityMapOverlay = Panel(root, "City atlas", 0, 0, 1450, 760, new Color(.025f, .055f, .075f, .98f)).gameObject;
-            Center(cityMapOverlay.GetComponent<RectTransform>(), 1450, 760);
-            Label(cityMapOverlay.transform, "AFTERLIGHT  /  도시 안내", 36, 24, 1000, 45, 29, white, FontStyle.Bold);
-            Label(cityMapOverlay.transform, "금색: 메인 경로 · 시설 선택: 방향과 거리      M 닫기", 36, 76, 1200, 25, 16, mint);
-            AddExpansionMap(cityMapOverlay.transform,true);
-            for(int i=0;i<ExpansionWorld.Names.Length;i++)
+            if(drivingInfo)return;
+            drivingInfo=Label(root,"",0,0,900,90,19,white,FontStyle.Bold);CenterBottom(drivingInfo.rectTransform,45,900,90);drivingInfo.alignment=TextAnchor.MiddleCenter;
+            if(game.stage!=StageId.UrbanCity)return;
+            cityMapOverlay=Panel(root,"City atlas",0,0,1450,820,new Color(.025f,.055f,.075f,.98f)).gameObject;Center(cityMapOverlay.GetComponent<RectTransform>(),1450,820);
+            var mapCanvas=cityMapOverlay.AddComponent<Canvas>();mapCanvas.overrideSorting=true;mapCanvas.sortingOrder=100;
+            cityMapOverlay.AddComponent<GraphicRaycaster>();
+            Label(cityMapOverlay.transform,"AFTERLIGHT / NETWORK ATLAS",30,22,1080,42,29,white,FontStyle.Bold);
+            Label(cityMapOverlay.transform,"휠 확대·축소   ·   드래그 탐색   ·   시설 선택 / 빈 곳 클릭: 경유지",30,72,1110,27,16,mint);
+            MakeButton(cityMapOverlay.transform,"닫기 M",1290,28,126,36,()=>UrbanSimulation.Instance?.CloseMap());
+            atlas=CreateAtlas(cityMapOverlay.transform,30,120,1000,630,false);
+            MakeButton(cityMapOverlay.transform,"+",40,132,40,40,()=>atlas.Zoom(.7f,atlas.rectTransform.rect.center));
+            MakeButton(cityMapOverlay.transform,"−",40,178,40,40,()=>atlas.Zoom(1.4f,atlas.rectTransform.rect.center));
+            MakeButton(cityMapOverlay.transform,"내 위치",886,132,130,40,()=>atlas.Recenter());
+            atlasScale=Label(cityMapOverlay.transform,"",45,710,950,28,15,mint);
+            Label(cityMapOverlay.transform,"목적지",1060,120,330,30,22,white,FontStyle.Bold);
+            MakeButton(cityMapOverlay.transform,"메인 의뢰",1060,160,350,34,()=>{ExpansionWorld.Selected=-1;selectedSite=-1;customMapGoal=false;atlas.Recenter();});
+            MakeButton(cityMapOverlay.transform,"전체",1060,202,110,30,()=>atlas.filter=0);
+            MakeButton(cityMapOverlay.transform,"시설",1180,202,110,30,()=>atlas.filter=1);
+            MakeButton(cityMapOverlay.transform,"교통",1300,202,110,30,()=>atlas.filter=2);
+            var view=Panel(cityMapOverlay.transform,"Destination scroll",1056,244,360,496,new Color(.035f,.09f,.115f));view.raycastTarget=true;view.gameObject.AddComponent<RectMask2D>();
+            var content=new GameObject("Destinations",typeof(RectTransform)).GetComponent<RectTransform>();content.SetParent(view.transform,false);
+            int count=ExpansionWorld.Names.Length+UrbanCatalog.SiteCount;Rect(content,0,0,342,count*34);
+            var scroll=view.gameObject.AddComponent<ScrollRect>();scroll.viewport=view.rectTransform;scroll.content=content;scroll.horizontal=false;scroll.scrollSensitivity=32;scroll.movementType=ScrollRect.MovementType.Clamped;
+            for(int i=0;i<count;i++)
             {
-                int id=i;var p=ExpansionWorld.Places[i];var m=ExpansionRoads.Map(p);
-                var b=MakeButton(cityMapOverlay.transform,ExpansionWorld.Names[i],872+(i%2)*275,118+(i/2)*27,264,25,()=>{ExpansionWorld.Selected=id;selectedSite=-1;});
-                b.GetComponentInChildren<Text>().fontSize=14;
-                Label(cityMapOverlay.transform,ExpansionWorld.Names[i],55+m.x*790,675-m.y*550,150,20,12,mint);
+                int id=i;bool expanded=i<ExpansionWorld.Names.Length;if(!expanded)id-=ExpansionWorld.Names.Length;
+                int site=id;bool region=expanded;
+                string name=expanded?ExpansionWorld.Names[id]:UrbanCatalog.Name(id);
+                var b=MakeButton(content,name,6,i*34,330,31,()=>atlas.Select(site,region));b.GetComponentInChildren<Text>().fontSize=15;
             }
-            MakeButton(cityMapOverlay.transform,"메인 의뢰 경로",1147,318,264,26,()=>{ExpansionWorld.Selected=-1;selectedSite=-1;});
-            for (int i = 0; i < UrbanCatalog.SiteCount; i++)
-            {
-                int id = i;
-                var p = UrbanCatalog.Center(i);
-                var button = MakeButton(cityMapOverlay.transform, (i + 1).ToString("00"), 55 + ExpansionRoads.Map(p).x*790, 675 - ExpansionRoads.Map(p).y*550, 14, 14, () => {selectedSite = id;ExpansionWorld.Selected=-1;});
-                button.GetComponentInChildren<Text>().fontSize = 12;
-                Rect(button.GetComponentInChildren<Text>().rectTransform, 1, 4, 30, 20);
-                button.GetComponentInChildren<Text>().alignment = TextAnchor.MiddleCenter;
-                var list = MakeButton(cityMapOverlay.transform, $"{i + 1:00}  {UrbanCatalog.Name(i)}", 872 + (i / 20) * 275, 350 + (i % 20) * 16, 264, 16, () => {selectedSite = id;ExpansionWorld.Selected=-1;});
-                list.GetComponentInChildren<Text>().fontSize = 12;
-            }
-
-            largeRoute = AddMapRoute(cityMapOverlay.transform, true);
-            cityMapPin = Label(cityMapOverlay.transform, "◆", 0, 0, 25, 26, 23, new Color(1, .83f, .28f), FontStyle.Bold).rectTransform;
-            cityDestination = Label(cityMapOverlay.transform, "시설을 선택하세요", 45, 708, 1250, 28, 18, mint);
-            cityMapOverlay.SetActive(false);
+            cityDestination=Label(cityMapOverlay.transform,"",32,773,1370,28,17,mint);cityMapOverlay.SetActive(false);
         }
 
         void UpdateUrbanHud()
@@ -90,23 +78,16 @@ namespace AfterSignal
             arsenalPanel.SetActive(!sim.Driving);
             weapon.transform.parent.gameObject.SetActive(!sim.Driving);
             drivingInfo.gameObject.SetActive(active);
-            if (cityMiniPin)
+            if(cityMapOverlay)
             {
-                var p = game.Player.transform.position;
-                cityMiniPin.anchoredPosition = new Vector2(16 + ExpansionRoads.Map(p).x*272, -(145 - ExpansionRoads.Map(p).y*116));
-            }
-
-            if (cityMapOverlay)
-            {
-                cityMapOverlay.SetActive(sim.MapOpen && active);
-                if (sim.MapOpen && active)
+                bool open=sim.MapOpen&&active;cityMapOverlay.SetActive(open);
+                if(open)
                 {
-                    Cursor.visible = true;
-                    cursor.gameObject.SetActive(false);
-                    var p = game.Player.transform.position;
-                    cityMapPin.anchoredPosition = new Vector2(52 + ExpansionRoads.Map(p).x*790, -(676 - ExpansionRoads.Map(p).y*550));
-                    cityDestination.text = ExpansionWorld.Selected>=0 ? ExpansionWorld.Names[ExpansionWorld.Selected]+" · "+Vector3.Distance(game.Player.transform.position,ExpansionWorld.Places[ExpansionWorld.Selected]).ToString("0")+" m" : selectedSite < 0 ? "번호 또는 시설 이름을 선택하면 이동 방향과 거리를 표시합니다." : UrbanCatalog.Name(selectedSite) + "  ·  " + UrbanCatalog.Descriptions[UrbanCatalog.Kind(selectedSite)];
+                    if(!wasMapOpen)atlas.Recenter();Cursor.visible=true;cursor.gameObject.SetActive(false);
+                    atlasScale.text="N ↑     표시 폭 "+atlas.Span.ToString("0")+" m     ◆ 서하    ■ 시설    ■ 교통편";
+                    cityDestination.text=customMapGoal?"경유지 · "+Vector3.Distance(game.Player.transform.position,mapGoal).ToString("0")+" m":ExpansionWorld.Selected>=0?ExpansionWorld.Names[ExpansionWorld.Selected]+" · "+Vector3.Distance(game.Player.transform.position,ExpansionWorld.Places[ExpansionWorld.Selected]).ToString("0")+" m":selectedSite>=0?UrbanCatalog.Name(selectedSite)+" · "+UrbanCatalog.Descriptions[UrbanCatalog.Kind(selectedSite)]:"시설이나 지점을 선택하면 길 안내를 시작합니다.";
                 }
+                wasMapOpen=open;
             }
 
             if (selectedSite >= 0 && active && !sim.MapOpen)
