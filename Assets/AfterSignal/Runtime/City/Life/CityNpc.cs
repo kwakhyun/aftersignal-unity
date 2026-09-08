@@ -6,8 +6,12 @@ namespace AfterSignal
     {
         public string identity, displayName, occupation, personality, context;
         public int variation;
+        public int CashOnHand { get; private set; } = 180;
+        public int TakeCash(int amount){int taken=Mathf.Min(CashOnHand,Mathf.Max(0,amount));CashOnHand-=taken;return taken;}
         public InteractionPoint point;
         public bool fixedQuest;
+        public float SocialUntil;
+        public bool Fleeing=>Time.time<fleeUntil;
         SpriteRenderer sprite;
         WorldActor body;
         float fleeUntil, downTime;
@@ -72,6 +76,7 @@ namespace AfterSignal
         public void Configure(int seed, string role = null, string name = null, string background = null)
         {
             variation = Mathf.Abs(seed) % 24;
+            CashOnHand=80+variation*13;
             identity = string.IsNullOrEmpty(identity) ? "resident-" + seed : identity;
             occupation = role ?? Jobs[variation % Jobs.Length];
             displayName = name ?? Names[variation] + " · " + occupation;
@@ -103,6 +108,7 @@ namespace AfterSignal
             if (!fixedQuest)
                 point.title = displayName + " · 대화";
             point.radius = 3.1f;
+            PeopleArt.Attach(gameObject,PeopleArt.Role(this));
             var look = GetComponent<ActorWardrobe>();
             if (!look)
                 look = gameObject.AddComponent<ActorWardrobe>();
@@ -118,11 +124,22 @@ namespace AfterSignal
                 return;
             }
 
+            GetComponent<DirectionalPerson>()?.Face(game.Player.transform.position,6);
             CityLife.Instance?.Talk(this);
         }
 
+        public void Panic(Vector3 danger,float duration)
+        {
+            if(CivilianDefense.Active(this))return;
+            if(fixedQuest||body&&!body.Alive)return;
+            fleeUntil=Time.time+duration;fleeDirection=(transform.position-danger).normalized;
+            if(fleeDirection.sqrMagnitude<.01f)fleeDirection=Vector3.right;
+            var ped=GetComponent<CityPedestrian>();
+            if(ped){ped.speed=3.7f;ped.WalkTo(transform.position+fleeDirection*13,false);}
+        }
         public void ReactToAttack(bool down, Vector3 force)
         {
+            if(!down&&CivilianDefense.Active(this))return;
             fleeUntil = Time.time + (down ? 3600 : 7);
             fleeDirection = new Vector3(force.x, 0, force.z).normalized;
             downTime = down ? 12 : 0;
@@ -137,6 +154,7 @@ namespace AfterSignal
 
         void Update()
         {
+            if(CivilianImpact.Active(this)||CivilianDefense.Active(this))return;
             var g = GameDirector.Instance;
             if (!g || g.Blocked || !sprite || Time.time >= fleeUntil)
                 return;
@@ -146,7 +164,7 @@ namespace AfterSignal
                 return;
             }
 
-            if (fixedQuest)
+            if (fixedQuest || GetComponent<CityPedestrian>())
                 return;
             var step = fleeDirection * Time.deltaTime * 2.8f;
             if (!Physics.Raycast(transform.position + Vector3.up, step.normalized, step.magnitude + .6f, 1, QueryTriggerInteraction.Ignore) && Physics.Raycast(transform.position + step + Vector3.up, Vector3.down, 1.5f, 1, QueryTriggerInteraction.Ignore))

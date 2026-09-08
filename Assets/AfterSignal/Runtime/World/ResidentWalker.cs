@@ -21,6 +21,7 @@ namespace AfterSignal
 
         void Update()
         {
+            if(CivilianImpact.Active(this)||CivilianDefense.Active(this))return;
             var g = GameDirector.Instance;
             if (!g || g.Blocked || !visual)
                 return;

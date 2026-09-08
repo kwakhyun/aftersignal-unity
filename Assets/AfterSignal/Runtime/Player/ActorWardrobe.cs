@@ -39,6 +39,7 @@ namespace AfterSignal
 
             if (!visual)
                 return;
+            if(citizen&&GetComponent<DirectionalPerson>())return;
             int id = citizen ? variant + 1 : LifeState.Outfit;
             if (applied == id)
                 return;

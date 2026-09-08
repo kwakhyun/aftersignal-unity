@@ -6,8 +6,26 @@ namespace AfterSignal.Editor
     {
         void OnPreprocessTexture()
         {
+            if(assetPath.Contains("/SeoMotion/")||assetPath.Contains("/NpcDirections/"))return;
             if(!assetPath.Contains("/Resources/Art/"))return;
+            if(assetPath.Contains("/LawEnforcement/")||assetPath.Contains("/Gangs/")||assetPath.Contains("/SeoIllustrated/")||assetPath.Contains("/Portraits/"))return;
             var importer=(TextureImporter)assetImporter;
+            if(assetPath.Contains("/Title/"))
+            {
+                importer.textureType=TextureImporterType.Default;importer.filterMode=FilterMode.Bilinear;
+                importer.mipmapEnabled=false;importer.wrapMode=TextureWrapMode.Clamp;importer.alphaIsTransparency=false;
+                importer.maxTextureSize=4096;importer.textureCompression=TextureImporterCompression.Uncompressed;
+                importer.isReadable=false;return;
+            }
+            if(assetPath.Contains("/ShopItems/"))
+            {
+                importer.textureType=TextureImporterType.Sprite;importer.spriteImportMode=SpriteImportMode.Single;
+                importer.filterMode=FilterMode.Bilinear;importer.mipmapEnabled=false;importer.wrapMode=TextureWrapMode.Clamp;
+                importer.textureCompression=TextureImporterCompression.Uncompressed;importer.maxTextureSize=512;
+                var iconSettings=new TextureImporterSettings();importer.ReadTextureSettings(iconSettings);
+                iconSettings.spriteAlignment=(int)SpriteAlignment.Center;iconSettings.spritePivot=new Vector2(.5f,.5f);iconSettings.spriteMeshType=SpriteMeshType.FullRect;
+                importer.SetTextureSettings(iconSettings);return;
+            }
             if(assetPath.Contains("/Urban/")){importer.textureType=TextureImporterType.Default;importer.filterMode=FilterMode.Trilinear;importer.mipmapEnabled=true;importer.wrapMode=assetPath.Contains("Surface-")?TextureWrapMode.Repeat:TextureWrapMode.Clamp;importer.alphaIsTransparency=false;importer.anisoLevel=4;importer.maxTextureSize=1024;importer.textureCompression=TextureImporterCompression.CompressedHQ;return;}
             if(assetPath.Contains("/Environment/")){importer.textureType=TextureImporterType.Default;importer.filterMode=FilterMode.Bilinear;importer.mipmapEnabled=true;importer.wrapMode=TextureWrapMode.Clamp;importer.maxTextureSize=2048;importer.textureCompression=TextureImporterCompression.Compressed;return;}
             importer.textureType=TextureImporterType.Sprite;importer.spriteImportMode=SpriteImportMode.Single;

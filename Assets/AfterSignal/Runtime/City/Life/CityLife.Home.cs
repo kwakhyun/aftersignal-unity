@@ -17,7 +17,7 @@ namespace AfterSignal
                     {
                         LifeState.Wear(index);
                         Wardrobe();
-                    });
+                    }, i == 2 ? "NightCoat" : i == 3 ? "TravelCoat" : null);
             }
         }
 

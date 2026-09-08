@@ -1,0 +1,9 @@
+{
+  "tool": "built-in image_gen",
+  "mode": "reference-guided generation",
+  "use_case": "illustration-story",
+  "asset": "Assets/AfterSignal/Resources/Art/Title/AfterlightTitle.png",
+  "source": "C:/Users/82105/.codex/generated_images/01a07a0d-ee6b-7872-b1e5-a1587b0c4ec4/exec-d581b51d-6c8d-492b-9d5d-5c5c1f5573c7.png",
+  "reference": "Assets/AfterSignal/Resources/Art/Portraits/SeoDialogue.png",
+  "prompt": "Use case: illustration-story. Asset type: dedicated 16:9 widescreen title key art for the Korean cyberpunk action game AFTERSIGNAL. Create a new cinematic scene using the supplied portrait only as the exact character identity and costume reference. Preserve Seo's adult face, violet eyes, silver-lilac hair with low loose side bun, slim long-limbed proportions, asymmetric black cropped tactical jacket, black crop top, fitted black trousers, gloves and small cyan hardware accents. Place Seo in the RIGHT third, visible from head to upper thighs, three-quarter stance looking quietly across the city, one relaxed gloved hand near her waist, hair gently moving in the breeze. Behind her: a beautiful dense Afterlight city at blue hour, layered elevated rail lines, a distant passing train, warm apartment windows, cyan and muted amber neon, wet rooftop reflections and deep atmospheric perspective. Premium polished anime game splash illustration with refined linework, painterly architectural lighting and crisp detailed character anatomy. Wide 16:9 composition, ideally 2560x1440 or higher. The LEFT 46 percent is reserved for an actual game logo and menu rendered by the engine: keep that region very dark navy with soft, low contrast distant buildings, no bright objects or character silhouette. The character's face must remain unobstructed around x 74%, y 29%. Dramatic but calm, melancholy yet hopeful. No text, no logos, no letters, no watermark, no UI baked into the illustration. Opaque full-canvas background, no white margin."
+}

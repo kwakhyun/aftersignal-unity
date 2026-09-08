@@ -1,0 +1,14 @@
+{
+    "completed": true,
+    "passed": [
+        "Government, distinct districts, physical weapon store and usable facility objects loaded",
+        "Three-level government atrium has an open central volume and solid upper galleries",
+        "Facility-specific usable interior detail loads in Clinic",
+        "Facility-specific usable interior detail loads in School"
+    ],
+    "errors": [],
+    "consoles": 158,
+    "props": 152,
+    "armyShots": 0,
+    "government": "(840.00, 0.00, 870.00)"
+}

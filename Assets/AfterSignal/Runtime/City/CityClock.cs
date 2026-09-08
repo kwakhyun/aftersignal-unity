@@ -58,6 +58,17 @@ namespace AfterSignal
             RenderSettings.ambientSkyColor = Color.Lerp(new Color(.14f, .2f, .34f), new Color(.54f, .65f, .75f), daylight);
             RenderSettings.ambientEquatorColor = Color.Lerp(new Color(.09f, .14f, .23f), new Color(.4f, .47f, .53f), daylight);
             RenderSettings.ambientGroundColor = Color.Lerp(new Color(.04f, .07f, .12f), new Color(.23f, .25f, .28f), daylight);
+            if(game.stage==StageId.UrbanInterior&&ResidentialWorld.VisitHome>=0)
+            {
+                // Interior practical lights keep a home readable after sunset.
+                sun.color=new Color(1,.92f,.8f);sun.intensity=1.35f;
+                sun.transform.rotation=Quaternion.Euler(55,-32,0);
+                sun.shadows=LightShadows.None;
+                RenderSettings.ambientMode=UnityEngine.Rendering.AmbientMode.Trilight;
+                RenderSettings.ambientSkyColor=new Color(.7f,.66f,.6f);
+                RenderSettings.ambientEquatorColor=new Color(.54f,.5f,.44f);
+                RenderSettings.ambientGroundColor=new Color(.32f,.29f,.25f);
+            }
             if (!indoor)
             {
                 float dusk = (1 - Mathf.Abs(altitude) * 3) * daylight;

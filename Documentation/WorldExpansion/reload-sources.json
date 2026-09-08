@@ -1,0 +1,64 @@
+{
+  "source": "https://opengameart.org/content/gun-reload-sounds",
+  "download": "https://opengameart.org/sites/default/files/gunreload1.wav",
+  "author": "SpringySpringo",
+  "license": "CC0-1.0",
+  "recording": "Airsoft gun magazine and action handling; gunshots remain the real 1911 recordings credited in firearm-sources.json.",
+  "source_sha256": "685cac6a184e3cc3ec09a25b6ddb1d6feffd86d469778f339aa423d384035c50",
+  "edits": [
+    {
+      "output": "Assets\\AfterSignal\\Resources\\Audio\\Firearms\\reload_out_0.wav",
+      "start": 0.04498866213151927,
+      "end": 0.34997732426303857,
+      "sha256": "9e594bb1a298e1d3c534b588e0c6ccacbba7c1e9eb1967f488a843043dfb843d"
+    },
+    {
+      "output": "Assets\\AfterSignal\\Resources\\Audio\\Firearms\\reload_out_1.wav",
+      "start": 0.04498866213151927,
+      "end": 0.34997732426303857,
+      "sha256": "8ebc0486dec8659fd70775cba47370a3aa7fc97f98a0242b690a683d0ebd2654"
+    },
+    {
+      "output": "Assets\\AfterSignal\\Resources\\Audio\\Firearms\\reload_out_2.wav",
+      "start": 0.04498866213151927,
+      "end": 0.34997732426303857,
+      "sha256": "5af07fd5c6688dea0bf2e4d436c052b0b6f7aed41af2af38eebd12ffc4d56965"
+    },
+    {
+      "output": "Assets\\AfterSignal\\Resources\\Audio\\Firearms\\reload_in_0.wav",
+      "start": 0.6649886621315193,
+      "end": 0.93,
+      "sha256": "aead12dca0a36326e5d532d069e4bb73e64582aea3ea4020d590bd8566598255"
+    },
+    {
+      "output": "Assets\\AfterSignal\\Resources\\Audio\\Firearms\\reload_in_1.wav",
+      "start": 0.6649886621315193,
+      "end": 0.93,
+      "sha256": "b79cb3834a8d790e34d0e3aa688e87c11942124126d8fc54a48c071ef63e0457"
+    },
+    {
+      "output": "Assets\\AfterSignal\\Resources\\Audio\\Firearms\\reload_in_2.wav",
+      "start": 0.6649886621315193,
+      "end": 0.93,
+      "sha256": "bca4d38aa60f8bd398fd21669841e0c94d77ba474651c42db76ccbb10e0144f5"
+    },
+    {
+      "output": "Assets\\AfterSignal\\Resources\\Audio\\Firearms\\reload_slide_0.wav",
+      "start": 1.2449886621315194,
+      "end": 1.5299773242630386,
+      "sha256": "36e9d604adfcf35fab596885bb83783478d81e138166d5b4137f9f73ebacd310"
+    },
+    {
+      "output": "Assets\\AfterSignal\\Resources\\Audio\\Firearms\\reload_slide_1.wav",
+      "start": 1.2449886621315194,
+      "end": 1.5299773242630386,
+      "sha256": "09b97917069a2eca531bdbc698f0dee74dd2d3d27157ed2de2516661f05cfe7c"
+    },
+    {
+      "output": "Assets\\AfterSignal\\Resources\\Audio\\Firearms\\reload_slide_2.wav",
+      "start": 1.2449886621315194,
+      "end": 1.5299773242630386,
+      "sha256": "836f40e04938bf9e26428ce86ce30f93187b39fc0f237c2cedc196a12fa339cf"
+    }
+  ]
+}

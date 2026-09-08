@@ -40,6 +40,7 @@ namespace AfterSignal
             {
                 nextQuest = Time.unscaledTime + .5f;
                 hasGoal = QuestGuidance.Resolve(game, questPoints, out mainGoal, out mainLabel);
+                if(game.stage==StageId.UrbanCity&&ExpansionWorld.Selected>=0){hasGoal=true;mainGoal=ExpansionWorld.Places[ExpansionWorld.Selected];mainLabel=ExpansionWorld.Names[ExpansionWorld.Selected];}
                 if (questLine && hasGoal)
                 {
                     roadRoute = CityRoadNetwork.Navigation(game.Player.transform.position, mainGoal);
@@ -60,7 +61,7 @@ namespace AfterSignal
             mainRouteText.gameObject.SetActive(show);
             mainRoutePin.gameObject.SetActive(show && !(UrbanSimulation.Instance && UrbanSimulation.Instance.MapOpen));
             if (questLine)
-                questLine.enabled = show;
+                questLine.enabled = show && !OceanLife.Swimming && !(UrbanSimulation.Instance&&UrbanSimulation.Instance.Current&&UrbanSimulation.Instance.Current.IsSpecial);
             if (!show)
                 return;
             Vector3 delta = mainGoal - game.Player.transform.position;

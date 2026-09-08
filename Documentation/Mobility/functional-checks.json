@@ -1,0 +1,29 @@
+{
+    "completed": true,
+    "population": 891,
+    "parkingLots": 45,
+    "traffic": 26,
+    "lifts": 29,
+    "passed": [
+        "Populated walk-in districts, parking lots and multistorey lifts installed",
+        "All seven new transport types spawn in the world",
+        "Old-city exits and new districts share continuous road data",
+        "Five hundred road-driving steps never climb the vehicle's own roof",
+        "Wheel spin axes stay parallel to the actual vehicle axles",
+        "Visible headlights and taillights align with driving forward and reverse",
+        "Rear-seat entry is separate from the driver seat",
+        "Passenger input cannot drive the car",
+        "Rear-seat exit restores character collision",
+        "Sports car and held Shift deliver a higher real driving speed",
+        "Fighter accelerates and climbs from the runway",
+        "Combat helicopter takes off vertically",
+        "Boat propulsion stays on water and follows the helm",
+        "NPC pilot and captain depart carrying varied passengers",
+        "Elevator carries Seo through an open upper-floor shaft",
+        "Diving moves below water without the old fall-respawn rule",
+        "Marine animals and solid seabed are present below the surface",
+        "Police capture transfers Seo into the actual prison cell",
+        "Sentence release returns Seo to the prison entrance"
+    ],
+    "errors": []
+}

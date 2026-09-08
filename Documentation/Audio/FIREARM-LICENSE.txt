@@ -1,0 +1,7 @@
+The Free Firearm Sound Library
+Creators: Ben Jaszczak, Brian Nelson, Kevin Heras, Matthew Nanney
+License: CC0 1.0 Universal
+https://creativecommons.org/publicdomain/zero/1.0/
+Source: https://opengameart.org/content/the-free-firearm-sound-library
+
+AFTERSIGNAL uses edited excerpts of 1911, Walther PPQ, Bersa, Mossberg, AR-15 and AK-47 recordings. Processing includes onset trimming, mono channel selection, 48 kHz resampling, peak normalization and short edge fades. These creators do not endorse this game.

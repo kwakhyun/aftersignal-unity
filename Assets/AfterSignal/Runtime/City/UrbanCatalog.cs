@@ -44,7 +44,7 @@ namespace AfterSignal
             "중앙역 조사와 도시 복원 임무를 진행하는 작전실입니다.",
             "밤길을 걷는 이들이 잠시 머무르는 카페입니다."
         };
-        public static int Kind(int site) => Mathf.Clamp(site, 0, SiteCount - 1) % 16;
+        public static int Kind(int site) => site==38?11:site==39?15:Mathf.Clamp(site, 0, SiteCount - 1) % 16;
         public static Vector3 Center(int site)
         {
             int block = site / 2;
@@ -55,10 +55,13 @@ namespace AfterSignal
         public static Vector3 Pump(int site) => Center(site) + new Vector3(0, .02f, -49);
         public static int Current => Mathf.Clamp(PlayerPrefs.GetInt(Prefix + "Site", 0), 0, SiteCount - 1);
 
+        public static bool IsGarage(int site)=>site==38;
+        public static bool IsBar(int site)=>site==39;
         public static bool IsHotel(int site) => site == 32;
-        public static string Name(int site) => IsHotel(site) ? "애프터뷰 호텔" : Names[Kind(site)] + (site >= 16 ? " · " + (site / 16 + 1) + "구역" : "");
+        public static string Name(int site) => IsGarage(site) ? "\uC560\uD504\uD130\uB77C\uC774\uD2B8 \uBAA8\uD130\uB7A9" : IsBar(site) ? "NEON AFTERHOURS BAR" : IsHotel(site) ? "애프터뷰 호텔" : Names[Kind(site)] + (site >= 16 ? " · " + (site / 16 + 1) + "구역" : "");
         public static void Enter(GameDirector game, int site)
         {
+            ResidentialWorld.VisitHome=-1;
             PlayerPrefs.SetInt(Prefix + "Site", site);
             UrbanSimulation.Instance?.SaveCar();
             game.Travel(StageId.UrbanInterior);

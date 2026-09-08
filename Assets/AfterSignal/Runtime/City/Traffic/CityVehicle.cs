@@ -7,10 +7,17 @@ namespace AfterSignal
         Sedan,
         Taxi,
         Bus,
-        Truck
+        Truck,
+        Motorcycle,
+        SportsCar,
+        Boat,
+        Airliner,
+        CombatHelicopter,
+        Fighter,
+        Tank
     }
 
-    public sealed class CityVehicle : MonoBehaviour
+    public sealed partial class CityVehicle : MonoBehaviour
     {
         public CityVehicleType type;
         public float fuel = 45, health = 100;
@@ -25,8 +32,14 @@ namespace AfterSignal
         public bool Wrecked => health <= 0;
         public bool WaitingAtSignal { get; private set; }
         public Vector3 Forward => transform.right;
-        public float HalfLength => type == CityVehicleType.Bus ? 4.6f : type == CityVehicleType.Truck ? 3.9f : 2.55f;
-        public float HalfWidth => (int)type >= 2 ? 1.25f : 1.05f;
+        public bool IsAircraft => type == CityVehicleType.Airliner || type == CityVehicleType.CombatHelicopter || type == CityVehicleType.Fighter;
+        public bool IsWatercraft => type == CityVehicleType.Boat;
+        public bool IsHeavy => type == CityVehicleType.Bus || type == CityVehicleType.Truck || type == CityVehicleType.Tank;
+        public bool IsSpecial => IsAircraft || IsWatercraft;
+        public float Steering { get; private set; }
+        public float TopSpeed => type == CityVehicleType.Motorcycle ? 45 : type == CityVehicleType.SportsCar ? 49 : type == CityVehicleType.Tank ? 18 : type == CityVehicleType.Bus ? 21 : type == CityVehicleType.Truck ? 23 : 27;
+        public float HalfLength => GetComponent<AuthoredCraft>() ? 235 : type == CityVehicleType.Bus ? 4.6f : type == CityVehicleType.Truck ? 3.9f : type == CityVehicleType.Motorcycle ? 1.25f : type == CityVehicleType.Airliner ? 15 : type == CityVehicleType.Boat ? 8 : type == CityVehicleType.CombatHelicopter ? 5.5f : type == CityVehicleType.Fighter ? 7.5f : type == CityVehicleType.Tank ? 4 : 2.55f;
+        public float HalfWidth => GetComponent<AuthoredCraft>() ? 19 : type == CityVehicleType.Motorcycle ? .42f : type == CityVehicleType.Airliner ? 2 : type == CityVehicleType.Boat ? 2.5f : type == CityVehicleType.Tank ? 1.9f : IsHeavy ? 1.25f : 1.05f;
 
         readonly System.Collections.Generic.List<Transform> wheels = new System.Collections.Generic.List<Transform>();
         Light[] lamps;
@@ -38,9 +51,16 @@ namespace AfterSignal
         bool exploded;
         void Start()
         {
+            VehicleDetails.Install(this);
+            if (IsSpecial) gameObject.AddComponent<CraftDynamics>().Initialize(this);
+            else VehicleGround.Settle(this, .02f, true);
+            gameObject.AddComponent<VehicleCabin>().Initialize(this);
             foreach (var t in GetComponentsInChildren<Transform>())
                 if (t.name == "Wheel tire" || t.name == "Wheel alloy")
+                {
                     wheels.Add(t);
+                    var wheel=t.gameObject.AddComponent<VehicleWheel>();wheel.Initialize(this);
+                }
             body = GetComponentsInChildren<Renderer>();
             paint = new MaterialPropertyBlock();
             lamps = new Light[2];
@@ -73,6 +93,7 @@ namespace AfterSignal
             if (engine.clip)
                 engine.Play();
             ApplyDamageLook();
+            ApplyCustomization();
         }
 
         public void Drive(ControlFrame input, float dt)
@@ -83,26 +104,35 @@ namespace AfterSignal
                 return;
             }
 
-            float throttle = input.move.y, top = type == CityVehicleType.Bus ? 21 : type == CityVehicleType.Truck ? 23 : 27;
+            if (IsSpecial) { GetComponent<CraftDynamics>()?.Drive(input, dt); return; }
+            if (type == CityVehicleType.Tank) GetComponent<VehicleArmament>()?.Tick(input, dt);
+            bool braking=input.vertical>0||input.jump||input.guard;
+            Steering = Mathf.MoveTowards(Steering, input.move.x, dt * 5);
+            float throttle = input.move.y, top = TopSpeed * (input.boost ? 1.32f : 1);
             float target = fuel > .001f ? (throttle >= 0 ? throttle * top : throttle * 7) : 0;
-            float accel = input.jump || input.guard ? 24 : Mathf.Abs(throttle) < .1f ? 3.8f : Mathf.Sign(target) != Mathf.Sign(speed) ? 17 : (int)type >= 2 ? 5 : 8;
-            if ((input.jump || input.guard) && Mathf.Abs(speed) > 15 && brakeCooldown <= 0)
+            float accel = braking ? 24 : Mathf.Abs(throttle) < .1f ? 3.8f : Mathf.Sign(target) != Mathf.Sign(speed) ? 17 : IsHeavy ? 5 : type == CityVehicleType.Motorcycle || type == CityVehicleType.SportsCar ? 14 : 8;
+            if ((braking) && Mathf.Abs(speed) > 15 && brakeCooldown <= 0)
             {
                 GameDirector.Instance?.Audio.Play("urban_brake", transform.position, .2f, 1);
                 brakeCooldown = 2;
             }
 
             brakeCooldown -= dt;
-            speed = Mathf.MoveTowards(speed, input.jump || input.guard ? 0 : target, accel * dt);
-            float steer = input.move.x * Mathf.Sign(speed) * Mathf.Clamp01(Mathf.Abs(speed) / 3) * ((int)type >= 2 ? 43 : 64) * dt;
+            speed = Mathf.MoveTowards(speed, braking ? 0 : target, accel * (input.boost ? 1.5f : 1) * dt);
+            float steer = input.move.x * Mathf.Sign(speed) * Mathf.Clamp01(Mathf.Abs(speed) / 3) * (IsHeavy ? 43 : type == CityVehicleType.Motorcycle ? 82 : 64) * dt;
             transform.Rotate(0, steer, 0, Space.World);
             Advance(Forward * speed * dt, dt, false);
         }
 
         public void TickTraffic(float dt)
         {
+            if (IsSpecial) return;
             if (!traffic || Wrecked || route == null || route.Length < 2)
                 return;
+            var emergency=GetComponent<VehicleEmergency>();
+            bool escaping=emergency&&emergency.Escaping;
+            var bus=GetComponent<CityBusLine>();
+            if(bus && !escaping && bus.Prepare(dt)) return;
             Vector3 d = route[waypoint] - transform.position;
             d.y = 0;
             if (d.magnitude < .04f)
@@ -113,7 +143,8 @@ namespace AfterSignal
             }
 
             Vector3 heading = d.normalized;
-            float target = d.magnitude < 8 ? 4 : 9;
+            float target = d.magnitude < 8 ? (escaping?7:4) : escaping?20:9;
+            if(bus && !escaping && waypoint<5) target=Mathf.Min(target,Mathf.Sqrt(Mathf.Max(0,d.magnitude-.03f)*4));
             float stop = CityRoadNetwork.StopDistance(transform.position, heading, HalfLength);
             WaitingAtSignal = stop < 22;
             target = Mathf.Min(target, Mathf.Sqrt(Mathf.Max(0, stop) * 7));
@@ -130,7 +161,7 @@ namespace AfterSignal
 
             if (CityPopulation.Instance && CityPopulation.Instance.CrossingAhead(this))
                 target = 0;
-            speed = Mathf.MoveTowards(speed, target, (target < speed ? 12 : 3) * dt);
+            speed = Mathf.MoveTowards(speed, target, (target < speed ? 12 : escaping ? 8 : 3) * dt);
             float distance = Mathf.Min(d.magnitude, speed * dt, Mathf.Max(0, stop));
             if (distance > 0)
             {
@@ -164,6 +195,7 @@ namespace AfterSignal
                 }
 
                 transform.position = old + delta.normalized * allowed;
+                VehicleGround.Settle(this, dt);
                 var g = GameDirector.Instance;
                 if (g)
                 {
@@ -175,10 +207,9 @@ namespace AfterSignal
 
                 float moved = Vector3.Distance(old, transform.position);
                 Distance += moved;
-                foreach (var wheel in wheels)
-                    wheel.Rotate(0, moved * Mathf.Sign(speed) * 130, 0, Space.Self);
+
                 if (owned)
-                    fuel = Mathf.Max(0, fuel - moved * ((int)type >= 2 ? .024f : .014f));
+                    fuel = Mathf.Max(0, fuel - moved * (IsHeavy ? .024f : .014f));
                 CityPopulation.Instance?.VehicleSweep(this, old, transform.position, speed);
                 if (hit)
                 {
@@ -209,11 +240,12 @@ namespace AfterSignal
             AudioLevel();
         }
 
-        public void Damage(float amount, Vector3 contact)
+        public void Damage(float amount, Vector3 contact, WorldActor source = null)
         {
             if (Wrecked || amount <= 0)
                 return;
             health = Mathf.Max(0, health - amount);
+            VehicleEmergency.Hit(this,contact,Wrecked);
             ApplyDamageLook();
             SignalEffects.Burst(contact, SignalEffects.Gold, 8, 4);
             if (Wrecked && !exploded)
@@ -226,14 +258,20 @@ namespace AfterSignal
                 var g = GameDirector.Instance;
                 g?.Audio.Play("urban_explosion", transform.position, .55f, 1);
                 VehicleExplosion.Create(transform.position, HalfLength);
-                if (owned)
+                BlastDamage.Create(transform.position,Mathf.Clamp(HalfLength*2.8f,7,16),145,source,this);
+                if (owned || UrbanSimulation.Instance && UrbanSimulation.Instance.Current==this)
                 {
                     g?.CameraRig.Kick(.15f);
                     g?.Toast("차량 파손 · 안전한 곳으로 탈출했습니다");
+                    bool driving=UrbanSimulation.Instance&&UrbanSimulation.Instance.Current==this;
                     UrbanSimulation.Instance?.EmergencyExit(this);
+                    if(driving&&g)g.Player.ReceiveDamage(g.Player.Health,transform.position,true);
                 }
 
                 occupied = false;
+                WreckFragments.Shatter(gameObject,8);
+                if(engine)engine.Stop();
+                Destroy(gameObject,7.8f);
             }
         }
 
@@ -247,7 +285,7 @@ namespace AfterSignal
                 if (!r || !(r.name == "Sculpted chassis" || r.name == "Sedan roof" || r.name == "Cargo shell"))
                     continue;
                 paint.Clear();
-                Color color = r.sharedMaterial.HasProperty("_BaseColor") ? r.sharedMaterial.GetColor("_BaseColor") : Color.white;
+                Color color = customColor>=0&&customColor<colors.Length?colors[customColor]:r.sharedMaterial.HasProperty("_BaseColor") ? r.sharedMaterial.GetColor("_BaseColor") : Color.white;
                 paint.SetColor("_BaseColor", Color.Lerp(color, new Color(.075f, .075f, .07f), damage * .88f));
                 r.SetPropertyBlock(paint);
             }
@@ -262,15 +300,17 @@ namespace AfterSignal
             if (!engine)
                 return;
             var g = GameDirector.Instance;
-            engine.pitch = ((int)type >= 2 ? .6f : .75f) + Mathf.Abs(speed) * .035f;
-            engine.volume = (Wrecked || fuel <= 0 ? 0 : occupied ? .035f + Mathf.Abs(speed) * .002f : .002f) * (g && g.Audio ? g.Audio.Volume : 1);
+            engine.pitch = IsAircraft ? .7f + Mathf.Abs(speed)*.006f : IsWatercraft ? .65f + Mathf.Abs(speed)*.02f : (IsHeavy ? .6f : .75f) + Mathf.Abs(speed) * .035f;
+            engine.volume = (Wrecked || fuel <= 0 ? 0 : occupied ? .035f + Mathf.Abs(speed) * .002f : .002f) * (g && g.Audio ? g.Audio.Volume*g.Audio.SfxVolume : 1);
         }
 
         void Update()
         {
+            if(exploded)return;
+            AudioLevel();
             var g = GameDirector.Instance;
             if (engine)
-                engine.mute = g && (g.Blocked || g.Audio.Volume <= 0);
+                engine.mute = g && (g.Blocked || g.Audio.Volume <= 0 || g.Audio.SfxVolume <= 0);
             if (lamps != null)
                 foreach (var l in lamps)
                     l.enabled = owned && occupied && !Wrecked;

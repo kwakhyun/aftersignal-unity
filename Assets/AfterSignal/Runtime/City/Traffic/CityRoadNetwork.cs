@@ -26,16 +26,18 @@ namespace AfterSignal
 
         public static bool CanStartCrossing(float seconds) => Walk && 64 - Clock > seconds + 1;
         public static Vector3 Junction(int col, int row) => new Vector3(40 + col * Spacing, .02f, -280 + row * Spacing);
-        public static Vector3 NearestJunction(Vector3 p) => Junction(Mathf.Clamp(Mathf.RoundToInt((p.x - 40) / Spacing), 0, 5), Mathf.Clamp(Mathf.RoundToInt((p.z + 280) / Spacing), 0, 4));
+        public static Vector3 NearestJunction(Vector3 p) => ExpansionRoads.Outside(p)?ExpansionRoads.Nearest(p,out _,out _):Junction(Mathf.Clamp(Mathf.RoundToInt((p.x - 40) / Spacing), 0, 5), Mathf.Clamp(Mathf.RoundToInt((p.z + 280) / Spacing), 0, 4));
         public static Vector3 CornerPoint(int col, int row, int sx, int sz) => Junction(col, row) + new Vector3(sx * Corner, .04f, sz * Corner);
         public static Vector3 Sidewalk(Vector3 p)
         {
+            if(ExpansionRoads.Outside(p))return ExpansionRoads.Sidewalk(p);
             var j = NearestJunction(p);
             return j + new Vector3(p.x >= j.x ? Corner : -Corner, .04f, p.z >= j.z ? Corner : -Corner);
         }
 
         public static Vector3 NextWalk(Vector3 p, int choice, out bool crossing)
         {
+            if(ExpansionRoads.Outside(p)){crossing=false;return ExpansionRoads.Sidewalk(p,choice%2==0?3:-3);}
             var j = NearestJunction(p);
             int col = Mathf.RoundToInt((j.x - 40) / Spacing), row = Mathf.RoundToInt((j.z + 280) / Spacing), sx = p.x >= j.x ? 1 : -1, sz = p.z >= j.z ? 1 : -1;
             crossing = choice < 2;
@@ -74,6 +76,7 @@ namespace AfterSignal
 
         public static float StopDistance(Vector3 p, Vector3 forward, float nose)
         {
+            if(ExpansionRoads.Outside(p))return float.PositiveInfinity;
             bool ew = Mathf.Abs(forward.x) > .97f, ns = Mathf.Abs(forward.z) > .97f;
             if (!ew && !ns)
                 return float.PositiveInfinity;
@@ -95,6 +98,7 @@ namespace AfterSignal
 
         public static List<Vector3> Navigation(Vector3 from, Vector3 to)
         {
+            if(ExpansionRoads.Outside(from)||ExpansionRoads.Outside(to))return ExpansionRoads.Navigation(from,to);
             var result = new List<Vector3>
             {
                 from

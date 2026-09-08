@@ -10,6 +10,7 @@ namespace AfterSignal
         public CityVehicle vehiclePrefab;
         public CityVehicle[] vehiclePrefabs;
         public CityVehicle Current { get; private set; }
+        public int SeatIndex { get; private set; }
         public CityVehicle Owned { get; private set; }
 
         public readonly List<CityVehicle> Cars = new List<CityVehicle>();
@@ -55,7 +56,7 @@ namespace AfterSignal
                 var parking = new Vector3(73, .02f, -254);
                 if (!Owned || Vector3.Distance(Owned.transform.position, parking) > 8)
                     Spawn(parking, false);
-                for (int i = 0; i < 12; i++)
+                for (int i = 0; i < 32; i++)
                     SpawnTraffic();
             }
         }
@@ -64,6 +65,7 @@ namespace AfterSignal
         {
             var prefab = variant < 0 ? vehiclePrefab : vehiclePrefabs != null && vehiclePrefabs.Length > variant ? vehiclePrefabs[variant] : vehiclePrefab;
             var c = Instantiate(prefab, position, Quaternion.identity);
+            VehicleFleet.Configure(c,variant);
             c.gameObject.SetActive(true);
             c.occupied = c.traffic = ai;
             c.owned = false;
@@ -82,11 +84,20 @@ namespace AfterSignal
             return c;
         }
 
+        int TrafficVariant() { int n=random.Next(10);return n<5?0:n<7?1:n==7?3:n==8?4:5; }
+
         void SpawnTraffic()
         {
             if (!game || !vehiclePrefab)
                 return;
             var p = game.Player.transform.position;
+            if(ExpansionRoads.Outside(p))
+            {
+                var loop=ExpansionRoads.TrafficLoop(p);int closest=0;float best=float.MaxValue;
+                for(int i=0;i<loop.Length;i++){float d=(p-loop[i]).sqrMagnitude;if(d<best){best=d;closest=i;}}
+                int at=(closest+random.Next(7,18))%loop.Length;foreach(var existingCar in Cars)if(existingCar&&Vector3.Distance(existingCar.transform.position,loop[at])<20)return;
+                var car=Spawn(loop[at],true,TrafficVariant());car.route=loop;car.waypoint=(at+1)%loop.Length;car.speed=7;Vector3 dnext=loop[car.waypoint]-car.transform.position;car.transform.rotation=Quaternion.Euler(0,Mathf.Atan2(-dnext.z,dnext.x)*Mathf.Rad2Deg,0);return;
+            }
             int col = Mathf.Clamp(Mathf.RoundToInt((p.x - 40) / 140) + (random.Next(3) - 1), 0, 4), row = Mathf.Clamp(Mathf.RoundToInt((p.z + 280) / 140) + (random.Next(3) - 1), 0, 3);
             float x = 40 + col * 140, z = -280 + row * 140;
             var route = CityRoadNetwork.TrafficLoop(col, row);
@@ -96,7 +107,7 @@ namespace AfterSignal
             foreach (var existing in Cars)
                 if (existing && Vector3.Distance(existing.transform.position, position) < 18)
                     return;
-            var c = Spawn(position, true, random.Next(4));
+            var c = Spawn(position, true, TrafficVariant());
             c.route = route;
             c.waypoint = next;
             c.speed = 4;
@@ -105,6 +116,7 @@ namespace AfterSignal
 
         public void BeforeInput(ref ControlFrame input, float dt)
         {
+            CityBusService.Instance?.BeforeInput(ref input);
             if (input.map)
                 MapOpen = !MapOpen;
             nearest = null;
@@ -112,7 +124,7 @@ namespace AfterSignal
             if (Current)
             {
                 bool pump = NearPump(Current.transform.position);
-                Prompt = Refueling ? "주유 중 · E 중단 / 출발하면 자동 중단" : pump && Mathf.Abs(Current.speed) < .7f ? "E 주유 시작   ·   F 하차" : "E 하차   ·   WASD 운전 / SPACE 제동";
+                Prompt = Refueling ? "주유 중 · E 중단 / 출발하면 자동 중단" : pump && Mathf.Abs(Current.speed) < .7f ? "E 주유 시작   ·   F 하차" : VehicleSeats.Name(Current,SeatIndex)+" · "+(SeatIndex==0?VehicleSeats.Controls(Current):"승객으로 이동 중 · F 하차");
                 if (input.interact)
                 {
                     input.interact = false;
@@ -155,15 +167,17 @@ namespace AfterSignal
                     }
                 }
 
-                input.attack = input.grapple = input.dash = input.skill = input.reload = false;
+                bool armed=Current&&(Current.type==CityVehicleType.Tank||Current.type==CityVehicleType.Fighter||Current.type==CityVehicleType.CombatHelicopter);
+                if(!armed||SeatIndex>0)input.attack=false;
+                input.grapple = input.dash = input.skill = input.reload = false;
             }
             else
             {
-                float best = 4.3f;
+                float best = 5.3f;
                 foreach (var c in Cars)
-                    if (c && !c.Wrecked)
+                    if (c && !c.Wrecked && !c.GetComponent<CityBusLine>())
                     {
-                        float d = Vector3.Distance(c.transform.position, game.Player.transform.position);
+                        float d = Vector3.Distance(c.IsSpecial?VehicleSeats.Door(c):c.transform.position, game.Player.transform.position);
                         if (d < best)
                         {
                             best = d;
@@ -171,9 +185,11 @@ namespace AfterSignal
                         }
                     }
 
-                if (nearest)
+                if (nearest && !(CityBusService.Instance && CityBusService.Instance.Riding))
                 {
-                    Prompt = nearest.occupied ? "E 운전자 내리게 하고 탑승" : "E 차량 탑승";
+                    Prompt = VehicleSeats.Title(nearest.type)+" · E "+(nearest.IsAircraft?"조종석":nearest.IsWatercraft?"선장석":"운전석")+(VehicleSeats.Count(nearest)>1?" / G 조수석·승객석":"");
+                    var scheduled=nearest.GetComponent<PassengerRoute>();if(scheduled)Prompt+=" · "+scheduled.Status;
+                    if(input.passenger&&VehicleSeats.Count(nearest)>1){input.passenger=false;int count=nearest.GetComponent<VehicleCabin>()?nearest.GetComponent<VehicleCabin>().PassengerCount:0;Enter(nearest,Mathf.Clamp(count+1,1,VehicleSeats.Count(nearest)-1));}
                     if (input.interact)
                     {
                         input.interact = false;
@@ -193,7 +209,7 @@ namespace AfterSignal
             saveClock -= dt;
             if (game.stage == StageId.UrbanCity && spawnClock <= 0)
             {
-                spawnClock = 2;
+                spawnClock = 1.25f;
                 int count = 0;
                 for (int i = Cars.Count - 1; i >= 0; i--)
                 {
@@ -204,32 +220,32 @@ namespace AfterSignal
                         continue;
                     }
 
-                    if (c != Owned && Vector3.Distance(c.transform.position, game.Player.transform.position) > 290)
+                    if (c != Owned && !c.GetComponent<CityBusLine>() && !c.GetComponent<EmergencyAmbulance>() && !VehicleFleet.Persistent(c) && Vector3.Distance(c.transform.position, game.Player.transform.position) > 420)
                     {
                         Destroy(c.gameObject);
                         Cars.RemoveAt(i);
                     }
-                    else if (c.traffic)
+                    else if (c.traffic && !c.GetComponent<CityBusLine>())
                         count++;
                 }
 
-                if (count < 14)
-                    SpawnTraffic();
+                if (count < 48)
+                    for(int spawn=0;spawn<4 && count+spawn<48;spawn++) SpawnTraffic();
                 int parked = 0;
                 foreach (var car in Cars)
                     if (car && !car.traffic && !car.owned)
                         parked++;
-                if (parked < 12)
+                if (parked < 32)
                 {
                     int id = random.Next(UrbanCatalog.SiteCount);
                     var p = UrbanCatalog.Center(id) + new Vector3(-12, .02f, -44);
                     if (Vector3.Distance(p, game.Player.transform.position) < 210 && Vector3.Distance(p, game.Player.transform.position) > 45)
-                        Spawn(p, false, random.Next(4));
+                        Spawn(p, false, TrafficVariant());
                 }
             }
 
             foreach (var c in Cars)
-                if (c && c != Current)
+                if (c && (c != Current || SeatIndex>0))
                     c.TickTraffic(dt);
             if (saveClock <= 0)
             {
@@ -242,11 +258,11 @@ namespace AfterSignal
         {
             if (!Current)
                 return;
-            Current.Drive(input, dt);
-            game.Player.transform.position = Current.transform.position + Vector3.up * .15f;
+            if(SeatIndex==0)Current.Drive(input, dt);
+            game.Player.transform.position = Current.transform.TransformPoint(VehicleSeats.Local(Current,SeatIndex));
         }
 
-        public bool Enter(CityVehicle car)
+        public bool Enter(CityVehicle car,int seat=0)
         {
             if (!car || Current || car.Wrecked)
                 return false;
@@ -256,7 +272,7 @@ namespace AfterSignal
                 return false;
             }
 
-            if (car.occupied)
+            if (seat==0 && car.occupied && !car.owned)
             {
                 Hijacks++;
                 CityPopulation.Instance?.Eject(car.transform.position - car.transform.forward * 2);
@@ -264,13 +280,13 @@ namespace AfterSignal
                 game.Toast("운전자가 하차했습니다");
             }
 
-            if (Owned)
-                Owned.owned = false;
-            Owned = Current = car;
-            car.owned = car.occupied = true;
-            car.traffic = false;
-            car.speed = 0;
+            SeatIndex=Mathf.Clamp(seat,0,VehicleSeats.Count(car)-1);
+            Current=car;
+            if(SeatIndex==0){if(Owned)Owned.owned=false;Owned=car;car.owned=car.occupied=true;}
+            car.ApplyCustomization();
+            if(SeatIndex==0){car.traffic = false;car.speed = 0;}
             Entries++;
+            game.Toast(VehicleSeats.Title(car.type)+" · "+VehicleSeats.Name(car,SeatIndex)+" 탑승");
             game.Player.Rope.Release();
             game.Player.Respawn(game.Player.transform.position, false);
             game.Player.Controller.enabled = false;
@@ -300,6 +316,8 @@ namespace AfterSignal
                 return false;
             }
 
+            if(Current.IsAircraft&&Current.transform.position.y>3 && !VehicleGround.Sample(Current,Current.transform.position,0,3,out _))
+            {game.Toast("착륙 후 하차할 수 있습니다.");return false;}
             Vector3 point = Vector3.zero;
             bool found = false;
             foreach (var offset in new[]
@@ -311,7 +329,9 @@ namespace AfterSignal
 
             )
             {
-                var p = Current.transform.position + offset;
+                var p = Current.IsSpecial?VehicleSeats.Door(Current):Current.transform.position + offset;
+                if(VehicleGround.Sample(Current,p,3,8,out var floor))p.y=floor.point.y+.06f;
+                else if(Current.IsWatercraft)p.y=OceanLife.Surface;
                 if (Physics.CheckCapsule(p + Vector3.up * .4f, p + Vector3.up * 1.7f, .34f, 1, QueryTriggerInteraction.Ignore))
                     continue;
                 point = p + Vector3.up * .15f;
@@ -326,9 +346,10 @@ namespace AfterSignal
             }
 
             Current.speed = 0;
-            Current.occupied = false;
+            if(SeatIndex==0)Current.occupied = false;
             game.Audio.Play("urban_door", point, .25f, 1);
             Current = null;
+            SeatIndex=0;
             Refueling = false;
             game.Player.Respawn(point, false);
             for (int i = 0; i < playerRenderers.Length; i++)
@@ -352,7 +373,7 @@ namespace AfterSignal
 
         public void SaveCar()
         {
-            if (!Owned || !game)
+            if (LifeState.SuppressSave || !Owned || !game || Owned.IsSpecial)
                 return;
             string p = UrbanCatalog.Prefix;
             PlayerPrefs.SetInt(p + "Car", 1);

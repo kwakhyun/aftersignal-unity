@@ -34,9 +34,21 @@ namespace AfterSignal
             conversation = gameObject.AddComponent<NpcConversation>();
             game.Player.gameObject.AddComponent<ActorWardrobe>();
             gameObject.AddComponent<WantedSystem>().Initialize(game);
+            if (game.stage == StageId.UrbanCity)
+                gameObject.AddComponent<CityGangWar>().Initialize(game);
             gameObject.AddComponent<CityClock>().Initialize(game);
             Camera.main.gameObject.AddComponent<CameraOcclusion>();
             BindResidents();
+            gameObject.AddComponent<AutomaticCityEntrance>();
+            gameObject.AddComponent<CityBusService>();
+            gameObject.AddComponent<ResidentialWorld>();
+            InteriorSupport.Install(game);
+            gameObject.AddComponent<CommunityWorld>();
+            gameObject.AddComponent<UrbanCrime>();
+            gameObject.AddComponent<CitySafety>();
+            gameObject.AddComponent<NightIllumination>();
+            if(CivicWorld.Interior(game.stage))gameObject.AddComponent<InteriorDistinct>();
+            if(game.stage==StageId.UrbanCity)gameObject.AddComponent<RiftIncursion>();
         }
 
         void BindResidents()
@@ -86,6 +98,13 @@ namespace AfterSignal
         static string Role(string role) => role == "medic" ? "의료진" : role == "teacher" ? "교사" : role == "commander" ? "안전 담당자" : "시설 직원";
         public bool Interact(InteractionPoint point)
         {
+            if(point.npc)point.npc.GetComponent<DirectionalPerson>()?.Face(game.Player.transform.position,6);
+            var neighbor=point.GetComponent<NeighborEntrance>();
+            if(neighbor){ResidentialWorld.EnterHome(ResidentialWorld.Home(neighbor.resident),neighbor.resident);ResidentialWorld.ReturnStage=StageId.Residence;ResidentialWorld.ReturnPoint=point.transform.position+Vector3.back;return true;}
+            var homeDoor=point.GetComponent<ResidentialDoor>();
+            if(homeDoor){ResidentialWorld.EnterHome(homeDoor.home);return true;}
+            if(point.kind==InteractionKind.UrbanEnter&&(point.siteId==0||point.siteId==16)){ApartmentDirectory(point.siteId==0?0:1);return true;}
+            if(point.kind==InteractionKind.UrbanExit&&ResidentialWorld.ExitHome())return true;
             if (point.kind == InteractionKind.Wardrobe || game.stage == StageId.Residence && point.title.Contains("옷장"))
             {
                 Wardrobe();
@@ -139,7 +158,7 @@ namespace AfterSignal
             if (keyboard != null)
             {
                 PanoramaYaw += (keyboard.rightArrowKey.isPressed ? 1 : 0) * dt * 36 - (keyboard.leftArrowKey.isPressed ? 1 : 0) * dt * 36;
-                PanoramaPitch = Mathf.Clamp(PanoramaPitch + (keyboard.downArrowKey.isPressed ? 1 : 0) * dt * 20 - (keyboard.upArrowKey.isPressed ? 1 : 0) * dt * 20, -12, 38);
+                PanoramaPitch = Mathf.Clamp(PanoramaPitch + (keyboard.downArrowKey.isPressed ? 1 : 0) * dt * 20 - (keyboard.upArrowKey.isPressed ? 1 : 0) * dt * 20, -65, 78);
             }
 
             control = ControlFrame.Empty;
@@ -147,6 +166,7 @@ namespace AfterSignal
 
         void Update()
         {
+            UpdateShift();
             if (!game || !game.Ready)
                 return;
             if (!game.Blocked)
@@ -173,9 +193,9 @@ namespace AfterSignal
             game.ShowDialogue(heading, body.Length > 0 ? body : " ");
         }
 
-        void Option(string label, Action action)
+        void Option(string label, Action action, string image = null)
         {
-            Options.Add(new LifeOption { label = label, action = action });
+            Options.Add(new LifeOption { label = label, action = action, image = image });
         }
 
         public void Close()

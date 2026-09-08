@@ -12,6 +12,9 @@ namespace AfterSignal
         float clock, fireClock = 3, warning, fall;
         Vector3 aim;
         bool retreat;
+        Vector3 crashVelocity;
+        float smokeAt;
+        bool crashing;
         public static PoliceHelicopter Create(WantedSystem owner, Vector3 at)
         {
             var go = new GameObject("POLICE / aerial response", typeof(WorldActor), typeof(PoliceHelicopter));
@@ -83,11 +86,17 @@ namespace AfterSignal
             if (!Body.Alive)
             {
                 fall += dt;
-                transform.position += Vector3.down * fall * 12 * dt;
-                transform.Rotate(0, 25 * dt, 30 * dt);
-                if (fall > 4 || Physics.Raycast(transform.position, Vector3.down, 3, 1))
+                crashVelocity += Vector3.down*9.81f*dt;
+                var delta=crashVelocity*dt;
+                bool impact=Physics.SphereCast(transform.position,1.5f,delta.normalized,out var crashHit,delta.magnitude,1,QueryTriggerInteraction.Ignore);
+                transform.position=impact?crashHit.point+crashHit.normal*1.5f:transform.position+delta;
+                transform.Rotate(12*dt,45*dt,(35+fall*12)*dt);
+                if(fall>smokeAt){smokeAt=fall+.14f;VehicleExplosion.Smoke(transform.position,3);SignalEffects.Burst(transform.position,SignalEffects.Gold,3,4);}
+                if (impact || transform.position.y < -15)
                 {
+                    g.Audio.Play("urban_explosion",transform.position,.9f,3);
                     VehicleExplosion.Create(transform.position, 4);
+                    WreckFragments.Shatter(gameObject,12);
                     Destroy(gameObject);
                 }
 
@@ -135,23 +144,27 @@ namespace AfterSignal
             Vector3 start = transform.position + transform.forward * 3 - Vector3.up;
             Vector3 direction = (aim - start).normalized;
             var end = start + direction * 95;
-            if (Physics.Raycast(start, direction, out var hit, 95, (1 << 0) | (1 << 8), QueryTriggerInteraction.Ignore))
+            if (Physics.Raycast(start, direction, out var hit, 95, (1 << 0) | (1 << 8) | (1 << 9), QueryTriggerInteraction.Collide))
             {
                 end = hit.point;
                 if (hit.collider.GetComponentInParent<PlayerMotor>())
                     g.Player.ReceiveDamage(16, transform.position);
                 var car = hit.collider.GetComponentInParent<CityVehicle>();
-                if (car && UrbanSimulation.Instance && car == UrbanSimulation.Instance.Current)
+                var civilian=hit.collider.GetComponentInParent<WorldActor>();
+                if(civilian&&!civilian.police)civilian.Damage(16,direction*3,Body);
+                if (car)
                     car.Damage(12, hit.point);
             }
 
             for (int i = 0; i < 3; i++)
                 SignalEffects.Beam(start + transform.right * (i - 1) * .12f, end, SignalEffects.Gold, .025f, .12f);
-            g.Audio.Play("pistol_overdrive", start, .22f, 1);
+            g.Audio.PlayGun(GunshotKind.Automatic, start, 1.1f);
         }
 
         public void Crash()
         {
+            if(crashing)return;crashing=true;fall=0;
+            crashVelocity=transform.forward*12+Vector3.down*2;
             var c = GetComponent<Collider>();
             if (c)
                 c.enabled = false;

@@ -31,6 +31,8 @@ namespace AfterSignal
             float step = 23 * Time.deltaTime;
             if (Physics.Raycast(transform.position, direction, out var wall, step, 1 << 0, QueryTriggerInteraction.Ignore) && !wall.collider.GetComponentInParent<BreakableGlass>())
             {
+                var vehicle=wall.collider.GetComponentInParent<CityVehicle>();
+                if(vehicle)vehicle.Damage(damage,wall.point);
                 Destroy(gameObject);
                 return;
             }
@@ -41,14 +43,14 @@ namespace AfterSignal
             if (clock <= 0)
             {
                 clock = .045f;
-                SignalEffects.Slash(transform.position, direction.x, 1.7f, SignalEffects.Cyan, 1);
+                SignalEffects.Slash(transform.position, direction, 1.7f, SignalEffects.Cyan, 1);
             }
 
             foreach (var enemy in game.Enemies)
                 if (enemy && enemy.Alive && !struck.Contains(enemy))
                 {
                     var d = enemy.transform.position + Vector3.up * 1.2f - transform.position;
-                    if (Mathf.Abs(d.x) < 1.2f + step && Mathf.Abs(d.z) < 1.15f && Mathf.Abs(d.y) < 1.8f)
+                    if (Mathf.Abs(Vector3.Dot(d,direction)) < 1.2f + step && Mathf.Abs(Vector3.Dot(d,Vector3.Cross(direction,Vector3.up))) < 1.15f && Mathf.Abs(d.y) < 1.8f)
                     {
                         struck.Add(enemy);
                         enemy.Damage(damage, direction * 4);
@@ -65,7 +67,7 @@ namespace AfterSignal
                     glass.Hit(damage);
                 }
 
-            WorldActor.Strike(transform.position, Vector3.zero, 1.5f + step, damage, residentsHit);
+            WorldActor.Strike(transform.position, Vector3.zero, 1.5f + step, damage, residentsHit, true);
             if (travel > 11)
                 Destroy(gameObject);
         }

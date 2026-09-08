@@ -20,8 +20,8 @@ namespace AfterSignal
         public int SkillsUsed { get; private set; }
         public int ShotsFired { get; private set; }
         public int WeaponChanges { get; private set; }
-        public bool Reloading => reloadRemaining > 0;
-        public float ReloadProgress => Reloading ? 1 - reloadRemaining / Tuning.reloadDuration : 0;
+        public bool Reloading => reloadRemaining > 0 || Equipment&&Equipment.Reloading;
+        public float ReloadProgress => Equipment&&Equipment.Extended?Equipment.ReloadProgress:Reloading ? 1 - reloadRemaining / Tuning.reloadDuration : 0;
         public float SkillCooldown => Mathf.Max(0, skillCooldown);
         public string SkillName => Weapon == WeaponId.Katana ? "월광참" : Weapon == WeaponId.Greatsword ? "지각 붕괴" : "전술 연사";
 
@@ -31,6 +31,8 @@ namespace AfterSignal
         readonly HashSet<WorldActor> worldStruck = new HashSet<WorldActor>();
         void UpdateArsenal(ControlFrame input, float dt)
         {
+            Equipment?.Tick(input,dt);
+            if(Equipment&&Equipment.Extended){pendingWeapon=-1;return;}
             dashAttackWindow = Mathf.Max(0, dashAttackWindow - dt);
             if (input.weapon >= 0)
                 pendingWeapon = Mathf.Clamp(input.weapon, 0, 2);
@@ -73,6 +75,7 @@ namespace AfterSignal
 
         public void BeginReload()
         {
+            if(Equipment&&Equipment.Extended){Equipment.BeginReload();return;}
             if (Weapon != WeaponId.Pistol || Reloading || Ammo >= Tuning.magazineSize || AttackTime > 0 || HurtTime > 0)
                 return;
             reloadRemaining = Tuning.reloadDuration;
@@ -101,8 +104,8 @@ namespace AfterSignal
             Vector3 direction = (Aim - muzzle).normalized;
             if (direction.sqrMagnitude < .1f)
                 direction = Vector3.right * Facing;
-            var end = muzzle + direction * 24;
-            if (Physics.Raycast(muzzle, direction, out var hit, 24, (1 << 0) | (1 << 9), QueryTriggerInteraction.Collide))
+            var end = muzzle + direction * Ballistics.Range;
+            if (Ballistics.Cast(muzzle, direction, Ballistics.Range, transform, out var hit))
             {
                 end = hit.point;
                 var enemy = hit.collider.GetComponentInParent<EnemyBrain>();
@@ -121,7 +124,9 @@ namespace AfterSignal
                 var car = hit.collider.GetComponentInParent<CityVehicle>();
                 if (car)
                 {
+                    bool occupied=car.occupied||car.GetComponent<VehicleCabin>()&&car.GetComponent<VehicleCabin>().PassengerCount>0;
                     car.Damage(damage, hit.point);
+                    if(occupied&&!car.GetComponent<PoliceCar>())WantedSystem.Report(7,car.transform.position);
                     if (car.GetComponent<PoliceCar>())
                         WantedSystem.Report(12, car.transform.position);
                 }
@@ -130,7 +135,7 @@ namespace AfterSignal
             var color = charged ? SignalEffects.Cyan : SignalEffects.Gold;
             SignalEffects.Beam(muzzle, end, color, charged ? .055f : .028f, .085f);
             SignalEffects.Impact(muzzle, direction, color, charged ? .52f : .32f);
-            Director.Audio.Play(charged ? "pistol_overdrive" : "pistol", muzzle, charged ? .34f : .38f, 3);
+            Director.Audio.PlayGun(GunshotKind.Pistol, muzzle, charged ? 1.12f : 1);
         }
 
         void ResolveSkill(float elapsed)
@@ -160,12 +165,12 @@ namespace AfterSignal
             {
                 var go = new GameObject("Mooncut / travelling blade");
                 go.transform.position = Shoulder;
-                go.AddComponent<TravellingCut>().Initialize(Director, Vector3.right * Facing, Tuning.skillDamage);
-                SignalEffects.Slash(Shoulder, Facing, 3, SignalEffects.Cyan, 2);
+                go.AddComponent<TravellingCut>().Initialize(Director, AttackHeading, Tuning.skillDamage);
+                SignalEffects.Slash(Shoulder, AttackHeading, 3, SignalEffects.Cyan, 2);
             }
             else
             {
-                var center = transform.position + Vector3.right * Facing * 1.6f;
+                var center = transform.position + AttackHeading * 1.6f;
                 SignalEffects.Ring(center + Vector3.up * .15f, SignalEffects.Gold, 6.2f, .45f);
                 SignalEffects.Dust(center, Vector3.up, 1.5f);
                 Director.CameraRig.Impact(Vector3.down, .13f);
@@ -184,6 +189,7 @@ namespace AfterSignal
                     if (glass && !glass.Broken && Vector3.Distance(center, glass.transform.position) < 6.7f)
                         glass.Hit(Tuning.skillDamage);
                 WorldActor.Strike(center + Vector3.up, Vector3.zero, 6.2f, Tuning.skillDamage, worldStruck);
+                StrikeVehicles(6.2f,Tuning.skillDamage);
             }
         }
     }

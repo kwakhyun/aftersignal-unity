@@ -1,5 +1,25 @@
 # 다음 Codex 작업을 위한 인계 — 2026-09-07
 
+## 추가 적용: 구매 아이템 이미지 8종
+
+`Resources/Art/ShopItems`에 새 이미지 생성 그림 8개를 추가했다. 야간 순찰/도시 여행 코트, 도시락, 에너지 음료, 따뜻한 정식, 든든한 특선, 커피, 커피와 샌드위치이다. `LifeOption.image`와 `ShopItemArt`로 품목을 연결하고 `LifeHud`가 이미지·이름·효과·가격·구매 표시를 가진 카드로 렌더링한다. 코트는 보유 의상 선택 화면에도 표시한다. 이미지 없는 일반 서비스는 작은 버튼 방식으로 돌아간다. 결제·회복·의상 콜백은 유지했다.
+
+`ArtImporter`의 ShopItems 분기는 Sprite Single, 최대 512px, 가운데 피벗, Bilinear, 무압축 설정을 사용한다. 원본과 프롬프트/품목 안내는 `Documentation/Art/SHOP-ITEMS.md` 및 `shop-item-prompts.json`에 있다. Windows 빌드 오류 0/기존 경고 35, 네이티브 UI 필수 확인 9개 통과. `Artifacts/ShopItems/Final/shop-art.json`이 최종 결과이며 `build-release.log`가 최종 빌드 로그다. 열려 있는 사용자 Unity를 유지하려고 별도 작업 복사본에서 빌드했고 실행 파일을 기존 `Builds/Windows`에 반영했다. 임시 복사본 삭제는 자동 실행 정책이 차단하여 `Artifacts/ShopItems/BuildWorkspace`에 남았다(Git 제외). 커밋·푸시는 하지 않았다.
+
+## 추가 적용: 도시 갱단과 경찰 교전
+
+`CityLife.Initialize`가 도시 외부에서 `CityGangWar`를 설치한다. 12개 보도 구역에 갱단 3명/경찰 2명, 가까운 최대 3개 교전을 배치한다. 도시 첫 화면 전에 초기 배치하고 이후에는 화면 밖에서만 재등장한다. 먼 구역 정리, 120초 재등장 대기, 시체 12초 제거로 개체 수를 제한한다. 갱단은 기존 `Enemies/gunner`를 세 색상 계열로 사용하며 경찰은 전용 에셋을 유지한다.
+
+`FactionCombat`이 실제 총탄 충돌/시야/진영 피해를 공유한다. `GangMember`와 `PoliceOfficer`가 상대를 선택해 접근·조준·사격하고, `WorldActor.Damage`에 공격자 인자를 추가해 NPC 피해가 플레이어 수배로 귀속되지 않게 했다. 갱단 공격은 수배를 올리지 않고 반격을 유발한다. 시민/경찰에 대한 플레이어 공격은 수배를 유지한다. 순찰 경찰은 수배 출동 예산과 별도이며 수배 플레이어를 목격하면 추격 판정에 참여한다.
+
+Windows Release 갱신 완료(오류 0, 기존 경고 35), 실제 도시의 필수 확인 12개 통과. `Artifacts/GangWar/Release/gang-war.json`: `completed=true`, 갱단 사격 25회/경찰 16회, 상호 피해·제압·벽 차단·수배 귀속 확인. 전체 캠페인 검사는 반복하지 않았다. `Documentation/Urban/CITY-GANGS.md`에 안내와 실제 교전 화면이 있다. 커밋·푸시는 하지 않았다.
+
+## 추가 적용: 경찰·특수대응팀 전용 스프라이트
+
+`Resources/Art/LawEnforcement`에 새 이미지 생성 에셋 3종, 총 24프레임을 추가했다. 일반 경찰은 제복·정모에 권총/샷건, 특수대응팀은 헬멧·고글·방탄 조끼에 소총을 든다. `PoliceSpriteCatalog`와 `PoliceOfficer`로 출동 무기에 연결했고 경찰의 `Enemies/gunner` 및 중복 `EnemyWeaponRig` 사용을 제거했다. 사격 트레이서는 조준 프레임 총구 위치를 사용하며, 최종 쓰러짐은 이미 누운 그림이어서 추가 회전하지 않는다.
+
+`PoliceSpriteImporter`가 흰 배경 PNG를 Unity에서 투명화하고 개별 인물을 분리하며 발 피벗과 2.1m 대기 키를 맞춘다. 가져오기 로직 변경 시 `GetVersion()`을 올려 캐시를 갱신한다. 제작 프롬프트와 사용 안내는 `Documentation/Art/POLICE-SPRITES.md`에 있다. Windows Release 갱신 성공(오류 0, 기존 경고 35). `-police-art-smoke`의 세 무기별 로드/배정/크기 9개 확인이 통과했고 게임 URP 렌더링으로 프레임과 투명 가장자리를 확인했다. 최종 결과는 `Artifacts/PoliceArt/Release`, 빌드 로그는 `Artifacts/PoliceArt/build-release.log`. 기존 장시간 검사는 반복하지 않았다. 이 작업은 커밋·푸시하지 않았다.
+
 ## 추가 적용: 필수 BGM 6곡
 
 사용자 제공 Suno WAV 6곡을 `Assets/AfterSignal/Resources/Audio/Music`에 원본 그대로 가져왔다. `Documentation/Audio/MUSIC.md`에 장소 배정, 출처, 측정 음량과 반복 방식이 있다. `SignalMusic`은 씬 간 지속되는 스트리밍 재생기로, 같은 곡의 재시작 방지, 다른 곡 1.8초 크로스페이드, 곡 끝 2초 겹침 반복, 대화 중 감쇠, 일시정지/사망과 전체 음소거 연동을 담당한다. 보스전은 컨덕터 접근 시 시작하고 후퇴 시 유지, 처치 후 마을곡으로 복귀한다. ESC 메뉴에서 BGM만 꺼짐/30/55/80/100%로 설정할 수 있다(기본 55%).
@@ -75,3 +95,123 @@ GitHub 복제 후에는 `SETUP.cmd` → `OPEN_UNITY.cmd`. 정확한 버전의 SD
 - 공개 테스트 XML의 어셈블리 경로는 프로젝트 상대 경로로 정리했다. 실행 시각, 결과, 소요 시간과 실패 정보는 원본 그대로 유지한다.
 
 사용자는 다음 Codex 프로젝트 채팅에서 작업을 계속하기 위해 소스 공개 저장소 생성과 커밋·푸시를 요청했다. 이 시점의 소스는 작업 인계 기준점이며 출시 완료 태그가 아니다.
+
+## 2026-09-07 · 갱단 전용 이미지 / 3인칭 자유 시점
+
+- 갱단 3종 × 8동작을 Resources/Art/Gangs에 제작·적용. 흰 배경은 경찰과 공유하는 임포터에서 투명 처리, 조준 이미지 총구와 사격 연결, 전용 쓰러짐 사용. Documentation/Art/GANG-SPRITES.md 및 gang-prompts.json 참조.
+- 가운데 마우스 드래그로 자유 회전, HOME으로 기본 카메라 복귀. 회전 기준 이동·대시·로프 좌우 가속 및 조준 평면/표시 방향 적용. 벽 충돌 시 카메라 거리 축소, 메뉴/창 전환 시 커서 잠금 해제. 옥상 전망 모드에서도 마우스 회전 지원. Documentation/FREE-CAMERA.md 참조.
+- Windows BuildRelease 성공: errors 0, warnings 35, bytes 363369423. Builds/Windows/AFTERSIGNAL.exe 갱신.
+- 필수 네이티브 확인만 실행: Artifacts/GangCamera/Smoke/gang-camera.json 15개 통과; Battle/gang-war.json 12개 통과, 갱단 21발/경찰 15발 및 상호 피해 확인. 전용 스프라이트 24동작 캡처는 Smoke/lineup-*.png, 대표 이미지는 Documentation/Art/gang-lineup.png.
+- 이번 요청에 대한 커밋/푸시는 실행하지 않음. 기존 재질·품질 설정 및 다른 작업 변경사항 보존.
+
+## 2026-09-07 서하 이미지·도시 생활
+
+- 첨부된 서하 일러스트를 기준으로 신규 10개 시트 / 80프레임을 제작하고 모든 플레이어 상태에 연결. 방향별 걷기·달리기, 앞뒤 대시, 피격·운전, 무기·로프 동작 포함. WASD 기본 걷기, 같은 방향 키를 0.28초 안에 두 번 누르면 달리기.
+- 동쪽 시내 입구 자동 이동(도보/차량), 하단 대화창·투명 서하 초상화·스크롤·응답 생성 경과 표시 적용.
+- 투명 차량 유리와 탑승자, 5개 버스 노선/25개 정류장, 정차·승객 교체·30 C 요금·하차벨 구현.
+- 식당/카페 주문 접수·레시피 선택·타이밍 조리·테이블 서빙·급여 미니게임. UI에서 진행되며 5명 응대 후 근무 완료.
+- 주민 24명, 아파트 호실 선택과 단독주택 5채 방문, 3D 가구와 야간 실내 조명. 주민은 게임 시간표에 따라 출퇴근·교류·귀가하며 주소/현재 일과를 기존 AI 대화 문맥에 전달. 일과 경로는 게임 로직으로 결정.
+- 필수 실행 확인 24개 통과: Artifacts/CityLiving/Final/city-living.json. AI API 실호출은 이번 확인에 포함하지 않음. Windows 실행 파일 갱신. 상세 안내 Documentation/CITY-LIVING.md.
+
+
+## 2026-09-07 — Eight-direction motion and city evolution
+
+- Implemented Seo 8-direction walk/run (8 phases per gait), directional idle, movement-distance timing and stable foot pivots. Added 22 role-specific four-direction NPC sheets and varied bus occupants. Image generation used the built-in tool; final art and prompts are under `Resources/Art/SeoMotion`, `Resources/Art/NpcDirections`, and `Documentation/Art/city-evolution-prompts.json`.
+- Added `CommunityWorld`, `CivicRoutine`, `InteriorSupport`, and `NpcSpeech`: expanded school, differentiated hospital/HQ personnel and routines, 12 neighbor apartment entrances, continuous collision foundations, and removal of overlapping legacy batches/themes in rebuilt interiors.
+- Added night-time gang mugging/car theft/building robberies, witness and victim reporting, patrol dispatch, panic, player facility heists, ambulance/paramedic pickup and hospital treatment, vehicle garage repair/paint/wheel/spoiler persistence, holding cells, and a neon bar.
+- NPC routine decisions are local schedules/state transitions. Existing OpenAI NPC conversation and music connections are preserved.
+- Final Windows build succeeded with 0 errors (37 warnings). Essential native `CityEvolutionSmoke` integration passed; detailed result in `Artifacts/CityEvolution/Release/city-evolution.json`. Diagnostics restore original PlayerPrefs on finish. Build uses existing authored scenes; no scene regeneration.
+- Launch via `PLAY.cmd`; controls and details: `Documentation/CITY-EVOLUTION.md`. Existing uncommitted work was preserved. This turn did not commit or push.
+
+
+## 2026-09-07 — Third-person controls, portrait and linked city story
+
+- Fixed SeoIllustrated alpha erasing bright internal hair/highlights by applying border-connected matte removal (SpriteMatte). PortraitImporter uses the same conservative path for the original cutout; new SeoDialogue.png is an opaque high-resolution portrait generated with the built-in image tool and is used by fixed and live conversations.
+- Default mouse-look third-person orbit, shoulder offset, central crosshair/world aim, wheel zoom (3.5–18), numeric 1–3 weapon selection, HOME reset. Menus/dialogues/maps release the cursor. Updated HUD control hints.
+- Added CityChronicle JSON catalog: 24 main quests across six acts plus 18 side quests in six connected resident chains, 126 objectives. Includes in-world witnesses/evidence terminals, timed scans, gang encounters, deliveries, choices, ending text, reward deduplication, prerequisite locks, tracked guidance, persistent progress, and J journal. Original rail/expansion/breach mission terminals are retained in rebuilt headquarters. Story markers are small diamonds to keep the closer camera clear.
+- Added CitySocial exchanges and non-modal NPC-initiated greetings, pausing walkers while chatting. NpcVoice uses role-specific injury lines with speech priority so panic does not immediately overwrite the victim's words. Existing AI conversations remain on explicit talk interaction; local social and scripted story actions do not make extra API calls.
+- Essential native ChronicleSmoke checks cover camera/zoom/weapon separation, representative dialogue-scan-delivery progression, old campaign terminal access, save/choice/reward behavior and citizen speech. All 22 passed in the final Windows build, including the final marker presentation changes. Final report: Artifacts/Chronicle/Final/chronicle.json. Windows build succeeded with 0 errors and 37 warnings. No full long-campaign manual playthrough was performed.
+- User controls and story overview: Documentation/CHRONICLE.md. Image provenance: Documentation/Art/seo-dialogue-prompt.json. Launch PLAY.cmd. Existing uncommitted work preserved; no commit/push in this turn.
+
+
+## 2026-09-08 — Movement, directional combat, vehicle reactions and client UX
+
+- Replaced Seo's active movement/action art with 18 newly generated slim-body sheets (184 frames): eight run phases in eight directions, three weapons with four attack phases in eight directions, eight idle and sixteen jump/climb frames. Distance-driven run timing preserves stride across turns; single WASD movement runs and double-tap gait selection is removed. Conservative border-connected matte extraction preserves internal hair and outfit detail. Runtime facing corrections are applied where source sheets face the opposite way.
+- Added double jump with a two-jump limit, facade grabbing, upward/lateral climbing, wall kicks and clear-roof mantling. Directional melee, travelling cuts, projectile aim and effects now follow the world attack heading. Updated Seo's vehicle appearance as well.
+- Occupied vehicles accelerate away when moving and viable, or evacuate occupants when stopped, badly damaged or blocked. Buses cancel stops/boarding during emergencies. Explosions empty cabins exactly once and eject incapacitated occupants, including the actual gang driver of a stolen car. Police/gang projectiles hit civilian trigger colliders. Added dedicated police-car bodywork, POLICE/112 markings, bumper, light-bar support and antenna.
+- Fixed the apartment elevator shaft blocked by the sixth-floor safety slab; platform carry, remote calls and both travel directions now work. Added contextual interaction cards, traversal status, weapon quick slots and active selection, updated pause controls, and aspect-aware HUD scaling.
+- Final Windows build succeeded: 0 errors, 39 warnings, 752622914 bytes. Essential native KineticSmoke checks: 23 passed, no errors. Actual checks include wall grab/ascent/kick/roof arrival, vehicle evacuation/escape/explosion, police and gang civilian hits, and the authored elevator travelling from floor six to ground and back with Seo. Reports: Artifacts/Kinetic/Final/kinetic.json and Artifacts/kinetic-final-build.log. No full campaign playthrough or long performance run was performed for this change. Diagnostic save state is restored on completion.
+- Launch PLAY.cmd. Controls: WASD run; SPACE jump and second airborne jump; jump toward a wall with W to climb, A/D traverse, S release, SPACE wall kick; E use/call lift. Full guide and captured previews: Documentation/KINETIC.md and Documentation/Kinetic/. Built-in image_gen provenance: Documentation/Art/seo-kinetic-prompts.json; final art: Assets/AfterSignal/Resources/Art/SeoKinetic/.
+- Preserved previous uncommitted work and existing authored scenes. No commit or push in this turn.
+
+
+## 2026-09-08 — Illustrated title screen
+
+- Added a dedicated full-screen title canvas with generated Seo/Afterlight rooftop key art, independent engine-rendered logo, continue/new game/settings/quit actions, keyboard/mouse navigation, entrance fade, save summary and loading progress. The world and in-game HUD are suspended while the title is active.
+- Continue reloads the saved area's entrance. New game confirms replacement when a save exists, resets story/life state and starts in Residence. Pause now offers save-and-return-to-title; death menu also offers title return. Settings share master/music/motion/post preferences and persist borderless/window mode. Existing Town music is selected on the title.
+- Built-in image_gen artwork: Assets/AfterSignal/Resources/Art/Title/AfterlightTitle.png. Prompt/provenance: Documentation/Art/title-art-prompt.json. User guide and actual captures: Documentation/TITLE.md and Documentation/Title/.
+- Existing AFTERSIGNAL process was left running. The new player is in Builds/Title/AFTERSIGNAL.exe; successful builds write Builds/active-player.txt and PLAY.cmd/Play-WithDialogue.ps1 resolve that path within Builds. Default future builds still target Builds/Windows. No authored scenes were regenerated.
+- Essential native TitleSmoke check passed all 12 start/menu/save-transition assertions, restoring all touched save values before exit. Artifacts/Title/Final/title.json and Artifacts/title-final-player.log; final build log Artifacts/title-final-build.log. No full campaign run. Preserved prior work; no commit/push for this request.
+
+- Final title release: 758935718 bytes, 0 build errors and 39 warnings. Rechecked the final binary: all 12 title checks passed, no runtime errors; launcher syntax errors 0.
+
+
+## 2026-09-08 — Restored effects, recorded gunfire and corpse blood
+
+- Restored effect audibility with explicit PCM preloading, per-cue variation fallback, a 28-voice pool, readable mix levels, player-near voice priority, distance attenuation and camera-relative panning. Master changes preserve each voice's intended gain. Added independent SFX volume (default 90%) to title settings and pause; engine/siren loops follow it. BGM is briefly ducked for strong combat feedback.
+- Retained and reconnected existing jump/landing/running/tile/metal footsteps, sword impact/swing, dash, hurt/guard, reload and rope sounds. Added wall grab/climb/kick and rope-jump feedback, campaign gunner shots and enemy attack/hurt calls. Running steps now follow the 4.1 m stride timing.
+- Downloaded the CC0 Free Firearm Sound Library (Ben Jaszczak, Brian Nelson, Kevin Heras, Matthew Nanney) from OpenGameArt. Generated 18 trimmed 48 kHz mono PCM16 clips from real 1911, Walther PPQ, Bersa, Mossberg, AR-15 and AK-47 recordings. All player, police, gang, campaign and helicopter firing calls use the matching recorded categories; the helicopter uses an AK-47 short burst, not a helicopter-mounted weapon recording. No synthetic gunshots are selected at runtime. Sources, processing and hashes: Documentation/Audio/firearm-sources.json; importer: Tools/Import-Firearms.py; source archive remains in ignored Artifacts/Sound/Source.
+- Added CorpseBlood procedural floor surfaces for dead WorldActors and campaign enemies, including manually incapacitated vehicle occupants. Blood follows the actual floor height, excludes vehicles, waits for grounded bodies, and is removed on corpse hiding/destruction or revival/pool reuse. Existing corpse lifetimes are preserved. Shared shader: Resources/Shaders/CorpseBlood.shader.
+- Final Windows release succeeded: 762777706 bytes, 0 errors and 40 warnings. All 38 essential native SoundSmoke checks passed in the final player: measured nonzero audio output for the requested cues and six firearm categories, actual movement/jump/attack/hurt/rope events, mute/pause behavior, elevated-floor blood placement, and corpse cleanup. Reports: Artifacts/Sound/Final/sound.json, Artifacts/sound-final-player.log; build: Artifacts/sound-final-build.log. No full campaign or long performance rerun. Audio preferences touched by checks are restored; life/story writes are suppressed.
+- Launch PLAY.cmd, which now resolves Builds/Sound/AFTERSIGNAL.exe through Builds/active-player.txt. Existing running player left untouched. Guide/source attribution: Documentation/Audio/RESTORED-AUDIO.md and FIREARM-LICENSE.txt; preview: Documentation/Sound/corpse-blood.png. Prior uncommitted work preserved; no commit or push.
+
+
+## 2026-09-08 - Vehicle upper bodies and Seo motion refinement
+
+- VehiclePortraits and VehicleCabin now use eighty authored upper-body sprites for Seo and sixteen NPC driver appearances, with camera-relative directions and steering-wheel poses. Other passengers retain their individual cropped torso art. Sedan/taxi torso height .72 m, truck .98 m, bus 1.06 m. Truck seats moved into the front cab. NPC cropping uses sprite pivot/stature metadata, not CPU pixel access.
+- Added SeoRefined: forty run phases and forty action poses over five canonical angles with mirrored left views, resolving eight directions. New rise/fall/land/hurt/dash/rope/alternating climb states; shared atlas scale avoids crouch/raised-arm resizing. SeoLocomotion maintains physical stride phase and smooth lean. Removed illustrated actor pixel snapping. Stride and footfalls share 3.4 m; one-frame ground contacts now trigger landing feedback. Existing weapon combat atlases/contact timing retained.
+- Final Windows release Builds/Motion/AFTERSIGNAL.exe: 857251823 bytes, 0 errors, 40 warnings. All 17 essential native MotionSmoke checks passed, no runtime errors. Source/readability and missed-landing findings were fixed and the final binary rerun. Report Artifacts/Motion/Final/motion.json, build Artifacts/motion-release-build.log, native log Artifacts/motion-final-player.log. Previews Documentation/Motion/; review Documentation/MOTION-REFINEMENT.md; provenance Documentation/Art/vehicle-motion-prompts.jsonl.
+- PLAY.cmd routes to the new Motion player. Existing running player and previous uncommitted changes preserved. No commit/push for this request.
+
+## 2026-09-08 - Seo rigged 3D trial
+
+- User authorized installing modelling tools and requested an original anime-style Seo model/rig test integrated into the game. Installed official Blender 4.5.3 LTS portably under ignored Artifacts/Tools, verified its official SHA-256. No external character mesh, paid asset or 3D service was used.
+- Created editable Documentation/Character3D/Seo.blend and deterministic Tools/Character3D/{meshkit,build_seo,rig_animation}.py. Original silver/lilac side-bun hair, sculpted anime face, violet eyes, asymmetric cropped black jacket, slim trousers, fingerless gloves, wrist terminal, boots and three weapons. Final mesh library: 81,734 vertices / 161,222 triangles, 60 deform bones plus source IK controls, Blink shape key, four hair bones, 23 FK animation clips. Unity uses a Generic rig; this is not yet a Humanoid retargeting asset.
+- Runtime resource names deliberately differ: SeoModel.fbx versus Seo.prefab. The initial same-name FBX/prefab collision produced a null controller and was fixed before the final build. Seo3DImporter.BuildTrial imports materials/clips/controller/prefab then builds current authored scenes without regeneration. Toon shader converts Blender linear palette correctly for Unity colour properties.
+- PlayerMotor adds Seo3DActor, which defaults to 3D, uses continuous world-facing rotation and state crossfades, matches run stride / attack durations, supports jumping/double jump/dash/rope/climb/weapon actions/hurt/death/drive, blinks and moves hair, applies jacket colours and bakes actual mesh afterimages. F8 toggles the prior sprite presentation and persists the choice. VehicleCabin suppresses Seo's duplicate sprite and displays a physical wheel with the rigged driver. NPC sprite presentation remains intact.
+- Final release Builds/Seo3D/AFTERSIGNAL.exe: 868799907 bytes, 0 errors, 40 warnings. Essential native Seo3DSmoke checks all 13 passed with no runtime errors, including binding, clips, materials, run progression, two jumps, attack selection, sprite fallback, vehicle entry and one visible mesh driver. Reports: Artifacts/Seo3D/Final/seo3d.json, Artifacts/seo3d-final-player.log, Artifacts/seo3d-final-build.log. Source render and actual final Unity captures are in Documentation/Character3D. No full campaign/performance rerun.
+- PLAY.cmd now resolves this new player. EDIT-SEO-3D.cmd opens the source in the prepared Blender. This is an explicitly documented first prototype: facial likeness, extreme garment deformation, two-hand weapon contact and exact steering-wheel grips remain art refinement areas; hair uses bounded secondary rotations, not cloth physics. Existing running player and all previous uncommitted work preserved; no commit/push in this task.
+
+## 2026-09-08 · 서하 3D 철회 / 해안 도시와 전투 연출 확장
+
+- 위의 Seo rigged 3D trial 기록은 철회된 과거 작업이다. Seo3DActor, 리깅·모델·재질·제작 도구·전용 빌드 연결을 프로젝트에서 제거하고 서하를 기존 스프라이트로 복귀했다. 철회한 파일은 저장소 밖 `../AFTERSIGNAL-Withdrawn/Seo3D-20260908`에 보관했다. 범용 Blender 설치는 차량 제작에 사용한다.
+- 차량 폭발 섬광·불덩이·연기·불꽃·후속 연소 및 실제 메시 파편, 차량/파편 정리, 기존 탑승자 방출 연동. 고속 충돌은 시민을 속도에 비례해 날리고 지면·벽을 검사한다. 헬기는 체력 소진 후 회전·중력 추락, 지형 충돌 시 폭발·파편 방출.
+- 조준점 획득과 총구 충돌 필터를 통일, 총기 사거리 1,400m. 실제 네이티브 실행에서 450m 시민 명중과 중간 벽 차단을 확인했다. 일부 성인 시민 보복, 카타나·블레이드 치명타의 확률적 스프라이트 신체 영역 분리 적용.
+- 기존 실제 권총 발사 녹음 유지, 장전 세 단계는 SpringySpringo CC0 에어소프트 조작 녹음으로 교체. NPC 말풍선 은행 340항목, 그중 40항목은 두 화자의 교환 대화.
+- 2,200m 폭의 확장 지도에 곡선 해안도로·대각선 도로·공항 순환로·교통·보행·경찰 출동 좌표·지도 경로 연결. 기존 authored scene은 재생성하지 않고 런타임 `WorldAssets/AfterlightExpansion.prefab`을 추가한다.
+- 국제공항·해변·항만·야시장·환승역·전망공원·물류센터·호텔·항만 진료소·변전소 10목적지. 식사·휴식·치료·근무·유료 셔틀은 기존 경제/메뉴 시스템과 연결. M 지도 상단 새 목적지, E 시설 안내. 항공기와 선박은 배경 모델이며, 모든 신축 건물의 전용 실내나 실제 운항을 구현한 것은 아니다.
+- 시설 전용 NPC 24종 / 96방향 프레임 / 344명 배치. RGBA32 임포트로 배경 투명도를 보존하며 장소별 직업·AI 대화 문맥·보행·위험 반응 연결. 210m 이내 주민 활성화. 생성 프롬프트와 출처는 Documentation/WorldExpansion 참조.
+- 원본 세단을 Blender에서 제작해 세단/택시에 적용, 대형 차량 세부 추가. Poly Haven CC0 창호·가로등·벽등·벤치·방호벽 및 4종 PBR 표면, 기존 외벽 아트 재사용. 초기 차체 면 방향, NPC 컴포넌트 직렬화, 파티클 커브 설정, 글자의 벽 통과, 스프라이트 알파 누락을 수정했다. 큰 지형 충돌 삼각형을 세분화했다.
+- Windows 빌드 성공, 오류 0. 기존 obsolete API/URP 관련 경고는 40개. 기능 확인 32개 통과, 오류 0: `Artifacts/WorldExpansion/Final/world-expansion.json`, `final-player.log`. 이후 변경은 네온 강도와 진단 카메라의 조명 대기 처리이며, 게임플레이 검증을 반복하지 않고 5구역 화면만 추가 확인했으며 오류가 없었다 (`Artifacts/WorldExpansion/Presentation/world-expansion.json`). 최종 빌드 로그: `Artifacts/WorldExpansion/presentation-release.log`.
+- PLAY.cmd는 Builds/WorldExpansion/AFTERSIGNAL.exe를 사용한다. 전체 캠페인/장시간 성능 테스트와 커밋·푸시는 이번 요청에서 실행하지 않았다. 상세 범위·이용 방법·재생성·출처: Documentation/WorldExpansion/README.md.
+
+## 2026-09-08 · 차량 상승 오류 / 교통·해양·거주 시설 확장
+
+- Fixed self-roof grounding: VehicleGround excludes the subject vehicle, other vehicles, Rigidbody debris and steep faces, limits upward ground steps, and recovers previously elevated saved cars. Eight connecting routes join old/new road data. Removed 41 old skyline blockers at exits and rebaked the existing city presentation without regenerating campaign scenes.
+- Original Blender motorcycle, sports car, ferry, airliner, combat helicopter, fighter and tank models with editable sources in Documentation/Mobility/Models. Runtime rotates FBX presentation 180 degrees to align Blender-exported noses with vehicle local +X, preserves that rotation during craft banking, spins wheels about the actual axle and steers front wheels. White front/red rear lenses, differentiated body paints, individual aircraft windows and sports-car door details. Cabin uses driver/front/rear/passenger seat positions, E driver/G passenger input, Shift boost and Space braking. Player-controlled military vehicles have weapons.
+- Regular nearby traffic cap 48 (previously 14); 45 street-facing parking areas with 276 bays use proximity spawning. Original airport aircraft converted to controllable stands, original cargo ship to a moving craft. Pilot/captain routes carry changing passenger groups; these are scheduled waypoint circuits, with arcade flight/water controls, not a physical aviation simulation. Cargo rendering combined to eight material batches and three hull colliders.
+- Added MobilityDistricts prefab: 24 walk-in infill buildings plus military HQ/barracks/maintenance, prison block and passenger terminal. 29 stair/lift connections across 2–4 floors, role-specific furniture and residents, 891 registered expansion NPCs activated nearby. Fixed upper-floor spawn checks and interior wandering to reject table surfaces and other floors. Existing interiors receive additive furniture/wall/ceiling refinements. Buildings are procedural modular environments; bespoke commercial art polish is not complete.
+- Ocean seabed, 115 reef groups, 180 proximity-activated fish/turtles/rays, swimming/diving without fall-respawn. Corrected seabed winding and rendered both sides of water. Police arrest/death while wanted transfers to actual prison cell; H surrender near police, sentence/bail release. Footstep mix .65 to .17. Limited close-up NPC speech width so interiors remain visible.
+- Essential native functional checks all 19 passed, no runtime errors: Artifacts/Mobility/Final/mobility.json (copy Documentation/Mobility/functional-checks.json). Later display-only changes and removal of 1,783 verified unreferenced generated meshes are followed by a focused final presentation/resource run. Gameplay, locations, controls and scope: Documentation/Mobility/README.md. PLAY.cmd resolves Builds/MobilityRelease/AFTERSIGNAL.exe. Preserve prior uncommitted work; no commit/push requested this turn.
+- Final release succeeded: 1,905,528,799 bytes, 0 errors, 42 existing obsolete API/URP warnings. Build log Artifacts/WorldExpansion/mobility-final-release.log. Final player presentation/resource run passed all 3 focused checks with no errors; Artifacts/Mobility/Presentation/mobility.json and presentation-player.log. Seven final game captures and both reports copied to Documentation/Mobility. No further full functional rerun after display-only changes.
+
+## 2026-09-08 · NPC 충돌 / 무기 상점 / 정부청사 / 잔향체 대응
+
+- Added NpcBody: separate upright physical body capsules (player layer 8 vs NPC layer 9 enabled; NPC-to-NPC collision remains ignored), contact replies with cooldowns, and movement overlap handling. Shared WorldActor death callback drops collectible credits with a 78% chance, respects remaining NPC cash and fixed-quest protection. Citizen hits play impact and hurt/death audio. Army visual billboards are children of upright controllers.
+- Shared BlastDamage applies distance-scaled damage, cover checks and knockback to people, player, enemies and other vehicles. Queued updates prevent recursive chain explosions. Added ArmoryInventory, PlayerEquipment, CombatProjectile and HeldArmory: 13 items, 7 number-key equipment slots, finite rifle/shotgun/rocket magazines and reserve ammo, purchased grenades, weapon-specific held geometry and real projectile impacts/fuses. Preserve legacy WeaponId 0–2 because sprite/tuning arrays depend on it; additional guns reuse the pistol body pose. Existing starter pistol ammunition rules remain intact.
+- CivicRenewal.prefab adds distinct facade treatments to 40 original sites and 29 inhabited expansion buildings, BLACKLINE weapon shop at (950,0,260), and government campus at (840,0,870). Government includes 6 floors, a three-level open atrium with solid galleries/rails, 24 department rooms, stairs/lift, 2 external non-enterable data towers, plaza and road. Final runtime counted 158 FacilityConsole and 152 UsableProp components. InteriorDistinct adds room-theme furniture and interactions to existing indoor scenes. These are modular additive environments, not complete bespoke replacements of every building.
+- Facility menus connect banking, treatment, hospitality, food, wardrobe, maintenance and existing minigames. New field jobs require visiting three stations before paying once per game day. Government worker registration grants +10% job pay. NightIllumination adjusts neon/window/sign emission and reuses up to 40 local point lights. Existing BGM and OpenAI dialogue configuration untouched.
+- RiftIncursion spawns story-linked procedural articulated memory creatures, dispatches six rifle troops and a combat helicopter, with shared faction targeting/damage, evacuation replies and participation reward. Verified 77 military shots and actual creature damage in the essential run. This uses local gameplay AI, not OpenAI calls.
+- SeoEdgeFinish decontaminates only neutral boundary pixels and extrudes transparent gutter RGB while preserving lilac hair and original source PNGs. Native final Seo capture shows intact silhouette. 2D Seo retained; no 3D character restoration.
+- Essential functional run: all 16 checks passed, no runtime errors (Artifacts/CivicRenewal/Essential/civic.json). Subsequently improved empty government rooms and obstructed shop displays; focused presentation/resource run passed all 4 checks with no errors (Artifacts/CivicRenewal/Presentation/civic.json), including solid government galleries and Clinic/School interaction details. No repeated full functional suite after these scene edits. No full campaign or long-duration performance run.
+- Final Windows build: 1,955,846,238 bytes, 0 errors, 43 warnings. Artifacts/civic-final-build.log; Builds/active-player.txt now resolves Builds/CivicRelease/AFTERSIGNAL.exe through PLAY.cmd. Final reports and captures copied to Documentation/CivicRenewal; usage/scope in Documentation/CIVIC-RENEWAL.md. A final editor-only removal of an unused local in SeoEdgeFinish does not change importer behaviour or runtime output. No commit/push requested this turn; preserve earlier uncommitted work.

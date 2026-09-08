@@ -1,0 +1,2103 @@
+{
+  "id": "modular_urban_apartments_facade",
+  "objects": [
+    {
+      "name": "wall_door_centered_large_01",
+      "size": [
+        2.999998092651367,
+        0.0,
+        3.0
+      ],
+      "location": [
+        11.0,
+        0.0,
+        0.0
+      ],
+      "vertices": 352
+    },
+    {
+      "name": "wall_door_angled_large_01",
+      "size": [
+        3.0000009536743164,
+        3.000000238418579,
+        3.0
+      ],
+      "location": [
+        4.0,
+        5.960464477539063e-08,
+        0.0
+      ],
+      "vertices": 706
+    },
+    {
+      "name": "wall_door_angled_small_01",
+      "size": [
+        2.0000007152557373,
+        2.0,
+        3.0
+      ],
+      "location": [
+        7.0,
+        5.960464477539062e-07,
+        0.0
+      ],
+      "vertices": 578
+    },
+    {
+      "name": "wall_window_angled_large_01",
+      "size": [
+        3.000000476837158,
+        3.000000238418579,
+        3.0
+      ],
+      "location": [
+        4.0,
+        5.960464477539062e-07,
+        4.0
+      ],
+      "vertices": 832
+    },
+    {
+      "name": "wall_window_angled_small_01",
+      "size": [
+        2.0000007152557373,
+        2.0,
+        3.0
+      ],
+      "location": [
+        7.0,
+        5.960464477539062e-07,
+        4.0
+      ],
+      "vertices": 641
+    },
+    {
+      "name": "wall_window_centered_large_01",
+      "size": [
+        3.0,
+        0.0,
+        3.0
+      ],
+      "location": [
+        11.0,
+        0.0,
+        4.0
+      ],
+      "vertices": 445
+    },
+    {
+      "name": "wall_window_centered_large_02",
+      "size": [
+        3.0,
+        0.0,
+        3.0
+      ],
+      "location": [
+        11.0,
+        0.0,
+        8.0
+      ],
+      "vertices": 445
+    },
+    {
+      "name": "wall_window_angled_small_02",
+      "size": [
+        2.0000007152557373,
+        2.0,
+        3.0
+      ],
+      "location": [
+        7.0,
+        5.960464477539062e-07,
+        8.0
+      ],
+      "vertices": 641
+    },
+    {
+      "name": "wall_window_angled_large_02",
+      "size": [
+        3.000000476837158,
+        3.000000238418579,
+        3.0
+      ],
+      "location": [
+        4.0,
+        5.960464477539062e-07,
+        8.0
+      ],
+      "vertices": 832
+    },
+    {
+      "name": "wall_window_centered_large_03",
+      "size": [
+        3.0,
+        0.18000011146068573,
+        3.0
+      ],
+      "location": [
+        11.0,
+        0.0,
+        12.0
+      ],
+      "vertices": 523
+    },
+    {
+      "name": "wall_window_centered_double_03",
+      "size": [
+        3.0,
+        0.18000012636184692,
+        3.0
+      ],
+      "location": [
+        19.0,
+        0.0,
+        12.0
+      ],
+      "vertices": 581
+    },
+    {
+      "name": "wall_window_centered_double_02",
+      "size": [
+        3.0,
+        0.0,
+        3.0
+      ],
+      "location": [
+        19.0,
+        0.0,
+        8.0
+      ],
+      "vertices": 465
+    },
+    {
+      "name": "wall_window_centered_double_01",
+      "size": [
+        3.0,
+        0.0,
+        3.0
+      ],
+      "location": [
+        19.0,
+        0.0,
+        4.0
+      ],
+      "vertices": 457
+    },
+    {
+      "name": "wall_door_centered_small_01",
+      "size": [
+        3.0,
+        4.371138828673793e-08,
+        3.0
+      ],
+      "location": [
+        15.0,
+        0.0,
+        0.0
+      ],
+      "vertices": 478
+    },
+    {
+      "name": "wall_door_centered_small_02",
+      "size": [
+        3.0,
+        0.0,
+        3.0
+      ],
+      "location": [
+        19.0,
+        0.0,
+        0.0
+      ],
+      "vertices": 508
+    },
+    {
+      "name": "wall_window_centered_small_02",
+      "size": [
+        3.0,
+        0.0,
+        3.0
+      ],
+      "location": [
+        15.0,
+        0.0,
+        8.0
+      ],
+      "vertices": 541
+    },
+    {
+      "name": "wall_window_centered_small_03",
+      "size": [
+        3.0,
+        0.18000011146068573,
+        3.0
+      ],
+      "location": [
+        15.0,
+        0.0,
+        12.0
+      ],
+      "vertices": 603
+    },
+    {
+      "name": "wall_window_centered_small_01",
+      "size": [
+        3.0,
+        0.0,
+        3.0
+      ],
+      "location": [
+        15.0,
+        0.0,
+        4.0
+      ],
+      "vertices": 541
+    },
+    {
+      "name": "wall_window_offset_small_05",
+      "size": [
+        3.0,
+        0.18000012636184692,
+        3.0
+      ],
+      "location": [
+        23.0,
+        0.0,
+        12.0
+      ],
+      "vertices": 603
+    },
+    {
+      "name": "wall_window_offset_small_03",
+      "size": [
+        3.0,
+        0.0,
+        3.0
+      ],
+      "location": [
+        23.0,
+        0.0,
+        8.0
+      ],
+      "vertices": 545
+    },
+    {
+      "name": "wall_window_offset_small_01",
+      "size": [
+        3.0,
+        0.0,
+        3.0
+      ],
+      "location": [
+        23.0,
+        0.0,
+        4.0
+      ],
+      "vertices": 541
+    },
+    {
+      "name": "wall_window_offset_small_06",
+      "size": [
+        3.0,
+        0.18000012636184692,
+        3.0
+      ],
+      "location": [
+        23.0,
+        2.0,
+        12.0
+      ],
+      "vertices": 603
+    },
+    {
+      "name": "wall_window_offset_small_04",
+      "size": [
+        3.0,
+        0.0,
+        3.0
+      ],
+      "location": [
+        23.0,
+        2.0,
+        8.0
+      ],
+      "vertices": 545
+    },
+    {
+      "name": "wall_window_offset_small_02",
+      "size": [
+        3.0,
+        0.0,
+        3.0
+      ],
+      "location": [
+        23.0,
+        2.0,
+        4.0
+      ],
+      "vertices": 541
+    },
+    {
+      "name": "wall_door_offset_small_01",
+      "size": [
+        3.0,
+        0.0,
+        3.0
+      ],
+      "location": [
+        23.0,
+        0.0,
+        0.0
+      ],
+      "vertices": 508
+    },
+    {
+      "name": "wall_door_offset_small_02",
+      "size": [
+        3.0,
+        0.0,
+        3.0
+      ],
+      "location": [
+        23.0,
+        2.0,
+        0.0
+      ],
+      "vertices": 508
+    },
+    {
+      "name": "wall_door_window_small_010",
+      "size": [
+        3.0,
+        0.18000012636184692,
+        3.0
+      ],
+      "location": [
+        27.0,
+        2.0,
+        12.0
+      ],
+      "vertices": 486
+    },
+    {
+      "name": "wall_door_window_small_06",
+      "size": [
+        3.0,
+        0.0,
+        3.0
+      ],
+      "location": [
+        27.0,
+        2.0,
+        8.0
+      ],
+      "vertices": 428
+    },
+    {
+      "name": "wall_door_window_small_02",
+      "size": [
+        3.0,
+        0.0,
+        3.0
+      ],
+      "location": [
+        27.0,
+        2.0,
+        4.0
+      ],
+      "vertices": 424
+    },
+    {
+      "name": "wall_door_window_small_01",
+      "size": [
+        3.0,
+        0.0,
+        3.0
+      ],
+      "location": [
+        27.0,
+        0.0,
+        4.0
+      ],
+      "vertices": 424
+    },
+    {
+      "name": "wall_door_window_small_05",
+      "size": [
+        3.0,
+        0.0,
+        3.0
+      ],
+      "location": [
+        27.0,
+        0.0,
+        8.0
+      ],
+      "vertices": 428
+    },
+    {
+      "name": "wall_door_window_small_09",
+      "size": [
+        3.0,
+        0.18000012636184692,
+        3.0
+      ],
+      "location": [
+        27.0,
+        0.0,
+        12.0
+      ],
+      "vertices": 486
+    },
+    {
+      "name": "wall_door_window_small_013",
+      "size": [
+        3.0,
+        0.18000012636184692,
+        3.0
+      ],
+      "location": [
+        27.0,
+        6.0,
+        12.0
+      ],
+      "vertices": 456
+    },
+    {
+      "name": "wall_door_window_small_08",
+      "size": [
+        3.0,
+        4.371138828673793e-08,
+        3.0
+      ],
+      "location": [
+        27.0,
+        6.0,
+        8.0
+      ],
+      "vertices": 398
+    },
+    {
+      "name": "wall_door_window_small_04",
+      "size": [
+        3.0,
+        4.371138828673793e-08,
+        3.0
+      ],
+      "location": [
+        27.0,
+        6.0,
+        4.0
+      ],
+      "vertices": 394
+    },
+    {
+      "name": "wall_door_window_small_012",
+      "size": [
+        3.0,
+        0.18000012636184692,
+        3.0
+      ],
+      "location": [
+        27.0,
+        4.0,
+        12.0
+      ],
+      "vertices": 456
+    },
+    {
+      "name": "wall_door_window_small_07",
+      "size": [
+        3.0,
+        4.371138828673793e-08,
+        3.0
+      ],
+      "location": [
+        27.0,
+        4.0,
+        8.0
+      ],
+      "vertices": 398
+    },
+    {
+      "name": "wall_door_window_small_03",
+      "size": [
+        3.0,
+        4.371138828673793e-08,
+        3.0
+      ],
+      "location": [
+        27.0,
+        4.0,
+        4.0
+      ],
+      "vertices": 394
+    },
+    {
+      "name": "wall_standard_standard_01",
+      "size": [
+        3.0,
+        0.0,
+        3.0
+      ],
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "vertices": 625
+    },
+    {
+      "name": "wall_standard_angled_large_01",
+      "size": [
+        3.0000009536743164,
+        3.000000238418579,
+        3.0
+      ],
+      "location": [
+        -8.0,
+        4.76837158203125e-07,
+        0.0
+      ],
+      "vertices": 1000
+    },
+    {
+      "name": "wall_standard_angled_small_01",
+      "size": [
+        2.0000007152557373,
+        2.0,
+        3.0
+      ],
+      "location": [
+        -15.0,
+        5.960464477539062e-07,
+        0.0
+      ],
+      "vertices": 725
+    },
+    {
+      "name": "wall_standard_corner_large_01",
+      "size": [
+        3.0,
+        3.000000238418579,
+        3.0
+      ],
+      "location": [
+        -4.0,
+        0.0,
+        0.0
+      ],
+      "vertices": 1225
+    },
+    {
+      "name": "wall_standard_corner_large_02",
+      "size": [
+        3.0000009536743164,
+        3.000000238418579,
+        3.0
+      ],
+      "location": [
+        -4.0,
+        1.0,
+        0.0
+      ],
+      "vertices": 1225
+    },
+    {
+      "name": "wall_standard_corner_small_01",
+      "size": [
+        2.0,
+        2.0,
+        3.0
+      ],
+      "location": [
+        -12.0,
+        1.4210854715202004e-14,
+        0.0
+      ],
+      "vertices": 825
+    },
+    {
+      "name": "wall_standard_corner_small_02",
+      "size": [
+        2.0000009536743164,
+        2.0,
+        3.0
+      ],
+      "location": [
+        -12.0,
+        2.0,
+        0.0
+      ],
+      "vertices": 825
+    },
+    {
+      "name": "wall_door_offset_small_04",
+      "size": [
+        3.0,
+        4.371138828673793e-08,
+        3.0
+      ],
+      "location": [
+        23.0,
+        6.0,
+        0.0
+      ],
+      "vertices": 478
+    },
+    {
+      "name": "wall_door_offset_small_03",
+      "size": [
+        3.0,
+        4.371138828673793e-08,
+        3.0
+      ],
+      "location": [
+        23.0,
+        4.0,
+        0.0
+      ],
+      "vertices": 478
+    },
+    {
+      "name": "wall_pier_angled_01",
+      "size": [
+        0.3726333975791931,
+        0.19142106175422668,
+        3.0
+      ],
+      "location": [
+        -18.0,
+        -1.1920928955078125e-07,
+        0.0
+      ],
+      "vertices": 175
+    },
+    {
+      "name": "wall_pier_corner_01",
+      "size": [
+        0.25,
+        0.2499997615814209,
+        3.0
+      ],
+      "location": [
+        -20.0,
+        0.0,
+        0.0
+      ],
+      "vertices": 175
+    },
+    {
+      "name": "wall_pier_corner_02",
+      "size": [
+        0.2999997138977051,
+        0.29999852180480957,
+        2.999999761581421
+      ],
+      "location": [
+        -20.0,
+        2.0,
+        0.0
+      ],
+      "vertices": 175
+    },
+    {
+      "name": "wall_pier_standard_01",
+      "size": [
+        0.2499997913837433,
+        0.04999995231628418,
+        3.0
+      ],
+      "location": [
+        -22.0,
+        1.1920928955078125e-07,
+        0.0
+      ],
+      "vertices": 125
+    },
+    {
+      "name": "door_angled_small_01",
+      "size": [
+        1.3547253608703613,
+        1.3547253608703613,
+        2.809999704360962
+      ],
+      "location": [
+        7.0,
+        5.960464477539062e-07,
+        0.0
+      ],
+      "vertices": 809
+    },
+    {
+      "name": "door_centered_small_01",
+      "size": [
+        1.4800057411193848,
+        0.440000057220459,
+        2.809999704360962
+      ],
+      "location": [
+        15.0,
+        0.0,
+        0.0
+      ],
+      "vertices": 809
+    },
+    {
+      "name": "door_centered_large_01",
+      "size": [
+        2.080005645751953,
+        0.440000057220459,
+        2.809999704360962
+      ],
+      "location": [
+        11.0,
+        0.0,
+        0.0
+      ],
+      "vertices": 1014
+    },
+    {
+      "name": "door_angled_large_01",
+      "size": [
+        1.778989315032959,
+        1.778989315032959,
+        2.809999704360962
+      ],
+      "location": [
+        4.0,
+        5.960464477539063e-08,
+        0.0
+      ],
+      "vertices": 1014
+    },
+    {
+      "name": "door_offset_small_01",
+      "size": [
+        1.1200001239776611,
+        0.23000013828277588,
+        2.2599997520446777
+      ],
+      "location": [
+        23.0,
+        0.0,
+        0.0
+      ],
+      "vertices": 465
+    },
+    {
+      "name": "door_offset_small_02",
+      "size": [
+        1.1200002431869507,
+        0.23000013828277588,
+        2.2599997520446777
+      ],
+      "location": [
+        23.0,
+        2.0,
+        0.0
+      ],
+      "vertices": 465
+    },
+    {
+      "name": "door_centered_small_02",
+      "size": [
+        1.1200002431869507,
+        0.23000013828277588,
+        2.2599997520446777
+      ],
+      "location": [
+        19.0,
+        0.0,
+        0.0
+      ],
+      "vertices": 465
+    },
+    {
+      "name": "door_window_small_01",
+      "size": [
+        2.6200098991394043,
+        0.39000749588012695,
+        2.299999713897705
+      ],
+      "location": [
+        27.0,
+        0.0,
+        4.0
+      ],
+      "vertices": 972
+    },
+    {
+      "name": "door_window_small_05",
+      "size": [
+        2.6200098991394043,
+        0.39000749588012695,
+        2.2999985218048096
+      ],
+      "location": [
+        27.0,
+        0.0,
+        8.0
+      ],
+      "vertices": 963
+    },
+    {
+      "name": "door_window_small_09",
+      "size": [
+        2.4800004959106445,
+        0.2548743784427643,
+        2.2599997520446777
+      ],
+      "location": [
+        27.0,
+        0.0,
+        12.0
+      ],
+      "vertices": 717
+    },
+    {
+      "name": "door_window_small_03",
+      "size": [
+        2.8000123500823975,
+        0.440000057220459,
+        2.809999942779541
+      ],
+      "location": [
+        27.0,
+        4.0,
+        4.0
+      ],
+      "vertices": 1316
+    },
+    {
+      "name": "door_window_small_07",
+      "size": [
+        2.8000123500823975,
+        0.440000057220459,
+        2.809999704360962
+      ],
+      "location": [
+        27.0,
+        4.0,
+        8.0
+      ],
+      "vertices": 1307
+    },
+    {
+      "name": "door_window_small_011",
+      "size": [
+        2.6600029468536377,
+        0.440000057220459,
+        2.809999704360962
+      ],
+      "location": [
+        27.0,
+        4.0,
+        12.0
+      ],
+      "vertices": 1061
+    },
+    {
+      "name": "door_offset_small_04",
+      "size": [
+        1.4800057411193848,
+        0.440000057220459,
+        2.809999704360962
+      ],
+      "location": [
+        23.0,
+        6.0,
+        0.0
+      ],
+      "vertices": 809
+    },
+    {
+      "name": "door_offset_small_03",
+      "size": [
+        1.4800057411193848,
+        0.440000057220459,
+        2.809999704360962
+      ],
+      "location": [
+        23.0,
+        4.0,
+        0.0
+      ],
+      "vertices": 809
+    },
+    {
+      "name": "door_window_small_02",
+      "size": [
+        2.620009422302246,
+        0.39000749588012695,
+        2.299999713897705
+      ],
+      "location": [
+        27.0,
+        2.0,
+        4.0
+      ],
+      "vertices": 972
+    },
+    {
+      "name": "door_window_small_04",
+      "size": [
+        2.8000125885009766,
+        0.440000057220459,
+        2.809999942779541
+      ],
+      "location": [
+        27.0,
+        6.0,
+        4.0
+      ],
+      "vertices": 1316
+    },
+    {
+      "name": "door_window_small_06",
+      "size": [
+        2.620009422302246,
+        0.39000749588012695,
+        2.2999985218048096
+      ],
+      "location": [
+        27.0,
+        2.0,
+        8.0
+      ],
+      "vertices": 963
+    },
+    {
+      "name": "door_window_small_08",
+      "size": [
+        2.8000125885009766,
+        0.440000057220459,
+        2.809999704360962
+      ],
+      "location": [
+        27.0,
+        6.0,
+        8.0
+      ],
+      "vertices": 1307
+    },
+    {
+      "name": "door_window_small_010",
+      "size": [
+        2.4800000190734863,
+        0.25487440824508667,
+        2.2599997520446777
+      ],
+      "location": [
+        27.0,
+        2.0,
+        12.0
+      ],
+      "vertices": 717
+    },
+    {
+      "name": "door_window_small_012",
+      "size": [
+        2.6600029468536377,
+        0.440000057220459,
+        2.809999704360962
+      ],
+      "location": [
+        27.0,
+        6.0,
+        12.0
+      ],
+      "vertices": 1061
+    },
+    {
+      "name": "window_centered_large_02",
+      "size": [
+        2.12001895904541,
+        0.39000749588012695,
+        1.9999996423721313
+      ],
+      "location": [
+        11.0,
+        0.0,
+        8.0
+      ],
+      "vertices": 777
+    },
+    {
+      "name": "window_angled_small_02",
+      "size": [
+        1.0654690265655518,
+        1.0654690265655518,
+        1.9999996423721313
+      ],
+      "location": [
+        7.0,
+        5.960464477539062e-07,
+        8.0
+      ],
+      "vertices": 498
+    },
+    {
+      "name": "window_angled_large_02",
+      "size": [
+        1.772575855255127,
+        1.772575855255127,
+        1.9999996423721313
+      ],
+      "location": [
+        4.0,
+        5.960464477539062e-07,
+        8.0
+      ],
+      "vertices": 777
+    },
+    {
+      "name": "window_centered_large_01",
+      "size": [
+        2.12001895904541,
+        0.39000749588012695,
+        2.299999713897705
+      ],
+      "location": [
+        11.0,
+        0.0,
+        4.0
+      ],
+      "vertices": 840
+    },
+    {
+      "name": "window_angled_small_01",
+      "size": [
+        1.0654690265655518,
+        1.0654690265655518,
+        2.299999713897705
+      ],
+      "location": [
+        7.0,
+        5.960464477539062e-07,
+        4.0
+      ],
+      "vertices": 507
+    },
+    {
+      "name": "window_angled_large_01",
+      "size": [
+        1.7725756168365479,
+        1.7725759744644165,
+        2.299999713897705
+      ],
+      "location": [
+        4.0,
+        5.960464477539062e-07,
+        4.0
+      ],
+      "vertices": 840
+    },
+    {
+      "name": "window_centered_large_03",
+      "size": [
+        1.7400000095367432,
+        0.20487438142299652,
+        1.684638261795044
+      ],
+      "location": [
+        11.0,
+        0.0,
+        12.0
+      ],
+      "vertices": 452
+    },
+    {
+      "name": "window_centered_double_02",
+      "size": [
+        2.62001895904541,
+        0.39000749588012695,
+        1.9999996423721313
+      ],
+      "location": [
+        19.0,
+        0.0,
+        8.0
+      ],
+      "vertices": 996
+    },
+    {
+      "name": "window_centered_double_01",
+      "size": [
+        2.62001895904541,
+        0.39000749588012695,
+        2.299999713897705
+      ],
+      "location": [
+        19.0,
+        0.0,
+        4.0
+      ],
+      "vertices": 1014
+    },
+    {
+      "name": "window_centered_double_03",
+      "size": [
+        2.3400001525878906,
+        0.2548743784427643,
+        1.684638261795044
+      ],
+      "location": [
+        19.0,
+        0.0,
+        12.0
+      ],
+      "vertices": 504
+    },
+    {
+      "name": "window_offset_small_03",
+      "size": [
+        1.1200191974639893,
+        0.39000749588012695,
+        1.9999996423721313
+      ],
+      "location": [
+        23.0,
+        0.0,
+        8.0
+      ],
+      "vertices": 498
+    },
+    {
+      "name": "window_offset_small_01",
+      "size": [
+        1.1200191974639893,
+        0.39000749588012695,
+        2.299999713897705
+      ],
+      "location": [
+        23.0,
+        0.0,
+        4.0
+      ],
+      "vertices": 507
+    },
+    {
+      "name": "window_offset_small_05",
+      "size": [
+        0.8400001525878906,
+        0.2548743784427643,
+        1.684638261795044
+      ],
+      "location": [
+        23.0,
+        0.0,
+        12.0
+      ],
+      "vertices": 252
+    },
+    {
+      "name": "window_offset_small_04",
+      "size": [
+        1.1200190782546997,
+        0.39000749588012695,
+        1.9999996423721313
+      ],
+      "location": [
+        23.0,
+        2.0,
+        8.0
+      ],
+      "vertices": 498
+    },
+    {
+      "name": "window_offset_small_02",
+      "size": [
+        1.1200190782546997,
+        0.39000749588012695,
+        2.299999713897705
+      ],
+      "location": [
+        23.0,
+        2.0,
+        4.0
+      ],
+      "vertices": 507
+    },
+    {
+      "name": "window_offset_small_06",
+      "size": [
+        0.8400001525878906,
+        0.25487440824508667,
+        1.684638261795044
+      ],
+      "location": [
+        23.0,
+        2.0,
+        12.0
+      ],
+      "vertices": 252
+    },
+    {
+      "name": "window_centered_small_02",
+      "size": [
+        1.1200190782546997,
+        0.39000749588012695,
+        1.9999996423721313
+      ],
+      "location": [
+        15.0,
+        0.0,
+        8.0
+      ],
+      "vertices": 498
+    },
+    {
+      "name": "window_centered_small_01",
+      "size": [
+        1.1200190782546997,
+        0.39000749588012695,
+        2.299999713897705
+      ],
+      "location": [
+        15.0,
+        0.0,
+        4.0
+      ],
+      "vertices": 507
+    },
+    {
+      "name": "window_centered_small_03",
+      "size": [
+        0.8400001525878906,
+        0.2548743784427643,
+        1.684638261795044
+      ],
+      "location": [
+        15.0,
+        0.0,
+        12.0
+      ],
+      "vertices": 252
+    },
+    {
+      "name": "base_end_02",
+      "size": [
+        0.2000001072883606,
+        0.2000001072883606,
+        0.75
+      ],
+      "location": [
+        -23.900001525878906,
+        0.0,
+        -2.0
+      ],
+      "vertices": 13
+    },
+    {
+      "name": "base_end_01",
+      "size": [
+        0.2000001072883606,
+        0.2000001072883606,
+        0.75
+      ],
+      "location": [
+        -24.099998474121094,
+        0.0,
+        -2.0
+      ],
+      "vertices": 13
+    },
+    {
+      "name": "base_standard_01",
+      "size": [
+        3.0,
+        0.20000000298023224,
+        0.75
+      ],
+      "location": [
+        0.0,
+        0.0,
+        -2.0
+      ],
+      "vertices": 10
+    },
+    {
+      "name": "base_angled_large_01",
+      "size": [
+        3.1999995708465576,
+        3.200000286102295,
+        0.75
+      ],
+      "location": [
+        -8.0,
+        4.76837158203125e-07,
+        -2.0
+      ],
+      "vertices": 25
+    },
+    {
+      "name": "base_angled_small_01",
+      "size": [
+        2.1999995708465576,
+        2.200000047683716,
+        0.75
+      ],
+      "location": [
+        -15.0,
+        5.960464477539062e-07,
+        -2.0
+      ],
+      "vertices": 25
+    },
+    {
+      "name": "base_corner_large_02",
+      "size": [
+        3.0,
+        3.0,
+        0.75
+      ],
+      "location": [
+        -4.0,
+        1.0,
+        -2.0
+      ],
+      "vertices": 15
+    },
+    {
+      "name": "base_corner_large_01",
+      "size": [
+        3.200000047683716,
+        3.200000047683716,
+        0.75
+      ],
+      "location": [
+        -4.0,
+        0.0,
+        -2.0
+      ],
+      "vertices": 15
+    },
+    {
+      "name": "base_corner_small_02",
+      "size": [
+        2.0,
+        2.0,
+        0.75
+      ],
+      "location": [
+        -12.0,
+        2.0,
+        -2.0
+      ],
+      "vertices": 15
+    },
+    {
+      "name": "base_corner_small_01",
+      "size": [
+        2.200000047683716,
+        2.200000047683716,
+        0.75
+      ],
+      "location": [
+        -12.0,
+        1.4210854715202004e-14,
+        -2.0
+      ],
+      "vertices": 15
+    },
+    {
+      "name": "dado_end_02",
+      "size": [
+        0.1400000900030136,
+        0.08000028133392334,
+        0.4999999701976776
+      ],
+      "location": [
+        -23.900001525878906,
+        0.0,
+        -1.0
+      ],
+      "vertices": 15
+    },
+    {
+      "name": "dado_end_01",
+      "size": [
+        0.14000029861927032,
+        0.08000002801418304,
+        0.4999999701976776
+      ],
+      "location": [
+        -24.099998474121094,
+        0.0,
+        -1.0
+      ],
+      "vertices": 15
+    },
+    {
+      "name": "dado_door_centered_large_01",
+      "size": [
+        3.0,
+        0.08000030368566513,
+        0.4999999701976776
+      ],
+      "location": [
+        11.0,
+        0.0,
+        -1.0
+      ],
+      "vertices": 40
+    },
+    {
+      "name": "dado_door_centered_small_01",
+      "size": [
+        3.0,
+        0.08000030368566513,
+        0.4999999701976776
+      ],
+      "location": [
+        15.0,
+        0.0,
+        -1.0
+      ],
+      "vertices": 40
+    },
+    {
+      "name": "dado_door_angled_large_01",
+      "size": [
+        3.0399999618530273,
+        3.0400002002716064,
+        0.5000000596046448
+      ],
+      "location": [
+        4.0,
+        0.0,
+        -1.0
+      ],
+      "vertices": 30
+    },
+    {
+      "name": "dado_door_angled_small_01",
+      "size": [
+        2.0399999618530273,
+        2.0399999618530273,
+        0.4999999701976776
+      ],
+      "location": [
+        7.0,
+        5.960464477539063e-08,
+        -1.0
+      ],
+      "vertices": 30
+    },
+    {
+      "name": "dado_door_centered_small_02",
+      "size": [
+        3.0,
+        0.08000030368566513,
+        0.4999999701976776
+      ],
+      "location": [
+        19.0,
+        0.0,
+        -1.0
+      ],
+      "vertices": 40
+    },
+    {
+      "name": "dado_door_offset_small_01",
+      "size": [
+        3.0,
+        0.08000030368566513,
+        0.5000000596046448
+      ],
+      "location": [
+        23.0,
+        0.0,
+        -1.0
+      ],
+      "vertices": 35
+    },
+    {
+      "name": "dado_door_offset_small_02",
+      "size": [
+        3.0000014305114746,
+        0.08000030368566513,
+        0.4999999701976776
+      ],
+      "location": [
+        23.0,
+        2.0,
+        -1.0
+      ],
+      "vertices": 35
+    },
+    {
+      "name": "dado_door_window_small_01",
+      "size": [
+        3.0000016689300537,
+        0.08000029623508453,
+        0.4999999701976776
+      ],
+      "location": [
+        27.0,
+        0.0,
+        -1.0
+      ],
+      "vertices": 30
+    },
+    {
+      "name": "dado_standard_standard_01",
+      "size": [
+        3.0,
+        0.040000032633543015,
+        0.4999999701976776
+      ],
+      "location": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "vertices": 10
+    },
+    {
+      "name": "dado_standard_angled_large_01",
+      "size": [
+        3.0399997234344482,
+        3.0400002002716064,
+        0.4999999701976776
+      ],
+      "location": [
+        -8.0,
+        4.76837158203125e-07,
+        -1.0
+      ],
+      "vertices": 25
+    },
+    {
+      "name": "dado_standard_angled_small_01",
+      "size": [
+        2.0399999618530273,
+        2.0399999618530273,
+        0.4999999701976776
+      ],
+      "location": [
+        -15.0,
+        5.960464477539062e-07,
+        -1.0
+      ],
+      "vertices": 20
+    },
+    {
+      "name": "dado_standard_corner_large_01",
+      "size": [
+        3.0400004386901855,
+        3.0399999618530273,
+        0.4999999701976776
+      ],
+      "location": [
+        -4.0,
+        0.0,
+        -1.0
+      ],
+      "vertices": 15
+    },
+    {
+      "name": "dado_standard_corner_large_02",
+      "size": [
+        3.0,
+        3.000000238418579,
+        0.4999999701976776
+      ],
+      "location": [
+        -4.0,
+        1.0,
+        -1.0
+      ],
+      "vertices": 15
+    },
+    {
+      "name": "dado_standard_corner_small_01",
+      "size": [
+        2.0400004386901855,
+        2.0399999618530273,
+        0.4999999701976776
+      ],
+      "location": [
+        -12.0,
+        1.4210854715202004e-14,
+        -1.0
+      ],
+      "vertices": 15
+    },
+    {
+      "name": "dado_standard_corner_small_02",
+      "size": [
+        2.0,
+        2.000000238418579,
+        0.4999999701976776
+      ],
+      "location": [
+        -12.0,
+        2.0,
+        -1.0
+      ],
+      "vertices": 15
+    },
+    {
+      "name": "dado_pier_pedestal_01",
+      "size": [
+        0.39999935030937195,
+        0.12999995052814484,
+        0.5399999618530273
+      ],
+      "location": [
+        -22.0,
+        1.1920928955078125e-07,
+        -1.0
+      ],
+      "vertices": 36
+    },
+    {
+      "name": "dado_pier_angled_01",
+      "size": [
+        0.5699125528335571,
+        0.3492027521133423,
+        0.5399999618530273
+      ],
+      "location": [
+        -18.0,
+        -1.1920928955078125e-07,
+        -1.0
+      ],
+      "vertices": 46
+    },
+    {
+      "name": "dado_pier_corner_01",
+      "size": [
+        0.4100000262260437,
+        0.4099997878074646,
+        0.5399999618530273
+      ],
+      "location": [
+        -20.0,
+        0.0,
+        -1.0
+      ],
+      "vertices": 46
+    },
+    {
+      "name": "dado_pier_corner_02",
+      "size": [
+        0.37999969720840454,
+        0.3799985349178314,
+        0.5399999022483826
+      ],
+      "location": [
+        -20.0,
+        2.0,
+        -1.0
+      ],
+      "vertices": 46
+    },
+    {
+      "name": "cornice_end_02",
+      "size": [
+        0.13999998569488525,
+        0.14000001549720764,
+        0.20000045001506805
+      ],
+      "location": [
+        -23.900001525878906,
+        0.0,
+        3.4000000953674316
+      ],
+      "vertices": 30
+    },
+    {
+      "name": "cornice_end_01",
+      "size": [
+        0.13999998569488525,
+        0.14000001549720764,
+        0.20000045001506805
+      ],
+      "location": [
+        -24.099998474121094,
+        0.0,
+        3.4000000953674316
+      ],
+      "vertices": 30
+    },
+    {
+      "name": "cornice_standard_standard_01",
+      "size": [
+        3.0,
+        0.03999999910593033,
+        0.19999997317790985
+      ],
+      "location": [
+        0.0,
+        0.0,
+        3.4000000953674316
+      ],
+      "vertices": 20
+    },
+    {
+      "name": "cornice_standard_angled_large_01",
+      "size": [
+        3.0399999618530273,
+        3.0399999618530273,
+        0.20000045001506805
+      ],
+      "location": [
+        -8.0,
+        4.76837158203125e-07,
+        3.4000000953674316
+      ],
+      "vertices": 50
+    },
+    {
+      "name": "cornice_standard_angled_small_01",
+      "size": [
+        2.0399999618530273,
+        2.0399999618530273,
+        0.20000021159648895
+      ],
+      "location": [
+        -15.0,
+        5.960464477539062e-07,
+        3.4000000953674316
+      ],
+      "vertices": 50
+    },
+    {
+      "name": "cornice_standard_corner_large_01",
+      "size": [
+        3.0400002002716064,
+        3.0400002002716064,
+        0.20000045001506805
+      ],
+      "location": [
+        -4.0,
+        0.0,
+        3.4000000953674316
+      ],
+      "vertices": 30
+    },
+    {
+      "name": "cornice_standard_corner_large_02",
+      "size": [
+        3.000000238418579,
+        3.0,
+        0.19999997317790985
+      ],
+      "location": [
+        -4.0,
+        1.0,
+        3.4000000953674316
+      ],
+      "vertices": 30
+    },
+    {
+      "name": "cornice_standard_corner_small_01",
+      "size": [
+        2.0400002002716064,
+        2.0399999618530273,
+        0.20000045001506805
+      ],
+      "location": [
+        -12.0,
+        1.4210854715202004e-14,
+        3.4000000953674316
+      ],
+      "vertices": 30
+    },
+    {
+      "name": "cornice_standard_corner_small_02",
+      "size": [
+        2.000000238418579,
+        2.0,
+        0.19999997317790985
+      ],
+      "location": [
+        -12.0,
+        2.0,
+        3.4000000953674316
+      ],
+      "vertices": 30
+    },
+    {
+      "name": "cornice_pier_angled_01",
+      "size": [
+        0.4974862337112427,
+        0.27677634358406067,
+        0.20000013709068298
+      ],
+      "location": [
+        -18.0,
+        -1.1920928955078125e-07,
+        3.3999996185302734
+      ],
+      "vertices": 40
+    },
+    {
+      "name": "cornice_pier_corner_01",
+      "size": [
+        0.3500000238418579,
+        0.3499997556209564,
+        0.20000013709068298
+      ],
+      "location": [
+        -20.0,
+        0.0,
+        3.3999996185302734
+      ],
+      "vertices": 40
+    },
+    {
+      "name": "cornice_pier_standard_01",
+      "size": [
+        0.3499990403652191,
+        0.09999994933605194,
+        0.20000013709068298
+      ],
+      "location": [
+        -22.0,
+        1.1920928955078125e-07,
+        3.3999996185302734
+      ],
+      "vertices": 32
+    },
+    {
+      "name": "cornice_pier_corner_02",
+      "size": [
+        0.34999972581863403,
+        0.3499985337257385,
+        0.20000004768371582
+      ],
+      "location": [
+        -20.0,
+        2.0,
+        3.3999996185302734
+      ],
+      "vertices": 40
+    },
+    {
+      "name": "crown_standard_angled_large_01",
+      "size": [
+        3.3299999237060547,
+        3.3299999237060547,
+        0.75
+      ],
+      "location": [
+        -8.0,
+        4.76837158203125e-07,
+        4.0
+      ],
+      "vertices": 808
+    },
+    {
+      "name": "crown_standard_standard_01",
+      "size": [
+        3.0000016689300537,
+        0.429999977350235,
+        0.75
+      ],
+      "location": [
+        0.0,
+        0.0,
+        4.0
+      ],
+      "vertices": 470
+    },
+    {
+      "name": "crown_standard_angled_small_01",
+      "size": [
+        2.3299999237060547,
+        2.3299999237060547,
+        0.75
+      ],
+      "location": [
+        -15.0,
+        5.960464477539062e-07,
+        4.0
+      ],
+      "vertices": 610
+    },
+    {
+      "name": "crown_end_02",
+      "size": [
+        0.4300003945827484,
+        0.4300001561641693,
+        0.75
+      ],
+      "location": [
+        -23.900001525878906,
+        0.0,
+        4.0
+      ],
+      "vertices": 213
+    },
+    {
+      "name": "crown_end_01",
+      "size": [
+        0.4300003945827484,
+        0.4300001561641693,
+        0.75
+      ],
+      "location": [
+        -24.099998474121094,
+        0.0,
+        4.0
+      ],
+      "vertices": 213
+    },
+    {
+      "name": "crown_standard_corner_large_01",
+      "size": [
+        3.3300015926361084,
+        3.3300018310546875,
+        0.75
+      ],
+      "location": [
+        -4.0,
+        0.0,
+        4.0
+      ],
+      "vertices": 1011
+    },
+    {
+      "name": "crown_standard_corner_large_02",
+      "size": [
+        3.100003719329834,
+        3.1000027656555176,
+        0.75
+      ],
+      "location": [
+        -4.0,
+        1.0,
+        4.0
+      ],
+      "vertices": 938
+    },
+    {
+      "name": "crown_standard_corner_small_01",
+      "size": [
+        2.330000638961792,
+        2.3300018310546875,
+        0.75
+      ],
+      "location": [
+        -12.0,
+        1.4210854715202004e-14,
+        4.0
+      ],
+      "vertices": 747
+    },
+    {
+      "name": "crown_standard_corner_small_02",
+      "size": [
+        2.100003719329834,
+        2.100001811981201,
+        0.75
+      ],
+      "location": [
+        -12.0,
+        2.0,
+        4.0
+      ],
+      "vertices": 674
+    },
+    {
+      "name": "crown_pier_pedestal_01",
+      "size": [
+        0.7099997997283936,
+        0.5249999761581421,
+        0.8349999785423279
+      ],
+      "location": [
+        -22.0,
+        1.1920928955078125e-07,
+        4.0
+      ],
+      "vertices": 110
+    },
+    {
+      "name": "crown_pier_corner_01",
+      "size": [
+        0.8550006151199341,
+        0.8550006151199341,
+        0.8350000381469727
+      ],
+      "location": [
+        -20.0,
+        0.0,
+        4.0
+      ],
+      "vertices": 109
+    },
+    {
+      "name": "crown_pier_angled_01",
+      "size": [
+        1.0720901489257812,
+        0.8257213830947876,
+        0.8350000977516174
+      ],
+      "location": [
+        -18.0,
+        -1.1920928955078125e-07,
+        4.0
+      ],
+      "vertices": 109
+    },
+    {
+      "name": "crown_pier_corner_02",
+      "size": [
+        0.630003035068512,
+        0.6300016641616821,
+        0.8349995613098145
+      ],
+      "location": [
+        -20.0,
+        2.0,
+        4.0
+      ],
+      "vertices": 113
+    }
+  ],
+  "materials": [
+    {
+      "name": "modular_urban_apartments_facade_glass",
+      "images": []
+    },
+    {
+      "name": "modular_urban_apartments_facade_objects",
+      "images": [
+        "modular_urban_apartments_facade_objects_alpha_1k.png",
+        "modular_urban_apartments_facade_objects_diff_1k.png",
+        "modular_urban_apartments_facade_objects_metal_1k.png",
+        "modular_urban_apartments_facade_objects_nor_gl_1k.png",
+        "modular_urban_apartments_facade_objects_rough_1k.png"
+      ]
+    },
+    {
+      "name": "modular_urban_apartments_facade_plaster",
+      "images": [
+        "modular_urban_apartments_facade_plaster_diff_1k.png",
+        "modular_urban_apartments_facade_plaster_nor_gl_1k.png",
+        "modular_urban_apartments_facade_plaster_rough_1k.png"
+      ]
+    },
+    {
+      "name": "modular_urban_apartments_facade_trim_01",
+      "images": [
+        "modular_urban_apartments_facade_trim_01_diff_1k.png",
+        "modular_urban_apartments_facade_trim_01_nor_gl_1k.png",
+        "modular_urban_apartments_facade_trim_01_rough_1k.png"
+      ]
+    },
+    {
+      "name": "modular_urban_apartments_facade_trim_02",
+      "images": [
+        "modular_urban_apartments_facade_trim_02_diff_1k.png",
+        "modular_urban_apartments_facade_trim_02_nor_gl_1k.png",
+        "modular_urban_apartments_facade_trim_02_rough_1k.png"
+      ]
+    }
+  ]
+}

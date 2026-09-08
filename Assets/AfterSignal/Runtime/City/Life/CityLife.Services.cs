@@ -8,6 +8,7 @@ namespace AfterSignal
         public void Services()
         {
             int site = UrbanCatalog.Current;
+            if(game.stage==StageId.UrbanInterior&&UrbanCatalog.IsGarage(site)){Garage();return;}
             int type = game.stage == StageId.Clinic ? 4 : game.stage == StageId.Headquarters ? 14 : game.stage == StageId.School ? 5 : UrbanCatalog.Kind(site);
             bool hotel = game.stage == StageId.UrbanInterior && UrbanCatalog.IsHotel(site);
             Panel("service", hotel ? "애프터뷰 호텔" : game.stage == StageId.UrbanInterior ? UrbanCatalog.Name(site) : CivicWorld.Title(game.stage), "잔액 " + LifeState.Credits.ToString("N0") + " C · 원하시는 서비스를 선택하세요.");
@@ -43,21 +44,23 @@ namespace AfterSignal
                     break;
                 case 6:
                 case 8:
-                    Option("야간 순찰 코트 / 650 C", () => BuyClothes(2, 650));
-                    Option("도시 여행 코트 / 850 C", () => BuyClothes(3, 850));
+                    Option("BLACKLINE 무기 매장",()=>Armory());
+                    Option("야간 순찰 코트 / 650 C", () => BuyClothes(2, 650), "NightCoat");
+                    Option("도시 여행 코트 / 850 C", () => BuyClothes(3, 850), "TravelCoat");
                     Option("구매한 의상 착용", Wardrobe);
                     break;
                 case 7:
-                    Option("도시락 / 체력 +40 · 45 C", () => Purchase(45, () => game.Player.Heal(40)));
-                    Option("에너지 음료 / 에너지 +60 · 35 C", () => Purchase(35, () => game.Player.RestoreEnergy(60)));
+                    Option("도시락 / 체력 +40 · 45 C", () => Purchase(45, () => game.Player.Heal(40)), "LunchBox");
+                    Option("에너지 음료 / 에너지 +60 · 35 C", () => Purchase(35, () => game.Player.RestoreEnergy(60)), "EnergyDrink");
                     break;
                 case 9:
-                    Option("따뜻한 정식 / 체력 +80 · 90 C", () => Purchase(90, () => game.Player.Heal(80)));
+                    Option("\uD640 \uC11C\uBE59 \uC544\uB974\uBC14\uC774\uD2B8 \uC2DC\uC791", () => BeginShift(false));
+                    Option("따뜻한 정식 / 체력 +80 · 90 C", () => Purchase(90, () => game.Player.Heal(80)), "WarmMeal");
                     Option("든든한 특선 / 완전 회복 · 140 C", () => Purchase(140, () =>
                     {
                         game.Player.Heal(100);
                         game.Player.RestoreEnergy(100);
-                    }));
+                    }), "SpecialMeal");
                     break;
                 case 10:
                     Option("중앙역 임무 출발", () =>
@@ -91,15 +94,18 @@ namespace AfterSignal
                     Option("신호 복원 활동 수당 / 하루 120 C", () => Daily("signal", 120, "도시 신호 복원 활동 수당을 받았습니다."));
                     break;
                 case 15:
-                    Option("따뜻한 커피 / 에너지 +70 · 35 C", () => Purchase(35, () => game.Player.RestoreEnergy(70)));
+                    Option("\uBC14\uB9AC\uC2A4\uD0C0 \uC544\uB974\uBC14\uC774\uD2B8 \uC2DC\uC791", () => BeginShift(true));
+                    Option("따뜻한 커피 / 에너지 +70 · 35 C", () => Purchase(35, () => game.Player.RestoreEnergy(70)), "Coffee");
                     Option("커피와 샌드위치 / 체력 +45 · 60 C", () => Purchase(60, () =>
                     {
                         game.Player.Heal(45);
                         game.Player.RestoreEnergy(45);
-                    }));
+                    }), "SandwichSet");
                     break;
             }
 
+            if(game.stage==StageId.UrbanInterior&&(type==3||type==7||type==9||type==15))
+                Option("\uD604\uAE08 \uAC15\uD0C8 \uC2DC\uB3C4",()=>UrbanCrime.Instance.StartHeist());
             if (LifeState.Errand != null && LifeState.Errand.accepted && !LifeState.Errand.completed && LifeState.Errand.site == site && game.stage == StageId.UrbanInterior && LifeState.Errand.kind != "rooftop")
                 Option("숨은 의뢰 · 전달 / 확인", CompleteErrand);
             var staff = FindObjectsByType<CityNpc>(FindObjectsSortMode.None);
@@ -149,13 +155,7 @@ namespace AfterSignal
 
         void Work(string id, int reward, float hours)
         {
-            int before = LifeState.Credits;
-            Daily(id, reward, "업무를 마쳤습니다.");
-            if (LifeState.Credits > before)
-            {
-                LifeState.Hours += hours;
-                LifeState.Save();
-            }
+            Dismiss();FacilityOperation.Begin(id,reward,hours);
         }
 
         void Purchase(int price, Action effect)

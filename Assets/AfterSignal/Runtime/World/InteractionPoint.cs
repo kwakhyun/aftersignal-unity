@@ -38,7 +38,8 @@ namespace AfterSignal
         Wardrobe,
         Sleep,
         Viewpoint,
-        HiddenErrand
+        HiddenErrand,
+        Story
     }
 
     public sealed class InteractionPoint : MonoBehaviour
@@ -72,6 +73,15 @@ namespace AfterSignal
         public bool CanReach(PlayerMotor player) => Vector3.Distance(transform.position, player.Shoulder) < radius;
         public void Interact(GameDirector game)
         {
+            var credits=GetComponent<CreditDrop>();if(credits){credits.Collect();return;}
+            var armory=GetComponent<ArmoryCounter>();if(armory){armory.Open();return;}
+            var work=GetComponent<FacilityWorkPoint>();if(work){work.Use();return;}
+            var prop=GetComponent<UsableProp>();if(prop){prop.Use(game);return;}
+            var facility=GetComponent<FacilityConsole>();if(facility){facility.Open();return;}
+            var floorAccess=GetComponent<FloorAccess>();if(floorAccess){floorAccess.Open();return;}
+
+            var expansion=GetComponent<ExpansionService>();if(expansion){expansion.Open();return;}
+            var story=GetComponent<StoryObjective>();if(story&&story.owner){story.owner.Interact();return;}
             if (CityLife.Instance && CityLife.Instance.Interact(this))
                 return;
             switch (kind)

@@ -85,12 +85,14 @@ namespace AfterSignal
                     if (Telegraph <= 0 && !fired)
                     {
                         fired = true;
+                        if(kind!="gunner")director.Audio.Play(kind=="shield"?"heavy_swing":"blade_swing",transform.position+Vector3.up,.3f,1);
                         cooldown = kind == "gunner" ? 1.7f : 1.15f;
                         followThrough = kind == "gunner" ? .34f : .42f;
                         if (kind == "gunner")
                         {
                             Vector3 start = transform.position + new Vector3(Facing * .6f, 1.25f, 0);
                             Vector3 end = lockedAim;
+                            director.Audio.PlayGun(GunshotKind.Rifle, start);
                             SignalEffects.Beam(start, end, SignalEffects.Red, .035f, .2f);
                             var shot = (end - start).normalized;
                             if (Physics.Raycast(start, shot, out var contact, 16, (1 << 0) | (1 << 8), QueryTriggerInteraction.Ignore) && contact.collider.GetComponentInParent<PlayerMotor>())
@@ -189,6 +191,7 @@ namespace AfterSignal
             }
 
             Health = Mathf.Max(0, Health - amount);
+            if(Health>0)director.Audio.Play("hurt",transform.position,.25f,2);
             hurt = .2f;
             knockback = force;
             if (core)
@@ -196,6 +199,7 @@ namespace AfterSignal
             director.DamageNumber(transform.position + Vector3.up * 2.5f, Mathf.CeilToInt(amount), core);
             if (Health <= 0)
             {
+                CorpseBlood.Attach(gameObject);
                 director.EnemyDied(this);
                 controller.enabled = false;
                 deathTime = 0;

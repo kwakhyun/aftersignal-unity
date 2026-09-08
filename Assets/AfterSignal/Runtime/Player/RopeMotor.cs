@@ -81,7 +81,7 @@ namespace AfterSignal
             Vector3 delta = Target.transform.position - player.Shoulder;
             var v = player.Velocity;
             v += delta.normalized * (Mathf.Max(0, delta.magnitude - Length) * 48f + 5f) * dt;
-            v.x += input.move.x * 17f * dt;
+            v += player.Director.CameraRig.ViewRight * (input.move.x * 17f * dt);
             player.Velocity = Vector3.ClampMagnitude(v, Target.cityAnchor ? 32 : 24f);
             if (Target.cityAnchor && Target.hasLanding && input.move.y > .1f && Vector3.Distance(player.Shoulder, Target.transform.position) < 3.3f)
             {
@@ -100,6 +100,7 @@ namespace AfterSignal
             if (input.jump)
             {
                 player.Velocity += Vector3.up * 5.5f;
+                player.Director.Audio.Play("jump",player.Shoulder,.22f,1);
                 Release();
             }
         }

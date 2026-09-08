@@ -9,9 +9,11 @@ namespace AfterSignal
         GameObject lifePanel;
         Text lifeTitle, lifeBody, lifeStatus, lifeQuest;
         InputField lifeInput;
-        Button lifeSend;
+        Button lifeSend, lifeClose;
         Image sleepShade;
         readonly Button[] lifeOptions = new Button[7];
+        readonly Image[] lifeItemImages = new Image[7];
+        readonly Text[] lifeItemActions = new Text[7];
         int lifeRevision = -1;
         void BuildLifeHud()
         {
@@ -21,12 +23,12 @@ namespace AfterSignal
             lifeQuest = Label(root, "", 0, 0, 440, 88, 16, mint);
             Right(lifeQuest.rectTransform, 32, 354, 440, 88);
             lifeQuest.alignment = TextAnchor.UpperRight;
-            lifePanel = Panel(root, "City life", 0, 0, 1040, 690, new Color(.025f, .06f, .085f, .99f)).gameObject;
+            lifePanel = Panel(root, "City life", 0, 0, 1040, 690, new Color(.025f, .06f, .085f, 1)).gameObject;
             Center(lifePanel.GetComponent<RectTransform>(), 1040, 690);
             lifeTitle = Label(lifePanel.transform, "", 36, 26, 820, 44, 29, white, FontStyle.Bold);
             lifeBody = Label(lifePanel.transform, "", 36, 91, 968, 320, 20, white);
             lifeBody.verticalOverflow = VerticalWrapMode.Truncate;
-            MakeButton(lifePanel.transform, "닫기  ESC", 870, 28, 132, 38, () => CityLife.Instance.Dismiss());
+            lifeClose = MakeButton(lifePanel.transform, "닫기  ESC", 870, 28, 132, 38, () => CityLife.Instance.Dismiss());
             for (int i = 0; i < lifeOptions.Length; i++)
             {
                 int selected = i;
@@ -37,6 +39,15 @@ namespace AfterSignal
                         life.Options[selected].action();
                 });
                 lifeOptions[i].GetComponentInChildren<Text>().fontSize = 16;
+                var icon = new GameObject("Shop item image", typeof(RectTransform), typeof(Image));
+                icon.transform.SetParent(lifeOptions[i].transform, false);
+                lifeItemImages[i] = icon.GetComponent<Image>();
+                lifeItemImages[i].preserveAspect = true;
+                lifeItemImages[i].raycastTarget = false;
+                PlaceLifeElement(lifeItemImages[i].rectTransform, 16, 23, 200, 200);
+                icon.SetActive(false);
+                lifeItemActions[i] = Label(lifeOptions[i].transform, "", 232, 170, 222, 28, 16, mint);
+                lifeItemActions[i].gameObject.SetActive(false);
             }
 
             var field = Panel(lifePanel.transform, "Reply", 36, 616, 790, 45, new Color(.07f, .13f, .17f));
@@ -51,6 +62,7 @@ namespace AfterSignal
             sleepShade = Panel(root, "Sleep fade", 0, 0, 1600, 900, Color.clear);
             Stretch(sleepShade.rectTransform);
             sleepShade.gameObject.SetActive(false);
+            BuildConversationPresentation();
         }
 
         void SendLifeText()
@@ -121,14 +133,42 @@ namespace AfterSignal
                     lifeRevision = life.Revision;
                     lifeTitle.text = life.Heading;
                     lifeBody.text = life.Body;
+                    bool illustrated = life.Options.Exists(option => ShopItemArt.Get(option.image));
+                    PlaceLifeElement(lifeBody.rectTransform, 36, 91, 968, illustrated ? 78 : 320);
+                    int cardIndex = 0, plainIndex = 0;
                     for (int i = 0; i < lifeOptions.Length; i++)
                     {
                         lifeOptions[i].gameObject.SetActive(i < life.Options.Count);
-                        if (i < life.Options.Count)
-                            ButtonText(lifeOptions[i], life.Options[i].label);
+                        if (i >= life.Options.Count) continue;
+                        var option = life.Options[i];
+                        var sprite = ShopItemArt.Get(option.image);
+                        var label = lifeOptions[i].GetComponentInChildren<Text>();
+                        lifeItemImages[i].gameObject.SetActive(sprite);
+                        lifeItemImages[i].sprite = sprite;
+                        lifeItemActions[i].gameObject.SetActive(sprite);
+                        if (sprite)
+                        {
+                            PlaceLifeElement(lifeOptions[i].GetComponent<RectTransform>(), 36 + cardIndex % 2 * 492, 190 + cardIndex / 2 * 260, 474, 246);
+                            PlaceLifeElement(label.rectTransform, 232, 35, 222, 125);
+                            label.alignment = TextAnchor.MiddleLeft;
+                            label.fontSize = 20;
+                            label.text = option.label.Replace(" / ", "\n");
+                            lifeItemActions[i].text = life.Mode == "wardrobe" ? "선택" : "구매";
+                            cardIndex++;
+                        }
+                        else
+                        {
+                            PlaceLifeElement(lifeOptions[i].GetComponent<RectTransform>(), 36 + plainIndex % 2 * 492, (illustrated ? 500 : 420) + plainIndex / 2 * 52, 474, 44);
+                            PlaceLifeElement(label.rectTransform, 10, 0, 454, 44);
+                            label.alignment = TextAnchor.MiddleCenter;
+                            label.fontSize = 16;
+                            label.text = option.label;
+                            plainIndex++;
+                        }
                     }
                 }
 
+                ConversationLayout(life);
                 bool talk = life.Mode == "talk";
                 lifeInput.gameObject.SetActive(talk);
                 lifeSend.gameObject.SetActive(talk);
@@ -141,6 +181,13 @@ namespace AfterSignal
                 life.TextFocused = false;
             sleepShade.gameObject.SetActive(life.SleepFade > 0);
             sleepShade.color = new Color(.005f, .012f, .025f, life.SleepFade);
+        }
+
+        static void PlaceLifeElement(RectTransform rect, float x, float y, float width, float height)
+        {
+            rect.anchorMin = rect.anchorMax = rect.pivot = new Vector2(0, 1);
+            rect.anchoredPosition = new Vector2(x, -y);
+            rect.sizeDelta = new Vector2(width, height);
         }
     }
 }

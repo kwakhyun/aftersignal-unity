@@ -26,6 +26,7 @@ namespace AfterSignal
         };
         Sprite[] frames;
         float clock;
+        SeoLocomotion locomotion;
         Sprite[] katanaFrames;
         readonly Sprite[][] actionFrames = new Sprite[3][];
         readonly Sprite[][] depthFrames = new Sprite[3][];
@@ -132,12 +133,30 @@ namespace AfterSignal
         public void TickHero(PlayerMotor p, float dt)
         {
             Initialize();
+            bool illustratedFlip;
+            var illustrated = SeoSpriteSet.Pose(p, clock, out illustratedFlip);
+            if(!locomotion)locomotion=gameObject.AddComponent<SeoLocomotion>();
+            var gait=locomotion.Tick(p,dt);
+            if(gait)
+            {illustrated=gait;illustratedFlip=locomotion.Flip;}
+            if (illustrated)
+            {
+                clock += dt;
+                Pose(0, illustratedFlip ? -1 : 1,p.HurtTime>0?.5f:0,locomotion.Lean);
+                visual.sprite = illustrated; lastFrame = -1;
+                // Illustrated sprites move smoothly in the 3D camera; pixel snapping caused visible judder.
+                visual.transform.position = transform.position + locomotion.Offset;
+                visual.transform.localScale = Vector3.one * bodyScale;
+                return;
+            }
             visual.transform.localScale = new Vector3(1 + (p.LandingTime > 0 ? .035f : 0), 1 - (p.LandingTime > 0 ? .035f : 0), 1) * bodyScale;
             float speed = new Vector2(p.Velocity.x, p.Velocity.z).magnitude;
             clock += dt * (speed > .5f ? Mathf.Lerp(.45f, 1, Mathf.Clamp01(speed / 7.6f)) : 1);
+            var right = p.Director.CameraRig.ViewRight;
+            float sideSpeed = Vector3.Dot(p.Velocity, right), depthSpeed = Vector3.Dot(p.Velocity, Vector3.Cross(right, Vector3.up));
             if (speed > .5f)
-                depthFacing = Mathf.Abs(p.Velocity.z) > Mathf.Abs(p.Velocity.x) * 1.2f ? (p.Velocity.z > 0 ? 1 : -1) : 0;
-            if (p.HurtTime <= 0 && !p.Reloading && p.AttackTime <= 0 && (p.DashTime <= 0 || Mathf.Abs(p.DashDirection.z) > .5f) && p.Grounded && !p.Guarding && depthFacing != 0 && depthFrames[(int)p.Weapon].Length == 8)
+                depthFacing = Mathf.Abs(depthSpeed) > Mathf.Abs(sideSpeed) * 1.2f ? (depthSpeed > 0 ? 1 : -1) : 0;
+            if (p.HurtTime <= 0 && !p.Reloading && p.AttackTime <= 0 && (p.DashTime <= 0 || Mathf.Abs(Vector3.Dot(p.DashDirection, Vector3.Cross(right, Vector3.up))) > .5f) && p.Grounded && !p.Guarding && depthFacing != 0 && depthFrames[(int)p.Weapon].Length == 8)
             {
                 int index = (depthFacing > 0 ? 4 : 0) + (speed > .5f ? (int)(clock * 7) % 4 : 0);
                 Pose(0, 1);
@@ -233,6 +252,11 @@ namespace AfterSignal
         public bool TryMuzzle(float facing, out Vector3 point)
         {
             point = Vector3.zero;
+            if(art=="Hero" && visual && visual.sprite && visual.sprite.name.StartsWith("Pistol-"))
+            {
+                var b=SeoSpriteSet.Frame("Pistol",0).bounds;
+                point=visual.transform.TransformPoint(new Vector3(facing*b.max.x,b.min.y+b.size.y*.8f,0));return true;
+            }
             if (!pistolPose || gunPoints == null || actionIndex < 0 || actionIndex >= gunPoints.points.Length)
                 return false;
             var pixel = gunPoints.points[actionIndex];

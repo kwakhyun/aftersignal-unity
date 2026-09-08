@@ -1,0 +1,511 @@
+fileFormatVersion: 2
+guid: 99d0b593bd6d5e24382782649247dc14
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 133.89424
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 0
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: 4
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: ElderWoman-00
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1051
+        width: 280
+        height: 351
+      alignment: 9
+      pivot: {x: 0.5712864, y: 0.07977208}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5724358f993229e0800000000000000
+      internalID: -1647691156366809253
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ElderWoman-01
+      rect:
+        serializedVersion: 2
+        x: 280
+        y: 1051
+        width: 281
+        height: 351
+      alignment: 9
+      pivot: {x: 0.5183441, y: 0.07977208}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 45011faf2fdeb2770800000000000000
+      internalID: 8587218742359953492
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ElderWoman-02
+      rect:
+        serializedVersion: 2
+        x: 561
+        y: 1051
+        width: 280
+        height: 351
+      alignment: 9
+      pivot: {x: 0.46437198, y: 0.07122507}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9570eca62594725e0800000000000000
+      internalID: -1934496896604305575
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ElderWoman-03
+      rect:
+        serializedVersion: 2
+        x: 841
+        y: 1051
+        width: 281
+        height: 351
+      alignment: 9
+      pivot: {x: 0.4080756, y: 0.074074075}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee273da9a07a498f0800000000000000
+      internalID: -534618791761186066
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ElderWoman-04
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 701
+        width: 280
+        height: 350
+      alignment: 9
+      pivot: {x: 0.54715174, y: 0.12}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b10e38d7d0bc26580800000000000000
+      internalID: -8835276260146683877
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ElderWoman-05
+      rect:
+        serializedVersion: 2
+        x: 280
+        y: 701
+        width: 281
+        height: 350
+      alignment: 9
+      pivot: {x: 0.48389766, y: 0.12}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e04c7db3f5a37d470800000000000000
+      internalID: 8419262209092731918
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ElderWoman-06
+      rect:
+        serializedVersion: 2
+        x: 561
+        y: 701
+        width: 280
+        height: 350
+      alignment: 9
+      pivot: {x: 0.43944803, y: 0.12}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a15d32fafb3fc990800000000000000
+      internalID: -7363600916735503968
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ElderWoman-07
+      rect:
+        serializedVersion: 2
+        x: 841
+        y: 701
+        width: 281
+        height: 350
+      alignment: 9
+      pivot: {x: 0.41119075, y: 0.117142856}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a1245c71f802d000800000000000000
+      internalID: 59119578375266726
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ElderWoman-08
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 361
+        width: 280
+        height: 340
+      alignment: 9
+      pivot: {x: 0.5470297, y: 0.15}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8eabd23b44b023420800000000000000
+      internalID: 2608159523892738792
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ElderWoman-09
+      rect:
+        serializedVersion: 2
+        x: 280
+        y: 354
+        width: 281
+        height: 347
+      alignment: 9
+      pivot: {x: 0.482874, y: 0.16138329}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 63c9f6d1ad0042440800000000000000
+      internalID: 4910050430537407542
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ElderWoman-10
+      rect:
+        serializedVersion: 2
+        x: 561
+        y: 354
+        width: 280
+        height: 347
+      alignment: 9
+      pivot: {x: 0.4363253, y: 0.16138329}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb1e0ecd229689700800000000000000
+      internalID: 547302953181045179
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ElderWoman-11
+      rect:
+        serializedVersion: 2
+        x: 841
+        y: 354
+        width: 281
+        height: 347
+      alignment: 9
+      pivot: {x: 0.41545606, y: 0.16426513}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: baf396ece1b49e100800000000000000
+      internalID: 137723859295616939
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ElderWoman-12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 280
+        height: 361
+      alignment: 9
+      pivot: {x: 0.54345596, y: 0.2132964}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ff9168af1c9dd12b0800000000000000
+      internalID: -5612090133478761985
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ElderWoman-13
+      rect:
+        serializedVersion: 2
+        x: 280
+        y: 0
+        width: 281
+        height: 354
+      alignment: 9
+      pivot: {x: 0.4993966, y: 0.22033899}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6b34dfcc5df293ac0800000000000000
+      internalID: -3875013409061911626
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ElderWoman-14
+      rect:
+        serializedVersion: 2
+        x: 561
+        y: 0
+        width: 280
+        height: 354
+      alignment: 9
+      pivot: {x: 0.43775907, y: 0.22033899}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f7899fe97d5c68770800000000000000
+      internalID: 8612788867268450431
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ElderWoman-15
+      rect:
+        serializedVersion: 2
+        x: 841
+        y: 0
+        width: 281
+        height: 354
+      alignment: 9
+      pivot: {x: 0.3616221, y: 0.21468927}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1786f61ad4ca8f200800000000000000
+      internalID: 214110431720990833
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      ElderWoman-00: -1647691156366809253
+      ElderWoman-01: 8587218742359953492
+      ElderWoman-02: -1934496896604305575
+      ElderWoman-03: -534618791761186066
+      ElderWoman-04: -8835276260146683877
+      ElderWoman-05: 8419262209092731918
+      ElderWoman-06: -7363600916735503968
+      ElderWoman-07: 59119578375266726
+      ElderWoman-08: 2608159523892738792
+      ElderWoman-09: 4910050430537407542
+      ElderWoman-10: 547302953181045179
+      ElderWoman-11: 137723859295616939
+      ElderWoman-12: -5612090133478761985
+      ElderWoman-13: -3875013409061911626
+      ElderWoman-14: 8612788867268450431
+      ElderWoman-15: 214110431720990833
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

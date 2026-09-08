@@ -1,0 +1,29 @@
+{
+  "id": "painted_wooden_bench",
+  "objects": [
+    {
+      "name": "painted_wooden_bench",
+      "size": [
+        1.1649435758590698,
+        0.49654310941696167,
+        0.8892914652824402
+      ],
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "vertices": 315
+    }
+  ],
+  "materials": [
+    {
+      "name": "painted_wooden_bench",
+      "images": [
+        "painted_wooden_bench_diff_1k.jpg",
+        "painted_wooden_bench_nor_gl_1k.exr",
+        "painted_wooden_bench_rough_1k.exr"
+      ]
+    }
+  ]
+}

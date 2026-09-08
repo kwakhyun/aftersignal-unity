@@ -1,0 +1,419 @@
+fileFormatVersion: 2
+guid: c26179cdc76a1764baf5d9031e4de171
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.05357143}
+  spritePixelsToUnits: 149.03847
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 0
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: 4
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: CombatRight-00
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 836
+        width: 330
+        height: 418
+      alignment: 9
+      pivot: {x: 0.41252562, y: 0.08133971}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c4b189700c37f0b30800000000000000
+      internalID: 4255747441486732108
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatRight-01
+      rect:
+        serializedVersion: 2
+        x: 330
+        y: 836
+        width: 273
+        height: 418
+      alignment: 9
+      pivot: {x: 0.47830915, y: 0.08133971}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e4cb3313d0532c8f0800000000000000
+      internalID: -521796276045235122
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatRight-02
+      rect:
+        serializedVersion: 2
+        x: 603
+        y: 836
+        width: 356
+        height: 418
+      alignment: 9
+      pivot: {x: 0.37454587, y: 0.08373206}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17a596473a1eaa800800000000000000
+      internalID: 624559590493215345
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatRight-03
+      rect:
+        serializedVersion: 2
+        x: 959
+        y: 836
+        width: 295
+        height: 418
+      alignment: 9
+      pivot: {x: 0.35335398, y: 0.08133971}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bef173619b1c8d1f0800000000000000
+      internalID: -1019852314913595413
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatRight-04
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 418
+        width: 330
+        height: 418
+      alignment: 9
+      pivot: {x: 0.4495252, y: 0.16267942}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f661136b85fc7a330800000000000000
+      internalID: 3722171596965746287
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatRight-05
+      rect:
+        serializedVersion: 2
+        x: 330
+        y: 418
+        width: 273
+        height: 418
+      alignment: 9
+      pivot: {x: 0.38814124, y: 0.16267942}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 99ee29e27f0940660800000000000000
+      internalID: 7351159883088195225
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatRight-06
+      rect:
+        serializedVersion: 2
+        x: 603
+        y: 418
+        width: 356
+        height: 418
+      alignment: 9
+      pivot: {x: 0.42334157, y: 0.16267942}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a623f3aec52cefa00800000000000000
+      internalID: 792284288786575978
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatRight-07
+      rect:
+        serializedVersion: 2
+        x: 959
+        y: 418
+        width: 295
+        height: 418
+      alignment: 9
+      pivot: {x: 0.3903191, y: 0.16267942}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d85e74ae0418ac40800000000000000
+      internalID: 5523686996091754705
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatRight-08
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 330
+        height: 418
+      alignment: 9
+      pivot: {x: 0.34813762, y: 0.20095694}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f729afbf3573dfd90800000000000000
+      internalID: -7062427806797753729
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatRight-09
+      rect:
+        serializedVersion: 2
+        x: 330
+        y: 0
+        width: 273
+        height: 418
+      alignment: 9
+      pivot: {x: 0.36669528, y: 0.20095694}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dbf94dcbeaf521150800000000000000
+      internalID: 5841836870749953981
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatRight-10
+      rect:
+        serializedVersion: 2
+        x: 603
+        y: 0
+        width: 356
+        height: 418
+      alignment: 9
+      pivot: {x: 0.3478638, y: 0.20095694}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 93d89c7ec2628e560800000000000000
+      internalID: 7343161166736756025
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatRight-11
+      rect:
+        serializedVersion: 2
+        x: 959
+        y: 0
+        width: 295
+        height: 418
+      alignment: 9
+      pivot: {x: 0.3283293, y: 0.20095694}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f19b687b42fea1f40800000000000000
+      internalID: 5700131219367704863
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      CombatRight-00: 4255747441486732108
+      CombatRight-01: -521796276045235122
+      CombatRight-02: 624559590493215345
+      CombatRight-03: -1019852314913595413
+      CombatRight-04: 3722171596965746287
+      CombatRight-05: 7351159883088195225
+      CombatRight-06: 792284288786575978
+      CombatRight-07: 5523686996091754705
+      CombatRight-08: -7062427806797753729
+      CombatRight-09: 5841836870749953981
+      CombatRight-10: 7343161166736756025
+      CombatRight-11: 5700131219367704863
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

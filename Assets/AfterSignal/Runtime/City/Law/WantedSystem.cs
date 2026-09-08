@@ -103,9 +103,12 @@ namespace AfterSignal
             float dt = Mathf.Min(.1f, Time.deltaTime);
             incidentClock -= dt;
             Seen = incidentClock > 0;
-            foreach (var officer in Officers)
-                if (officer && officer.Body.Alive && officer.CanSee())
-                    Seen = true;
+            foreach (var body in WorldActor.All)
+                if (body && body.police && body.Alive)
+                {
+                    var officer = body.GetComponent<PoliceOfficer>();
+                    if (officer && officer.CanSee()) Seen = true;
+                }
             if (Helicopter && Helicopter.Body.Alive && Helicopter.CanSee())
                 Seen = true;
             if (Seen)
@@ -148,7 +151,9 @@ namespace AfterSignal
         Vector3 SpawnPoint(int index)
         {
             Vector3 p = game.Player.transform.position;
-            if (game.stage == StageId.UrbanCity)
+            if(game.stage==StageId.UrbanCity&&ExpansionRoads.Outside(p))
+                p=ExpansionRoads.Sidewalk(p+new Vector3(index%2==0?-40:40,0,25+index*3));
+            else if (game.stage == StageId.UrbanCity)
                 p = CityRoadNetwork.Sidewalk(new Vector3(Mathf.Clamp(p.x + (index % 2 == 0 ? -1 : 1) * (32 + index * 2), 20, 760), .08f, Mathf.Clamp(p.z + 16, -300, 300)));
             else if (CivicWorld.Interior(game.stage))
                 p = game.stage == StageId.Residence ? new Vector3(34, .08f, -2) : new Vector3(5 + index % 3 * 1.4f, .08f, -7 - index / 3 * .9f);

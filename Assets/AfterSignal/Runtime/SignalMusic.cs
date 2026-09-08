@@ -74,11 +74,11 @@ namespace AfterSignal
                 if (owner != game) { owner = game; bossEngaged = false; }
                 // Latch engagement so retreating across the activation boundary cannot restart the boss cue.
                 if (game.stage == StageId.Roof && game.Boss && game.Boss.Active) bossEngaged = true;
-                Request(MusicCatalog.Select(game.stage, UrbanCatalog.Current, bossEngaged,
+                Request(game.Title ? MusicCue.Town : MusicCatalog.Select(game.stage, UrbanCatalog.Current, bossEngaged,
                     game.stage == StageId.Roof && game.Boss && !game.Boss.Alive));
                 SetMasterVolume(game.Audio.Volume);
                 SetPaused(game.Paused || game.Dead);
-                duckTarget = game.Dialogue || (CityLife.Instance && CityLife.Instance.Mode.Length > 0) ? .45f : 1;
+                duckTarget = game.Dialogue || (CityLife.Instance && CityLife.Instance.Mode.Length > 0) ? .45f : game.Audio.MusicDuck;
             }
             if (paused) return;
             float dt = Time.unscaledDeltaTime;

@@ -1,0 +1,265 @@
+{
+  "id": "modular_street_seating",
+  "objects": [
+    {
+      "name": "crossbar",
+      "size": [
+        1.8623936176300049,
+        0.03999999910593033,
+        0.04000002145767212
+      ],
+      "location": [
+        -1.159999966621399,
+        0.0,
+        0.16499999165534973
+      ],
+      "vertices": 36
+    },
+    {
+      "name": "legs_double",
+      "size": [
+        0.18438175320625305,
+        0.6000000238418579,
+        0.45000001788139343
+      ],
+      "location": [
+        -5.587935447692871e-08,
+        0.0,
+        6.661338147750939e-16
+      ],
+      "vertices": 1831
+    },
+    {
+      "name": "legs_single",
+      "size": [
+        0.13219085335731506,
+        0.6000000238418579,
+        0.45000001788139343
+      ],
+      "location": [
+        -2.319999933242798,
+        0.0,
+        0.0
+      ],
+      "vertices": 1386
+    },
+    {
+      "name": "suspended_support_01",
+      "size": [
+        0.10603751242160797,
+        0.5670339465141296,
+        0.20096440613269806
+      ],
+      "location": [
+        -1.159999966621399,
+        0.0,
+        0.3499999940395355
+      ],
+      "vertices": 1406
+    },
+    {
+      "name": "suspended_support_02",
+      "size": [
+        0.18438175320625305,
+        0.6000000238418579,
+        0.22577108442783356
+      ],
+      "location": [
+        1.040000081062317,
+        0.0,
+        0.3499999940395355
+      ],
+      "vertices": 1536
+    },
+    {
+      "name": "back_support_r",
+      "size": [
+        0.12999999523162842,
+        0.17306500673294067,
+        0.44191402196884155
+      ],
+      "location": [
+        -2.0999999046325684,
+        0.0,
+        0.45000001788139343
+      ],
+      "vertices": 566
+    },
+    {
+      "name": "back_support_l",
+      "size": [
+        0.12999999523162842,
+        0.17306500673294067,
+        0.44191402196884155
+      ],
+      "location": [
+        -0.21999996900558472,
+        0.0,
+        0.44999998807907104
+      ],
+      "vertices": 566
+    },
+    {
+      "name": "arm_rest_01",
+      "size": [
+        0.07999993115663528,
+        0.5990468263626099,
+        0.229925274848938
+      ],
+      "location": [
+        -2.319999933242798,
+        0.0,
+        0.550000011920929
+      ],
+      "vertices": 190
+    },
+    {
+      "name": "arm_rest_02",
+      "size": [
+        0.07999993115663528,
+        0.4471709728240967,
+        0.1670055240392685
+      ],
+      "location": [
+        6.332993507385254e-08,
+        0.0,
+        0.550000011920929
+      ],
+      "vertices": 181
+    },
+    {
+      "name": "seat",
+      "size": [
+        1.840000033378601,
+        0.6000000238418579,
+        0.02499997615814209
+      ],
+      "location": [
+        -1.159999966621399,
+        0.0,
+        0.44999998807907104
+      ],
+      "vertices": 216
+    },
+    {
+      "name": "seat_back",
+      "size": [
+        1.6800000667572021,
+        0.36500000953674316,
+        0.02499997615814209
+      ],
+      "location": [
+        -1.159999966621399,
+        0.0,
+        0.4449999928474426
+      ],
+      "vertices": 96
+    },
+    {
+      "name": "connector_60",
+      "size": [
+        0.6054816246032715,
+        0.6491891145706177,
+        0.02469242922961712
+      ],
+      "location": [
+        0.9400001168251038,
+        0.30000001192092896,
+        0.75
+      ],
+      "vertices": 720
+    },
+    {
+      "name": "connector_45",
+      "size": [
+        0.4940183758735657,
+        0.6281612515449524,
+        0.02469245344400406
+      ],
+      "location": [
+        0.14000016450881958,
+        0.30000001192092896,
+        0.949999988079071
+      ],
+      "vertices": 570
+    },
+    {
+      "name": "connector_90",
+      "size": [
+        0.6999788880348206,
+        0.699978768825531,
+        0.02469242922961712
+      ],
+      "location": [
+        0.14000004529953003,
+        0.30000001192092896,
+        0.75
+      ],
+      "vertices": 1020
+    },
+    {
+      "name": "connector_30",
+      "size": [
+        0.349323570728302,
+        0.612530529499054,
+        0.024692459031939507
+      ],
+      "location": [
+        0.7400000691413879,
+        0.30000001192092896,
+        0.949999988079071
+      ],
+      "vertices": 414
+    },
+    {
+      "name": "seat_bench",
+      "size": [
+        1.8400001525878906,
+        0.6000000238418579,
+        0.02499997615814209
+      ],
+      "location": [
+        1.0600000619888306,
+        0.0,
+        0.45000001788139343
+      ],
+      "vertices": 216
+    }
+  ],
+  "materials": [
+    {
+      "name": "modular_street_seating_armrests",
+      "images": [
+        "modular_street_seating_armrests_diff_1k.png",
+        "modular_street_seating_armrests_metal_1k.png",
+        "modular_street_seating_armrests_nor_gl_1k.png",
+        "modular_street_seating_armrests_rough_1k.png"
+      ]
+    },
+    {
+      "name": "modular_street_seating_connectors",
+      "images": [
+        "modular_street_seating_connectors_diff_1k.png",
+        "modular_street_seating_connectors_nor_gl_1k.png",
+        "modular_street_seating_connectors_rough_1k.png"
+      ]
+    },
+    {
+      "name": "modular_street_seating_supports",
+      "images": [
+        "modular_street_seating_supports_diff_1k.png",
+        "modular_street_seating_supports_metal_1k.png",
+        "modular_street_seating_supports_nor_gl_1k.png",
+        "modular_street_seating_supports_rough_1k.png"
+      ]
+    },
+    {
+      "name": "modular_street_seating_timber",
+      "images": [
+        "modular_street_seating_timber_diff_1k.png",
+        "modular_street_seating_timber_nor_gl_1k.png",
+        "modular_street_seating_timber_rough_1k.png"
+      ]
+    }
+  ]
+}

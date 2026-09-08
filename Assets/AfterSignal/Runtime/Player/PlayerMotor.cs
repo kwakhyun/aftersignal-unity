@@ -12,17 +12,15 @@ namespace AfterSignal
         public RopeMotor Rope { get; private set; }
 
         public Vector3 Velocity;
+        public bool Running { get; private set; }
+        public int LastMoveDirection { get; private set; } = 1;
         public Vector3 Shoulder => transform.position + Vector3.up * 1.45f;
 
         public Vector3 Muzzle
         {
             get
             {
-                if (actor && actor.TryMuzzle(Facing, out var point))
-                    return point;
-                bool late = AttackTime > 0 && AttackTime < AttackDuration * .5f;
-                Vector2 pixel = Grounded ? (late ? new Vector2(178, 117) : new Vector2(184, 123)) : (late ? new Vector2(169, 132) : new Vector2(168, 137));
-                return transform.position + Vector3.right * ((pixel.x - 112) / 49f * Facing) + (Camera.main ? Camera.main.transform.up : Vector3.up) * ((212 - pixel.y) / 49f);
+                return Shoulder + (Aim-Shoulder).normalized*.55f;
             }
         }
 
@@ -45,6 +43,7 @@ namespace AfterSignal
         public float LandingTime { get; private set; }
         public bool SkillPose { get; private set; }
 
+        readonly HashSet<CityVehicle> struckCars=new HashSet<CityVehicle>();
         readonly HashSet<EnemyBrain> struck = new HashSet<EnemyBrain>();
         readonly HashSet<BreakableGlass> shattered = new HashSet<BreakableGlass>();
         float freezeUntil, attackBuffer, stepDistance, trailClock;
@@ -87,12 +86,14 @@ namespace AfterSignal
             gameObject.layer = 8;
             Weapon = WeaponId.Katana;
             Ammo = Tuning.magazineSize;
+            Equipment=gameObject.AddComponent<PlayerEquipment>();Equipment.Initialize(this);
         }
 
         public void Tick(ControlFrame input, float dt)
         {
             if (Health <= 0)
                 return;
+            if(OceanLife.Tick(this,input,dt))return;
             attackBuffer = input.attack ? Tuning.Timing(Weapon).buffer : Mathf.Max(0, attackBuffer - dt / Mathf.Max(.01f, Time.timeScale));
             if (HitStopRemaining > 0)
                 return;
@@ -110,22 +111,23 @@ namespace AfterSignal
             Energy = Mathf.Min(100, Energy + dt * 4f);
             var camera = Camera.main;
             var ray = camera.ScreenPointToRay(input.pointer);
-            var plane = new Plane(Vector3.forward, new Vector3(0, 0, transform.position.z));
-            Aim = plane.Raycast(ray, out float distance) ? ray.GetPoint(distance) : Shoulder + Vector3.right * Facing;
-            // The visible enemy can be on another depth lane; use the camera ray to acquire its actual 3D collider.
-            if (Physics.Raycast(ray, out var aimHit, 200, (1 << 0) | (1 << 9), QueryTriggerInteraction.Collide) && (aimHit.collider.GetComponentInParent<EnemyBrain>() || aimHit.collider.GetComponentInParent<WorldActor>() || aimHit.collider.GetComponentInParent<CityVehicle>()))
-                Aim = aimHit.point;
+            var viewRight = Director.CameraRig.ViewRight;
+            var moveDirection = Vector3.ClampMagnitude(Director.CameraRig.MoveDirection(input.move),1);
+            Running = input.move.sqrMagnitude > .04f;
+            if(input.move.sqrMagnitude > .04f) LastMoveDirection = Mathf.Abs(input.move.y) > Mathf.Abs(input.move.x) ? input.move.y > 0 ? 2 : 0 : 1;
+            const float gait = 1;
+            Aim = Ballistics.AimPoint(ray, transform);
             if (AttackTime <= 0)
             {
                 if (Mathf.Abs(input.move.x) > .15f && !input.guard)
                     Facing = Mathf.Sign(input.move.x);
-                else if (input.guard && Mathf.Abs(Aim.x - transform.position.x) > .15f)
-                    Facing = Mathf.Sign(Aim.x - transform.position.x);
+                else if (input.guard && Mathf.Abs(Vector3.Dot(Aim - Shoulder, Director.CameraRig.ViewRight)) > .15f)
+                    Facing = Mathf.Sign(Vector3.Dot(Aim - Shoulder, Director.CameraRig.ViewRight));
             }
 
             Guarding = input.guard && Grounded && !Rope.Attached && AttackTime <= 0;
             bool wasGrounded = Grounded;
-            Grounded = Controller.isGrounded || Supported();
+            Grounded = !WallClimbing && Velocity.y <= 1 && (Controller.isGrounded || Supported());
             if (Grounded && !wasGrounded && Velocity.y < -3)
             {
                 LandingTime = .13f;
@@ -146,12 +148,12 @@ namespace AfterSignal
                 jumpBuffer -= dt;
             bool wasRope = Rope.Attached;
             Rope.Tick(input, dt);
-            if (jumpBuffer > 0 && !wasRope && (coyote > 0 || jumps < 1))
+            if (jumpBuffer > 0 && !wasRope && !WallClimbing && (coyote > 0 || jumps < 2))
             {
                 Velocity.y = Tuning.jumpSpeed;
                 jumpBuffer = 0;
+                jumps = Grounded || coyote > 0 ? 1 : Mathf.Max(1,jumps)+1;
                 coyote = 0;
-                jumps++;
                 supportedUntil = 0;
                 Grounded = false;
                 SignalEffects.Burst(transform.position + Vector3.up * .1f, SignalEffects.Cyan, 8, 2);
@@ -166,7 +168,7 @@ namespace AfterSignal
                 Facing = Mathf.Abs(input.move.x) > .2f ? Mathf.Sign(input.move.x) : Facing;
                 dashAttackWindow = .27f;
                 CancelReload();
-                dashDirection = input.move.sqrMagnitude > .04f ? new Vector3(input.move.x, 0, input.move.y).normalized : Vector3.right * Facing;
+                dashDirection = input.move.sqrMagnitude > .04f ? moveDirection.normalized : viewRight * Facing;
                 Velocity.x = dashDirection.x * Tuning.dashSpeed;
                 Velocity.z = dashDirection.z * Tuning.dashSpeed;
                 Velocity.y = Mathf.Max(Velocity.y, 0);
@@ -180,25 +182,34 @@ namespace AfterSignal
             {
                 if (!Rope.Attached)
                 {
-                    float target = input.move.x * Tuning.moveSpeed * (Guarding ? .36f : 1) * (AttackTime > 0 && Weapon != WeaponId.Pistol ? .45f : 1);
+                    float target = moveDirection.x * Tuning.moveSpeed * gait * (Guarding ? .36f : 1) * (AttackTime > 0 && Weapon != WeaponId.Pistol ? .45f : 1);
                     Velocity.x = Mathf.MoveTowards(Velocity.x, target, (Grounded ? Tuning.acceleration : 13f) * dt);
                 }
 
                 if (!Rope.Attached)
-                    Velocity.z = Mathf.MoveTowards(Velocity.z, input.move.y * Tuning.moveSpeed * (CivicWorld.Exploration(Director.stage) ? 1 : .64f), (Grounded ? Tuning.acceleration : 13f) * dt);
+                    Velocity.z = Mathf.MoveTowards(Velocity.z, moveDirection.z * Tuning.moveSpeed * gait * (CivicWorld.Exploration(Director.stage) ? 1 : .64f), (Grounded ? Tuning.acceleration : 13f) * dt);
                 Velocity.y -= (Rope.Attached ? Tuning.ropeGravity : Tuning.gravity) * dt;
                 if (Grounded && Velocity.y < 0)
                     Velocity.y = -2f;
             }
 
+            Traverse(input,moveDirection,dt);
+            bool groundedBeforeMove = Grounded;
+            float landingSpeed = Velocity.y;
             Controller.Move(Velocity * dt);
             Rope.Constrain();
-            Grounded = Controller.isGrounded || Supported();
+            Grounded = !WallClimbing && Velocity.y <= 1 && (Controller.isGrounded || Supported());
+            if (Grounded && !groundedBeforeMove && landingSpeed < -3)
+            {
+                LandingTime = .13f;
+                Director.Audio.Play("land", transform.position, .3f, 1);
+                SignalEffects.Dust(transform.position, Vector3.up, .55f);
+            }
             if ((Controller.collisionFlags & CollisionFlags.Above) != 0 && Velocity.y > 0)
                 Velocity.y = 0;
             Vector3 position = transform.position;
             position.x = Mathf.Clamp(position.x, 1, Director.stageLength - 1);
-            position.z = Mathf.Clamp(position.z, -Director.halfDepth, Director.halfDepth);
+            position.z = Mathf.Clamp(position.z, -Director.halfDepth, Director.stage==StageId.UrbanCity?1098:Director.halfDepth);
             transform.position = position;
             if (position.y < -9)
             {
@@ -208,21 +219,21 @@ namespace AfterSignal
 
             if (resolving)
                 ResolveSwing(previousAttack);
-            if (attackBuffer > 0 && !Guarding && HurtTime <= 0 && attackCooldown <= 0 && !Reloading)
+            if (attackBuffer > 0 && !WallClimbing && !Guarding && HurtTime <= 0 && attackCooldown <= 0 && !Reloading)
             {
                 Attack();
                 attackBuffer = 0;
             }
 
-            if (input.skill && !Guarding && HurtTime <= 0 && !Reloading && AttackTime <= 0 && Energy >= Tuning.skillCost && skillCooldown <= 0)
+            if (input.skill && !WallClimbing && !Guarding && HurtTime <= 0 && !Reloading && AttackTime <= 0 && Energy >= Tuning.skillCost && skillCooldown <= 0)
                 Skill();
             actor.TickHero(this, dt);
             if (Grounded && DashTime <= 0 && AttackTime <= 0)
             {
                 stepDistance += new Vector2(Velocity.x, Velocity.z).magnitude * dt;
-                if (stepDistance > 2.25f)
+                if (stepDistance > SeoLocomotion.StrideLength * .5f)
                 {
-                    stepDistance = 0;
+                    stepDistance -= SeoLocomotion.StrideLength * .5f;
                     Director.Audio.Play(Director.stage == StageId.Carriage || Director.stage == StageId.Roof ? "step_metal" : "step_tile", transform.position, .12f, 0);
                 }
             }
@@ -237,6 +248,7 @@ namespace AfterSignal
 
         public void Attack()
         {
+            if(Equipment&&Equipment.Extended){Equipment.Attack();return;}
             if (Reloading)
                 return;
             if (Weapon == WeaponId.Pistol && Ammo <= 0)
@@ -245,8 +257,8 @@ namespace AfterSignal
                 return;
             }
 
-            if (Mathf.Abs(Aim.x - transform.position.x) > .15f)
-                Facing = Mathf.Sign(Aim.x - transform.position.x);
+            if (Mathf.Abs(Vector3.Dot(Aim - Shoulder, Director.CameraRig.ViewRight)) > .15f)
+                Facing = Mathf.Sign(Vector3.Dot(Aim - Shoulder, Director.CameraRig.ViewRight));
             Combo = comboWindow > 0 ? (Combo + 1) % 3 : 0;
             comboWindow = 1.05f;
             Attacks++;
@@ -262,7 +274,7 @@ namespace AfterSignal
             attackCooldown = AttackDuration;
             struck.Clear();
             shattered.Clear();
-            worldStruck.Clear();
+            worldStruck.Clear();struckCars.Clear();
             resolving = true;
             swingStarted = false;
             if (Weapon == WeaponId.Pistol && currentTiming.contact <= 0)
@@ -287,7 +299,7 @@ namespace AfterSignal
                 return;
             }
 
-            float damage = CampaignRules.Damage(Weapon, Combo, Tuning) * (Action == WeaponAction.Dash ? Weapon == WeaponId.Greatsword ? 1.3f : 1.15f : 1);
+            float damage = CampaignRules.Damage(Weapon, Combo, Tuning) * (Equipment?Equipment.Item.multiplier:1) * (Action == WeaponAction.Dash ? Weapon == WeaponId.Greatsword ? 1.3f : 1.15f : 1);
             if (Weapon == WeaponId.Pistol)
             {
                 int count = Action == WeaponAction.Dash ? 3 : 1;
@@ -309,7 +321,7 @@ namespace AfterSignal
                 if (!swingStarted)
                 {
                     swingStarted = true;
-                    SignalEffects.Slash(Shoulder, Facing, range, Weapon == WeaponId.Greatsword ? SignalEffects.Gold : SignalEffects.Cyan, Combo);
+                    SignalEffects.Slash(Shoulder, AttackHeading, range, Weapon == WeaponId.Greatsword ? SignalEffects.Gold : SignalEffects.Cyan, Combo);
                     Director.Audio.Play(Weapon == WeaponId.Greatsword ? "heavy_swing" : "blade_swing", Shoulder, .22f, 1);
                 }
 
@@ -317,10 +329,12 @@ namespace AfterSignal
                     if (enemy && enemy.Alive && !struck.Contains(enemy))
                     {
                         Vector3 d = enemy.transform.position - transform.position;
-                        if (Mathf.Abs(d.z) < 1.35f && Mathf.Abs(d.y) < 2.9f && d.x * Facing > -.55f && d.x * Facing < range)
+                        var strikeRight = AttackHeading;
+                        float along = Vector3.Dot(d, strikeRight);
+                        if (Mathf.Abs(Vector3.Dot(d, Vector3.Cross(strikeRight, Vector3.up))) < 1.35f && Mathf.Abs(d.y) < 2.9f && along > -.55f && along < range && !Physics.Linecast(Shoulder,enemy.transform.position+Vector3.up,1,QueryTriggerInteraction.Ignore))
                         {
                             struck.Add(enemy);
-                            enemy.Damage(damage, new Vector3(Facing * (Weapon == WeaponId.Greatsword ? 5.5f : 3.5f), 0, 0));
+                            enemy.Damage(damage, strikeRight * (Weapon == WeaponId.Greatsword ? 5.5f : 3.5f));
                             OnContact(enemy, enemy.transform.position + new Vector3(-Facing * .22f, 1.22f, -.08f), Vector3.right * Facing);
                         }
                     }
@@ -332,7 +346,8 @@ namespace AfterSignal
                         glass.Hit(damage);
                     }
 
-                WorldActor.Strike(Shoulder, Action == WeaponAction.Dash ? dashDirection : (Aim - Shoulder).normalized, range, damage, worldStruck);
+                WorldActor.Strike(Shoulder, Action == WeaponAction.Dash ? dashDirection : (Aim - Shoulder).normalized, range, damage, worldStruck, true);
+                StrikeVehicles(range,damage);
                 Director.TryCoreStrike(this, range);
             }
 
@@ -357,10 +372,11 @@ namespace AfterSignal
 
         public void Skill()
         {
+            if(Equipment&&Equipment.Extended){Equipment.Attack();return;}
             if (Energy < Tuning.skillCost || Reloading)
                 return;
-            if (Mathf.Abs(Aim.x - transform.position.x) > .15f)
-                Facing = Mathf.Sign(Aim.x - transform.position.x);
+            if (Mathf.Abs(Vector3.Dot(Aim - Shoulder, Director.CameraRig.ViewRight)) > .15f)
+                Facing = Mathf.Sign(Vector3.Dot(Aim - Shoulder, Director.CameraRig.ViewRight));
             Energy -= Tuning.skillCost;
             skillCooldown = 4f;
             SkillsUsed++;
@@ -374,14 +390,14 @@ namespace AfterSignal
             shotsInAction = 0;
             struck.Clear();
             shattered.Clear();
-            worldStruck.Clear();
+            worldStruck.Clear();struckCars.Clear();
         }
 
         public void ReceiveDamage(float amount, Vector3 source, bool ignoreInvulnerability = false)
         {
             if (Health <= 0 || (!ignoreInvulnerability && invincible > 0))
                 return;
-            bool blocked = Guarding && (source.x - transform.position.x) * Facing >= 0;
+            bool blocked = Guarding && Vector3.Dot(source - transform.position, Director.CameraRig.ViewRight) * Facing >= 0;
             if (blocked)
             {
                 amount *= .15f;
@@ -426,6 +442,7 @@ namespace AfterSignal
             Controller.enabled = true;
             Velocity = Vector3.zero;
             Grounded = false;
+            WallClimbing=false;wallRelease=0;jumps=0;jumpBuffer=0;coyote=0;
             supportedUntil = 0;
             DashTime = 0;
             if (fullHeal)

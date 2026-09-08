@@ -25,6 +25,7 @@ namespace AfterSignal
                     r.sharedMaterial = Resources.Load<Material>("Materials/DistrictIvory");
             var p = car.gameObject.AddComponent<PoliceCar>();
             p.Vehicle = car;
+            PoliceVehicleArt.Apply(car);
             p.system = owner;
             WorldGeometry.Part(car.transform, "Police blue stripe", new Vector3(0, 1.05f, -1.06f), new Vector3(4.5f, .35f, .05f), "DistrictBlue");
             WorldGeometry.Part(car.transform, "Police blue stripe", new Vector3(0, 1.05f, 1.06f), new Vector3(4.5f, .35f, .05f), "DistrictBlue");
@@ -68,7 +69,10 @@ namespace AfterSignal
             if (!g || !Vehicle)
                 return;
             if (siren)
+            {
                 siren.mute = g.Blocked || Vehicle.Wrecked || retreat;
+                siren.volume=.25f*g.Audio.Volume*g.Audio.SfxVolume;
+            }
             if (g.Blocked)
                 return;
             float dt = Mathf.Min(.07f, Time.deltaTime);

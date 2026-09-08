@@ -5,7 +5,11 @@ namespace AfterSignal
 {
     public struct ControlFrame
     {
-        public Vector2 move, pointer;
+        public Vector2 move, pointer, lookDelta;
+        public float zoom, vertical;
+        public bool boost, passenger, surrender;
+        public bool journal;
+        public bool look, cameraReset, run;
         public bool attack, grapple, jump, interact, dash, skill, guard, pause, reload, map, exit;
         public int weapon, weaponCycle;
         public static ControlFrame Empty => new ControlFrame
@@ -18,6 +22,23 @@ namespace AfterSignal
     {
         InputActionAsset asset;
         InputAction move, pointer, attack, grapple, jump, interact, dash, skill, guard, pause, one, two, three;
+        bool captured;
+        Vector2 savedPointer;
+
+        void ReleaseLook()
+        {
+            if (!captured) return;
+            captured = false;
+            Cursor.lockState = CursorLockMode.None;
+            if (Application.isFocused && Mouse.current != null) Mouse.current.WarpCursorPosition(savedPointer);
+        }
+
+        void OnApplicationFocus(bool focus) { if (!focus) ReleaseLook(); }
+        void LateUpdate()
+        {
+            var game = GameDirector.Instance;
+            if (captured && (!game || !game.CameraRig || !game.CameraRig.CanLook)) ReleaseLook();
+        }
         public ControlFrame Frame { get; private set; }
         public bool ExternalControl { get; set; }
         public ControlFrame ExternalFrame { get; set; }
@@ -50,6 +71,7 @@ namespace AfterSignal
 
         void OnDisable()
         {
+            ReleaseLook();
             if (asset)
                 asset.Disable();
             Frame = ControlFrame.Empty;
@@ -64,11 +86,26 @@ namespace AfterSignal
         public ControlFrame Read()
         {
             if (ExternalControl)
-                return Frame = ExternalFrame;
+            { ReleaseLook(); return Frame = ExternalFrame; }
+            var game = GameDirector.Instance;
+            bool held = Application.isFocused && Mouse.current != null  && game && game.CameraRig && game.CameraRig.CanLook;
+            bool starting = held && !captured;
+            if (starting) { savedPointer = pointer.ReadValue<Vector2>(); captured = true; Cursor.lockState = CursorLockMode.Locked; }
+            if (!held) ReleaseLook();
             Frame = new ControlFrame
             {
+                boost = Keyboard.current != null && (Keyboard.current.leftShiftKey.isPressed || Keyboard.current.rightShiftKey.isPressed),
+                passenger = Keyboard.current != null && Keyboard.current.gKey.wasPressedThisFrame,
+                surrender = Keyboard.current != null && Keyboard.current.hKey.isPressed,
+                vertical = Keyboard.current == null ? 0 : (Keyboard.current.spaceKey.isPressed ? 1 : 0) - (Keyboard.current.leftCtrlKey.isPressed ? 1 : 0),
+                run = move.ReadValue<Vector2>().sqrMagnitude > .04f,
+                look = held,
+                lookDelta = held && !starting ? Vector2.ClampMagnitude(Mouse.current.delta.ReadValue(), 2000) : Vector2.zero,
+                cameraReset = Keyboard.current != null && Keyboard.current.homeKey.wasPressedThisFrame,
                 move = move.ReadValue<Vector2>(),
-                pointer = pointer.ReadValue<Vector2>(),
+                pointer = new Vector2(Screen.width*.5f,Screen.height*.5f),
+                zoom = held ? Mouse.current.scroll.ReadValue().y : 0,
+                journal = Keyboard.current != null && Keyboard.current.jKey.wasPressedThisFrame,
                 attack = attack.IsPressed(),
                 grapple = grapple.IsPressed(),
                 jump = jump.WasPressedThisFrame(),
@@ -80,8 +117,8 @@ namespace AfterSignal
                 reload = Keyboard.current != null && Keyboard.current.rKey.wasPressedThisFrame,
                 map = Keyboard.current != null && Keyboard.current.mKey.wasPressedThisFrame,
                 exit = Keyboard.current != null && Keyboard.current.fKey.wasPressedThisFrame,
-                weaponCycle = Mouse.current != null && Mathf.Abs(Mouse.current.scroll.ReadValue().y) > .01f ? (Mouse.current.scroll.ReadValue().y > 0 ? 1 : -1) : 0,
-                weapon = one.WasPressedThisFrame() ? 0 : two.WasPressedThisFrame() ? 1 : three.WasPressedThisFrame() ? 2 : -1
+                weaponCycle = 0,
+                weapon = one.WasPressedThisFrame() ? 0 : two.WasPressedThisFrame() ? 1 : three.WasPressedThisFrame() ? 2 : Keyboard.current==null?-1:Keyboard.current.digit4Key.wasPressedThisFrame?3:Keyboard.current.digit5Key.wasPressedThisFrame?4:Keyboard.current.digit6Key.wasPressedThisFrame?5:Keyboard.current.digit7Key.wasPressedThisFrame?6:-1
             };
             return Frame;
         }

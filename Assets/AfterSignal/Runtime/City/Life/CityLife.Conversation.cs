@@ -4,6 +4,8 @@ namespace AfterSignal
 {
     public sealed partial class CityLife
     {
+        public float SendingStarted { get; private set; }
+
         public void Talk(CityNpc npc)
         {
             Speaker = npc;
@@ -21,6 +23,7 @@ namespace AfterSignal
             if (text.Length > 350)
                 text = text.Substring(0, 350);
             Sending = true;
+            SendingStarted = Time.unscaledTime;
             Body = "서하: " + text + "\n\n…";
             Revision++;
             history.Add(new NpcLine { role = "user", content = text });

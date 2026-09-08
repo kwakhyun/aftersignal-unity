@@ -39,13 +39,15 @@ namespace AfterSignal
                 System.Array.Sort(sprites[i], (a, b) => string.CompareOrdinal(a.name, b.name));
             }
 
-            for (int i = 0; i < (game.stage == StageId.Haven ? 18 : 60); i++)
+            for (int i = 0; i < (game.stage == StageId.Haven ? 18 : ResidentialWorld.AtHome(LifeState.Hour) ? 16 : 40); i++)
                 Spawn(false);
         }
 
         Vector3 Position(bool hidden)
         {
             var center = game.Player.transform.position;
+            if(game.stage==StageId.UrbanCity&&ExpansionRoads.Outside(center))
+            {var p=ExpansionRoads.Sidewalk(center+new Vector3(Random.Range(-100,100),0,Random.Range(-100,100)));return p;}
             for (int tries = 0; tries < 30; tries++)
             {
                 Vector3 p;
@@ -110,6 +112,7 @@ namespace AfterSignal
 
         void SetDestination(CityPedestrian c)
         {
+            if(game.stage==StageId.UrbanCity&&ExpansionRoads.Outside(c.transform.position)){c.WalkTo(ExpansionRoads.Sidewalk(c.transform.position,Random.value>.5f?4:-4),false);return;}
             if (game.stage == StageId.Haven)
             {
                 c.WalkTo(new Vector3(Mathf.Clamp(c.transform.position.x + Random.Range(-24, 24), 5, 222), .06f, c.transform.position.z), false);
@@ -138,7 +141,7 @@ namespace AfterSignal
                 if (c.gameObject.activeSelf)
                 {
                     c.Tick(dt);
-                    if ((c.dead && c.age > 12) || Vector3.Distance(c.transform.position, game.Player.transform.position) > 250)
+                    if ((c.dead && c.age > 12 && !c.GetComponent<MedicalPending>()) || !c.GetComponent<MedicalPending>() && Vector3.Distance(c.transform.position, game.Player.transform.position) > 250)
                         c.gameObject.SetActive(false);
                     else if (!c.struck && Vector3.Distance(c.transform.position, c.target) < .3f)
                         SetDestination(c);
@@ -152,7 +155,7 @@ namespace AfterSignal
                 foreach (var c in Citizens)
                     if (c.gameObject.activeSelf)
                         count++;
-                if (count < (game.stage == StageId.Haven ? 18 : 60))
+                if (count < (game.stage == StageId.Haven ? 18 : ResidentialWorld.AtHome(LifeState.Hour) ? 16 : 40))
                     Spawn(true);
             }
         }
@@ -185,7 +188,11 @@ namespace AfterSignal
                         if (player)
                             c.GetComponent<WorldActor>()?.VehicleHit(car.Forward * Mathf.Sign(speed), Mathf.Abs(speed));
                         else
+                        {
                             c.Hit(car.Forward * Mathf.Sign(speed), Mathf.Abs(speed));
+                            var victim=c.GetComponent<WorldActor>();if(victim)victim.health=Mathf.Min(victim.health,30);
+                            CitySafety.Shock(c.transform.position);
+                        }
                         Impacts++;
                         if (c.dead)
                             Fatalities++;

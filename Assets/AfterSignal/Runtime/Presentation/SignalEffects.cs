@@ -50,13 +50,17 @@ namespace AfterSignal
             fx.expand = true;
         }
 
-        public static void Slash(Vector3 center, float facing, float radius, Color color, int combo)
+        public static void Slash(Vector3 center,float facing,float radius,Color color,int combo)
+            => Slash(center,Vector3.right*facing,radius,color,combo);
+        public static void Slash(Vector3 center,Vector3 heading,float radius,Color color,int combo)
         {
+            heading=Vector3.ProjectOnPlane(heading,Vector3.up).normalized;
+            if(heading.sqrMagnitude<.01f)heading=Vector3.forward;
             if (PresentationSettings.Effects <= 0 || EffectBudget.Active >= 54)
                 return;
             if (radius < 3)
             {
-                Beam(center + Vector3.right * facing * .5f, center + Vector3.right * facing * radius, color, .035f, .1f);
+                Beam(center + heading * .5f, center + heading * radius, color, .035f, .1f);
                 return;
             }
 
@@ -73,7 +77,7 @@ namespace AfterSignal
                 float a = Mathf.Lerp(-1.2f, 1.4f, i / 24f);
                 if (combo == 1)
                     a = -a;
-                line.SetPosition(i, center + new Vector3(Mathf.Cos(a) * facing, Mathf.Sin(a) * .72f, -.12f) * radius);
+                line.SetPosition(i, center + (heading*Mathf.Cos(a)+Vector3.up*Mathf.Sin(a)*.72f+Vector3.Cross(heading,Vector3.up)*-.12f) * radius);
             }
 
             go.AddComponent<EffectBudget>();

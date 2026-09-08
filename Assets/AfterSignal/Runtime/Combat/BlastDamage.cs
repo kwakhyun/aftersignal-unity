@@ -1,0 +1,42 @@
+using System.Collections.Generic;
+using UnityEngine;
+namespace AfterSignal
+{
+    public sealed class BlastDamage:MonoBehaviour
+    {
+        public static int Detonations {get;private set;}
+        float radius,damage;WorldActor source;CityVehicle excluded;bool done;
+        public static void Create(Vector3 at,float radius,float damage,WorldActor source=null,CityVehicle excluded=null)
+        {
+            var go=new GameObject("Blast damage wave");go.transform.position=at;var b=go.AddComponent<BlastDamage>();b.radius=radius;b.damage=damage;b.source=source;b.excluded=excluded;
+        }
+        public static bool Exposed(Vector3 origin,Vector3 target,Transform victim,CityVehicle excluded=null)
+        {
+            Vector3 d=target-origin;
+            foreach(var hit in Physics.RaycastAll(origin,d.normalized,d.magnitude,1,QueryTriggerInteraction.Ignore))
+            {if(hit.distance<.08f||hit.normal.y>.8f||hit.collider.attachedRigidbody||excluded&&hit.transform.IsChildOf(excluded.transform)||victim&&hit.transform.IsChildOf(victim))continue;return false;}
+            return true;
+        }
+        void Update()
+        {
+            if(done)return;done=true;Detonations++;Vector3 origin=transform.position+Vector3.up*.8f;
+            foreach(var actor in WorldActor.All.ToArray())
+            {
+                if(!actor||!actor.Alive)continue;float distance=Vector3.Distance(origin,actor.Center);
+                if(distance>radius||!Exposed(origin,actor.Center,actor.transform,excluded))continue;
+                var d=(actor.Center-origin).normalized;actor.Damage(damage*Mathf.Lerp(1,.18f,distance/radius),d*12,source);
+                if(!actor.helicopter)CivilianImpact.Launch(actor,d,Mathf.Lerp(22,7,distance/radius));
+            }
+            var g=GameDirector.Instance;
+            if(g)
+            {
+                float d=Vector3.Distance(origin,g.Player.Shoulder);if(d<radius&&Exposed(origin,g.Player.Shoulder,g.Player.transform,excluded)){g.Player.ReceiveDamage(damage*Mathf.Lerp(1,.2f,d/radius),origin);g.CameraRig.Kick(.14f*(1-d/radius));}
+                foreach(var e in g.Enemies)if(e&&e.Alive&&Vector3.Distance(origin,e.transform.position)<radius&&Exposed(origin,e.transform.position+Vector3.up,e.transform))e.Damage(damage,(e.transform.position-origin).normalized*8);
+            }
+            var sim=UrbanSimulation.Instance;
+            if(sim)foreach(var car in new List<CityVehicle>(sim.Cars))
+            {if(!car||car==excluded||car.Wrecked)continue;float d=Vector3.Distance(origin,car.transform.position+Vector3.up);if(d<radius&&Exposed(origin,car.transform.position+Vector3.up,car.transform,excluded))car.Damage(damage*Mathf.Lerp(.85f,.15f,d/radius),car.transform.position,source);}
+            Destroy(gameObject);
+        }
+    }
+}

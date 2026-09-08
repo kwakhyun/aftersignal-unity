@@ -1,0 +1,13 @@
+{
+    "completed": true,
+    "population": 891,
+    "parkingLots": 45,
+    "traffic": 24,
+    "lifts": 29,
+    "passed": [
+        "Populated walk-in districts, parking lots and multistorey lifts installed",
+        "All seven new transport types spawn in the world",
+        "Old-city exits and new districts share continuous road data"
+    ],
+    "errors": []
+}

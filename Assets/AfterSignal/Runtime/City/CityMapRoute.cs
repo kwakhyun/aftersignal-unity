@@ -35,6 +35,6 @@ namespace AfterSignal
             }
         }
 
-        Vector2 Point(Vector3 p) => new Vector2(Mathf.Clamp01(p.x / 790) * rectTransform.rect.width, -(1 - Mathf.Clamp01((p.z + 330) / 660)) * rectTransform.rect.height);
+        Vector2 Point(Vector3 p){var map=ExpansionRoads.Map(p);return new Vector2(map.x*rectTransform.rect.width,-(1-map.y)*rectTransform.rect.height);}
     }
 }

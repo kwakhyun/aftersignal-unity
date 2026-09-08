@@ -1,0 +1,314 @@
+[
+  {
+    "id": "street_lamp_01",
+    "source": "https://polyhaven.com/a/street_lamp_01",
+    "license": "CC0-1.0",
+    "files": [
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\street_lamp_01\\street_lamp_01.blend",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/blend/1k/street_lamp_01/street_lamp_01_1k.blend",
+        "md5": "62c3c1c6f478ee981b98d04bbdc01805"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\street_lamp_01\\textures\\street_lamp_01_metal_1k.exr",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/exr/1k/street_lamp_01/street_lamp_01_metal_1k.exr",
+        "md5": "2fd4f606bc1974559498c8b911997d25"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\street_lamp_01\\textures\\street_lamp_01_rough_1k.exr",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/exr/1k/street_lamp_01/street_lamp_01_rough_1k.exr",
+        "md5": "5a494cce4818c5e86a4b9f97d63a886e"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\street_lamp_01\\textures\\street_lamp_01_diff_1k.jpg",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/street_lamp_01/street_lamp_01_diff_1k.jpg",
+        "md5": "82efb7531a25cda3ef8af2aff8ecccf7"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\street_lamp_01\\textures\\street_lamp_01_opacity_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/street_lamp_01/street_lamp_01_opacity_1k.png",
+        "md5": "f63e82f9ca1e66bf69a9abd8ef79db72"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\street_lamp_01\\textures\\street_lamp_01_nor_gl_1k.exr",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/exr/1k/street_lamp_01/street_lamp_01_nor_gl_1k.exr",
+        "md5": "9b93445f8313f890dac0d5513f036d44"
+      }
+    ]
+  },
+  {
+    "id": "modular_street_seating",
+    "source": "https://polyhaven.com/a/modular_street_seating",
+    "license": "CC0-1.0",
+    "files": [
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\modular_street_seating\\modular_street_seating.blend",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/blend/1k/modular_street_seating/modular_street_seating_1k.blend",
+        "md5": "c9feabfcb32a8280e855bb03e8fdb869"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\modular_street_seating\\textures\\modular_street_seating_armrests_diff_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_street_seating/modular_street_seating_armrests_diff_1k.png",
+        "md5": "0565e8d2eb4ff198d0a880792b0b1624"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\modular_street_seating\\textures\\modular_street_seating_supports_nor_gl_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_street_seating/modular_street_seating_supports_nor_gl_1k.png",
+        "md5": "74baa2aa1097560c05e04dd99a3a4266"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\modular_street_seating\\textures\\modular_street_seating_supports_rough_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_street_seating/modular_street_seating_supports_rough_1k.png",
+        "md5": "8b25764de291a3e2dc9d2241a749365f"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\modular_street_seating\\textures\\modular_street_seating_armrests_rough_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_street_seating/modular_street_seating_armrests_rough_1k.png",
+        "md5": "0d0a6d9b852dc8770d5cf56b19bf843c"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\modular_street_seating\\textures\\modular_street_seating_connectors_diff_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_street_seating/modular_street_seating_connectors_diff_1k.png",
+        "md5": "3501b7e529f66e2e50ee43eb20d80fb7"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\modular_street_seating\\textures\\modular_street_seating_timber_nor_gl_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_street_seating/modular_street_seating_timber_nor_gl_1k.png",
+        "md5": "5c33140f0fcd6255050c0bdaaf5c78c5"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\modular_street_seating\\textures\\modular_street_seating_supports_metal_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_street_seating/modular_street_seating_supports_metal_1k.png",
+        "md5": "d32661aedfa14424e49086d068325520"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\modular_street_seating\\textures\\modular_street_seating_armrests_metal_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_street_seating/modular_street_seating_armrests_metal_1k.png",
+        "md5": "0282e7b7d520ec66fbe8292807c3f7c4"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\modular_street_seating\\textures\\modular_street_seating_supports_diff_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_street_seating/modular_street_seating_supports_diff_1k.png",
+        "md5": "16c5276289ace6cf1240ed929ac3d68c"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\modular_street_seating\\textures\\modular_street_seating_armrests_nor_gl_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_street_seating/modular_street_seating_armrests_nor_gl_1k.png",
+        "md5": "d515b96121684937ba26d8fd680fb4a6"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\modular_street_seating\\textures\\modular_street_seating_timber_rough_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_street_seating/modular_street_seating_timber_rough_1k.png",
+        "md5": "93b406e816b33d1ca567ee58318c9676"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\modular_street_seating\\textures\\modular_street_seating_timber_diff_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_street_seating/modular_street_seating_timber_diff_1k.png",
+        "md5": "0705d668a79b5e7b12842d8ff1c3fc75"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\modular_street_seating\\textures\\modular_street_seating_connectors_nor_gl_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_street_seating/modular_street_seating_connectors_nor_gl_1k.png",
+        "md5": "9281994ff23efe5badbc1eefa19b414e"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\modular_street_seating\\textures\\modular_street_seating_connectors_rough_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_street_seating/modular_street_seating_connectors_rough_1k.png",
+        "md5": "8d926ef08bd6f622aa8b3a5a5ac40dbf"
+      }
+    ]
+  },
+  {
+    "id": "concrete_road_barrier",
+    "source": "https://polyhaven.com/a/concrete_road_barrier",
+    "license": "CC0-1.0",
+    "files": [
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\concrete_road_barrier\\concrete_road_barrier.blend",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/blend/1k/concrete_road_barrier/concrete_road_barrier_1k.blend",
+        "md5": "a3e468415944c7271bd85b4c0c616fd6"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\concrete_road_barrier\\textures\\concrete_road_barrier_nor_gl_1k.exr",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/exr/1k/concrete_road_barrier/concrete_road_barrier_nor_gl_1k.exr",
+        "md5": "4532c35acd13385062a40f7b0b50343b"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\concrete_road_barrier\\textures\\concrete_road_barrier_rough_1k.exr",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/exr/1k/concrete_road_barrier/concrete_road_barrier_rough_1k.exr",
+        "md5": "9dc756383e79a6c8d32a2bc02466c8a2"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\concrete_road_barrier\\textures\\concrete_road_barrier_diff_1k.jpg",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/concrete_road_barrier/concrete_road_barrier_diff_1k.jpg",
+        "md5": "0fc11541996e1ddbdb1875dff35bc1c9"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\concrete_road_barrier\\textures\\concrete_road_barrier_disp_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/concrete_road_barrier/concrete_road_barrier_disp_1k.png",
+        "md5": "cef5c0386ca9f7bd380e75594d6a1f96"
+      }
+    ]
+  },
+  {
+    "id": "modular_urban_apartments_facade",
+    "source": "https://polyhaven.com/a/modular_urban_apartments_facade",
+    "license": "CC0-1.0",
+    "files": [
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\modular_urban_apartments_facade\\modular_urban_apartments_facade.blend",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/blend/1k/modular_urban_apartments_facade/modular_urban_apartments_facade_1k.blend",
+        "md5": "b96087f62fe03224993e4a8d52ea864b"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\modular_urban_apartments_facade\\textures\\modular_urban_apartments_facade_trim_01_diff_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_urban_apartments_facade/modular_urban_apartments_facade_trim_01_diff_1k.png",
+        "md5": "da801b5607c4dc9404deaab8400733d7"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\modular_urban_apartments_facade\\textures\\modular_urban_apartments_facade_objects_alpha_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_urban_apartments_facade/modular_urban_apartments_facade_objects_alpha_1k.png",
+        "md5": "e1c870078793b0e50c62d3c863dbcce7"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\modular_urban_apartments_facade\\textures\\modular_urban_apartments_facade_plaster_diff_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_urban_apartments_facade/modular_urban_apartments_facade_plaster_diff_1k.png",
+        "md5": "05549038f9e794cef728ed18fe9a8d1b"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\modular_urban_apartments_facade\\textures\\modular_urban_apartments_facade_trim_02_nor_gl_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_urban_apartments_facade/modular_urban_apartments_facade_trim_02_nor_gl_1k.png",
+        "md5": "e581264b9a5aad996db6cc5dbc4158b1"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\modular_urban_apartments_facade\\textures\\modular_urban_apartments_facade_trim_01_nor_gl_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_urban_apartments_facade/modular_urban_apartments_facade_trim_01_nor_gl_1k.png",
+        "md5": "89b0d146c871cc9278c3190ebe97ee8d"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\modular_urban_apartments_facade\\textures\\modular_urban_apartments_facade_objects_nor_gl_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_urban_apartments_facade/modular_urban_apartments_facade_objects_nor_gl_1k.png",
+        "md5": "fa9446737f9b62116ba97dad2771a4a4"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\modular_urban_apartments_facade\\textures\\modular_urban_apartments_facade_objects_diff_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_urban_apartments_facade/modular_urban_apartments_facade_objects_diff_1k.png",
+        "md5": "fca738bbccd729d7a32a71632e7e5f3c"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\modular_urban_apartments_facade\\textures\\modular_urban_apartments_facade_objects_rough_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_urban_apartments_facade/modular_urban_apartments_facade_objects_rough_1k.png",
+        "md5": "880544a9cfee3bced7553b936b287498"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\modular_urban_apartments_facade\\textures\\modular_urban_apartments_facade_objects_metal_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_urban_apartments_facade/modular_urban_apartments_facade_objects_metal_1k.png",
+        "md5": "11cbb308f137a5d67a7b965feef28e52"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\modular_urban_apartments_facade\\textures\\modular_urban_apartments_facade_plaster_rough_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_urban_apartments_facade/modular_urban_apartments_facade_plaster_rough_1k.png",
+        "md5": "00604e6acf1e2338080cadbbe49cbae0"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\modular_urban_apartments_facade\\textures\\modular_urban_apartments_facade_plaster_nor_gl_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_urban_apartments_facade/modular_urban_apartments_facade_plaster_nor_gl_1k.png",
+        "md5": "41952635720f7a71000b0a88c71e813b"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\modular_urban_apartments_facade\\textures\\modular_urban_apartments_facade_trim_02_rough_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_urban_apartments_facade/modular_urban_apartments_facade_trim_02_rough_1k.png",
+        "md5": "a529fc4f002d016bab568eeac1a4f316"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\modular_urban_apartments_facade\\textures\\modular_urban_apartments_facade_trim_01_rough_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_urban_apartments_facade/modular_urban_apartments_facade_trim_01_rough_1k.png",
+        "md5": "16243b21024dd4db91c71e0a47292a87"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\modular_urban_apartments_facade\\textures\\modular_urban_apartments_facade_trim_02_diff_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/modular_urban_apartments_facade/modular_urban_apartments_facade_trim_02_diff_1k.png",
+        "md5": "5c9c4cd1e5b5b28f207f816fb2d108c6"
+      }
+    ]
+  },
+  {
+    "id": "industrial_wall_lamp",
+    "source": "https://polyhaven.com/a/industrial_wall_lamp",
+    "license": "CC0-1.0",
+    "files": [
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\industrial_wall_lamp\\industrial_wall_lamp.blend",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/blend/1k/industrial_wall_lamp/industrial_wall_lamp_1k.blend",
+        "md5": "53f1f4b18c8658e33df0da3b5c7f5f11"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\industrial_wall_lamp\\textures\\industrial_wall_lamp_diff_1k.jpg",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/industrial_wall_lamp/industrial_wall_lamp_diff_1k.jpg",
+        "md5": "fec1b0755dccb02b19b6a386169460cc"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\industrial_wall_lamp\\textures\\industrial_wall_lamp_emissive_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/industrial_wall_lamp/industrial_wall_lamp_emissive_1k.png",
+        "md5": "93f61337cb240385de17e2f2a27eb42a"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\industrial_wall_lamp\\textures\\industrial_wall_lamp_glass_alpha_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/industrial_wall_lamp/industrial_wall_lamp_glass_alpha_1k.png",
+        "md5": "d6dd3aa5c1790bf133e94c2a1a69b77d"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\industrial_wall_lamp\\textures\\industrial_wall_lamp_glass_diff_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/industrial_wall_lamp/industrial_wall_lamp_glass_diff_1k.png",
+        "md5": "5f8c645119a8debc49958b7d36ed4af3"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\industrial_wall_lamp\\textures\\industrial_wall_lamp_glass_nor_gl_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/industrial_wall_lamp/industrial_wall_lamp_glass_nor_gl_1k.png",
+        "md5": "5b7e9828c48a16d4f3687e2ddc6aaeca"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\industrial_wall_lamp\\textures\\industrial_wall_lamp_glass_rough_1k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/industrial_wall_lamp/industrial_wall_lamp_glass_rough_1k.png",
+        "md5": "181621e6197b0d95c499681c5ac5c4ba"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\industrial_wall_lamp\\textures\\industrial_wall_lamp_nor_gl_1k.exr",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/exr/1k/industrial_wall_lamp/industrial_wall_lamp_nor_gl_1k.exr",
+        "md5": "1536a7093ae2ed07afc07e513d6c5021"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\industrial_wall_lamp\\textures\\industrial_wall_lamp_rough_1k.exr",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/exr/1k/industrial_wall_lamp/industrial_wall_lamp_rough_1k.exr",
+        "md5": "68700b90a0ece52b07b493d609f1768b"
+      }
+    ]
+  },
+  {
+    "id": "painted_wooden_bench",
+    "source": "https://polyhaven.com/a/painted_wooden_bench",
+    "license": "CC0-1.0",
+    "files": [
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\painted_wooden_bench\\painted_wooden_bench.blend",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/blend/1k/painted_wooden_bench/painted_wooden_bench_1k.blend",
+        "md5": "2a3eedc9e85e0fcbf7f92145aeb61bc2"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\painted_wooden_bench\\textures\\painted_wooden_bench_nor_gl_1k.exr",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/exr/1k/painted_wooden_bench/painted_wooden_bench_nor_gl_1k.exr",
+        "md5": "8435611f72c37df8955f926fb0ac6f24"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\painted_wooden_bench\\textures\\painted_wooden_bench_diff_1k.jpg",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/painted_wooden_bench/painted_wooden_bench_diff_1k.jpg",
+        "md5": "60c7d0f34f52b1003345d318e35f468d"
+      },
+      {
+        "path": "Artifacts\\WorldExpansion\\Source\\painted_wooden_bench\\textures\\painted_wooden_bench_rough_1k.exr",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/exr/1k/painted_wooden_bench/painted_wooden_bench_rough_1k.exr",
+        "md5": "931831c3681226933a3a01d07cc57d4d"
+      }
+    ]
+  }
+]

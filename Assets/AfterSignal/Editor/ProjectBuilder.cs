@@ -46,9 +46,14 @@ namespace AfterSignal.Editor
         {
             PlayerSettings.SetUseDefaultGraphicsAPIs(BuildTarget.StandaloneWindows64,false);PlayerSettings.SetGraphicsAPIs(BuildTarget.StandaloneWindows64,new[]{GraphicsDeviceType.Direct3D11});PlayerSettings.useFlipModelSwapchain=false;
             if(EditorBuildSettings.scenes.Length<4)CreateProject();Directory.CreateDirectory("Builds/Windows");Directory.CreateDirectory("Artifacts");PlayerSettings.bundleVersion="1.6.0";AssetDatabase.SaveAssets();
-            var options=new BuildPlayerOptions {scenes=Array.ConvertAll(EditorBuildSettings.scenes,s=>s.path),locationPathName="Builds/Windows/AFTERSIGNAL.exe",target=BuildTarget.StandaloneWindows64,options=mode|BuildOptions.CleanBuildCache};
+            string output="Builds/Windows/AFTERSIGNAL.exe";
+            var args=Environment.GetCommandLineArgs();int outputIndex=Array.IndexOf(args,"-player-output");
+            if(outputIndex>=0&&outputIndex+1<args.Length)output=args[outputIndex+1];
+            Directory.CreateDirectory(Path.GetDirectoryName(output));
+            var options=new BuildPlayerOptions {scenes=Array.ConvertAll(EditorBuildSettings.scenes,s=>s.path),locationPathName=output,target=BuildTarget.StandaloneWindows64,options=mode|BuildOptions.CleanBuildCache};
             var report=BuildPipeline.BuildPlayer(options);File.WriteAllText("Artifacts/build-result.json",JsonUtility.ToJson(new BuildResult {result=report.summary.result.ToString(),bytes=report.summary.totalSize,errors=report.summary.totalErrors,warnings=report.summary.totalWarnings},true));
             if(report.summary.result!=UnityEditor.Build.Reporting.BuildResult.Succeeded)throw new Exception("Windows build failed: "+report.summary.result);
+            File.WriteAllText("Builds/active-player.txt",Path.GetRelativePath(Directory.GetCurrentDirectory(),Path.GetFullPath(output)));
         }
         public static void RebuildAndBuild(){CreateProject();BuildWindows();}
         [Serializable] class BuildResult{public string result;public ulong bytes;public int errors,warnings;}

@@ -56,7 +56,7 @@ namespace AfterSignal
             area = Label(objectivePanel, "", 11, 6, 260, 17, 10, muted, FontStyle.Bold);
             objective = Label(objectivePanel, "", 11, 28, 260, 52, 14, white);
             rail = Label(root, "", 0, 0, 1, 1, 1, Color.clear);
-            var guide = Label(root, "WASD 이동   ·   E 상호작용   ·   ESC 조작 / 설정", 0, 0, 650, 22, 11, muted);
+            var guide = Label(root, "WASD 달리기 · E 상호작용 · 마우스 시점 · 휠 줌 · J 일지 · ESC 설정", 0, 0, 650, 22, 11, muted);
             CenterBottom(guide.rectTransform, 22, 650, 22);
             guide.alignment = TextAnchor.MiddleCenter;
             notice = Label(root, "", 0, 200, 850, 34, 17, mint, FontStyle.Bold);

@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 namespace AfterSignal
 {
-    public sealed class GameDirector : MonoBehaviour
+    public sealed partial class GameDirector : MonoBehaviour
     {
         public static GameDirector Instance { get; private set; }
         public static bool SkipTitle;
@@ -51,9 +51,10 @@ namespace AfterSignal
         float waveClock=4.5f,coreCooldown,inputSuppress,prePauseScale=1;
         int waveIndex;
         InteractionPoint[] interactions;
-        void Awake(){Instance=this;Time.timeScale=1;FramePacing.Apply();Physics.IgnoreLayerCollision(8,9,true);Physics.IgnoreLayerCollision(9,9,true);}
+        void Awake(){Instance=this;Time.timeScale=1;FramePacing.Apply();Physics.IgnoreLayerCollision(8,9,false);Physics.IgnoreLayerCollision(9,9,true);}
         void Start()
         {
+            ExpansionWorld.Install(this);
             if(!tuning)tuning=Resources.Load<GameTuning>("GameTuning");
             spawn=CivicWorld.Spawn(stage,spawn);spawn=CivicWorld.SafeSpawn(stage,spawn);checkpoint=spawn;
             Player=FindAnyObjectByType<PlayerMotor>();Player.Initialize(this);Player.Respawn(spawn);
@@ -65,16 +66,20 @@ namespace AfterSignal
             foreach(var enemy in FindObjectsByType<EnemyBrain>()){Enemies.Add(enemy);enemy.Initialize(this);if(enemy.boss)Boss=enemy;}
             Glass.AddRange(FindObjectsByType<BreakableGlass>());
             gameObject.AddComponent<CityLife>().Initialize(this);
+            gameObject.AddComponent<CityChronicle>();gameObject.AddComponent<CitySocial>();
             interactions=FindObjectsByType<InteractionPoint>();
             Hud=gameObject.AddComponent<SignalHud>();Hud.Initialize(this);
             bool pacingProbe=System.Array.IndexOf(System.Environment.GetCommandLineArgs(),"-quality-probe")>=0;
-            Title=stage==StageId.Station&&!SkipTitle&&!pacingProbe;SkipTitle=true;
+            Title=!SkipTitle&&!pacingProbe;SkipTitle=true;
+            if(Title)Time.timeScale=0;
+            gameObject.AddComponent<TitleScreen>().Initialize(this);
             Speed=stage==StageId.Carriage?22:stage==StageId.Roof?34:0;
             Memories=PlayerPrefs.GetInt("AFTERSIGNAL.Unity.Memories",0);
             if(stage==StageId.Haven)Toast(PlayerPrefs.GetInt("AFTERSIGNAL.Unity.Completed",0)>0?"애프터라이트 · 노아와 이웃들의 소식을 확인하세요":"애프터라이트 · 북쪽 가로의 본부로 향하세요",6);
             var district=CampaignCatalog.Get(stage);if(district!=null){ShowDialogue(district.title,district.brief);gameObject.AddComponent<DistrictCheckpoint>();}
             gameObject.AddComponent<SceneLightBudget>();
             Ready=true;
+            if(CivicWorld.Interior(stage)){gameObject.AddComponent<InteriorRefinement>();if(!GetComponent<PrisonSystem>())gameObject.AddComponent<PrisonSystem>();}
             CityLife.Instance.InstallErrandMarker();
             if(System.Array.IndexOf(System.Environment.GetCommandLineArgs(),"-life-smoke")>=0)gameObject.AddComponent<CityLifeSmoke>();
             if(pacingProbe)gameObject.AddComponent<PacingProbe>();
@@ -90,6 +95,7 @@ namespace AfterSignal
         {
             if(!Ready)return;
             var control=Input.Read();
+            if(control.journal&&(!Blocked||CityLife.Instance.Mode=="journal")){if(CityLife.Instance.Mode=="journal")CityLife.Instance.Dismiss();else CityLife.Instance.StoryJournal();return;}
             if(control.pause&&!Title&&!Dead&&!Transition){if(CityLife.Instance&&CityLife.Instance.Mode=="sleeping")return;if(Dialogue)CloseDialogue();else SetPaused(!Paused);}
             if(Dialogue&&control.interact&&!(CityLife.Instance&&CityLife.Instance.Mode.Length>0)){CloseDialogue();return;}
             if(Blocked){Audio.SetPaused(Paused||Dead);return;}
@@ -98,8 +104,10 @@ namespace AfterSignal
             Elapsed+=dt;NoticeTimer=Mathf.Max(0,NoticeTimer-dt);coreCooldown-=dt;
             if(UrbanSimulation.Instance&&UrbanSimulation.Instance.enabled)UrbanSimulation.Instance.BeforeInput(ref control,dt);
             CityLife.Instance?.BeforeInput(ref control,dt);
+            PrisonSystem.BeforeInput(ref control,dt);
+            CameraRig.ReadLook(Input.Frame);
             float remaining=dt;
-            while(remaining>.00001f){float step=Mathf.Min(.02f,remaining);if(UrbanSimulation.Instance&&UrbanSimulation.Instance.Driving)UrbanSimulation.Instance.Tick(control,step);else Player.Tick(control,step);foreach(var enemy in Enemies)if(enemy&&enemy.gameObject.activeSelf)enemy.Tick(step);control.jump=control.dash=control.skill=control.reload=false;control.weaponCycle=0;control.weapon=-1;remaining-=step;}
+            while(remaining>.00001f){float step=Mathf.Min(.02f,remaining);if(UrbanSimulation.Instance&&UrbanSimulation.Instance.Driving)UrbanSimulation.Instance.Tick(control,step);else if(!(CityBusService.Instance&&CityBusService.Instance.Riding))Player.Tick(control,step);foreach(var enemy in Enemies)if(enemy&&enemy.gameObject.activeSelf)enemy.Tick(step);control.jump=control.dash=control.skill=control.reload=false;control.weaponCycle=0;control.weapon=-1;remaining-=step;}
             if(stage==StageId.Station&&CampaignRules.CanBoard(Power,Cleared))Arrival=Mathf.MoveTowards(Arrival,1,dt/4f);
             if(stage==StageId.Carriage||stage==StageId.Roof){Speed=Mathf.MoveTowards(Speed,stage==StageId.Roof?34:27,dt*2);TravelDistance+=Speed*dt;}
             UpdateBoss(dt);
@@ -114,6 +122,7 @@ namespace AfterSignal
         {
             get {
                 if(stage==StageId.UrbanCity)return "M 도시 지도 · E 차량 탑승 / 건물 출입 · 주유소에서 연료 보충";
+                if(stage==StageId.UrbanInterior&&ResidentialWorld.VisitHome>=0)return ResidentialWorld.VisitTitle+" · E / ESC";
                 if(stage==StageId.UrbanInterior)return UrbanCatalog.Name(UrbanCatalog.Current)+" · 직원과 대화 / 출입문으로 돌아가기";
                 if(stage==StageId.Residence)return Player.transform.position.y>18?"내 방을 둘러보고 현관문 열기 · E / 승강기 또는 비상계단으로 1층":"1층 출입구에서 E · 애프터라이트로 외출";
                 if(stage==StageId.School)return "학교 도서실과 교실 탐색 · 교사와 대화 / 출입구 E";
@@ -127,14 +136,6 @@ namespace AfterSignal
                 return CampaignCatalog.NextChapter>0?"노아의 메인 의뢰 · 광장 아래 노선 단말":"도시 노선 복구 완료 · 주민 의뢰와 선착장 탐색";
             }
         }
-        public void Begin(bool resume=false)
-        {
-            Title=false;SkipTitle=true;inputSuppress=.2f;
-            if(resume){int saved=Mathf.Clamp(PlayerPrefs.GetInt("AFTERSIGNAL.Unity.Stage",0),0,CampaignRules.Scenes.Length-1);if(saved!=0){SceneManager.LoadScene(CampaignRules.Scenes[saved]);return;}}
-            else {LifeState.Reset();Memories=0;PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Stage",0);PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Memories",0);PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Completed",0);ResetExpansion();CivicWorld.ClearArrival();UrbanCatalog.Reset();
-                var args=System.Environment.GetCommandLineArgs();if(System.Array.IndexOf(args,"-aftersignal-smoke")<0&&System.Array.IndexOf(args,"-expansion-smoke")<0){PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Stage",(int)StageId.Residence);PlayerPrefs.Save();SceneManager.LoadScene(CampaignRules.Scene(StageId.Residence));return;}}
-            Toast("WASD 이동 · 왼쪽 클릭 공격 · 오른쪽 클릭 로프",5);
-        }
         public void SetPaused(bool value){if(value==Paused)return;if(value){prePauseScale=Time.timeScale;Time.timeScale=0;}else Time.timeScale=prePauseScale;Paused=value;inputSuppress=.16f;Player.Rope.Release();}
         public void ShowDialogue(string title,string text){DialogueTitle=title;DialogueText=text;Player.Rope.Release();}
         public void CloseDialogue(){CityLife.Instance?.Close();DialogueText=null;inputSuppress=.18f;if(Audio)Audio.Play("ui_cancel",Player.Shoulder,.12f,1);}
@@ -142,10 +143,10 @@ namespace AfterSignal
         public void DamageNumber(Vector3 position,int amount,bool critical){if(Hud)Hud.AddDamage(position,amount,critical);}
         public void EnemyDied(EnemyBrain enemy){Kills++;LifeState.Earn(enemy.boss?350:25);Player.Heal(enemy.boss?30:3);if(enemy.boss){Toast("컨덕터 정지 · 기억 코어를 회수하세요",6);ExposeTimer=WaveWarning=0;}else if(Cleared)Toast("구역 확보 · 다음 목표로 이동하세요");}
         public void GlassBroken(){BrokenGlass=true;Toast("유리 격벽 파괴 · 다음 객실로 진입하세요");}
-        public void Die(){WantedSystem.Clear("");Dead=true;Player.Rope.Release();Time.timeScale=0;}
+        public void Die(){if(PrisonSystem.Capture(this))return;WantedSystem.Clear("");Dead=true;Player.Rope.Release();Time.timeScale=0;}
         public void Retry(){Time.timeScale=1;SkipTitle=true;SceneManager.LoadScene(CampaignRules.Scene(stage));}
         public void Restart(){Time.timeScale=1;SkipTitle=false;PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Stage",0);PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Memories",0);ResetExpansion();SceneManager.LoadScene(CampaignRules.Scene(StageId.Station));}
-        static void ResetExpansion(){foreach(string key in new[]{"Chapters","Accepted","Jobs"})PlayerPrefs.DeleteKey("AFTERSIGNAL.Unity.Expansion."+key);}
+        static void ResetExpansion(){if(CityChronicle.Instance)CityChronicle.Instance.ResetProgress();else PlayerPrefs.DeleteKey(CityChronicle.SaveKey);foreach(string key in new[]{"Chapters","Accepted","Jobs"})PlayerPrefs.DeleteKey("AFTERSIGNAL.Unity.Expansion."+key);}
         public void Travel(StageId next){if(Transition)return;StartCoroutine(TravelRoutine(next));}
         IEnumerator TravelRoutine(StageId next)
         {

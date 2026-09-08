@@ -125,6 +125,7 @@ namespace AfterSignal
 
         public static void Reset()
         {
+            ArmoryInventory.Reset();
             loaded = true;
             Credits = 1500;
             Savings = Outfit = 0;

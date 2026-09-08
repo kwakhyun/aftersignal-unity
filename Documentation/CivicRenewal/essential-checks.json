@@ -1,0 +1,26 @@
+{
+    "completed": true,
+    "passed": [
+        "Government, distinct districts, physical weapon store and usable facility objects loaded",
+        "Player capsule physically collides with NPC and triggers a bump reply",
+        "Civilian and police deaths drop credits; hit and hurt sounds actually play",
+        "Walking over dropped credits adds the amount once and removes the pickup",
+        "Vehicle explosion damages nearby people, respects distance and is blocked by a wall",
+        "Rifle, grenade, bazooka and shotgun purchases debit the exact total and equip owned slots",
+        "Purchased rifle consumes a round and hits the actual centered target",
+        "Rifle reload transfers finite reserve ammunition into the magazine",
+        "Shotgun combines multiple pellet hits before the target invulnerability window",
+        "Bazooka projectile impacts, explodes and applies radial damage",
+        "Thrown grenade uses its fuse and consumes the purchased grenade",
+        "Facility work starts without paying a reward before the work is done",
+        "Three physical work stations pay once and prevent same-day reward farming",
+        "Night lights activate near the player and neon emission follows the clock",
+        "Daylight disables the local streetlight pool",
+        "Story anomaly spawns creatures and dispatches military units that actually fire and damage them"
+    ],
+    "errors": [],
+    "consoles": 133,
+    "props": 137,
+    "armyShots": 77,
+    "government": "(840.00, 0.00, 870.00)"
+}

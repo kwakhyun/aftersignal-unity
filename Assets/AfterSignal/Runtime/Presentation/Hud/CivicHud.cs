@@ -88,7 +88,8 @@ namespace AfterSignal
             {
                 nextArsenalText = Time.unscaledTime + .08f;
                 arsenalStatus.text = p.Weapon == WeaponId.Pistol ? (p.Reloading ? $"장전 중  {p.ReloadProgress * 100:0}%" : $"{p.Ammo:00} / {game.tuning.magazineSize:00}     R  장전") : p.AttackTime > 0 ? $"{(p.Action == WeaponAction.Dash ? "대시 공격" : p.Action == WeaponAction.Skill ? p.SkillName : "연속 검격  " + (p.Combo + 1))}" : "SHIFT + LMB  대시 공격";
-                skillStatus.text = $"Q  {p.SkillName}   ·   " + (p.SkillCooldown > 0 ? $"{p.SkillCooldown:0.0}s" : p.Energy < game.tuning.skillCost ? "에너지 부족" : "준비 완료");
+                if(p.Equipment&&p.Equipment.Extended)arsenalStatus.text=p.Equipment.Readout;
+                skillStatus.text = p.Equipment&&p.Equipment.Extended?"LMB 발사 · R 장전 · 1–7 장비 선택":$"Q  {p.SkillName}   ·   " + (p.SkillCooldown > 0 ? $"{p.SkillCooldown:0.0}s" : p.Energy < game.tuning.skillCost ? "에너지 부족" : "준비 완료");
                 reloadBar.rectTransform.sizeDelta = new Vector2(p.Reloading ? 280 * p.ReloadProgress : 0, 3);
             }
 

@@ -2,6 +2,13 @@ param([string]$Python)
 $ErrorActionPreference='Stop'
 $taskRoot=Split-Path $PSScriptRoot -Parent
 $gamePath=Join-Path $taskRoot 'Builds/Windows/AFTERSIGNAL.exe'
+$activePlayer=Join-Path $taskRoot 'Builds/active-player.txt'
+if (Test-Path -LiteralPath $activePlayer) {
+    $relativePlayer=(Get-Content -LiteralPath $activePlayer -Raw).Trim()
+    $candidatePlayer=[IO.Path]::GetFullPath((Join-Path $taskRoot $relativePlayer))
+    $buildRoot=[IO.Path]::GetFullPath((Join-Path $taskRoot 'Builds'))+[IO.Path]::DirectorySeparatorChar
+    if ($candidatePlayer.StartsWith($buildRoot,[StringComparison]::OrdinalIgnoreCase) -and (Test-Path -LiteralPath $candidatePlayer)) { $gamePath=$candidatePlayer }
+}
 if (-not (Test-Path -LiteralPath $gamePath)) { throw 'Build the Unity Windows player first: Tools/Build-Windows.ps1 -Release' }
 $gatewayProcess=$null
 $running=$false

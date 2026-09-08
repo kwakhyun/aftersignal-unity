@@ -6,6 +6,7 @@ namespace AfterSignal
     {
         public static bool Resolve(GameDirector game, InteractionPoint[] points, out Vector3 target, out string label)
         {
+            if(CityChronicle.Instance&&CityChronicle.Instance.Guide(out target,out label))return true;
             target = game.Player.transform.position;
             label = game.Objective;
             InteractionKind kind = InteractionKind.MissionBoard;
