@@ -28,7 +28,7 @@ namespace AfterSignal
         public bool Dead { get; private set; }
         public bool Transition { get; private set; }
         public bool Dialogue => !string.IsNullOrEmpty(DialogueText);
-        public bool Blocked => Title||Paused||Dead||Transition||Dialogue;
+        public bool Blocked => Title||Paused||Dead||Transition||Dialogue||CityCinematic.Active;
         public bool Cleared => LivingGuards==0;
         public int LivingGuards { get {int n=0;foreach(var e in Enemies)if(e&&e.Alive&&!e.boss)n++;return n;} }
         public int Kills { get; private set; }
@@ -96,18 +96,19 @@ namespace AfterSignal
             if(!Ready)return;
             var control=Input.Read();
             if(control.journal&&(!Blocked||CityLife.Instance.Mode=="journal")){if(CityLife.Instance.Mode=="journal")CityLife.Instance.Dismiss();else CityLife.Instance.StoryJournal();return;}
-            if(control.pause&&!Title&&!Dead&&!Transition){if(CityLife.Instance&&CityLife.Instance.Mode=="sleeping")return;if(Dialogue)CloseDialogue();else SetPaused(!Paused);}
+            if(control.pause&&!Title&&!Dead&&!Transition&&!CityCinematic.Active){if(CityLife.Instance&&CityLife.Instance.Mode=="sleeping")return;if(Dialogue)CloseDialogue();else SetPaused(!Paused);}
             if(Dialogue&&control.interact&&!(CityLife.Instance&&CityLife.Instance.Mode.Length>0)){CloseDialogue();return;}
             if(Blocked){Audio.SetPaused(Paused||Dead);return;}
             float dt=Mathf.Min(Time.deltaTime,.1f);Audio.SetPaused(false);inputSuppress-=dt;
             if(inputSuppress>0){control.attack=control.grapple=control.interact=false;}
             Elapsed+=dt;NoticeTimer=Mathf.Max(0,NoticeTimer-dt);coreCooldown-=dt;
+            VenueRide.BeforeInput(ref control);
             if(UrbanSimulation.Instance&&UrbanSimulation.Instance.enabled)UrbanSimulation.Instance.BeforeInput(ref control,dt);
             CityLife.Instance?.BeforeInput(ref control,dt);
             PrisonSystem.BeforeInput(ref control,dt);
             CameraRig.ReadLook(Input.Frame);
             float remaining=dt;
-            while(remaining>.00001f){float step=Mathf.Min(.02f,remaining);if(UrbanSimulation.Instance&&UrbanSimulation.Instance.Driving)UrbanSimulation.Instance.Tick(control,step);else if(!(CityBusService.Instance&&CityBusService.Instance.Riding))Player.Tick(control,step);foreach(var enemy in Enemies)if(enemy&&enemy.gameObject.activeSelf)enemy.Tick(step);control.jump=control.dash=control.skill=control.reload=false;control.weaponCycle=0;control.weapon=-1;remaining-=step;}
+            while(remaining>.00001f){float step=Mathf.Min(.02f,remaining);if(UrbanSimulation.Instance&&UrbanSimulation.Instance.Driving)UrbanSimulation.Instance.Tick(control,step);else if(!VenueRide.Riding&&!(CityBusService.Instance&&CityBusService.Instance.Riding))Player.Tick(control,step);foreach(var enemy in Enemies)if(enemy&&enemy.gameObject.activeSelf)enemy.Tick(step);control.jump=control.dash=control.skill=control.reload=false;control.weaponCycle=0;control.weapon=-1;remaining-=step;}
             if(stage==StageId.Station&&CampaignRules.CanBoard(Power,Cleared))Arrival=Mathf.MoveTowards(Arrival,1,dt/4f);
             if(stage==StageId.Carriage||stage==StageId.Roof){Speed=Mathf.MoveTowards(Speed,stage==StageId.Roof?34:27,dt*2);TravelDistance+=Speed*dt;}
             UpdateBoss(dt);

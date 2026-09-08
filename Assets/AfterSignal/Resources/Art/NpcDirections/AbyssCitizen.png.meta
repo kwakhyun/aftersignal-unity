@@ -1,0 +1,511 @@
+fileFormatVersion: 2
+guid: 994b3c31739b547428da42366c897290
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 141.16586
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 0
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: 4
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: AbyssCitizen-00
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 940
+        width: 313
+        height: 314
+      alignment: 9
+      pivot: {x: 0.47029206, y: 0.012738854}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 517356c10e6457f40800000000000000
+      internalID: 5725560429634467605
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AbyssCitizen-01
+      rect:
+        serializedVersion: 2
+        x: 313
+        y: 940
+        width: 314
+        height: 314
+      alignment: 9
+      pivot: {x: 0.44986004, y: 0.00955414}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e3e8ef898a10ba2b0800000000000000
+      internalID: -5572358290307903938
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AbyssCitizen-02
+      rect:
+        serializedVersion: 2
+        x: 627
+        y: 940
+        width: 313
+        height: 314
+      alignment: 9
+      pivot: {x: 0.41870943, y: 0.00955414}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 18646b38c0e083210800000000000000
+      internalID: 1312814738290656897
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AbyssCitizen-03
+      rect:
+        serializedVersion: 2
+        x: 940
+        y: 940
+        width: 314
+        height: 314
+      alignment: 9
+      pivot: {x: 0.4768399, y: 0.015923567}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c32ebdd88d64b7d90800000000000000
+      internalID: -7099002491712576964
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AbyssCitizen-04
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 628
+        width: 313
+        height: 312
+      alignment: 9
+      pivot: {x: 0.47352153, y: 0.0032051282}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c12d5a44a9db5960800000000000000
+      internalID: 7591900896508584384
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AbyssCitizen-05
+      rect:
+        serializedVersion: 2
+        x: 313
+        y: 628
+        width: 314
+        height: 312
+      alignment: 9
+      pivot: {x: 0.43622473, y: 0.044871796}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d60e09a57fcde680800000000000000
+      internalID: -8724088798892390695
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AbyssCitizen-06
+      rect:
+        serializedVersion: 2
+        x: 627
+        y: 629
+        width: 313
+        height: 311
+      alignment: 9
+      pivot: {x: 0.41824505, y: 0.041800644}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8122d90e7d7de49c0800000000000000
+      internalID: -3940975301716270568
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AbyssCitizen-07
+      rect:
+        serializedVersion: 2
+        x: 940
+        y: 628
+        width: 314
+        height: 312
+      alignment: 9
+      pivot: {x: 0.46517745, y: 0.048076924}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 43ef9dfb8bb11cf30800000000000000
+      internalID: 4593983575201283636
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AbyssCitizen-08
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 330
+        width: 313
+        height: 298
+      alignment: 9
+      pivot: {x: 0.47593063, y: 0.023489933}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8bf4cf70d3777a060800000000000000
+      internalID: 6964666452762447800
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AbyssCitizen-09
+      rect:
+        serializedVersion: 2
+        x: 313
+        y: 331
+        width: 314
+        height: 297
+      alignment: 9
+      pivot: {x: 0.43314493, y: 0.030303031}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 89b05f52d56784ae0800000000000000
+      internalID: -1564870728070394984
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AbyssCitizen-10
+      rect:
+        serializedVersion: 2
+        x: 627
+        y: 331
+        width: 313
+        height: 298
+      alignment: 9
+      pivot: {x: 0.4236159, y: 0.026845638}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 07e40d2a7c0126d10800000000000000
+      internalID: 2117273224433651312
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AbyssCitizen-11
+      rect:
+        serializedVersion: 2
+        x: 940
+        y: 328
+        width: 314
+        height: 300
+      alignment: 9
+      pivot: {x: 0.45974013, y: 0.006666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 624074bf95b872e10800000000000000
+      internalID: 2172858563813639206
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AbyssCitizen-12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 313
+        height: 330
+      alignment: 9
+      pivot: {x: 0.4661322, y: 0.10909091}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37d79a44657962440800000000000000
+      internalID: 4910778840469044595
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AbyssCitizen-13
+      rect:
+        serializedVersion: 2
+        x: 313
+        y: 0
+        width: 314
+        height: 331
+      alignment: 9
+      pivot: {x: 0.45189768, y: 0.11480363}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c1fd99b32bc189980800000000000000
+      internalID: -8532037942223708388
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AbyssCitizen-14
+      rect:
+        serializedVersion: 2
+        x: 627
+        y: 0
+        width: 313
+        height: 331
+      alignment: 9
+      pivot: {x: 0.42688024, y: 0.11480363}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1403130714f67e680800000000000000
+      internalID: -8725883426161217471
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AbyssCitizen-15
+      rect:
+        serializedVersion: 2
+        x: 940
+        y: 0
+        width: 314
+        height: 328
+      alignment: 9
+      pivot: {x: 0.3980482, y: 0.0121951215}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d7d32165663873d30800000000000000
+      internalID: 4411138835586628989
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      AbyssCitizen-00: 5725560429634467605
+      AbyssCitizen-01: -5572358290307903938
+      AbyssCitizen-02: 1312814738290656897
+      AbyssCitizen-03: -7099002491712576964
+      AbyssCitizen-04: 7591900896508584384
+      AbyssCitizen-05: -8724088798892390695
+      AbyssCitizen-06: -3940975301716270568
+      AbyssCitizen-07: 4593983575201283636
+      AbyssCitizen-08: 6964666452762447800
+      AbyssCitizen-09: -1564870728070394984
+      AbyssCitizen-10: 2117273224433651312
+      AbyssCitizen-11: 2172858563813639206
+      AbyssCitizen-12: 4910778840469044595
+      AbyssCitizen-13: -8532037942223708388
+      AbyssCitizen-14: -8725883426161217471
+      AbyssCitizen-15: 4411138835586628989
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

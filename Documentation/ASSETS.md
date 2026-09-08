@@ -1,5 +1,7 @@
 # Assets and packages
 
+- Four cities: eight original image-generated directional NPC sheets (128 frames), parametric venue architecture, and the original 60-second 3D film `SIGNAL / TIDE`. Creation prompts, reference sources and provenance are documented in `FourCities/REFERENCES.md` and `FourCities/ART-PROMPTS.json`.
+
 - Music: six user-supplied Suno-generated instrumental WAV masters, preserved unchanged in `Assets/AfterSignal/Resources/Audio/Music`. Track mapping, provenance details, playback gain measurements and loop handling are documented in `Audio/MUSIC.md` and `Audio/music-sources.json`. These are supplied recordings, separate from the project's synthesized sound effects.
 
 - Seo: 96 original transparent PNG frames copied from the existing AFTERSIGNAL project (`seo-v2`, `seo-v21`, `seo-v22`, `seo-v23`, `seo-v40`). Generated originally with image_gen for this project.

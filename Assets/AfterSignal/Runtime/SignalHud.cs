@@ -10,6 +10,7 @@ namespace AfterSignal
     {
         readonly Color ink=new Color(.035f,.07f,.095f,.94f),mint=new Color(.63f,.92f,.83f),muted=new Color(.48f,.64f,.66f),white=new Color(.88f,.94f,.92f);
         Canvas canvas;
+        public void CinematicVisibility(bool visible){if(canvas)canvas.enabled=visible;}
         RectTransform root;
         Font font;
         GameDirector game;
@@ -71,11 +72,11 @@ namespace AfterSignal
         }
         void Update()
         {
-            if(!game||!game.Ready)return;canvas.enabled=!game.Title;if(game.Title)return;UpdateCivicHud();
+            if(!game||!game.Ready)return;canvas.enabled=!game.Title&&!CityCinematic.Active&&!VenueRuntime.ViewingCinema;if(game.Title||CityCinematic.Active||VenueRuntime.ViewingCinema)return;UpdateCivicHud();
             displayedHealth=Mathf.MoveTowards(displayedHealth,game.Player.Health,Time.unscaledDeltaTime*30);hpTrail.rectTransform.sizeDelta=new Vector2(278*displayedHealth/100,9);
             hpBar.rectTransform.sizeDelta=new Vector2(278*game.Player.Health/100,9);energyBar.rectTransform.sizeDelta=new Vector2(174*game.Player.Energy/100,3);
             if(Time.unscaledTime>=nextText){nextText=Time.unscaledTime+.08f;UpdateReferenceHud();health.text=$"{Mathf.CeilToInt(game.Player.Health)} / 100";weapon.text=game.Player.EquippedName;
-            area.text=(int)game.stage<4?stageNames[(int)game.stage]:CampaignCatalog.Title(game.stage);objective.text=game.Objective;
+            area.text=(int)game.stage<4?stageNames[(int)game.stage]:CampaignCatalog.Title(game.stage);objective.text=game.Objective;if(game.stage==StageId.UrbanCity)area.text=FourCityCatalog.CityNames[FourCityCatalog.CityAt(game.Player.transform.position)];
             rail.text=game.Speed>0?$"NIGHT LINE    {game.Speed*3.6f:0} KM/H    ·    {game.LivingGuards} HOSTILES":$"ARCHIVE  {game.Memories:00}     /     {game.LivingGuards} HOSTILES";
             if(game.stage==StageId.Haven){int jobs=((CampaignCatalog.Jobs&4)!=0?1:0)+((CampaignCatalog.Jobs&16)!=0?1:0);rail.text=$"주민 의뢰  {jobs} / 2     ·     기록  {game.Memories:00}";}
             var district=CampaignCatalog.Get(game.stage);if(district!=null&&district.chapter>0){int first=district.chapter==5?22:district.chapter==2?4:district.chapter==3?11:14,count=district.chapter==5?1:district.chapter==2?7:3;area.text=$"CH {district.chapter:00}  ·  {(int)game.stage-first+1}/{count}  /  {district.title}";}

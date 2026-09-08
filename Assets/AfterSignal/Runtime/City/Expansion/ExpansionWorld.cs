@@ -17,7 +17,9 @@ namespace AfterSignal
             var harbor=Resources.Load<GameObject>("WorldAssets/NeonHarbor");if(harbor)Instantiate(harbor,expanded?expanded.transform:null);
             var terminals=Resources.Load<GameObject>("WorldAssets/TransitFacilities");if(terminals)Instantiate(terminals,expanded?expanded.transform:null);
             game.gameObject.AddComponent<VehicleFleet>();game.gameObject.AddComponent<OceanLife>();game.gameObject.AddComponent<PrisonSystem>();game.gameObject.AddComponent<TaxiNetwork>();
-            Camera.main.farClipPlane=5400;
+            Camera.main.farClipPlane=6400;
+            game.stageLength=FourCityCatalog.East;game.halfDepth=-FourCityCatalog.South;
+            new GameObject("Four cities / living world").AddComponent<FourCityWorld>();
         }
         public int Population{get;private set;}
         sealed class DistrictResidents

@@ -43,14 +43,15 @@ namespace AfterSignal
                 if(game.stage==StageId.UrbanCity&&ExpansionWorld.Selected>=0){hasGoal=true;mainGoal=ExpansionWorld.Places[ExpansionWorld.Selected];mainLabel=ExpansionWorld.Names[ExpansionWorld.Selected];}
                 if(game.stage==StageId.UrbanCity&&selectedSite>=0){hasGoal=true;mainGoal=UrbanCatalog.Door(selectedSite);mainLabel=UrbanCatalog.Name(selectedSite);}
                 if(game.stage==StageId.UrbanCity&&customMapGoal){hasGoal=true;mainGoal=mapGoal;mainLabel="지도 경유지";}
+                if(game.stage==StageId.UrbanCity&&FourCityAtlasSelection.Venue!=null){hasGoal=true;mainGoal=FourCityAtlasSelection.Goal;mainLabel=FourCityAtlasSelection.Label;}
                 if (questLine && hasGoal)
                 {
-                    roadRoute = CityRoadNetwork.Navigation(game.Player.transform.position, mainGoal);
+                    roadRoute = FourCityNavigation.Route(game.Player.transform.position, mainGoal);
                     questLine.positionCount = roadRoute.Count;
                     for (int i = 0; i < roadRoute.Count; i++)
                     {
                         var p = roadRoute[i];
-                        p.y = .16f;
+                        p.y += .16f;
                         questLine.SetPosition(i, p);
                     }
 

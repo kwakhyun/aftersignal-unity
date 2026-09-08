@@ -1,0 +1,511 @@
+fileFormatVersion: 2
+guid: 8ecea353fc3b0c946a184847af237a9b
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 142.60818
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 0
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: 4
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: FootballPlayer-00
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 940
+        width: 313
+        height: 314
+      alignment: 9
+      pivot: {x: 0.49091223, y: 0.0031847134}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0535ea1bf7de6f7f0800000000000000
+      internalID: -579014369372908720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FootballPlayer-01
+      rect:
+        serializedVersion: 2
+        x: 313
+        y: 939
+        width: 314
+        height: 315
+      alignment: 9
+      pivot: {x: 0.455783, y: 0.0031746032}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2676ca2186f0c540800000000000000
+      internalID: 5026288218774337068
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FootballPlayer-02
+      rect:
+        serializedVersion: 2
+        x: 627
+        y: 940
+        width: 313
+        height: 314
+      alignment: 9
+      pivot: {x: 0.43726617, y: 0.0031847134}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cdfde2b61c11b3e70800000000000000
+      internalID: 9095883394829443036
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FootballPlayer-03
+      rect:
+        serializedVersion: 2
+        x: 940
+        y: 939
+        width: 314
+        height: 315
+      alignment: 9
+      pivot: {x: 0.46297112, y: 0.0031746032}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0aa993083495800f0800000000000000
+      internalID: -1150571558344222048
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FootballPlayer-04
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 627
+        width: 313
+        height: 313
+      alignment: 9
+      pivot: {x: 0.47896177, y: 0.031948883}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2f310ca927df1900800000000000000
+      internalID: 657480644598775597
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FootballPlayer-05
+      rect:
+        serializedVersion: 2
+        x: 313
+        y: 627
+        width: 314
+        height: 312
+      alignment: 9
+      pivot: {x: 0.45080152, y: 0.032051284}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 25abd2f2a24fd8760800000000000000
+      internalID: 7461888619640109650
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FootballPlayer-06
+      rect:
+        serializedVersion: 2
+        x: 627
+        y: 627
+        width: 313
+        height: 313
+      alignment: 9
+      pivot: {x: 0.4335966, y: 0.028753994}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc615057afdabd460800000000000000
+      internalID: 7267593714909124303
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FootballPlayer-07
+      rect:
+        serializedVersion: 2
+        x: 940
+        y: 627
+        width: 314
+        height: 312
+      alignment: 9
+      pivot: {x: 0.42427206, y: 0.035256412}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aee2460af03d87f60800000000000000
+      internalID: 8032401999484169962
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FootballPlayer-08
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 327
+        width: 313
+        height: 300
+      alignment: 9
+      pivot: {x: 0.4937314, y: 0.036666665}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96944b537a4faf530800000000000000
+      internalID: 3889690227185568105
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FootballPlayer-09
+      rect:
+        serializedVersion: 2
+        x: 313
+        y: 327
+        width: 314
+        height: 300
+      alignment: 9
+      pivot: {x: 0.44277123, y: 0.04}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7fd477213bf2b31f0800000000000000
+      internalID: -1064204440787530249
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FootballPlayer-10
+      rect:
+        serializedVersion: 2
+        x: 627
+        y: 325
+        width: 313
+        height: 302
+      alignment: 9
+      pivot: {x: 0.4387005, y: 0.026490066}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ed7b1b0ac93cc120800000000000000
+      internalID: 2435385038433123808
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FootballPlayer-11
+      rect:
+        serializedVersion: 2
+        x: 940
+        y: 324
+        width: 314
+        height: 303
+      alignment: 9
+      pivot: {x: 0.4450281, y: 0.0330033}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e88705ccd848d6d0800000000000000
+      internalID: -2965540241587861279
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FootballPlayer-12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 313
+        height: 327
+      alignment: 9
+      pivot: {x: 0.48777726, y: 0.003058104}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d15b490eb812242e0800000000000000
+      internalID: -2143113588022921955
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FootballPlayer-13
+      rect:
+        serializedVersion: 2
+        x: 313
+        y: 0
+        width: 314
+        height: 327
+      alignment: 9
+      pivot: {x: 0.4565495, y: 0.10703364}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d381747a7c7ade9e0800000000000000
+      internalID: -1590430617445132227
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FootballPlayer-14
+      rect:
+        serializedVersion: 2
+        x: 627
+        y: 0
+        width: 313
+        height: 325
+      alignment: 9
+      pivot: {x: 0.4200136, y: 0.04923077}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d830cec1e4ecfa90800000000000000
+      internalID: -7278691239250085672
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FootballPlayer-15
+      rect:
+        serializedVersion: 2
+        x: 940
+        y: 0
+        width: 314
+        height: 324
+      alignment: 9
+      pivot: {x: 0.49998528, y: 0.0030864198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 185fc5553fe602170800000000000000
+      internalID: 8151637316928861569
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      FootballPlayer-00: -579014369372908720
+      FootballPlayer-01: 5026288218774337068
+      FootballPlayer-02: 9095883394829443036
+      FootballPlayer-03: -1150571558344222048
+      FootballPlayer-04: 657480644598775597
+      FootballPlayer-05: 7461888619640109650
+      FootballPlayer-06: 7267593714909124303
+      FootballPlayer-07: 8032401999484169962
+      FootballPlayer-08: 3889690227185568105
+      FootballPlayer-09: -1064204440787530249
+      FootballPlayer-10: 2435385038433123808
+      FootballPlayer-11: -2965540241587861279
+      FootballPlayer-12: -2143113588022921955
+      FootballPlayer-13: -1590430617445132227
+      FootballPlayer-14: -7278691239250085672
+      FootballPlayer-15: 8151637316928861569
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

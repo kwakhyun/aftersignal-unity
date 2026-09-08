@@ -8,13 +8,13 @@ namespace AfterSignal.Editor
     public sealed class DirectionalSheetImporter : AssetPostprocessor
     {
         bool Match => assetPath.Contains("/Resources/Art/SeoMotion/") || assetPath.Contains("/Resources/Art/NpcDirections/");
-        public override uint GetVersion() => 4;
+        public override uint GetVersion() => 5;
         bool checker;
         bool Background(Color32 c) => c.a < 32 || Mathf.Min(c.r, Mathf.Min(c.g,c.b)) > (checker?118:235) && Mathf.Max(c.r,Mathf.Max(c.g,c.b))-Mathf.Min(c.r,Mathf.Min(c.g,c.b)) < (checker?8:14);
         void OnPreprocessTexture()
         {
             if (!Match) return;
-            checker=assetPath.EndsWith("/Worker.png")||assetPath.EndsWith("/Soldier.png");
+            checker=assetPath.EndsWith("/Worker.png")||assetPath.EndsWith("/Soldier.png")||assetPath.EndsWith("Player.png")||assetPath.Contains("/Abyss")||assetPath.EndsWith("/CorruptedCitizen.png")||assetPath.EndsWith("/RacingDriver.png");
             var importer = (TextureImporter)assetImporter;
             importer.textureType=TextureImporterType.Sprite; importer.spriteImportMode=SpriteImportMode.Multiple;
             importer.mipmapEnabled=false; importer.filterMode=FilterMode.Point; importer.alphaIsTransparency=true;
@@ -81,7 +81,7 @@ namespace AfterSignal.Editor
         void OnPostprocessTexture(Texture2D tex)
         {
             if(!Match)return;
-            checker=assetPath.EndsWith("/Worker.png")||assetPath.EndsWith("/Soldier.png");
+            checker=assetPath.EndsWith("/Worker.png")||assetPath.EndsWith("/Soldier.png")||assetPath.EndsWith("Player.png")||assetPath.Contains("/Abyss")||assetPath.EndsWith("/CorruptedCitizen.png")||assetPath.EndsWith("/RacingDriver.png");
             var p=tex.GetPixels32();var queue=new int[p.Length];var visited=new bool[p.Length];int head=0,tail=0;
             // Seed only the outer boundary. A grid line can cross white clothing or pale hair.
             for(int n=0;n<p.Length;n++)if((p[n].a==0||n%tex.width==0||n%tex.width==tex.width-1||n<tex.width||n>=p.Length-tex.width)&&Background(p[n]))

@@ -53,7 +53,7 @@ namespace AfterSignal
             if(len>.001f)
             {
                 if(StructuralImpact.CheckCraft(car,delta)){delta=Vector3.zero;throttle=0;if(car.Wrecked)return;}
-                var p=old+delta;p.x=Mathf.Clamp(p.x,8,2192);p.z=Mathf.Clamp(p.z,NeonHarbor.South+10,1088);p.y=Mathf.Clamp(p.y,-3,520);transform.position=p;
+                var p=old+delta;p.x=Mathf.Clamp(p.x,8,FourCityCatalog.East-8);p.z=Mathf.Clamp(p.z,FourCityCatalog.South+10,FourCityCatalog.North-10);p.y=Mathf.Clamp(p.y,-3,520);transform.position=p;
                 car.fuel=Mathf.Max(0,car.fuel-(old-p).magnitude*.0018f);
             }
             if(model)model.localRotation=Quaternion.Euler(input.move.x*(car.IsAircraft?-12:2),0,car.IsAircraft?verticalSpeed*.5f:Mathf.Sin(Time.time)*.6f)*modelRest;

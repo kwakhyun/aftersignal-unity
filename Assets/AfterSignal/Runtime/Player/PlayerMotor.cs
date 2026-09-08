@@ -209,9 +209,9 @@ namespace AfterSignal
                 Velocity.y = 0;
             Vector3 position = transform.position;
             position.x = Mathf.Clamp(position.x, 1, Director.stageLength - 1);
-            position.z = Mathf.Clamp(position.z, -Director.halfDepth, Director.stage==StageId.UrbanCity?1098:Director.halfDepth);
+            position.z = Mathf.Clamp(position.z, -Director.halfDepth, Director.stage==StageId.UrbanCity?FourCityCatalog.North-2:Director.halfDepth);
             transform.position = position;
-            if (position.y < -9)
+            if (position.y < (Director.stage==StageId.UrbanCity&&FourCityCatalog.Dry(position)?-125:-9))
             {
                 ReceiveDamage(20, Vector3.zero, true);
                 Respawn(Director.checkpoint, false);

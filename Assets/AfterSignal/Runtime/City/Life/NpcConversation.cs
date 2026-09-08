@@ -41,6 +41,8 @@ namespace AfterSignal
         public void Request(CityNpc npc, NpcLine[] history, Action<Reply> done)
         {
             Cancel();
+            if(history!=null&&history.Length>0&&FacilityGuide.TryAnswer(npc,history[history.Length-1].content,out var guide))
+            {done(new Reply{reply=guide,status="시설 이용 안내"});return;}
             pending = StartCoroutine(Send(npc, history, done));
         }
 
@@ -52,7 +54,7 @@ namespace AfterSignal
                 name = npc.displayName,
                 occupation = npc.occupation,
                 personality = npc.personality,
-                context = npc.context,
+                context = npc.context+"\n"+FacilityGuide.Knowledge(npc),
                 place = CivicWorld.Title(game.stage),
                 messages = history,
                 day = LifeState.Day,

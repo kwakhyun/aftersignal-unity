@@ -34,6 +34,13 @@ Shader "AfterSignal/CoastalWater"
    V vert(A i){V o;UNITY_SETUP_INSTANCE_ID(i);UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);o.w=TransformObjectToWorld(i.p.xyz);o.w.y+=Swell(o.w.xz)*_WaveStrength;o.p=TransformWorldToHClip(o.w);o.fog=ComputeFogFactor(o.p.z);return o;}
    half4 frag(V i):SV_Target
    {
+    // The sea underside has no sky reflection or screen-colour feedback from the dry city.
+    if(_WorldSpaceCameraPos.y < i.w.y-.2)
+    {
+     float ripple=Noise(i.w.xz*.034+_Time.y*.06)*.045;
+     float3 under=lerp(float3(.018,.105,.16),float3(.03,.24,.29),saturate(1-length(i.w.xz-_WorldSpaceCameraPos.xz)/1800));
+     return half4(under+ripple,1);
+    }
     float3 eye=normalize(_WorldSpaceCameraPos-i.w);float2 slope=Ripple(i.w.xz)*_WaveStrength;float3 n=normalize(float3(-slope.x*2,1,-slope.y*2));if(eye.y<0)n=-n;
     float2 uv=i.p.xy/_ScaledScreenParams.xy;
     float opaque=LinearEyeDepth(SampleSceneDepth(uv),_ZBufferParams);float water=-TransformWorldToView(i.w).z;float depth=max(0,opaque-water);

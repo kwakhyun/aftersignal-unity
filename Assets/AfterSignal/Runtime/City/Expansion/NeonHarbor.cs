@@ -8,7 +8,7 @@ namespace AfterSignal
         public static readonly Vector3 OldDock=new(1272.5f,-.95f,-708),NewDock=new(920,-.95f,-2379);
         public static readonly Rect[] Land={new(180,-3190,840,790),new(1110,-3190,930,790),new(180,-4180,840,920),new(1110,-4180,930,920)};
         public static bool OnIsland(Vector3 p){foreach(var r in Land)if(r.Contains(new Vector2(p.x,p.z)))return true;return false;}
-        public static bool Region(Vector3 p)=>p.z< -2320;
+        public static bool Region(Vector3 p)=>p.z< -2320&&p.x<2400;
         public static readonly string[] Names={"노바 해협 여객항","크로마 수로시장","펠라직 해양연구소","오벨리스크 기록금고","스카이워드 시민의회","에코 수중 관측소","노바 공항","조수 발전 관제소"};
         public static readonly Vector3[] Sites={new(920,.05f,-2460),new(610,.05f,-2810),new(1360,.05f,-2810),new(1610,.05f,-3470),new(680,.05f,-3700),new(980,-28,-2180),new(1790,.05f,-3940),new(470,.05f,-4010)};
         static Vector3 P(float x,float z,float y=.035f)=>new(x,y,z);

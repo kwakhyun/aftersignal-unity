@@ -97,6 +97,7 @@ namespace AfterSignal
                 if(health[floor][n]<0)continue;
                 var go=new GameObject("Employee "+n,typeof(SpriteRenderer),typeof(CityNpc));go.transform.SetParent(p,false);go.transform.localPosition=deskPositions[n]+new Vector3(0,.04f,-1.1f);
                 string art=theme==4?(n%2==0?"Doctor":"Nurse"):theme==5?(n%3==0?"Bartender":"OfficeWoman"):n%2==0?"OfficeMan":"OfficeWoman";
+                if(FourCityCatalog.CityAt(origin)==3)art=n%3==0?"AbyssEngineer":n%3==1?"AbyssCitizen":"AbyssMedic";
                 var sr=go.GetComponent<SpriteRenderer>();sr.sharedMaterial=Resources.Load<Material>("Materials/PixelActor");sr.sprite=PeopleArt.Get(art,2);
                 go.GetComponent<CityNpc>().Configure(Building.Identity*31+floor*16+n,theme==4?"연구원":theme==5&&n%3==0?"구내식당 직원":"사무 직원",null,Building.Title+" "+(floor+1)+"층 "+FloorName(floor)+"에서 근무한다. 동료와 회의하거나 업무를 처리하고 휴게실에서 쉰다.");
                 PeopleArt.Attach(go,art);var routine=go.AddComponent<CivicRoutine>();routine.Initialize("사무",go.transform.position);

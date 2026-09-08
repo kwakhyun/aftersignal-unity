@@ -1,0 +1,511 @@
+fileFormatVersion: 2
+guid: 051d681ec6795a14eb6568135923ff90
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 149.27885
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 0
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: 4
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: CorruptedCitizen-00
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 940
+        width: 327
+        height: 314
+      alignment: 9
+      pivot: {x: 0.4473051, y: 0.0031847134}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c448ae42ea627afe0800000000000000
+      internalID: -1177930248148581300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CorruptedCitizen-01
+      rect:
+        serializedVersion: 2
+        x: 327
+        y: 932
+        width: 276
+        height: 322
+      alignment: 9
+      pivot: {x: 0.43859208, y: 0.0031055901}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4c2d9cec6602bf360800000000000000
+      internalID: 7204387654837326532
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CorruptedCitizen-02
+      rect:
+        serializedVersion: 2
+        x: 603
+        y: 932
+        width: 351
+        height: 322
+      alignment: 9
+      pivot: {x: 0.44200814, y: 0.0031055901}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1f6f5c2f3999fe170800000000000000
+      internalID: 8209949506432005873
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CorruptedCitizen-03
+      rect:
+        serializedVersion: 2
+        x: 954
+        y: 940
+        width: 300
+        height: 314
+      alignment: 9
+      pivot: {x: 0.46233708, y: 0.0031847134}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1788376f7631a5950800000000000000
+      internalID: 6438479954516871281
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CorruptedCitizen-04
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 630
+        width: 327
+        height: 310
+      alignment: 9
+      pivot: {x: 0.43962348, y: 0.0032258064}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a9114d8f841281590800000000000000
+      internalID: -7703370565321223782
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CorruptedCitizen-05
+      rect:
+        serializedVersion: 2
+        x: 327
+        y: 634
+        width: 276
+        height: 298
+      alignment: 9
+      pivot: {x: 0.43472847, y: 0.0033557047}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eae71898095f6b8c0800000000000000
+      internalID: -3983726819231564114
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CorruptedCitizen-06
+      rect:
+        serializedVersion: 2
+        x: 603
+        y: 626
+        width: 351
+        height: 306
+      alignment: 9
+      pivot: {x: 0.4411359, y: 0.003267974}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f01faa3a482a5430800000000000000
+      internalID: 3772371937153454329
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CorruptedCitizen-07
+      rect:
+        serializedVersion: 2
+        x: 954
+        y: 629
+        width: 300
+        height: 311
+      alignment: 9
+      pivot: {x: 0.468731, y: 0.003215434}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6333c6dba6e70d3f0800000000000000
+      internalID: -878062930427628746
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CorruptedCitizen-08
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 330
+        width: 327
+        height: 300
+      alignment: 9
+      pivot: {x: 0.44684738, y: 0.0033333334}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ee635ff59cd774a0800000000000000
+      internalID: -6595560592468906266
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CorruptedCitizen-09
+      rect:
+        serializedVersion: 2
+        x: 327
+        y: 329
+        width: 276
+        height: 305
+      alignment: 9
+      pivot: {x: 0.44245622, y: 0.0032786885}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 59e513addf26b0780800000000000000
+      internalID: -8715763811418546539
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CorruptedCitizen-10
+      rect:
+        serializedVersion: 2
+        x: 603
+        y: 328
+        width: 351
+        height: 298
+      alignment: 9
+      pivot: {x: 0.44453377, y: 0.0033557047}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b02985f608fc5a2d0800000000000000
+      internalID: -3267977804056587765
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CorruptedCitizen-11
+      rect:
+        serializedVersion: 2
+        x: 954
+        y: 326
+        width: 300
+        height: 303
+      alignment: 9
+      pivot: {x: 0.460602, y: 0.0033003301}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cbe110590547e6ce0800000000000000
+      internalID: -1410061743874302276
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CorruptedCitizen-12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 327
+        height: 330
+      alignment: 9
+      pivot: {x: 0.46430793, y: 0.003030303}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa8846d0a466f8c00800000000000000
+      internalID: 905054518363064490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CorruptedCitizen-13
+      rect:
+        serializedVersion: 2
+        x: 327
+        y: 0
+        width: 276
+        height: 329
+      alignment: 9
+      pivot: {x: 0.45113364, y: 0.0030395137}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b9100a0a386ce97a0800000000000000
+      internalID: -6368434554417446501
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CorruptedCitizen-14
+      rect:
+        serializedVersion: 2
+        x: 603
+        y: 0
+        width: 351
+        height: 328
+      alignment: 9
+      pivot: {x: 0.46157125, y: 0.0030487804}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf0adda6054ec9870800000000000000
+      internalID: 8691072414959640828
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CorruptedCitizen-15
+      rect:
+        serializedVersion: 2
+        x: 954
+        y: 0
+        width: 300
+        height: 326
+      alignment: 9
+      pivot: {x: 0.380831, y: 0.0030674846}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b82b423669c30ce60800000000000000
+      internalID: 7980445156306629259
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      CorruptedCitizen-00: -1177930248148581300
+      CorruptedCitizen-01: 7204387654837326532
+      CorruptedCitizen-02: 8209949506432005873
+      CorruptedCitizen-03: 6438479954516871281
+      CorruptedCitizen-04: -7703370565321223782
+      CorruptedCitizen-05: -3983726819231564114
+      CorruptedCitizen-06: 3772371937153454329
+      CorruptedCitizen-07: -878062930427628746
+      CorruptedCitizen-08: -6595560592468906266
+      CorruptedCitizen-09: -8715763811418546539
+      CorruptedCitizen-10: -3267977804056587765
+      CorruptedCitizen-11: -1410061743874302276
+      CorruptedCitizen-12: 905054518363064490
+      CorruptedCitizen-13: -6368434554417446501
+      CorruptedCitizen-14: 8691072414959640828
+      CorruptedCitizen-15: 7980445156306629259
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

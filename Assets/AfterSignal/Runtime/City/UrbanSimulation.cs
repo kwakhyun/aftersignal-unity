@@ -22,6 +22,7 @@ namespace AfterSignal
         public bool MapOpen { get; private set; }
 
         public void CloseMap()=>MapOpen=false;
+        public void OpenMap()=>MapOpen=true;
         GameDirector game;
         Renderer[] playerRenderers;
         bool[] rendererStates;

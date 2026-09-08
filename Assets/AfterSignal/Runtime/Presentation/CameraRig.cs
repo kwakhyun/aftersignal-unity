@@ -14,6 +14,7 @@ namespace AfterSignal
         public bool FreeOrbit { get; private set; }=true;
         public float OrbitYaw => orbitYaw;
         public float OrbitPitch => orbitPitch;
+        public void SetView(Vector3 target){var d=target-director.Player.Shoulder;orbitYaw=Mathf.Atan2(d.x,d.z)*Mathf.Rad2Deg;orbitPitch=Mathf.Clamp(-Mathf.Atan2(d.y,new Vector2(d.x,d.z).magnitude)*Mathf.Rad2Deg,-65,78);velocity=Vector3.zero;Snap();}
         public bool CanLook => director && director.Ready && !director.Blocked && !(UrbanSimulation.Instance && UrbanSimulation.Instance.MapOpen);
         Vector3 Focus => Driving ? VehicleFocus() : director.Player.Shoulder + Quaternion.Euler(0,orbitYaw,0)*Vector3.right*.75f + Vector3.up*.25f;
         public Vector3 ViewRight => FreeOrbit ? Vector3.ProjectOnPlane(transform.right, Vector3.up).normalized : Vector3.right;
@@ -82,8 +83,11 @@ namespace AfterSignal
 
         Quaternion Angle => Viewing ? Quaternion.LookRotation(director.Player.Shoulder - basePosition) : Driving ? Quaternion.LookRotation(UrbanSimulation.Instance.Current.transform.position + UrbanSimulation.Instance.Current.Forward * 5 + Vector3.up * 1.5f - basePosition, Vector3.up) : Stairwell ? Quaternion.LookRotation(director.Player.transform.position + Vector3.up * 1.1f - basePosition, Vector3.up) : director.stage == StageId.UrbanCity || director.stage == StageId.UrbanInterior ? Quaternion.Euler(20, -8, 0) : CivicWorld.Interior(director.stage) ? Quaternion.Euler(14, -5, 0) : CivicWorld.Exploration(director.stage) ? Quaternion.Euler(16, -8, 0) : Quaternion.Euler(10, 0, 0);
 
+        void SetCinemaSeat(){basePosition=director.Player.transform.position+Vector3.up*1.65f;transform.SetPositionAndRotation(basePosition,Quaternion.Euler(orbitPitch,orbitYaw,0));velocity=Vector3.zero;}
+
         public void Snap()
         {
+            if (VenueRuntime.ViewingCinema) { SetCinemaSeat(); return; }
             if (FirstPersonVehicle) { SetCockpit(); return; }
             basePosition = Target();
             velocity = Vector3.zero;
@@ -153,6 +157,7 @@ namespace AfterSignal
         {
             if (!director || !director.Player || director.Blocked)
                 return;
+            if (VenueRuntime.ViewingCinema) { SetCinemaSeat(); return; }
             if (FirstPersonVehicle) { SetCockpit(); return; }
             GetComponent<Camera>().nearClipPlane=.15f;
             lead = Mathf.Lerp(lead, Mathf.Clamp(director.Player.Velocity.x * .22f + director.Player.Facing * .65f, -2.4f, 2.4f), 1 - Mathf.Exp(-Time.deltaTime * 4));

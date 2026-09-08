@@ -10,6 +10,7 @@ namespace AfterSignal
             var c=CityChronicle.Instance;if(!c)return;
             Panel("journal","애프터라이트 사건 일지","지워진 열일곱 분 · 기억 유출 사건\n메인 "+c.CompletedMain+"/24 · 서브 "+c.Quests.Count(q=>!q.main&&c.Done(q))+"/18\n\n추적 중: "+(c.Tracked?.title??"없음")+"\n"+(c.CurrentStep?.label??"모든 단서 확인")+"\n\n주민 의뢰는 메인 사건의 진행과 앞선 의뢰에 따라 열립니다. [J / ESC 닫기]");
             Option("메인 이야기",()=>StoryList(true,0));Option("주민 연계 의뢰",()=>StoryList(false,0));
+            if(FourCityCampaign.Instance)Option("네 도시의 증언 · 시설 내부 캠페인",FourCityJournal);
             if(c.Tracked!=null)Option("현재 의뢰 상세",()=>StoryDetails(c.Tracked));
             Option("닫기",Dismiss);
         }

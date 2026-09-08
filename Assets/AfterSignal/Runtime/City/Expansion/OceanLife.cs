@@ -14,9 +14,10 @@ namespace AfterSignal
             float[] xs={0,250,480,780,1050,1250,1450,2200},zs={-510,-545,-610,-655,-590,-580,-565,-565};
             for(int i=1;i<xs.Length;i++)if(x<=xs[i])return Mathf.Lerp(zs[i-1],zs[i],Mathf.InverseLerp(xs[i-1],xs[i],x));return -565;
         }
-        public static bool Contains(Vector3 p)=>p.x>2&&p.x<2198&&p.z<Shore(p.x)-12&&p.z>NeonHarbor.South+2&&!NeonHarbor.OnIsland(p);
+        public static bool Contains(Vector3 p)=>p.x>2&&p.x<FourCityCatalog.East-2&&p.z<Shore(p.x)-12&&p.z>FourCityCatalog.South+2&&!NeonHarbor.OnIsland(p)&&!FourCityCatalog.OnNewLand(p)&&!FourCityCatalog.Dry(p);
         public static float Bed(float x,float z)
         {
+            if(x>2400&&z< -2900)return -108+Mathf.Sin(x*.009f+z*.008f)*1.5f;
             float shoreDepth=-3-Mathf.Min(42,(Shore(x)-z)*.065f);
             if(z< -2100)shoreDepth=-38+Mathf.Sin(x*.004f+z*.003f)*7+Mathf.Sin(z*.012f)*2;
             return shoreDepth+Mathf.Sin(x*.033f)*Mathf.Sin(z*.022f)*1.5f;

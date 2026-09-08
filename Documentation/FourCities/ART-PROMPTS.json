@@ -1,0 +1,39 @@
+{
+  "tool": "built-in image_gen",
+  "reference": "Assets/AfterSignal/Resources/Art/NpcDirections/Worker.png",
+  "common": "Production pixel art RPG sprite sheet. Exact 4 columns x 4 rows layout, uniform scale, feet baseline, generous gutters, crisp dark outlines and compact five-head proportions. Rows: front, right, back, left. Columns: idle, left stride with opposing arm, right stride with opposing arm, role-specific action. Request transparent background, opaque character interiors, no labels or scenery.",
+  "subjects": [
+    {
+      "name": "FootballPlayer",
+      "description": "athletic Korean adult male football player, teal blue short sleeved jersey with no number or logos, white shorts, teal long socks, football boots; pose fourth column kicking a football (no ball, runtime adds ball)"
+    },
+    {
+      "name": "BasketballPlayer",
+      "description": "tall athletic adult Black female basketball player, short tied black curls, burnt orange sleeveless basketball jersey and matching shorts, white sneakers; pose fourth column arms raised to shoot a basketball (no ball, runtime adds ball)"
+    },
+    {
+      "name": "BaseballPlayer",
+      "description": "athletic Korean adult male baseball player, white pinstripe baseball uniform, navy cap and belt, black cleats, left hand baseball mitt; fourth column swinging wooden baseball bat"
+    },
+    {
+      "name": "AbyssEngineer",
+      "description": "adult Korean female deep sea city technician, short auburn hair, white and teal pressure suit with flexible trousers, luminous cyan seams, compact oxygen collar folded open, face visible, tool satchel; fourth column explaining a machine"
+    },
+    {
+      "name": "AbyssCitizen",
+      "description": "adult Korean male deep sea city resident, silver blue hair, elegant coral and ivory futuristic casual long jacket and dark trousers, subtle luminous trim, no armor, no helmet; fourth column friendly talking gesture"
+    },
+    {
+      "name": "AbyssMedic",
+      "description": "adult Korean female marine city physician, long dark hair in low ponytail, aqua white medical tunic and dark blue trousers, transparent visor raised, medical pouch; fourth column examining handheld diagnostic screen"
+    },
+    {
+      "name": "CorruptedCitizen",
+      "description": "adult male infected cyberpunk office worker, tattered charcoal business suit, pale gray skin, purple luminous fissures on hands and face, eerie eyes, recognisable human rather than skeleton, NO blood or gore; fourth column reaching forward aggressively"
+    },
+    {
+      "name": "RacingDriver",
+      "description": "Adult woman professional racing driver, navy and white protective suit with burnt orange shoulders, helmet with raised visor; idle, two opposing strides, hands gripping an imaginary steering wheel."
+    }
+  ]
+}
