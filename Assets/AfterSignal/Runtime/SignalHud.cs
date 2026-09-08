@@ -19,7 +19,7 @@ namespace AfterSignal
         GameObject modal,dialogueBox,bossPanel;
         RectTransform cursor,candidate,safeMarker;
         Button primary,secondary,third,musicButton,sfxButton;
-        Button motionButton,effectButton,postButton;GameObject settingsRow;
+        Button motionButton,effectButton,postButton,graphicsButton;GameObject settingsRow;
         Image hpTrail;float displayedHealth=100,nextText;
         static readonly string[] weaponNames={"01  ·  KATANA / 연속 검격","02  ·  GREATSWORD / 중검","03  ·  PISTOL / 조준 사격"};
         static readonly string[] stageNames={"01 / CENTRAL STATION","02 / THE NIGHT CARRIAGE","03 / ABOVE THE CITY","HUB / AFTERLIGHT"};
@@ -62,7 +62,8 @@ namespace AfterSignal
                 PlayerPrefs.Save();ConfigureModal("pause");
             });
             sfxButton.GetComponentInChildren<Text>().fontSize=16;
-            Label(card,"ESC  메뉴 닫기     ·     배경음악과 화면 연출 조절",40,710,530,20,12,muted);
+            graphicsButton=MakeButton(card,"",40,683,530,32,()=>{FidelityPresentation.Cycle();ConfigureModal("pause");});graphicsButton.GetComponentInChildren<Text>().fontSize=15;
+            Label(card,"ESC  메뉴 닫기     ·     배경음악과 화면 연출 조절",40,723,530,20,12,muted);
             dialogueBox=Panel(root,"Dialogue",0,0,1020,230,ink).gameObject;CenterBottom(dialogueBox.GetComponent<RectTransform>(),90,1020,230);
             dialogueName=Label(dialogueBox.transform,"",30,23,920,28,14,mint,FontStyle.Bold);
             dialogueText=Label(dialogueBox.transform,"",30,67,952,95,23,white);
@@ -106,6 +107,7 @@ namespace AfterSignal
             if(mode=="")return;
             musicButton.gameObject.SetActive(mode=="pause");
             sfxButton.gameObject.SetActive(mode=="pause");
+            graphicsButton.gameObject.SetActive(mode=="pause");ButtonText(graphicsButton,"그래픽: "+FidelityPresentation.PresetName+"  ·  클릭하여 변경");
             ButtonText(sfxButton,game.Audio.SfxVolume<.01f?"효과음: 꺼짐  ·  클릭하여 켜기":$"효과음: {game.Audio.SfxVolume*100:0}%  ·  클릭하여 조절");
             float musicLevel=SignalMusic.Instance?SignalMusic.Instance.MusicLevel:SignalMusic.DefaultLevel;
             ButtonText(musicButton,musicLevel<.01f?"배경음악: 꺼짐  ·  클릭하여 변경":$"배경음악: {musicLevel*100:0}%  ·  클릭하여 변경");

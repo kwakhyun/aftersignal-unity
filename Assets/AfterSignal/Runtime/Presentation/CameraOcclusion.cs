@@ -92,7 +92,7 @@ namespace AfterSignal
                 if (!r)
                     continue;
                 var surface = pair.Value;
-                float target = blocking.Contains(r) ? .14f : 1;
+                float target = blocking.Contains(r) ? .04f : 1;
                 if (target == 1 && surface.opacity >= 1)
                     continue;
                 surface.opacity = Mathf.MoveTowards(surface.opacity, target, Time.unscaledDeltaTime * 5);

@@ -8,7 +8,7 @@ namespace AfterSignal
         public bool staff,spectator,athlete;
         public int team,slot,serial;
         public string Activity{get;private set;}="이동 중";
-        CityNpc npc;WorldActor body;DirectionalPerson art;SpriteRenderer sprite;Vector3 target;float wait,chat,actionUntil;int state;
+        CityNpc npc;WorldActor body;DirectionalPerson art;SpriteRenderer sprite;Vector3 target;float wait,chat,actionUntil;int state;PedestrianSteering steering;
         public static VenueActor Create(VenueRuntime venue,int id,string role,string sheet,Vector3 at)
         {
             var go=new GameObject(role+" / "+id,typeof(SpriteRenderer),typeof(CityNpc),typeof(VenueActor));go.transform.SetParent(venue.transform,false);go.transform.localPosition=at;
@@ -55,9 +55,9 @@ namespace AfterSignal
             if(!arrived)
             {
                 float speed=athlete?venue.Definition.kind==VenueKind.Basketball?4.5f:5.8f:1.1f+serial%5*.13f;var dir=delta.normalized;
-                if(!Physics.Raycast(transform.position+Vector3.up,dir,.7f,1,QueryTriggerInteraction.Ignore))transform.position+=dir*Mathf.Min(speed*Time.deltaTime,delta.magnitude);
-                else {var tangent=Vector3.Cross(dir,Vector3.up)*(serial%2==0?1:-1);if(!Physics.Raycast(transform.position+Vector3.up,tangent,.8f,1,QueryTriggerInteraction.Ignore))transform.position+=tangent*Time.deltaTime*speed;}
+                if(!steering)steering=PedestrianSteering.For(this);steering.Move(world,speed*Time.deltaTime);
             }
+            else if(spectator)art.Face(venue.transform.TransformPoint(venue.lookPoint),.6f);
             if(!athlete&&Time.time>chat&&Vector3.Distance(game.Player.transform.position,transform.position)<24)
             {chat=Time.time+24+serial%19;NpcSpeech.Say(npc,staff?StaffLine():VisitorLine(),4);}
         }

@@ -11,7 +11,7 @@ namespace AfterSignal
         public readonly List<VenueRuntime> Facilities=new();
         readonly List<(Transform root,Renderer[] renderers)> chunks=new();
         float next;Vector3 lastVisibility;int announcedCity=-1;
-        void Awake(){Instance=this;gameObject.AddComponent<FourCitySports>();gameObject.AddComponent<FourCityCampaign>();gameObject.AddComponent<FourCityAtmosphere>();}
+        void Awake(){Instance=this;gameObject.AddComponent<FourCitySports>();gameObject.AddComponent<FourCityCampaign>();gameObject.AddComponent<FourCityAtmosphere>();gameObject.AddComponent<VenuePracticalLights>();}
         public VenueRuntime Find(string id)=>Facilities.Find(v=>v.Definition.id==id);
         Transform Root(string name,Vector3 at){var go=new GameObject(name);go.transform.SetParent(transform,false);go.transform.position=at;return go.transform;}
         IEnumerator Start()

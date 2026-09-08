@@ -23,7 +23,12 @@ namespace AfterSignal
                     for(int bay=-1;bay<=1;bay+=2)g.Box("Facade insulated spandrel",new(bay*(w*.25f+4),y+.65f,side*d*.5f),new(w*.5f-8,1.3f,.35f),v.city==3?"DeepDeck":"FutureCarbon",true);
                     g.Box("Side facade spandrel",new(side*w*.5f,y+.6f,0),new(.4f,1.2f,d),"FutureCarbon",true);
                 }
-                if(!cinema)Rooms(g,venue,floor,w,d,step);
+                if(!cinema)
+                {
+                    Rooms(g,venue,floor,w,d,step);
+                    foreach(var lamp in VenuePracticalLights.Positions(w,d,y+step))
+                    {g.Box("Recessed luminaire housing",lamp+Vector3.up*.03f,new(2.8f,.1f,.4f),"FutureSilver");g.Box("Linear ceiling diffuser",lamp-Vector3.up*.035f,new(2.65f,.025f,.25f),"NeonWarm");}
+                }
             }
             if(floors>1)venue.CreateLift(new(w*.5f-3,0,d*.5f-3),floors,step);
             if(cinema){Cinema(g,venue,w,d);}
@@ -38,6 +43,7 @@ namespace AfterSignal
                     if(i<ribs-1){float nx=x+w*1.16f/(ribs-1),nc=(v.kind==VenueKind.Museum?12:8)*Mathf.Sin((i+1)*Mathf.PI/(ribs-1));g.Quad(new(x,roof,-d*.6f),new(x,roof+crown,0),new(nx,roof+nc,0),new(nx,roof,-d*.6f),"Glass",true);}
                 }
                 g.Box("Roof lightwell rim",new(0,height+.25f,0),new(w*.35f,.3f,d*.35f),"Glass");
+                for(int unit=0;unit<4;unit++)StreetKit.Place("ClimateUnit",venue.transform,new Vector3(w*.36f,height,-d*.28f+unit*2.8f),Quaternion.identity);
             }
             if(hotel)
             {
@@ -48,7 +54,7 @@ namespace AfterSignal
         }
         static void Floor(CityGeometry g,float w,float d,float y,bool ground)
         {
-            if(ground){g.Box("Ground lobby floor",new(0,y-.1f,0),new(w,.2f,d),"TerminalFloor",true);return;}
+            if(ground){g.Box("Ground lobby floor",new(0,y-.07f,0),new(w,.2f,d),"TerminalFloor",true);return;}
             Rect stair=new(-w*.5f+4,-5.1f,6,10.2f),lift=new(w*.5f-6,d*.5f-6,6,6);
             var xs=new List<float>{-w*.5f,stair.xMin,stair.xMax,lift.xMin,w*.5f};var zs=new List<float>{-d*.5f,stair.yMin,stair.yMax,lift.yMin,d*.5f};xs.Sort();zs.Sort();
             for(int a=1;a<xs.Count;a++)for(int b=1;b<zs.Count;b++){var center=new Vector2((xs[a-1]+xs[a])/2,(zs[b-1]+zs[b])/2);if(stair.Contains(center)||lift.Contains(center))continue;g.Box("Unobstructed upper floor",new(center.x,y-.1f,center.y),new(xs[a]-xs[a-1],.2f,zs[b]-zs[b-1]),"TerminalFloor",true);}

@@ -23,6 +23,7 @@ namespace AfterSignal
         }
         public static void Tower(CityGeometry g,float w,float d,float h,int profile,bool ruined=false)
         {
+            if(!ruined){DistrictTower.Build(g,w,d,h,profile);return;}
             string stone=ruined?"NovaObsidian":profile%3==0?"FutureCeramic":"FutureCarbon";
             int floors=Mathf.Max(3,(int)(h/4));
             for(int f=0;f<floors;f++)

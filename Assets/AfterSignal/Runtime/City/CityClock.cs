@@ -52,12 +52,14 @@ namespace AfterSignal
             float hour = LifeState.Hour, altitude = Mathf.Sin((hour - 6) / 24 * Mathf.PI * 2);
             float daylight = Mathf.SmoothStep(0, 1, Mathf.InverseLerp(-.12f, .32f, altitude));
             bool indoor = CivicWorld.Interior(game.stage);
+            RenderSettings.ambientMode=UnityEngine.Rendering.AmbientMode.Trilight;
             sun.color = Color.Lerp(new Color(.36f, .54f, .88f), Color.Lerp(new Color(1, .57f, .33f), new Color(1, .94f, .82f), Mathf.Clamp01(altitude * 2)), daylight);
-            sun.intensity = indoor ? Mathf.Lerp(.65f, 1.25f, daylight) : Mathf.Lerp(.28f, 1.45f, daylight);
+            sun.intensity = indoor ? Mathf.Lerp(.65f, 1.25f, daylight) : Mathf.Lerp(.18f, 2.1f, daylight);
+            if(!indoor){sun.shadows=LightShadows.Soft;sun.shadowStrength=.85f;sun.shadowBias=.65f;sun.shadowNormalBias=.35f;}
             sun.transform.rotation = Quaternion.Euler(altitude >= 0 ? (hour - 6) * 15 : Mathf.Repeat(hour + 6, 24) * 15, -32, 0);
-            RenderSettings.ambientSkyColor = Color.Lerp(new Color(.14f, .2f, .34f), new Color(.54f, .65f, .75f), daylight);
-            RenderSettings.ambientEquatorColor = Color.Lerp(new Color(.09f, .14f, .23f), new Color(.4f, .47f, .53f), daylight);
-            RenderSettings.ambientGroundColor = Color.Lerp(new Color(.04f, .07f, .12f), new Color(.23f, .25f, .28f), daylight);
+            RenderSettings.ambientSkyColor = Color.Lerp(new Color(.085f,.12f,.21f),new Color(.39f,.48f,.61f),daylight);
+            RenderSettings.ambientEquatorColor = Color.Lerp(new Color(.045f,.065f,.10f),new Color(.23f,.27f,.30f),daylight);
+            RenderSettings.ambientGroundColor = Color.Lerp(new Color(.025f,.032f,.05f),new Color(.12f,.105f,.09f),daylight);
             if(game.stage==StageId.UrbanInterior&&ResidentialWorld.VisitHome>=0)
             {
                 // Interior practical lights keep a home readable after sunset.
@@ -77,7 +79,7 @@ namespace AfterSignal
                 RenderSettings.fogColor = fog;
                 Camera.main.backgroundColor = fog;
                 if (game.stage == StageId.UrbanCity)
-                    RenderSettings.fogDensity = Mathf.Lerp(.00165f, .0009f, Mathf.InverseLerp(15, 95, game.Player.transform.position.y));
+                    RenderSettings.fogDensity = Mathf.Lerp(.00075f, .0005f, Mathf.InverseLerp(15, 95, game.Player.transform.position.y));
                 if (sky)
                 {
                     sky.SetColor("_Horizon", fog);

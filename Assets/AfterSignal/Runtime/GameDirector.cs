@@ -51,6 +51,7 @@ namespace AfterSignal
         float waveClock=4.5f,coreCooldown,inputSuppress,prePauseScale=1;
         int waveIndex;
         InteractionPoint[] interactions;
+        readonly InteractionScanner interactionScanner=new();
         void Awake(){Instance=this;Time.timeScale=1;FramePacing.Apply();Physics.IgnoreLayerCollision(8,9,false);Physics.IgnoreLayerCollision(9,9,true);}
         void Start()
         {
@@ -62,6 +63,7 @@ namespace AfterSignal
             CameraRig=Camera.main.GetComponent<CameraRig>();CameraRig.director=this;CameraRig.Snap();
             Audio=gameObject.AddComponent<SignalAudio>();Audio.Initialize();
             PresentationSettings.Load();
+            gameObject.AddComponent<FidelityPresentation>();
             if(System.Array.IndexOf(System.Environment.GetCommandLineArgs(),"-quality-effects-off")>=0){PresentationSettings.Effects=0;PresentationSettings.Motion=0;}
             foreach(var enemy in FindObjectsByType<EnemyBrain>()){Enemies.Add(enemy);enemy.Initialize(this);if(enemy.boss)Boss=enemy;}
             Glass.AddRange(FindObjectsByType<BreakableGlass>());
@@ -112,11 +114,7 @@ namespace AfterSignal
             if(stage==StageId.Station&&CampaignRules.CanBoard(Power,Cleared))Arrival=Mathf.MoveTowards(Arrival,1,dt/4f);
             if(stage==StageId.Carriage||stage==StageId.Roof){Speed=Mathf.MoveTowards(Speed,stage==StageId.Roof?34:27,dt*2);TravelDistance+=Speed*dt;}
             UpdateBoss(dt);
-            Nearby=null;float best=float.MaxValue;
-            foreach(var point in InteractionPoint.All)if(point&&point.gameObject.activeInHierarchy&&(!point.Used||point.kind==InteractionKind.Noa||point.kind==InteractionKind.Citizen)&&(!point.npc||!point.npc.GetComponent<WorldActor>()||point.npc.GetComponent<WorldActor>().Alive)){
-                float distance=Vector3.Distance(point.transform.position,Player.Shoulder);
-                if(distance<point.radius&&distance<best){Nearby=point;best=distance;}
-            }
+            Nearby=interactionScanner.Nearest(Player);
             if(control.interact&&Nearby&&!(UrbanSimulation.Instance&&UrbanSimulation.Instance.Driving))Nearby.Interact(this);
         }
         public string Objective

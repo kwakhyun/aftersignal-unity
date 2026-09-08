@@ -8,7 +8,7 @@ namespace AfterSignal
         public int BrokenWindows=>count;
         void Start()
         {
-            foreach(var r in GetComponentsInChildren<MeshRenderer>())if(r.sharedMaterial&&r.sharedMaterial.shader.name=="AfterSignal/NovaWindows")windows.Add(r);
+            foreach(var r in GetComponentsInChildren<MeshRenderer>())if(r.sharedMaterial&&(r.sharedMaterial.shader.name=="AfterSignal/NovaWindows"||r.sharedMaterial.shader.name=="AfterSignal/Architectural Glass"))windows.Add(r);
             props=new MaterialPropertyBlock();
         }
         public bool OpenAt(Vector3 p)

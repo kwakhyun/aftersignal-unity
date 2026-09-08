@@ -9,7 +9,7 @@ namespace AfterSignal
         public bool struck, dead;
         public Sprite[] poses;
         SpriteRenderer visual;
-        float phase, stun;
+        float phase, stun;PedestrianSteering steering;
         public bool crossing, enteredCrossing, waiting;
         public void WalkTo(Vector3 p, bool cross)
         {
@@ -100,7 +100,8 @@ namespace AfterSignal
                 if (crossing)
                     enteredCrossing = true;
                 delta.y = 0;
-                transform.position = Vector3.MoveTowards(transform.position, target, speed * dt);
+                if(!steering)steering=PedestrianSteering.For(this);
+                steering.Move(target,speed*dt);
                 if (delta.x != 0)
                     visual.flipX = delta.x < 0;
             }

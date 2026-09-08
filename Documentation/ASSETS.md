@@ -70,3 +70,13 @@ Implementation scope, controls and references: [WorldExpansion/README.md](WorldE
 Seven original Blender transport assets are in `WorldAssets/{Motorcycle,SportsCar,Boat,Airliner,CombatHelicopter,Fighter,Tank}`. Editable sources: `Documentation/Mobility/Models`; generator: `Tools/WorldExpansion/create_transport.py`. Runtime corrects the FBX forward axis, applies body/lens/glazing materials and rotates the articulated wheel pivots around the axle. No third-party branded vehicle or aircraft model is used.
 
 `MobilityDistricts.prefab` adds connected roads, furnished multistorey buildings, military base, prison, passenger terminal, parking and the seabed. Coral and marine animal meshes are procedural original geometry. These facilities reuse the project's existing original NPC art and documented Poly Haven surfaces. `ContainerShip.prefab` converts the previously authored cargo ship to a controllable, batched vessel. Confirmed unused generated meshes from replaced world batches were removed; source models and active mesh GUIDs are retained. Scope and controls: [Mobility/README.md](Mobility/README.md).
+
+### Physical city surfaces, street kit and botanical LODs
+
+`Resources/Materials/Scanned/` contains four CC0 Poly Haven 2K surface sets (12 JPEG maps): asphalt_04, concrete_tiles_02, concrete_wall_006 and blue_metal_plate. Individual URLs, checksums and license: [Fidelity/material-provenance.json](Fidelity/material-provenance.json).
+
+`Resources/WorldAssets/StreetKit/` contains seven original Blender assets: PromenadeBench, TransitShelter, CivicKiosk, ChargePoint, SmartBollard, ClimateUnit and CoastalPalm. All are used by the runtime. Editable sources can be recreated with `Tools/Fidelity/create_street_kit.py`; studio review uses `preview_street_kit.py`. These are original generic designs, not extracted commercial-game assets.
+
+`Resources/WorldAssets/Botanical/` contains three reduced meshes and a Unity LOD prefab derived from Rico Cilliers' CC0 Tree Small 02 from Poly Haven. Nine maps include channel-packed URP masks. Original file hashes, processing and triangle counts: [Fidelity/botanical-provenance.json](Fidelity/botanical-provenance.json). Download, reduction, texture packing and preview scripts are in `Tools/Fidelity/`. The rejected uniform-decimation version is not the shipped model.
+
+Architecture, facade-interior shading, weather response and practical lighting are project-authored code. Scope, external technical/architecture references and remaining production gaps: [Fidelity/QUALITY-DIRECTION.md](Fidelity/QUALITY-DIRECTION.md).

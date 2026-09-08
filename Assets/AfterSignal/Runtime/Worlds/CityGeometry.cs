@@ -25,6 +25,11 @@ namespace AfterSignal
             }
             mat=Resources.Load<Material>("WorldAssets/Generated/"+key);
             if(!mat)mat=Resources.Load<Material>("Materials/"+key);
+            if(!mat&&key=="DeepDeck")
+            {
+                var template=Resources.Load<Material>("WorldAssets/Generated/Pavement");
+                if(template){mat=new Material(template){name=key};mat.SetColor("_BaseColor",new Color(.29f,.40f,.43f));mat.SetFloat("_RainResponse",0);materials[key]=mat;return mat;}
+            }
             if(!mat){mat=new Material(Shader.Find("Universal Render Pipeline/Lit"));mat.name=key;
                 Color c=key=="Pitch"?new(.12f,.32f,.18f):key=="PitchLight"?new(.16f,.39f,.23f):key=="Clay"?new(.52f,.28f,.16f):key=="Court"?new(.59f,.34f,.19f):key=="SeatBlue"?new(.035f,.29f,.43f):key=="SeatCoral"?new(.63f,.20f,.14f):key=="GardenSoil"?new(.08f,.12f,.09f):key=="CanopyLeaf"?new(.035f,.24f,.12f):key=="CanopyLight"?new(.16f,.38f,.18f):key=="DeepDeck"?new(.095f,.15f,.18f):new(.15f,.2f,.24f);
                 mat.color=c;mat.SetFloat("_Smoothness",key=="Court"?.55f:.2f);}

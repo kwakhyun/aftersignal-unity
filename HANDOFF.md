@@ -1,5 +1,17 @@
 # 다음 Codex 작업을 위한 인계 — 2026-09-08
 
+## 최신 작업: 물리 재질·건축 표현·거리 소품·식생·보행자 품질
+
+기존 네 도시 변경사항을 `0968b341`로 main에 커밋·푸시한 뒤 진행했다. 최신 실행은 `PLAY.cmd` → `Builds/Fidelity/AFTERSIGNAL.exe`. 적용 범위·조작·AAA 제작 격차는 `Documentation/Fidelity/README.md`, 1차 참고 자료와 코드 조사 결과는 `QUALITY-DIRECTION.md`, 최종 빌드·네이티브 검사·비교 프레임 시간은 `validation.json`에 있다. AAA 게임 수준을 완성했다고 보고하지 말 것.
+
+URP 17.4를 유지한다. UrbanSurface의 고정 주변광을 PBR 조명/법선/ARM/반사로 교체했고 CC0 2K 재질 4종을 적용했다. ArchitecturalGlass는 창틀·실내 깊이·블라인드·점등 차이와 기존 FacadeGlass 파손 마스크를 지원한다. 파손 변수는 UnityPerMaterial 버퍼에 두어 일반 창문 렌더링에도 개별 전역 파라미터 처리를 강요하지 않는다. 설정은 ESC 그래픽 버튼의 성능/고품질/최고 품질. CityClock의 그림자·환경광, FidelityPresentation의 노출/반사 프로브, CitySky 구름, CameraOcclusion 잔상을 보완했다.
+
+DistrictTower는 새 네 도시 구역의 여섯 타워 형태와 상업부·차양·테라스·외부 구조·옥상 설비를 만든다. 기존 시내 전체를 개별 수작업 건축물로 교체하지 않았다. StreetKit 7종은 Blender 제작물이며 UrbanDetailStreaming이 근거리 최대 48개 지점을 운영한다. FBX 루트의 축 변환 회전을 초기화하면 소품이 눕는다. StreetKit.Place에서 임포트 회전을 반드시 보존한다. 나무는 Poly Haven CC0 원본을 재가공한 83,206/29,190/8,789 삼각형 LOD이며, 초기 일괄 감량은 줄기·잎 손상 때문에 폐기했다. 재생성 절차와 출처는 Tools/Fidelity, Documentation/Fidelity에 있다.
+
+VenuePracticalLights는 신설 실내 시설의 현재 층 주변 등 12개만 켠다. 로비 바닥을 외부 광장보다 3cm 높여 겹침을 제거했다. PedestrianSteering은 짧은 회피 지점을 유지해야 벽 앞에서 맴돌지 않는다. 절벽 방지와 NPC 트리거 몸체 간격을 처리하지만 NavMesh 전체 경로 탐색은 아니다. InteractionScanner는 주변 후보를 0.2초 캐싱하며 비활성화와 텔레포트에 대응한다.
+
+렌더 성능 비교는 숨겨진 Windows 플레이어에서 URP 프레임을 명시적으로 제출하고 GPU readback을 기다리는 방식이다. `BeforeRendered`가 유효 기준이며 이전 `Before`의 일반 백그라운드 창 수치는 사용하지 않는다. 측정치는 동기화 비용을 포함하므로 일반 플레이 FPS라고 보고하지 않는다. 실행 오류가 나면 `Artifacts/Fidelity/build-shipping.log`, `after-shipping-player.log`, `AfterShipping/benchmark.json`을 먼저 본다. 기존 서하 3D 시안과 BGM은 이번 작업에서 변경하지 않았다. Unity 임시 PerformanceTestRun 파일 네 개와 Resources 폴더 메타데이터 삭제는 자동 승인 검토가 거부했다. 삭제하지 않고 정확한 경로를 .gitignore에 추가했다. 실제 Resources 에셋을 이 폴더에 새로 추가할 때에는 폴더 메타데이터 제외 규칙을 제거한다.
+
 ## 최신 작업: 네 도시 · 문화 시설 · 실내 캠페인
 
 시작 시 기존 전체 변경을 `d1eacacd`로 main에 커밋·푸시했다. 이번 확장은 그 이후 작업 트리에 반영했다. 실행 경로 `PLAY.cmd` → `Builds/FourCities/AFTERSIGNAL.exe`. 상세 조작·시설 목록·적용 범위: `Documentation/FourCities/README.md`, 공식 건축·경기 규칙 참고: `REFERENCES.md`.

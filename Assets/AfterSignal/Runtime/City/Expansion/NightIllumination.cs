@@ -18,7 +18,7 @@ namespace AfterSignal
                 var mats=r.sharedMaterials;bool changed=false;
                 for(int i=0;i<mats.Length;i++)
                 {
-                    var m=mats[i];if(!m||!m.HasProperty("_EmissionColor"))continue;
+                    var m=mats[i];if(!m||!m.HasProperty("_EmissionColor")||m.shader.name=="AfterSignal/Architectural Glass")continue;
                     string n=m.name.ToLowerInvariant();bool neon=n.Contains("neon")||n.Contains("districtlight")||n.Contains("cyanfx")||n.Contains("window")||n.Contains("sign");
                     if(!neon)continue;
                     if(!replacements.TryGetValue(m,out var copy))
@@ -26,7 +26,7 @@ namespace AfterSignal
                         copy=new Material(m);copy.name=m.name+" / timed night glow";copy.EnableKeyword("_EMISSION");copy.globalIlluminationFlags=MaterialGlobalIlluminationFlags.RealtimeEmissive;
                         var baseColor=m.GetColor("_EmissionColor");if(baseColor.maxColorComponent<.01f)baseColor=m.HasProperty("_BaseColor")?m.GetColor("_BaseColor"):Color.cyan;
                         if(baseColor.maxColorComponent>.01f)baseColor/=baseColor.maxColorComponent;
-                        baseColor*=n.Contains("window")?.65f:2.6f;replacements[m]=copy;clones.Add(copy);emissions.Add(baseColor);
+                        baseColor*=n.Contains("window")?.3f:n.Contains("districtlight")?.48f:2.6f;replacements[m]=copy;clones.Add(copy);emissions.Add(baseColor);
                     }
                     mats[i]=copy;changed=true;
                 }

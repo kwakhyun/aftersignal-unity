@@ -1,0 +1,98 @@
+[
+  {
+    "asset": "asphalt_04",
+    "file": "asphalt_04_albedo.jpg",
+    "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/asphalt_04/asphalt_04_diff_2k.jpg",
+    "md5": "a9c6f84cfd568368607898351fce9b51",
+    "license": "CC0-1.0",
+    "source": "https://polyhaven.com/a/asphalt_04"
+  },
+  {
+    "asset": "asphalt_04",
+    "file": "asphalt_04_normal.jpg",
+    "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/asphalt_04/asphalt_04_nor_gl_2k.jpg",
+    "md5": "7c908104ea09ed7749d287a85bdae485",
+    "license": "CC0-1.0",
+    "source": "https://polyhaven.com/a/asphalt_04"
+  },
+  {
+    "asset": "asphalt_04",
+    "file": "asphalt_04_arm.jpg",
+    "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/asphalt_04/asphalt_04_arm_2k.jpg",
+    "md5": "86aa0c868aa1a4c3a0bc0e96732b506a",
+    "license": "CC0-1.0",
+    "source": "https://polyhaven.com/a/asphalt_04"
+  },
+  {
+    "asset": "concrete_tiles_02",
+    "file": "concrete_tiles_02_albedo.jpg",
+    "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/concrete_tiles_02/concrete_tiles_02_diff_2k.jpg",
+    "md5": "7db6f974b91e94c395ecdcdb96329e75",
+    "license": "CC0-1.0",
+    "source": "https://polyhaven.com/a/concrete_tiles_02"
+  },
+  {
+    "asset": "concrete_tiles_02",
+    "file": "concrete_tiles_02_normal.jpg",
+    "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/concrete_tiles_02/concrete_tiles_02_nor_gl_2k.jpg",
+    "md5": "2da0bec51e41be940d85629f8d1ff426",
+    "license": "CC0-1.0",
+    "source": "https://polyhaven.com/a/concrete_tiles_02"
+  },
+  {
+    "asset": "concrete_tiles_02",
+    "file": "concrete_tiles_02_arm.jpg",
+    "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/concrete_tiles_02/concrete_tiles_02_arm_2k.jpg",
+    "md5": "56e3dd1fa9be64d32bc2b465384907f6",
+    "license": "CC0-1.0",
+    "source": "https://polyhaven.com/a/concrete_tiles_02"
+  },
+  {
+    "asset": "concrete_wall_006",
+    "file": "concrete_wall_006_albedo.jpg",
+    "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/concrete_wall_006/concrete_wall_006_diff_2k.jpg",
+    "md5": "604ffd4e767e1949d714ee9ee35215ca",
+    "license": "CC0-1.0",
+    "source": "https://polyhaven.com/a/concrete_wall_006"
+  },
+  {
+    "asset": "concrete_wall_006",
+    "file": "concrete_wall_006_normal.jpg",
+    "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/concrete_wall_006/concrete_wall_006_nor_gl_2k.jpg",
+    "md5": "856f47ebd894a492b33398f22cc8b923",
+    "license": "CC0-1.0",
+    "source": "https://polyhaven.com/a/concrete_wall_006"
+  },
+  {
+    "asset": "concrete_wall_006",
+    "file": "concrete_wall_006_arm.jpg",
+    "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/concrete_wall_006/concrete_wall_006_arm_2k.jpg",
+    "md5": "cc886437ea78c089ae5776a6a65228b0",
+    "license": "CC0-1.0",
+    "source": "https://polyhaven.com/a/concrete_wall_006"
+  },
+  {
+    "asset": "blue_metal_plate",
+    "file": "blue_metal_plate_albedo.jpg",
+    "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/blue_metal_plate/blue_metal_plate_diff_2k.jpg",
+    "md5": "6189f7c443f0b7767d3e046f021b5495",
+    "license": "CC0-1.0",
+    "source": "https://polyhaven.com/a/blue_metal_plate"
+  },
+  {
+    "asset": "blue_metal_plate",
+    "file": "blue_metal_plate_normal.jpg",
+    "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/blue_metal_plate/blue_metal_plate_nor_gl_2k.jpg",
+    "md5": "c460b1b25b5d418218982d8b100822b8",
+    "license": "CC0-1.0",
+    "source": "https://polyhaven.com/a/blue_metal_plate"
+  },
+  {
+    "asset": "blue_metal_plate",
+    "file": "blue_metal_plate_arm.jpg",
+    "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/blue_metal_plate/blue_metal_plate_arm_2k.jpg",
+    "md5": "d0f422ae772522cc3978f2bf2bbb5902",
+    "license": "CC0-1.0",
+    "source": "https://polyhaven.com/a/blue_metal_plate"
+  }
+]

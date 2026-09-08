@@ -20,6 +20,7 @@ namespace AfterSignal
             Camera.main.farClipPlane=6400;
             game.stageLength=FourCityCatalog.East;game.halfDepth=-FourCityCatalog.South;
             new GameObject("Four cities / living world").AddComponent<FourCityWorld>();
+            game.gameObject.AddComponent<UrbanDetailStreaming>();
         }
         public int Population{get;private set;}
         sealed class DistrictResidents
@@ -89,13 +90,13 @@ namespace AfterSignal
     public sealed class FacilityCitizen:MonoBehaviour
     {
         public Vector3 origin;public float radius;public string district;public int serial;
-        Vector3 target;float next,chat;WorldActor body;CityNpc npc;
+        Vector3 target;float next,chat;WorldActor body;CityNpc npc;PedestrianSteering steering;
         void Start(){body=GetComponent<WorldActor>();npc=GetComponent<CityNpc>();target=origin;chat=Time.time+Random.Range(8f,28f);}
         void Update()
         {
             var g=GameDirector.Instance;if(!g||g.Blocked||!body||!body.Alive||npc.Fleeing||CivilianImpact.Active(this)||CivilianDefense.Active(this)||Time.time<npc.SocialUntil)return;
             if(Time.time>next){next=Time.time+Random.Range(8f,19f);var d=Random.insideUnitCircle*radius;var p=origin+new Vector3(d.x,0,d.y);if(Physics.Raycast(p+Vector3.up*3,Vector3.down,out var ground,5,1,QueryTriggerInteraction.Ignore)&&ground.normal.y>.8f&&Mathf.Abs(ground.point.y-origin.y)<.3f)target=ground.point+Vector3.up*.04f;}
-            Vector3 delta=target-transform.position;delta.y=0;if(delta.magnitude>.4f&&!Physics.Raycast(transform.position+Vector3.up,delta.normalized,.7f,1,QueryTriggerInteraction.Ignore))transform.position+=delta.normalized*Time.deltaTime*(1.05f+serial%4*.17f);
+            if(!steering)steering=PedestrianSteering.For(this);steering.Move(target,Time.deltaTime*(1.05f+serial%4*.17f));
             if(Time.time>chat&&(transform.position-g.Player.transform.position).sqrMagnitude<30*30){chat=Time.time+Random.Range(22f,45f);NpcSpeech.Say(npc,NpcDialogueBank.Line(npc,"ambient"),4);}
         }
     }

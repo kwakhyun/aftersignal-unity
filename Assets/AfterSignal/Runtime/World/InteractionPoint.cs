@@ -73,6 +73,7 @@ namespace AfterSignal
         public bool CanReach(PlayerMotor player) => Vector3.Distance(transform.position, player.Shoulder) < radius;
         public void Interact(GameDirector game)
         {
+            var amenity=GetComponent<StreetAmenity>();if(amenity){amenity.Use(game);return;}
             var venue=GetComponent<VenueService>();if(venue){venue.Use();return;}
             var highrise=GetComponent<HighriseDoor>();if(highrise){highrise.Use();return;}
             var taxi=GetComponent<CityTaxiService>();if(taxi){taxi.Board();return;}

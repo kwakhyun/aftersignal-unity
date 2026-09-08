@@ -11,7 +11,7 @@ namespace AfterSignal
         SpriteRenderer visual;
         Sprite[] poses;
         bool outward = true;
-        float phase;
+        float phase;PedestrianSteering steering;
         void Start()
         {
             visual = GetComponent<SpriteRenderer>();
@@ -29,7 +29,7 @@ namespace AfterSignal
             var delta = target - transform.position;
             if (walking)
             {
-                transform.position = Vector3.MoveTowards(transform.position, target, speed * Time.deltaTime);
+                if(!steering)steering=PedestrianSteering.For(this);steering.Move(target,speed*Time.deltaTime);
                 if (delta.magnitude < .05f)
                     outward = !outward;
                 if (Mathf.Abs(delta.x) > .01f)

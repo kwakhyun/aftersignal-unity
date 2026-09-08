@@ -5,6 +5,7 @@ namespace AfterSignal
     {
         public static void Tree(CityGeometry g,Vector3 p,float scale,int seed)
         {
+            if(BotanicalTree.Place(g.root,p,scale,seed))return;
             g.Cylinder(p,.22f*scale,4.6f*scale,"Trunk",9,.09f*scale);
             for(int b=0;b<5;b++)
             {
