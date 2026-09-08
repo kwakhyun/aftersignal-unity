@@ -82,6 +82,9 @@ namespace AfterSignal
 
                         Purchase(150, () =>
                         {
+                            var current=UrbanSimulation.Instance?UrbanSimulation.Instance.Owned:null;
+                            if(current)current.Repair();
+                            PlayerPrefs.SetInt(UrbanCatalog.Prefix+"CarDurabilityVersion",0);
                             PlayerPrefs.SetFloat(UrbanCatalog.Prefix + "CarHealth", 100);
                             PlayerPrefs.Save();
                         });
@@ -104,7 +107,7 @@ namespace AfterSignal
                     break;
             }
 
-            if(game.stage==StageId.UrbanInterior&&(type==3||type==7||type==9||type==15))
+            if((game.stage==StageId.UrbanInterior||game.stage==StageId.Clinic)&&(type==3||type==4||type==7||type==9||type==15))
                 Option("\uD604\uAE08 \uAC15\uD0C8 \uC2DC\uB3C4",()=>UrbanCrime.Instance.StartHeist());
             if (LifeState.Errand != null && LifeState.Errand.accepted && !LifeState.Errand.completed && LifeState.Errand.site == site && game.stage == StageId.UrbanInterior && LifeState.Errand.kind != "rooftop")
                 Option("숨은 의뢰 · 전달 / 확인", CompleteErrand);

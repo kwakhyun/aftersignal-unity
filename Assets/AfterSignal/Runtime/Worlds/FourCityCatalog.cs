@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace AfterSignal
 {
-    public enum VenueKind { Garden, Monument, Football, Baseball, Basketball, Circuit, Cinema, Hotel, Amusement, Museum, Research, Civic, Market, Hospital, Archive, Reactor }
+    public enum VenueKind { Garden, Monument, Football, Baseball, Basketball, Circuit, Cinema, Hotel, Amusement, Museum, Research, Civic, Market, Hospital, Archive, Reactor, Police, FireStation, Bank, Restaurant, Cafe, School, Library, Military, Prison, Slum, Island, Laboratory, CityHall, Plaza, Sinkhole }
     [Serializable] public sealed class CityVenue
     {
         public string id, title, district, description;
@@ -20,11 +20,12 @@ namespace AfterSignal
     }
     public static class FourCityCatalog
     {
-        public const float East=5400, North=2350, South=-6200;
+        public const float East=6200, North=3600, South=-7300;
         public static readonly string[] CityNames={"애프터라이트","노바 시티","에레보스 · 잠식도시","네레이드 · 수중도시"};
         public static readonly Vector3[] Centers={new(1120,0,1650),new(1110,0,-5020),new(3850,0,-900),new(3900,-62,-4480)};
-        public static readonly Rect[] Land={new(0,1095,2200,1255),new(180,-5650,1860,1470),new(2700,-2100,2500,2500)};
-        public static readonly CityVenue[] Venues={
+        public static readonly Rect[] Land={new(0,1095,2200,1255),new(180,-5650,1860,1470),new(2700,-2100,2500,2500),new(100,2349,2050,1160),new(70,-7200,2380,1621)};
+        public static readonly CityVenue[] Venues=CreateVenues();
+        static CityVenue[] CreateVenues(){var list=new List<CityVenue>{
             new("lumen-garden","루멘 크라운 식물원",0,VenueKind.Garden,350,0,1450,260,250,42,"유리 아치 아래 열대 정원과 빛의 폭포, 공중 산책로를 잇는 도심 온실."),
             new("signal-spire","세븐 시그널 전망탑",0,VenueKind.Monument,760,0,1430,130,160,28,"일곱 신호를 기리는 나선형 전망대. 승강기로 하늘 정원에 오르세요."),
             new("dawn-stadium","던 유나이티드 축구장",0,VenueKind.Football,1170,0,1440,245,200,110,"전·후반 45분, 11인제 도시 리그. 관람석과 선수 통로, 매표소, 클럽 매장."),
@@ -48,17 +49,17 @@ namespace AfterSignal
             new("nereid-port","네레이드 감압 관문",3,VenueKind.Civic,3010,-62,-4350,110,110,45,"기밀 해저 도로와 중앙 생활 돔을 잇는 관문. 돔 안에서는 자유롭게 숨 쉴 수 있습니다."),
             new("nereid-garden","펄라이트 산호 정원",3,VenueKind.Garden,3640,-62,-4050,230,190,68,"해양 생물 관찰 갤러리와 실내 숲, 수경 재배 연구실."),
             new("nereid-research","아틀라스 해저 연구원",3,VenueKind.Research,4210,-62,-4130,170,140,72,"생물학·압력 제어·기억 보관 연구원들이 근무하는 최첨단 연구 시설."),
-            new("nereid-forum","심해 시민 포럼",3,VenueKind.Civic,3960,-62,-4560,160,130,70,"민원·교통 안내·도시 운영 제어를 제공하는 공개 행정 광장."),
+            new("nereid-forum","네레이드 시민 시청",3,VenueKind.CityHall,3960,-62,-4560,160,130,70,"민원·교통 안내·도시 운영 제어를 제공하는 공개 행정 광장."),
             new("nereid-market","블루펄 생활시장",3,VenueKind.Market,3470,-62,-4660,200,140,95,"해조 식당·의류점·생활 도구점이 연결된 기밀 상업가."),
             new("nereid-hospital","심해 종합의료원",3,VenueKind.Hospital,4390,-62,-4640,150,130,65,"감압 치료·진료·입원·응급 복원 기능을 제공하는 의료원."),
             new("nereid-hotel","아비스 그랜드 레지던스",3,VenueKind.Hotel,3960,-62,-5020,165,130,82,"심해 전망 객실과 식당, 주민 공동 거실을 갖춘 주거 호텔."),
             new("nereid-archive","블루 아카이브",3,VenueKind.Archive,4410,-62,-5020,150,130,60,"잠식 이전의 기록을 보존한 도서관. 에레보스 사건을 연결하는 핵심 장소.")
-        };
+        };RegionalCatalog.Append(list);return list.ToArray();}
         public static readonly Vector3[][] Roads=MakeRoads();
         static Vector3[][] MakeRoads()
         {
             var r=new List<Vector3[]>();
-            void Add(params Vector3[] p)=>r.Add(p);
+            void Add(params Vector3[] p)=>RegionalCatalog.AddRoad(r,p);
             Add(new(880,0,1050),new(880,0,1200),new(2100,0,1200));
             foreach(float x in new[]{160f,650,930,2100})Add(new(x,0,1200),new(x,0,2240));
             Add(new(1450,0,1200),new(1450,0,1720),new(1830,0,1720),new(1830,0,2240));
@@ -75,9 +76,11 @@ namespace AfterSignal
             Add(new(3190,-62,-4560),new(3280,-62,-4390),new(4550,-62,-4390));
             Add(new(3250,-62,-4880),new(4550,-62,-4880));
             foreach(float x in new[]{3280f,3810,4620})Add(new(x,-62,-3900),new(x,-62,-5200));
+            RegionalCatalog.Roads(r);
             var mainRoads=r.ToArray();
             foreach(var v in Venues)
             {
+                if(v.kind==VenueKind.Island||v.kind==VenueKind.Sinkhole||v.kind==VenueKind.Slum)continue;
                 var a=v.Entrance;a.y=v.position.y;Vector3 best=a;float distance=float.MaxValue;
                 foreach(var road in mainRoads)for(int i=1;i<road.Length;i++)
                 {
@@ -102,11 +105,12 @@ namespace AfterSignal
             return r.ToArray();
         }
         public static Vector3 Closest(Vector3 p,Vector3 a,Vector3 b)=>a+(b-a)*Mathf.Clamp01(Vector3.Dot(p-a,b-a)/Mathf.Max(.001f,(b-a).sqrMagnitude));
-        public static int CityAt(Vector3 p)=>p.x>2700?(p.z< -3200?3:2):p.z< -2200?1:0;
+        public static int CityAt(Vector3 p)=>p.x>2700?(p.z< -3200?3:p.z> -2200?2:1):p.z< -2200?1:0;
         public static CityVenue Nearest(Vector3 p){CityVenue best=null;float d=float.MaxValue;foreach(var v in Venues){float n=(v.position-p).sqrMagnitude;if(n<d){d=n;best=v;}}return best;}
-        public static bool OnNewLand(Vector3 p){foreach(var r in Land)if(r.Contains(new Vector2(p.x,p.z)))return true;return false;}
+        public static bool OnNewLand(Vector3 p){if(RegionalCatalog.Island(p))return true;foreach(var r in Land)if(r.Contains(new Vector2(p.x,p.z)))return true;return false;}
         public static bool Dry(Vector3 p)
         {
+            if(RegionalCatalog.Dry(p))return true;
             var d=p-Centers[3];if(d.y>=-.5f&&d.y<50&&d.x*d.x/(1030*1030)+d.z*d.z/(930*930)+d.y*d.y/2500<1)return true;
             foreach(var road in Roads)for(int i=1;i<road.Length;i++)if(road[i].y<-.5f){var q=Closest(p,road[i-1],road[i]);if(Mathf.Abs(p.x-q.x)<12&&Mathf.Abs(p.z-q.z)<12&&p.y>=q.y-.5f&&p.y<q.y+8)return true;}
             return false;

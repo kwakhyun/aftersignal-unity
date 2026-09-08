@@ -105,7 +105,7 @@ namespace AfterSignal
             var canvases=FindObjectsByType<Canvas>().Where(c=>c.renderMode==RenderMode.ScreenSpaceOverlay).ToArray();
             foreach(var canvas in canvases){canvas.renderMode=RenderMode.ScreenSpaceCamera;canvas.worldCamera=Camera.main;canvas.planeDistance=.5f;}Canvas.ForceUpdateCanvases();yield return null;
             var rt=RenderTexture.GetTemporary(1600,900,24);var old=RenderTexture.active;var texture=new Texture2D(1600,900,TextureFormat.RGB24,false);
-            RenderPipeline.SubmitRenderRequest(Camera.main,new UniversalRenderPipeline.SingleCameraRequest{destination=rt});RenderTexture.active=rt;texture.ReadPixels(new Rect(0,0,1600,900),0,0);texture.Apply();File.WriteAllBytes(Path.Combine(output,name+".png"),texture.EncodeToPNG());RenderTexture.active=old;RenderTexture.ReleaseTemporary(rt);Destroy(texture);
+            RenderPipeline.SubmitRenderRequest(Camera.main,new RenderPipeline.StandardRequest{destination=rt});RenderTexture.active=rt;texture.ReadPixels(new Rect(0,0,1600,900),0,0);texture.Apply();File.WriteAllBytes(Path.Combine(output,name+".png"),texture.EncodeToPNG());RenderTexture.active=old;RenderTexture.ReleaseTemporary(rt);Destroy(texture);
             foreach(var canvas in canvases){canvas.renderMode=RenderMode.ScreenSpaceOverlay;canvas.worldCamera=null;}Canvas.ForceUpdateCanvases();
         }
         IEnumerator View(string name,Vector3 player,Vector3 eye,Vector3 target,float hour)
@@ -114,12 +114,13 @@ namespace AfterSignal
             yield return new WaitForSeconds(2.5f);
             // Hidden Windows players skip ordinary presentation. Explicitly render each measured
             // frame, including a GPU readback fence, so an idle window is never reported as FPS.
+            // StandardRequest also updates the volume stack; SingleCameraRequest bypasses it.
             var benchmarkTarget=RenderTexture.GetTemporary(1600,900,24);
             var fence=new Texture2D(1,1,TextureFormat.RGB24,false);var frames=new float[120];
             for(int n=0;n<frames.Length;n++)
             {
                 float start=Time.realtimeSinceStartup;
-                RenderPipeline.SubmitRenderRequest(Camera.main,new UniversalRenderPipeline.SingleCameraRequest{destination=benchmarkTarget});
+                RenderPipeline.SubmitRenderRequest(Camera.main,new RenderPipeline.StandardRequest{destination=benchmarkTarget});
                 var old=RenderTexture.active;RenderTexture.active=benchmarkTarget;fence.ReadPixels(new Rect(0,0,1,1),0,0);RenderTexture.active=old;
                 yield return null;frames[n]=(Time.realtimeSinceStartup-start)*1000;
             }
@@ -127,7 +128,7 @@ namespace AfterSignal
             var sorted=frames.OrderBy(f=>f).ToArray();var renderers=FindObjectsByType<MeshRenderer>();
             report.samples.Add(new Sample{view=name,meanMs=frames.Average(),p95Ms=sorted[(int)(sorted.Length*.95f)],memoryBytes=UnityEngine.Profiling.Profiler.GetTotalAllocatedMemoryLong(),renderers=renderers.Length,visibleRenderers=renderers.Count(r=>r.enabled&&r.isVisible)});
             var rt=RenderTexture.GetTemporary(1600,900,24);var previous=RenderTexture.active;var texture=new Texture2D(1600,900,TextureFormat.RGB24,false);
-            RenderPipeline.SubmitRenderRequest(Camera.main,new UniversalRenderPipeline.SingleCameraRequest{destination=rt});RenderTexture.active=rt;texture.ReadPixels(new Rect(0,0,1600,900),0,0);texture.Apply();File.WriteAllBytes(Path.Combine(output,name+".png"),texture.EncodeToPNG());RenderTexture.active=previous;RenderTexture.ReleaseTemporary(rt);Destroy(texture);
+            RenderPipeline.SubmitRenderRequest(Camera.main,new RenderPipeline.StandardRequest{destination=rt});RenderTexture.active=rt;texture.ReadPixels(new Rect(0,0,1600,900),0,0);texture.Apply();File.WriteAllBytes(Path.Combine(output,name+".png"),texture.EncodeToPNG());RenderTexture.active=previous;RenderTexture.ReleaseTemporary(rt);Destroy(texture);
             File.WriteAllText(Path.Combine(output,"benchmark.json"),JsonUtility.ToJson(report,true));Debug.Log("FIDELITY VIEW "+name+" "+frames.Average().ToString("F2")+" ms");
         }
         void Finish(){if(done)return;done=true;report.completed=true;File.WriteAllText(Path.Combine(output,"benchmark.json"),JsonUtility.ToJson(report,true));Application.Quit(report.errors.Count==0?0:1);}

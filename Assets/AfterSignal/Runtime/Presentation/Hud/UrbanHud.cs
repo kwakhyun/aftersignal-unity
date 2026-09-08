@@ -59,7 +59,7 @@ namespace AfterSignal
             if (Time.unscaledTime >= nextCityText)
             {
                 nextCityText = Time.unscaledTime + .1f;
-                drivingInfo.text = sim.Current ? $"{Mathf.Abs(sim.Current.speed) * 3.6f:000} km/h    ·    연료 {sim.Current.fuel:0.0} L    ·    차체 {sim.Current.health:0}%\n" + (sim.Current.fuel < 3 ? "연료 부족 · 가까운 주유소로 이동하세요" : VehicleSeats.Name(sim.Current,sim.SeatIndex)+" · "+(sim.SeatIndex==0?VehicleSeats.Controls(sim.Current):"승객 탑승 · F 하차")) : selectedSite >= 0 ? $"{UrbanCatalog.Name(selectedSite)}  ·  {Vector3.Distance(game.Player.transform.position, UrbanCatalog.Door(selectedSite)):0} m" : "";
+                drivingInfo.text = sim.Current ? $"{Mathf.Abs(sim.Current.speed) * 3.6f:000} km/h    ·    연료 {sim.Current.fuel:0.0} L    ·    차체 {sim.Current.HealthFraction*100:0}%\n" + (sim.Current.fuel < 3 ? "연료 부족 · 가까운 주유소로 이동하세요" : VehicleSeats.Name(sim.Current,sim.SeatIndex)+" · "+(sim.SeatIndex==0?VehicleSeats.Controls(sim.Current):"승객 탑승 · F 하차")) : selectedSite >= 0 ? $"{UrbanCatalog.Name(selectedSite)}  ·  {Vector3.Distance(game.Player.transform.position, UrbanCatalog.Door(selectedSite)):0} m" : "";
             }
 
             arsenalPanel.SetActive(!sim.Driving);

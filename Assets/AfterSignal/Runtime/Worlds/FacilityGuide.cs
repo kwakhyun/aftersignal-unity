@@ -14,6 +14,17 @@ namespace AfterSignal
         };
         public static string For(CityVenue v)=>v.Sport?Rules(v.kind):v.kind switch
         {
+            VenueKind.Slum=>"시장 공동 단말 E에서 8 C 식사, 암시장 거래, 비공식 운송 의뢰를 이용하세요. 서하의 집은 저지대 서남쪽의 기존 새벽 주거동에 있습니다. 이곳 이웃은 서하와 함께 자랐으며 높은 친밀도로 시작합니다. 폭력은 신뢰를 떨어뜨립니다.",
+            VenueKind.Island=>"부두 옆 보트는 E로 조종할 수 있습니다. 해협 순환 여객선이 정차하면 G로 승객 탑승하고 F로 하선합니다. 마을 안내 단말에서 18 C 식사를 이용하세요.",
+            VenueKind.Bank=>"안내 단말 E에서 500 C씩 예금·인출할 수 있습니다. 영업장 안의 금고는 별도 상호작용 대상입니다. 현금 탈취를 목격한 직원은 경찰에 신고합니다.",
+            VenueKind.Restaurant or VenueKind.Cafe=>"안내 단말 E에서 식사 또는 음료를 구매하거나 아르바이트를 시작하세요. 화면 주문에 따라 응대·서빙·음료 제조를 진행하면 보수를 받습니다.",
+            VenueKind.FireStation=>"출동 베이와 훈련탑, 구조 장비실을 둘러볼 수 있습니다. 안내 단말 E에서 무료 응급처치 교육을 받으면 체력이 20 회복됩니다.",
+            VenueKind.Police=>"정문은 민원 접수 구역입니다. 안내 단말 E에서 안전·투항 방법을 확인하세요. 경찰서 안에서 범죄가 발생하면 근무 중인 경찰이 대응합니다.",
+            VenueKind.Military=>"지휘동과 장비고는 계단·승강기로 이동합니다. 노바 기지의 전차와 항공기는 차량 가까이에서 E로 조종할 수 있습니다. 에레보스 기지는 잠식체에 대응하는 격리대가 지킵니다.",
+            VenueKind.Prison=>"정문 접수 구역과 교도관에게 면회 안내를 문의하세요. 철창이 있는 수용 구역은 출입을 제한합니다.",
+            VenueKind.School=>"안내 단말 E에서 1시간 공개 수업에 참가할 수 있습니다. 교실은 계단이나 승강기를 이용해 둘러보세요.",
+            VenueKind.Library=>"안내 단말 E에서 도시 연혁 자료를 열람할 수 있습니다. 열람석과 서가를 자유롭게 이용하고 사서에게 궁금한 점을 물어보세요.",
+            VenueKind.Sinkhole=>"붕괴구 가장자리의 관측 단말 E로 관측 지점에 설 수 있습니다. 지면이 실제로 붕괴한 구역이므로 우회 도로와 난간 바깥으로 떨어지지 않도록 이동하세요.",
             VenueKind.Cinema=>"입구 안내 단말에 가까이 가서 E → 영화 관람(25 C)을 선택하세요. 상영관 좌석에서 원본 단편 영상을 볼 수 있습니다. 자유롭게 걸어서 나올 수 있습니다.",
             VenueKind.Amusement=>"안내 단말에서 대관람차(30 C), 코스터(40 C), 회전목마(15 C)를 선택하세요. 승강장 대기 후 운전원이 출발시킵니다. 탑승 중 F를 누르면 입구에서 내립니다.",
             VenueKind.Hotel=>"로비 안내 단말 E → 객실 취침(120 C)을 선택하면 8시간 쉬고 체력을 회복합니다. 승강기 앞에서 E로 호출한 후 내부에서 E로 층을 선택하세요. 계단으로도 층을 이동할 수 있습니다.",
@@ -25,7 +36,8 @@ namespace AfterSignal
         public static string Knowledge(CityNpc npc)
         {
             var v=FourCityCatalog.Nearest(npc.transform.position);
-            string local=v!=null&&Vector3.Distance(v.position,npc.transform.position)<180?v.title+". "+For(v):"";
+            var localVenue=npc.GetComponent<VenueActor>()?.venue;if(localVenue)v=localVenue.Definition;
+            string local=v!=null&&(localVenue||Vector3.Distance(v.position,npc.transform.position)<180)?v.title+". "+For(v):"";
             return "시설 사용법은 실제 조작과 일치하게 설명한다. 상호작용 E, 지도 M, 무기 숫자키, 승객 탑승 G, 하차 F. "+local+" 공항/항만 교통편은 터미널 안내 단말에서 노선, 운임, 출발 정보를 확인하고 탑승 구역으로 이동한다. 네레이드 기밀 도로와 돔 내부는 호흡이 가능하다. 이용 가능하지 않은 기능이나 운임은 지어내지 않는다.";
         }
         public static bool TryAnswer(CityNpc npc,string question,out string answer)
@@ -42,7 +54,8 @@ namespace AfterSignal
             var v=FourCityCatalog.Nearest(npc.transform.position);
             VenueKind? requested=Has(question,"축구")?VenueKind.Football:Has(question,"야구")?VenueKind.Baseball:Has(question,"농구")?VenueKind.Basketball:Has(question,"레이싱","경주")?VenueKind.Circuit:Has(question,"영화")?VenueKind.Cinema:Has(question,"호텔","숙박")?VenueKind.Hotel:Has(question,"병원","치료")?VenueKind.Hospital:Has(question,"놀이공원","놀이기구")?VenueKind.Amusement:null;
             float nearest=float.MaxValue;foreach(var candidate in FourCityCatalog.Venues){if(Has(question,candidate.title)){v=candidate;break;}if(requested.HasValue&&candidate.kind==requested.Value){float d=(candidate.position-npc.transform.position).sqrMagnitude;if(d<nearest){nearest=d;v=candidate;}}}
-            if(v!=null&&((v.position-npc.transform.position).sqrMagnitude<220*220||Has(question,"축구","야구","농구","레이싱","영화","호텔","놀이공원"))){answer="네, 안내해 드릴게요. "+v.title+"에서는 "+For(v)+(v.Sport?" 매표소의 '오늘 경기'에서 점수와 경기 시작 시간을 확인하고, 시작 전 홈 또는 원정 팀 승리에 100 C를 예측할 수 있어요.":"");return true;}
+            var local=npc.GetComponent<VenueActor>();if(local&&local.venue&&!requested.HasValue)v=local.venue.Definition;
+            if(v!=null&&(local||(v.position-npc.transform.position).sqrMagnitude<220*220||Has(question,"축구","야구","농구","레이싱","영화","호텔","놀이공원"))){answer="네, 안내해 드릴게요. "+v.title+"에서는 "+For(v)+(v.Sport?" 매표소의 '오늘 경기'에서 점수와 경기 시작 시간을 확인하고, 시작 전 홈 또는 원정 팀 승리에 100 C를 예측할 수 있어요.":"");return true;}
             if(Has(question,"승강기","엘리베이터")){answer="승강기 앞 단말에 가까이 가서 E로 호출하세요. 문이 열리면 객실 안에 들어가 E를 누르고 목적 층을 선택하면 됩니다. 도착한 뒤 통로로 걸어 나오세요.";return true;}
             return false;
         }

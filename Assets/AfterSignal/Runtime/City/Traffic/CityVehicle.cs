@@ -51,7 +51,10 @@ namespace AfterSignal
         bool exploded;
         void Start()
         {
+            InitializeDurability();
             VehicleDetails.Install(this);
+            gameObject.AddComponent<VehicleDamagePresentation>();
+            gameObject.AddComponent<VehicleHorn>();
             if (IsSpecial) gameObject.AddComponent<CraftDynamics>().Initialize(this);
             else VehicleGround.Settle(this, .02f, true);
             gameObject.AddComponent<VehicleCabin>().Initialize(this);
@@ -109,10 +112,11 @@ namespace AfterSignal
             if (IsSpecial) { GetComponent<CraftDynamics>()?.Drive(input, dt); return; }
             if (type == CityVehicleType.Tank) { DriveTank(input,dt); return; }
             bool braking=input.vertical>0||input.jump||input.guard;
+            bool handbrakeTurn=braking&&Mathf.Abs(input.move.x)>.2f&&Mathf.Abs(speed)>7;
             Steering = Mathf.MoveTowards(Steering, input.move.x, dt * 5);
             float throttle = input.move.y, top = TopSpeed * (input.boost ? 1.32f : 1);
             float target = fuel > .001f ? (throttle >= 0 ? throttle * top : throttle * 7) : 0;
-            float accel = braking ? 24 : Mathf.Abs(throttle) < .1f ? 3.8f : Mathf.Sign(target) != Mathf.Sign(speed) ? 17 : IsHeavy ? 5 : type == CityVehicleType.Motorcycle || type == CityVehicleType.SportsCar ? 14 : 8;
+            float accel = handbrakeTurn ? 3.6f : braking ? 24 : Mathf.Abs(throttle) < .1f ? 3.8f : Mathf.Sign(target) != Mathf.Sign(speed) ? 17 : IsHeavy ? 5 : type == CityVehicleType.Motorcycle || type == CityVehicleType.SportsCar ? 14 : 8;
             if ((braking) && Mathf.Abs(speed) > 15 && brakeCooldown <= 0)
             {
                 GameDirector.Instance?.Audio.Play("urban_brake", transform.position, .2f, 1);
@@ -121,9 +125,10 @@ namespace AfterSignal
 
             brakeCooldown -= dt;
             speed = Mathf.MoveTowards(speed, braking ? 0 : target, accel * (input.boost ? 1.5f : 1) * dt);
-            float steer = input.move.x * Mathf.Sign(speed) * Mathf.Clamp01(Mathf.Abs(speed) / 3) * (IsHeavy ? 43 : type == CityVehicleType.Motorcycle ? 82 : 64) * dt;
+            float steer = input.move.x * Mathf.Sign(speed) * Mathf.Clamp01(Mathf.Abs(speed) / 3) * (IsHeavy ? 43 : type == CityVehicleType.Motorcycle ? 82 : 64) * (handbrakeTurn?1.5f:1) * dt;
             transform.Rotate(0, steer, 0, Space.World);
-            Advance(Forward * speed * dt, dt, false);
+            Advance(DriftStep(input,braking,dt), dt, false);
+            if(Mathf.Abs(speed)<.1f)roadVelocity=Vector3.zero;
         }
 
         public void TickTraffic(float dt)
@@ -230,9 +235,9 @@ namespace AfterSignal
                         PushVehicle(other,delta,force);
                         if (!ai || force > 10)
                         {
-                            Damage(Mathf.Max(3, (force - 3) * (force - 3) * .22f), transform.position + Forward * HalfLength);
+                            CollisionDamage(force, transform.position + Forward * HalfLength,other);
                             if (other)
-                                other.Damage(force * 1.4f, other.transform.position - Forward * other.HalfLength);
+                                other.CollisionDamage(force, other.transform.position - Forward * other.HalfLength,this);
                         }
 
                         g?.Audio.Play("urban_crash", transform.position, .32f, 1);
@@ -247,46 +252,44 @@ namespace AfterSignal
             AudioLevel();
         }
 
-        public void Damage(float amount, Vector3 contact, WorldActor source = null)
+        public void Damage(float amount, Vector3 contact, WorldActor source = null, bool alertOccupants=true)
         {
+            InitializeDurability();
             if (Wrecked || amount <= 0)
                 return;
+            RecordDamageSource(source);
             health = Mathf.Max(0, health - amount);
-            VehicleEmergency.Hit(this,contact,Wrecked);
+            if(!Wrecked&&(alertOccupants||HealthFraction<.25f))VehicleEmergency.Hit(this,contact,false);
             ApplyDamageLook();
             SignalEffects.Burst(contact, SignalEffects.Gold, 8, 4);
             if (Wrecked && !exploded)
             {
-                exploded = true;
-                Explosions++;
-                speed = 0;
-                fuel = 0;
-                traffic = false;
-                var g = GameDirector.Instance;
-                g?.Audio.Play("urban_explosion", transform.position, .55f, 1);
-                VehicleExplosion.Create(transform.position, HalfLength);
-                BlastDamage.Create(transform.position,Mathf.Clamp(HalfLength*2.8f,7,16),145,source,this);
-                if (owned || UrbanSimulation.Instance && UrbanSimulation.Instance.Current==this)
-                {
-                    g?.CameraRig.Kick(.15f);
-                    g?.Toast("차량 파손 · 안전한 곳으로 탈출했습니다");
-                    bool driving=UrbanSimulation.Instance&&UrbanSimulation.Instance.Current==this;
-                    UrbanSimulation.Instance?.EmergencyExit(this);
-                    if(driving&&g)g.Player.ReceiveDamage(g.Player.Health,transform.position,true);
-                }
-
-                occupied = false;
-                WreckFragments.Shatter(gameObject,8);
-                if(engine)engine.Stop();
-                Destroy(gameObject,7.8f);
+                if(IsSpecial){if(!GetComponent<VehicleFailure>())VehicleFailure.Begin(this,source);}
+                else Detonate(source);
             }
+        }
+
+        public void Detonate(WorldActor source=null)
+        {
+            if(exploded)return;exploded=true;Explosions++;health=0;fuel=0;traffic=false;
+            source=source?source:DamageSource;
+            var g=GameDirector.Instance;bool carrying=UrbanSimulation.Instance&&UrbanSimulation.Instance.Current==this;
+            // Occupants take a bounded injury, never an unconditional instant death.
+            if(carrying){g.Player.ProtectVehicleImpact();UrbanSimulation.Instance.EmergencyExit(this);g.Player.ReceiveDamage(35,transform.position,true);}
+            VehicleEmergency.Hit(this,transform.position,true);occupied=false;speed=0;
+            g?.Audio.Play("urban_explosion",transform.position,.55f,1);
+            VehicleExplosion.Create(transform.position,Mathf.Clamp(HalfLength,2,15));
+            BlastDamage.Create(transform.position,Mathf.Clamp(HalfLength*2.8f,7,25),145,source,this);
+            WreckFragments.Shatter(gameObject,8);if(engine)engine.Stop();
+            var failure=GetComponent<VehicleFailure>();if(failure)failure.enabled=false;
+            Destroy(gameObject,7.8f);
         }
 
         void ApplyDamageLook()
         {
             if (body == null)
                 return;
-            float damage = 1 - health / 100;
+            float damage = 1 - HealthFraction;
             foreach (var r in body)
             {
                 if (!r || !(r.name == "Sculpted chassis" || r.name == "Sedan roof" || r.name == "Cargo shell"))
@@ -323,7 +326,7 @@ namespace AfterSignal
             if (lamps != null)
                 foreach (var l in lamps)
                     l.enabled = owned && occupied && !Wrecked;
-            if (health < 40 && g && !g.Blocked)
+            if (HealthFraction < .12f && g && !g.Blocked && !GetComponent<VehicleDamagePresentation>())
             {
                 smokeClock -= Time.deltaTime;
                 if (smokeClock <= 0)

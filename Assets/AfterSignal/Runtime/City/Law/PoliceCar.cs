@@ -29,8 +29,7 @@ namespace AfterSignal
             p.system = owner;
             WorldGeometry.Part(car.transform, "Police blue stripe", new Vector3(0, 1.05f, -1.06f), new Vector3(4.5f, .35f, .05f), "DistrictBlue");
             WorldGeometry.Part(car.transform, "Police blue stripe", new Vector3(0, 1.05f, 1.06f), new Vector3(4.5f, .35f, .05f), "DistrictBlue");
-            p.red = WorldGeometry.Part(car.transform, "Siren red", new Vector3(0, 2.2f, -.45f), new Vector3(.65f, .22f, .5f), "RedFX").GetComponent<Renderer>();
-            p.blue = WorldGeometry.Part(car.transform, "Siren blue", new Vector3(0, 2.2f, .45f), new Vector3(.65f, .22f, .5f), "CyanFX").GetComponent<Renderer>();
+
             p.siren = car.gameObject.AddComponent<AudioSource>();
             p.siren.clip = SirenClip();
             p.siren.spatialBlend = 1;
@@ -128,6 +127,7 @@ namespace AfterSignal
 
         public void Withdraw()
         {
+            var lightbar=GetComponent<ResponseLightbar>();if(lightbar)lightbar.enabled=false;
             if (Vehicle.owned)
             {
                 if (siren)

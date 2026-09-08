@@ -32,6 +32,8 @@ namespace AfterSignal
         }
         void Report(Vector3 at,WorldActor suspect,CityNpc victim)
         {
+            // Player reports belong to CrimeObservation; accidents have no suspect.
+            if(!suspect||suspect.environmental)return;
             int id=suspect?suspect.GetInstanceID():-1;
             if(reported.Contains(id))return;
             reported.Add(id);Reports++;

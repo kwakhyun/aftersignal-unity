@@ -38,10 +38,14 @@ namespace AfterSignal.Editor
         }
         static void StripNovaSourceMeshes()
         {
+            var batches=root.Find("Batched district geometry");
+            if(!batches||!batches.GetComponentsInChildren<MeshRenderer>().Any(r=>r.enabled&&r.GetComponent<MeshFilter>()&&r.GetComponent<MeshFilter>().sharedMesh))
+                throw new System.InvalidOperationException("Refusing to strip source geometry without a populated presentation batch: "+root.name);
             // The combined meshes are the presentation. Retain collision and interactive objects,
             // remove the duplicated disabled source renderers and their empty leaf transforms.
             foreach(var filter in root.GetComponentsInChildren<MeshFilter>())
             {
+                if(filter.transform.IsChildOf(batches))continue;
                 var renderer=filter.GetComponent<MeshRenderer>();if(!renderer||renderer.enabled)continue;
                 var go=filter.gameObject;Object.DestroyImmediate(renderer);if(!go.GetComponent<MeshCollider>())Object.DestroyImmediate(filter);
                 if(go.transform.childCount==0&&go.GetComponents<Component>().Length==1)Object.DestroyImmediate(go);

@@ -8,6 +8,7 @@ namespace AfterSignal
 
         public void Talk(CityNpc npc)
         {
+            npc.GetComponent<NeighborBond>()?.Greet();
             Speaker = npc;
             history.Clear();
             Panel("talk", npc.displayName, "대화를 시작합니다…");

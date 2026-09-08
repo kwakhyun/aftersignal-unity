@@ -34,11 +34,16 @@ namespace AfterSignal
             conversation = gameObject.AddComponent<NpcConversation>();
             game.Player.gameObject.AddComponent<ActorWardrobe>();
             gameObject.AddComponent<WantedSystem>().Initialize(game);
+            gameObject.AddComponent<CrimeObservation>();
+            gameObject.AddComponent<FacilitySecurity>();
+            gameObject.AddComponent<CashLocations>();
+            if(game.stage==StageId.UrbanCity)gameObject.AddComponent<MilitaryInstallation>();
             if (game.stage == StageId.UrbanCity)
                 gameObject.AddComponent<CityGangWar>().Initialize(game);
             gameObject.AddComponent<CityClock>().Initialize(game);
             Camera.main.gameObject.AddComponent<CameraOcclusion>();
             BindResidents();
+            if(game.stage==StageId.Haven)gameObject.AddComponent<RegionalOrigin>();
             gameObject.AddComponent<AutomaticCityEntrance>();
             gameObject.AddComponent<CityBusService>();
             gameObject.AddComponent<ResidentialWorld>();
@@ -51,7 +56,7 @@ namespace AfterSignal
             if(game.stage==StageId.UrbanCity)gameObject.AddComponent<RiftIncursion>();
         }
 
-        void BindResidents()
+        public void BindResidents()
         {
             var points = FindObjectsByType<InteractionPoint>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
             var visuals = FindObjectsByType<SpriteRenderer>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);

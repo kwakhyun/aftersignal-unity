@@ -49,7 +49,9 @@ namespace AfterSignal
                 Owned = Spawn(new Vector3(PlayerPrefs.GetFloat(UrbanCatalog.Prefix + "CarX"), .02f, PlayerPrefs.GetFloat(UrbanCatalog.Prefix + "CarZ")), false, PlayerPrefs.GetInt(UrbanCatalog.Prefix + "CarType", 0));
                 Owned.transform.rotation = Quaternion.Euler(0, PlayerPrefs.GetFloat(UrbanCatalog.Prefix + "CarYaw"), 0);
                 Owned.fuel = PlayerPrefs.GetFloat(UrbanCatalog.Prefix + "CarFuel", 45);
-                Owned.health = PlayerPrefs.GetFloat(UrbanCatalog.Prefix + "CarHealth", 100);
+                Owned.designVariant=PlayerPrefs.GetInt(UrbanCatalog.Prefix+"CarDesign",Owned.designVariant);
+                Owned.InitializeDurability();
+                Owned.health = PlayerPrefs.GetInt(UrbanCatalog.Prefix+"CarDurabilityVersion",0)>0?Mathf.Clamp(PlayerPrefs.GetFloat(UrbanCatalog.Prefix+"CarHealth",Owned.MaxHealth),0,Owned.MaxHealth):Mathf.Clamp01(PlayerPrefs.GetFloat(UrbanCatalog.Prefix+"CarHealth",100)/100)*Owned.MaxHealth;
                 Owned.owned = true;
             }
 
@@ -68,6 +70,7 @@ namespace AfterSignal
             var prefab = variant < 0 ? vehiclePrefab : vehiclePrefabs != null && vehiclePrefabs.Length > variant ? vehiclePrefabs[variant] : vehiclePrefab;
             var c = Instantiate(prefab, position, Quaternion.identity);
             VehicleFleet.Configure(c,variant);
+            FleetDesign.Configure(c);
             c.gameObject.SetActive(true);
             c.occupied = c.traffic = ai;
             c.owned = false;
@@ -171,9 +174,9 @@ namespace AfterSignal
                 }
 
                 bool armed=Current&&(Current.type==CityVehicleType.Tank||Current.type==CityVehicleType.Fighter||Current.type==CityVehicleType.CombatHelicopter);
-                if(!armed||SeatIndex>0)input.attack=false;
                 input.grapple = input.dash = input.skill = false;
-                if(!armed||SeatIndex>0){input.reload=false;input.secondaryFire=false;}
+                if(!armed||SeatIndex>0)input.secondaryFire=false;
+                Prompt+=" · B 크락션"+(!armed||SeatIndex>0?" · 좌클릭 사격 / R 장전":"");
                 var intercity=Current?Current.GetComponent<IntercityService>():null;if(intercity)Prompt+=" · "+intercity.Status;
             }
             else
@@ -275,8 +278,12 @@ namespace AfterSignal
         {
             if (!Current)
                 return;
+            game.Player.TickVehicleStatus(dt);
             if(SeatIndex==0)Current.Drive(input, dt);
             game.Player.transform.position = Current.transform.TransformPoint(VehicleSeats.Local(Current,SeatIndex));
+            if(input.horn)Current.GetComponent<VehicleHorn>()?.Honk();
+            bool armed=Current.GetComponent<VehicleArmament>()&&SeatIndex==0;
+            if(!armed)game.Player.TickMountedCombat(input,dt);
         }
 
         public bool Enter(CityVehicle car,int seat=0)
@@ -296,6 +303,8 @@ namespace AfterSignal
                 WantedSystem.Report(car.GetComponent<PoliceCar>() ? 22 : 9, car.transform.position);
                 game.Toast("운전자가 하차했습니다");
             }
+
+            else if(seat==0&&!car.owned)WantedSystem.Report(7,car.transform.position);
 
             SeatIndex=Mathf.Clamp(seat,0,VehicleSeats.Count(car)-1);
             Current=car;
@@ -394,6 +403,8 @@ namespace AfterSignal
             PlayerPrefs.SetFloat(p + "CarYaw", Owned.transform.eulerAngles.y);
             PlayerPrefs.SetFloat(p + "CarFuel", Owned.fuel);
             PlayerPrefs.SetFloat(p + "CarHealth", Owned.health);
+            PlayerPrefs.SetInt(p + "CarDurabilityVersion",1);
+            PlayerPrefs.SetInt(p+"CarDesign",Owned.designVariant);
             PlayerPrefs.SetInt(p + "CarType", (int)Owned.type);
             PlayerPrefs.Save();
         }

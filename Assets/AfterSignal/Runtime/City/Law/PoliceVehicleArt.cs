@@ -18,12 +18,10 @@ namespace AfterSignal
                 WorldGeometry.Part(root,"Push bar upright",new Vector3(2.72f,.85f,side*.55f),new Vector3(.13f,.95f,.13f),"DarkMetal");
                 WorldGeometry.Part(root,"Reflective blue door band",new Vector3(-.15f,.92f,side*1.08f),new Vector3(3.9f,.29f,.035f),"DistrictBlue");
                 WorldGeometry.Part(root,"Police door shield",new Vector3(.4f,1.11f,side*1.105f),new Vector3(.42f,.43f,.035f),"Gold",PrimitiveType.Cube);
-                Text(root,"POLICE",new Vector3(-.55f,1.12f,side*1.13f),Quaternion.Euler(0,side>0?180:0,0),.08f);
-                Text(root,"112",new Vector3(-1.8f,1.25f,side*1.13f),Quaternion.Euler(0,side>0?180:0,0),.05f);
             }
             WorldGeometry.Part(root,"Lightbar mounting bridge",new Vector3(0,2.09f,0),new Vector3(.5f,.09f,1.7f),"DarkMetal");
             WorldGeometry.Part(root,"Radio aerial",new Vector3(-.8f,2.48f,.35f),new Vector3(.03f,1.1f,.03f),"DarkMetal",PrimitiveType.Cylinder);
-            Text(root,"POLICE 112",new Vector3(1.65f,1.17f,0),Quaternion.Euler(90,90,0),.07f);
+            car.gameObject.AddComponent<ResponseLightbar>();
         }
         static void Text(Transform parent,string text,Vector3 at,Quaternion rotation,float size)
         {

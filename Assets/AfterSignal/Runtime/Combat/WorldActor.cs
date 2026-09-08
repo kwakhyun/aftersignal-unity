@@ -9,7 +9,7 @@ namespace AfterSignal
         public static readonly List<WorldActor> All = new List<WorldActor>();
         public float health = 70;
         public bool police, helicopter, protectedResident, gang;
-        public bool monster, military;
+        public bool monster, military, environmental;
         public float LastPlayerHit {get;private set;}=-100;
         bool deathHandled;
         public bool Alive => health > 0;
@@ -47,6 +47,7 @@ namespace AfterSignal
 
         public void Damage(float amount, Vector3 force, WorldActor source = null, bool blade = false)
         {
+            if(source==null&&Alive&&amount>0)GetComponent<NeighborBond>()?.Offended();
             if (!Alive || amount <= 0 || Time.time < hurt)
                 return;
             hurt = Time.time + .08f;
@@ -56,11 +57,11 @@ namespace AfterSignal
             health = Mathf.Max(protectedResident ? 1 : 0, health - amount);
             if(!Alive)GetComponent<DirectionalPerson>()?.PreserveAppearance();
             if(!Alive&&blade&&!helicopter&&Random.value<.62f)SeveredSprite.Create(this,force);
-            if(Alive&&!police&&!gang&&!helicopter&&!protectedResident&&!monster&&!military)CivilianDefense.React(this,source);
+            if(Alive&&!police&&!gang&&!helicopter&&!protectedResident&&!monster&&!military&&(!source||!source.environmental))CivilianDefense.React(this,source);
             NpcVoice.React(GetComponent<CityNpc>(),health<=0);
             // Existing weapon/vehicle callers are player attacks. Faction fire supplies its source.
             if (!source && !gang && !monster)
-                WantedSystem.Report(police ? 12 : health <= 0 ? 24 : 9, transform.position);
+                CrimeObservation.Observe(police ? 12 : health <= 0 ? 24 : 9, transform.position,this,!Alive);
             var game = GameDirector.Instance;
             if(!helicopter)game?.Audio.Play(Alive?"hurt":"death",Center,.34f,2);
             if(!helicopter)game?.Audio.Play(blade?"blade_hit":"urban_impact",Center,blade?.35f:.3f,3);

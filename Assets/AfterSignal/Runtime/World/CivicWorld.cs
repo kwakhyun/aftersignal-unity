@@ -9,10 +9,11 @@ namespace AfterSignal
         static bool pending;
         public static bool Interior(StageId stage) => stage == StageId.Residence || stage == StageId.School || stage == StageId.Clinic || stage == StageId.Headquarters || stage == StageId.UrbanInterior;
         public static bool Exploration(StageId stage) => stage == StageId.Haven || stage == StageId.UrbanCity || Interior(stage);
-        public static string Title(StageId stage) => stage == StageId.Residence ? "서하의 집 / AFTERLIGHT 0607" : stage == StageId.School ? "새봄초등학교" : stage == StageId.Clinic ? "온유병원" : stage == StageId.Headquarters ? "신호복원본부" : stage == StageId.UrbanInterior ? (ResidentialWorld.VisitHome>=0 ? ResidentialWorld.VisitTitle : UrbanCatalog.Name(UrbanCatalog.Current)) : "애프터라이트";
+        public static string Title(StageId stage) => stage == StageId.Residence ? "새벽 저지대 / 서하의 집" : stage == StageId.School ? "새봄초등학교" : stage == StageId.Clinic ? "온유병원" : stage == StageId.Headquarters ? "신호복원본부" : stage == StageId.UrbanInterior ? (ResidentialWorld.VisitHome>=0 ? ResidentialWorld.VisitTitle : UrbanCatalog.Name(UrbanCatalog.Current)) : "애프터라이트";
         public static Vector3 TownDoor(StageId stage) => stage == StageId.Residence ? new Vector3(16, .15f, 14) : stage == StageId.School ? new Vector3(64, .15f, 19) : stage == StageId.Clinic ? new Vector3(113, .15f, 19) : new Vector3(178, .15f, 19);
         public static void Travel(GameDirector game, StageId destination, Vector3 point)
         {
+            if(destination==StageId.Haven){destination=StageId.UrbanCity;point+=RegionalCatalog.HomeQuarter;}
             arrivalStage = destination;
             arrival = point;
             pending = true;

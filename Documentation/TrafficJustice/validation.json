@@ -1,0 +1,58 @@
+{
+  "date": "2026-09-08",
+  "player": "Builds/TrafficJustice/AFTERSIGNAL.exe",
+  "build": {
+    "result": "Succeeded",
+    "bytes": 1860890292,
+    "errors": 0,
+    "warnings": 47
+  },
+  "nativeChecks": 34,
+  "native": {
+    "completed": true,
+    "passed": [
+      "Light collision causes less than one percent body damage",
+      "One severe road crash cannot explode a healthy car",
+      "Repeated strong collisions produce smoke before destruction",
+      "Low hull health enables persistent engine fire",
+      "Repair restores the type-specific hull capacity",
+      "A belted driver receives a bounded severe-collision injury",
+      "Mounted pistol consumes ammunition and hits a target beyond the own vehicle",
+      "First-person vehicle glass has a transparent bounded material",
+      "Vehicle horn produces a playback event",
+      "Motorcycle rider can fire a pistol",
+      "Airliner has substantially greater durability than a car",
+      "Disabled flying airliner falls before impact detonation",
+      "Disabled boat progressively sinks instead of immediately shattering",
+      "Container ship receives fifty-thousand hull capacity",
+      "Military installation contains an expanded parked tank fleet",
+      "Damaged police helicopter emits staged smoke and fire before crashing",
+      "Unwitnessed crime does not create a wanted level",
+      "Civilian witness starts a delayed report",
+      "Incapacitated witness cannot complete a pending report",
+      "Living witness completes the call and creates a wanted level",
+      "Direct police observation reports the crime immediately",
+      "NPC collision explosion causes collateral injury without blaming the player",
+      "Four tactical officers deploy sequentially from an armoured vehicle rear",
+      "Tactical response uses dedicated armour and red-blue lights",
+      "Patrol car removes floating text and uses red-blue lightbar",
+      "Observed mass casualties dispatch trucks, tank, combat helicopter and fighter",
+      "Close police restraint completes a live arrest and transfers the player to prison",
+      "Bank creates a physical interactive cash vault",
+      "Bank vault robbery awards cash once and empties the vault",
+      "Hospital provides an interactive cash counter",
+      "Police station staff are registered for armed defence",
+      "Residence creates Seoha's personal safe",
+      "Home safe deposit and withdrawal conserve total money",
+      "Death while wanted does not count as capture or enter prison"
+    ],
+    "errors": []
+  },
+  "log": "Artifacts/TrafficJustice/player-final.log",
+  "frames": [
+    "damaged-car.png",
+    "cockpit.png",
+    "tactical-deployment.png",
+    "bank-vault.png"
+  ]
+}

@@ -64,6 +64,7 @@ namespace AfterSignal
         void ChooseActivity()
         {
             state++;wait=Time.time+12+serial%13;
+            if(venue.Definition.kind==VenueKind.Prison&&!staff){Activity="수용동 생활";target=origin+new Vector3(0,0,state%2==0?.4f:0);return;}
             if(staff)
             {
                 Activity=state%4==0?"시설 점검":"시설 업무";

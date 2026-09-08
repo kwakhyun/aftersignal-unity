@@ -20,6 +20,8 @@ namespace AfterSignal
         {
             get
             {
+                var sim=UrbanSimulation.Instance;
+                if(sim&&sim.Current){var seat=sim.Current.transform.TransformPoint(VehicleSeats.Local(sim.Current,sim.SeatIndex))+Vector3.up*.5f;return seat+(Aim-seat).normalized*.65f;}
                 return Shoulder + (Aim-Shoulder).normalized*.55f;
             }
         }
@@ -396,7 +398,7 @@ namespace AfterSignal
 
         public void ReceiveDamage(float amount, Vector3 source, bool ignoreInvulnerability = false)
         {
-            if (Health <= 0 || (!ignoreInvulnerability && invincible > 0))
+            if (amount<=0 || Health <= 0 || (!ignoreInvulnerability && (invincible > 0 || Time.time<vehicleProtection)))
                 return;
             bool blocked = Guarding && Vector3.Dot(source - transform.position, Director.CameraRig.ViewRight) * Facing >= 0;
             if (blocked)

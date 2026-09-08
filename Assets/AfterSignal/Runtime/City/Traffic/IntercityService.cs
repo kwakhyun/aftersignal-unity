@@ -94,7 +94,7 @@ namespace AfterSignal
             transform.position+=step;Car.fuel=Mathf.Max(0,Car.fuel-step.magnitude*.0003f);
             if(distance<.25f){leg++;if(leg>=path.Length){AtNova=!AtNova;Arrivals++;dwell=55;Car.speed=0;Car.fuel=45;Exchange();if(sim&&sim.Current==Car)g.Toast((AtNova?"노바":"애프터라이트")+" 도착 · F 하차 / 55초 후 재출발",6);}}
         }
-        public void ReleaseAfterCrash(){foreach(var t in Manifest)if(t){t.Inside=false;t.WantsBoard=false;t.gameObject.SetActive(true);t.transform.position=transform.position+Random.insideUnitSphere*3;t.GetComponent<WorldActor>()?.Damage(999,Vector3.up*4);}Manifest.Clear();}
+        public void ReleaseAfterCrash(){foreach(var t in Manifest)if(t){t.Inside=false;t.WantsBoard=false;t.gameObject.SetActive(true);t.transform.position=transform.position+Random.insideUnitSphere*3;t.GetComponent<WorldActor>()?.Damage(999,Vector3.up*4,Car?Car.DamageSource:TrafficDamageSource.Environment);}Manifest.Clear();}
         void OnDestroy(){All.Remove(this);foreach(var t in travellers)if(t)Destroy(t.gameObject);}
     }
     public sealed class TransitTraveller:MonoBehaviour

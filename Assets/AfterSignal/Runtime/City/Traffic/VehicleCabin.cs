@@ -10,6 +10,8 @@ namespace AfterSignal
         readonly List<SpriteRenderer> occupants=new List<SpriteRenderer>();
         readonly List<Sprite> people=new List<Sprite>();
         public int PassengerCount {get;private set;}
+        public float OccupantInjury {get;private set;}
+        public void InjureOccupants(float speed){OccupantInjury=Mathf.Clamp(OccupantInjury+VehicleDurability.OccupantDamage(speed,false),0,50);}
         static readonly string[] passengerRoles={"CivilianMan","CivilianWoman","OfficeMan","OfficeWoman","Worker","ElderMan","ElderWoman","TeacherMan","TeacherWoman","Doctor","Nurse","Bartender","PatientMan","PatientWoman"};
         readonly List<string> identities=new List<string>();
         int boardingSerial;float visualClock;
@@ -18,18 +20,13 @@ namespace AfterSignal
         {
             if(car) return;
             car=owner;
-            glass=new Material(Resources.Load<Material>("Materials/Glass"));
+            glass=new Material(Resources.Load<Shader>("Shaders/StructuralGlass"));
             glass.name="Transparent vehicle glazing";
-            glass.SetColor("_BaseColor",new Color(.16f,.3f,.36f,.42f));
-            glass.SetColor("_Color",new Color(.16f,.3f,.36f,.42f));
-            glass.SetFloat("_Surface",1);glass.SetFloat("_ZWrite",0);
-            glass.SetInt("_SrcBlend",(int)BlendMode.SrcAlpha);glass.SetInt("_DstBlend",(int)BlendMode.OneMinusSrcAlpha);
-            glass.DisableKeyword("_ALPHAPREMULTIPLY_ON");glass.SetFloat("_Smoothness",.8f);glass.SetFloat("_Metallic",.12f);
-            glass.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");glass.renderQueue=3000;
+            glass.SetColor("_BaseColor",new Color(.10f,.20f,.24f,.14f));glass.renderQueue=3000;
             foreach(var mesh in GetComponentsInChildren<MeshRenderer>())
             {
                 string n=mesh.name.ToLowerInvariant();
-                if(n.Contains("window")||n.Contains("windshield")||n=="sculpted cabin"||n=="navigation bridge") mesh.sharedMaterial=glass;
+                if((n.Contains("window")&&!n.Contains("pillar")&&!n.Contains("frame"))||n.Contains("windshield")||n=="sculpted cabin"||n=="navigation bridge") mesh.sharedMaterial=glass;
                 if(n=="bus saloon") mesh.enabled=false;
             }
             bool bus=car.type==CityVehicleType.Bus;
@@ -60,6 +57,8 @@ namespace AfterSignal
                 string identity=passengerRoles[(i+Mathf.Abs(car.GetInstanceID())%passengerRoles.Length)%passengerRoles.Length];
                 if(i==0&&car.GetComponent<EmergencyAmbulance>())identity="Doctor";
                 if(car.GetComponent<PoliceCar>())identity="Police";
+                if(car.GetComponent<TacticalTransport>())identity="Swat";
+                if(car.GetComponent<MilitaryVehicleAI>())identity="Soldier";
                 if(car.IsAircraft)identity=i==0?FacilityPeople.Key(0):FacilityPeople.Key(4+i%4);
                 if(car.IsWatercraft)identity=i==0?FacilityPeople.Key(10):passengerRoles[i%passengerRoles.Length];
                 identities.Add(identity);
@@ -77,7 +76,7 @@ namespace AfterSignal
         public void SetPassengers(int count)
         {
             int next=Mathf.Clamp(count,0,Mathf.Max(0,occupants.Count-1));
-            for(int i=PassengerCount+1;i<=next;i++)identities[i]=car.GetComponent<PoliceCar>()?"Police":car.IsAircraft?FacilityPeople.Key(4+(boardingSerial++ + i)%4):passengerRoles[(boardingSerial++ + i)%passengerRoles.Length];
+            for(int i=PassengerCount+1;i<=next;i++)identities[i]=car.GetComponent<TacticalTransport>()?"Swat":car.GetComponent<MilitaryVehicleAI>()?"Soldier":car.GetComponent<PoliceCar>()?"Police":car.IsAircraft?FacilityPeople.Key(4+(boardingSerial++ + i)%4):passengerRoles[(boardingSerial++ + i)%passengerRoles.Length];
             PassengerCount=next;
         }
         public void SetManifest(List<string> manifest)
@@ -96,6 +95,8 @@ namespace AfterSignal
         void LateUpdate()
         {
             if(!car)return;
+            bool cockpit=UrbanSimulation.Instance&&UrbanSimulation.Instance.Current==car&&GameDirector.Instance.CameraRig.FirstPersonVehicle;
+            if(glass)glass.SetColor("_BaseColor",cockpit?new Color(.05f,.1f,.12f,.025f):new Color(.10f,.20f,.24f,.14f));
             var camera=Camera.main;bool nearby=camera&&(transform.position-camera.transform.position).sqrMagnitude<180*180;
             if(Time.time<visualClock)return;visualClock=Time.time+(nearby?0:.75f);
             bool seo=UrbanSimulation.Instance&&UrbanSimulation.Instance.Current==car;
@@ -104,7 +105,7 @@ namespace AfterSignal
             {
                 var r=occupants[i];
                 bool isSeo=seo&&i==UrbanSimulation.Instance.SeatIndex||rider&&i==occupants.Count-1;
-                r.enabled=(nearby||seo||rider)&&!car.Wrecked&&(isSeo||(i==0?car.occupied:i<=PassengerCount));
+                r.enabled=(nearby||seo||rider)&&(!car.Wrecked||car.GetComponent<VehicleFailure>())&&(isSeo||(i==0?car.occupied:i<=PassengerCount));
                 var taxi=car.GetComponent<CityTaxiService>();if(taxi&&taxi.Air&&i==0&&!isSeo)r.enabled=false;
                 if(!nearby&&!isSeo)continue;
                 if(isSeo&&GameDirector.Instance&&GameDirector.Instance.CameraRig.FirstPersonVehicle)r.enabled=false;

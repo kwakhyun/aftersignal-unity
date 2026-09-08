@@ -3,8 +3,8 @@ import bpy,math,json,bmesh
 import numpy as np
 from mathutils import Vector
 from pathlib import Path
-ROOT=Path(__file__).resolve().parents[2];OUT=ROOT/'Artifacts/CharacterLab';OUT.mkdir(exist_ok=True,parents=True)
-bpy.ops.wm.open_mainfile(filepath=str(OUT/'Seo-Anatomy.blend'))
+ROOT=Path(__file__).resolve().parents[2];BASE=ROOT/'Artifacts/CharacterLab';OUT=BASE/'Refined';OUT.mkdir(exist_ok=True,parents=True)
+bpy.ops.wm.open_mainfile(filepath=str(BASE/'Seo-Anatomy.blend'))
 body=bpy.data.objects.get('Seoha anatomical foundation');rig=body.parent
 if not rig or rig.type!='ARMATURE':rig=next(o for o in bpy.data.objects if o.type=='ARMATURE')
 bpy.ops.object.select_all(action='DESELECT');body.select_set(True);bpy.context.view_layer.objects.active=body
@@ -34,7 +34,27 @@ a=phi(source[:,None,:]-source[None,:,:]);a+=np.eye(n)*1e-7;p=np.column_stack([np
 coef=np.linalg.solve(system,np.vstack([target,np.zeros((4,3))]))
 def warp(points):
  points=np.asarray(points);return np.column_stack([phi(points[:,None,:]-source[None,:,:]),np.ones(len(points)),points])@coef
-points=warp([v.co[:] for v in body.data.vertices])
+source_points=np.array([v.co[:] for v in body.data.vertices]);points=warp(source_points)
+# RBF fitting alone flattens the small cross-sections of arms, wrists and fingers.
+# Preserve their anatomical volume with the imported deformation weights and
+# bone-local longitudinal scaling; blend smoothly into the fitted torso.
+group_names={g.index:g.name for g in body.vertex_groups}
+transforms={}
+for name,(head,tail) in oldbones.items():
+ a=Vector(head);b=Vector(tail);target_bone=warp([head,tail]);c=Vector(target_bone[0]);d=Vector(target_bone[1]);axis=(b-a).normalized();length=(b-a).length
+ if length<1e-6:continue
+ transforms[name]=(a,c,axis,(b-a).rotation_difference(d-c),(d-c).length/length)
+preserved=0
+for vertex in body.data.vertices:
+ weights=[(group_names[g.group],g.weight) for g in vertex.groups if group_names[g.group] in transforms and g.weight>1e-6]
+ arm_weight=sum(w for name,w in weights if any(s in name for s in ('upperarm','lowerarm','hand','finger','wrist','thumb')))
+ if arm_weight<.001:continue
+ total=sum(w for _,w in weights);position=Vector(source_points[vertex.index]);result=Vector((0,0,0))
+ for name,weight in weights:
+  a,c,axis,q,ratio=transforms[name];offset=position-a;offset+=axis*offset.dot(axis)*(ratio-1)
+  result+=(c+q@offset)*(weight/total)
+ blend=min(1,arm_weight/total);points[vertex.index]=points[vertex.index]*(1-blend)+np.array(result)*blend;preserved+=1
+print('Volume-preserved arm/hand vertices',preserved)
 for v,p in zip(body.data.vertices,points):v.co=p
 body.data.update()
 # Update the skeleton to the same rest proportions, preserving imported deformation weights.
@@ -44,7 +64,7 @@ for b in rig.data.edit_bones:
 bpy.ops.object.mode_set(mode='OBJECT');rig.name='Seoha_Rig'
 mod=body.modifiers.new('Seoha deformation','ARMATURE');mod.object=rig;body.parent=rig
 body.name='Seoha fitted body and costume foundation'
-img=bpy.data.images.load(str(OUT/'SeoTurnaround.png'),check_existing=True)
+img=bpy.data.images.load(str(BASE/'SeoTurnaround.png'),check_existing=True)
 surface=bpy.data.materials.new('Illustration surface');surface.use_nodes=True;nodes=surface.node_tree.nodes;nodes.clear()
 texture=nodes.new('ShaderNodeTexImage');texture.image=img;texture.interpolation='Linear'
 shader=nodes.new('ShaderNodeEmission');shader.inputs['Strength'].default_value=1
@@ -112,7 +132,7 @@ def plain(name,color,metal=0):
  m=bpy.data.materials.new(name);m.use_nodes=True;p=m.node_tree.nodes.get('Principled BSDF');p.inputs['Base Color'].default_value=(*color,1);p.inputs['Metallic'].default_value=metal;p.inputs['Roughness'].default_value=.35;return m
 black=plain('Black leather edges',(.024,.025,.033));silver=plain('Titanium',(.35,.4,.48),.8);cyan=plain('Forearm signal light',(.02,.85,.9),.4)
 def toon(name,color):
- m=bpy.data.materials.new(name);m.use_nodes=True;nodes=m.node_tree.nodes;nodes.clear();out=nodes.new('ShaderNodeOutputMaterial');e=nodes.new('ShaderNodeEmission');e.inputs['Color'].default_value=(*color,1);e.inputs['Strength'].default_value=1;m.node_tree.links.new(e.outputs[0],out.inputs[0]);return m
+ m=plain(name,color);m.node_tree.nodes.get('Principled BSDF').inputs['Roughness'].default_value=.72;return m
 edgecloth=toon('Costume side finish',(.032,.029,.045));skin=toon('Warm anime skin',(.87,.69,.64));hair=toon('Lilac hair side finish',(.55,.49,.66))
 body.data.materials.append(edgecloth);body.data.materials.append(skin)
 for poly in body.data.polygons:
@@ -127,7 +147,7 @@ for o in list(bpy.data.objects):
  if o.type=='MESH' and ('hair cap' in o.name or 'hair bun' in o.name):
   o.data.materials.append(hair)
   for poly in o.data.polygons:
-   if abs(poly.normal.y)<.65 or 'bun' in o.name:poly.material_index=1
+   poly.material_index=1
 # Actual swept strands around the bun and side cap remain readable from profile and rear views.
 for n in range(18):
  curve=bpy.data.curves.new('Combed hair groove','CURVE');curve.dimensions='3D';curve.bevel_depth=.0007;curve.bevel_resolution=2
@@ -158,6 +178,7 @@ detail('Belt buckle',(-.01,-.107,1.072),(.032,.012,.035),'spine05',silver)
 detail('Left forearm interface',(.272,-.063,1.092),(.032,.022,.09),'lowerarm02.L',black)
 detail('Left cuff cyan status',(.276,-.076,1.109),(.006,.006,.031),'lowerarm02.L',cyan)
 for index,(at,size,bone) in enumerate([((-.16,-.048,1.414),(.095,.058,.065),'upperarm01.R'),((-.197,-.058,1.316),(.074,.038,.10),'upperarm02.R'),((-.23,-.052,1.221),(.07,.036,.065),'lowerarm01.R'),((-.264,-.059,1.11),(.064,.03,.094),'lowerarm02.R')]):
+ size=(size[0]*.68,size[1]*.60,size[2]*.78)
  plate=detail('Right sleeve articulated armour '+str(index),at,size,bone,black)
  for offset in [-.019,.019]:detail('Armour inset fastening',tuple(Vector(at)+Vector((offset,-.021,0))),(.008,.009,.008),bone,silver)
 bm=bmesh.new();bm.from_mesh(body.data);bmesh.ops.delete(bm,geom=[v for v in bm.verts if v.co.z<.125],context='VERTS');bm.to_mesh(body.data);bm.free()

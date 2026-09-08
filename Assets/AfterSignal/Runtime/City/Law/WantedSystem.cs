@@ -49,6 +49,9 @@ namespace AfterSignal
         }
 
         public static void Report(float severity, Vector3 where)
+            =>CrimeObservation.Observe(severity,where);
+
+        public static void ConfirmReport(float severity, Vector3 where)
         {
             LifeState.Load();
             int old = Level;
@@ -72,6 +75,7 @@ namespace AfterSignal
 
         public static void Clear(string message)
         {
+            CrimeObservation.Forget();
             LifeState.Heat = LifeState.HiddenSeconds = 0;
             LifeState.Save();
             if (Instance)
@@ -87,6 +91,8 @@ namespace AfterSignal
                         c.Withdraw();
                 if (Instance.Helicopter)
                     Instance.Helicopter.Withdraw();
+                foreach(var t in FindObjectsByType<TacticalTransport>())t.Withdraw();
+                var military=Instance.GetComponent<MilitaryResponse>();if(military)military.Withdraw();
                 Instance.Officers.Clear();
                 Instance.Cars.Clear();
                 Instance.Helicopter = null;
@@ -107,7 +113,7 @@ namespace AfterSignal
                 if (body && body.police && body.Alive)
                 {
                     var officer = body.GetComponent<PoliceOfficer>();
-                    if (officer && officer.CanSee()) Seen = true;
+                    if (officer && officer.CanSee() || body.GetComponent<StationDefender>()&&FactionCombat.Visible(body.Center,game.Player.Shoulder,55)) Seen = true;
                 }
             if (Helicopter && Helicopter.Body.Alive && Helicopter.CanSee())
                 Seen = true;
@@ -127,6 +133,13 @@ namespace AfterSignal
             dispatchClock -= dt;
             if (dispatchClock <= 0 && deployed < Strength[Level])
             {
+                if(Level>=3&&game.stage==StageId.UrbanCity&&UrbanSimulation.Instance)
+                {
+                    int squad=Mathf.Min(4,Strength[Level]-deployed);
+                    TacticalTransport.Create(this,SpawnPoint(deployed),squad);deployed+=squad;dispatchClock=5;
+                }
+                else
+                {
                 dispatchClock = .9f;
                 Vector3 spawn = SpawnPoint(deployed);
                 Officers.Add(PoliceOfficer.Create(this, spawn, Level, deployed));
@@ -137,12 +150,13 @@ namespace AfterSignal
                     Cars.Add(PoliceCar.Create(this, position));
                     carCount++;
                 }
+                }
             }
 
             if (Level >= 4 && !Helicopter && game.stage == StageId.UrbanCity)
                 Helicopter = PoliceHelicopter.Create(this, LastSeen + new Vector3(-45, 48, 35));
             bool aircraftAlive = Helicopter && Helicopter.Body.Alive;
-            if (engaged && deployed >= Strength[Level] && ActiveOfficers == 0 && !aircraftAlive)
+            if (engaged && deployed >= Strength[Level] && ActiveOfficers == 0 && !aircraftAlive && !TacticalTransport.Pending && !GetComponent<MilitaryResponse>())
             {
                 Clear("출동한 경찰 병력을 모두 제압했습니다 · 수배 해제");
             }

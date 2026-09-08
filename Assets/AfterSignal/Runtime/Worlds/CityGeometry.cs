@@ -18,10 +18,9 @@ namespace AfterSignal
             if(materials.TryGetValue(key,out var mat)&&mat)return mat;
             if(key=="Glass"||key=="PressureGlass")
             {
-                mat=new Material(Shader.Find("Universal Render Pipeline/Lit")){name=key};
+                mat=new Material(Resources.Load<Shader>("Shaders/StructuralGlass")){name=key};
                 mat.SetColor("_BaseColor",key=="PressureGlass"?new Color(.025f,.14f,.19f,.08f):new Color(.10f,.28f,.32f,.12f));
-                mat.SetFloat("_Surface",1);mat.SetFloat("_SrcBlend",(float)BlendMode.SrcAlpha);mat.SetFloat("_DstBlend",(float)BlendMode.OneMinusSrcAlpha);mat.SetFloat("_ZWrite",0);mat.SetFloat("_Cull",(float)CullMode.Off);
-                mat.SetFloat("_Smoothness",.15f);mat.SetFloat("_SpecularHighlights",0);mat.SetFloat("_EnvironmentReflections",0);mat.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");mat.EnableKeyword("_SPECULARHIGHLIGHTS_OFF");mat.EnableKeyword("_ENVIRONMENTREFLECTIONS_OFF");mat.renderQueue=3000;materials[key]=mat;return mat;
+                mat.renderQueue=3000;mat.enableInstancing=true;materials[key]=mat;return mat;
             }
             mat=Resources.Load<Material>("WorldAssets/Generated/"+key);
             if(!mat)mat=Resources.Load<Material>("Materials/"+key);
@@ -31,7 +30,7 @@ namespace AfterSignal
                 if(template){mat=new Material(template){name=key};mat.SetColor("_BaseColor",new Color(.29f,.40f,.43f));mat.SetFloat("_RainResponse",0);materials[key]=mat;return mat;}
             }
             if(!mat){mat=new Material(Shader.Find("Universal Render Pipeline/Lit"));mat.name=key;
-                Color c=key=="Pitch"?new(.12f,.32f,.18f):key=="PitchLight"?new(.16f,.39f,.23f):key=="Clay"?new(.52f,.28f,.16f):key=="Court"?new(.59f,.34f,.19f):key=="SeatBlue"?new(.035f,.29f,.43f):key=="SeatCoral"?new(.63f,.20f,.14f):key=="GardenSoil"?new(.08f,.12f,.09f):key=="CanopyLeaf"?new(.035f,.24f,.12f):key=="CanopyLight"?new(.16f,.38f,.18f):key=="DeepDeck"?new(.095f,.15f,.18f):new(.15f,.2f,.24f);
+                Color c=key=="IslandSand"?new(.68f,.58f,.39f):key=="SlumRust"?new(.38f,.19f,.13f):key=="SlumPlaster"?new(.51f,.46f,.35f):key=="SlumPatina"?new(.17f,.31f,.28f):key=="SlumTarpaulin"?new(.09f,.24f,.39f):key=="Pitch"?new(.12f,.32f,.18f):key=="PitchLight"?new(.16f,.39f,.23f):key=="Clay"?new(.52f,.28f,.16f):key=="Court"?new(.59f,.34f,.19f):key=="SeatBlue"?new(.035f,.29f,.43f):key=="SeatCoral"?new(.63f,.20f,.14f):key=="GardenSoil"?new(.08f,.12f,.09f):key=="CanopyLeaf"?new(.035f,.24f,.12f):key=="CanopyLight"?new(.16f,.38f,.18f):key=="DeepDeck"?new(.095f,.15f,.18f):new(.15f,.2f,.24f);
                 mat.color=c;mat.SetFloat("_Smoothness",key=="Court"?.55f:.2f);}
             materials[key]=mat;return mat;
         }
@@ -68,7 +67,9 @@ namespace AfterSignal
             Vector3 P(float a,float b)=>p+Vector3.Scale(radius,new Vector3(Mathf.Cos(a)*Mathf.Cos(b),Mathf.Sin(b),Mathf.Sin(a)*Mathf.Cos(b)));
             for(int i=0;i<meridians;i++)for(int j=0;j<parallels;j++)
             {float a=i*2*Mathf.PI/meridians,b=(i+1)*2*Mathf.PI/meridians,t=j*Mathf.PI*.5f/parallels,u=(j+1)*Mathf.PI*.5f/parallels;
-                Quad(P(a,t),P(a,u),P(b,u),P(b,t),glass,true);if(ribs){Beam(P(a,t),P(a,u),.25f,"FutureSilver");if(j%2==0)Beam(P(a,t),P(b,t),.2f,"FutureSilver");}}
+                // Glass uses Cull Off: a reversed copy blended the exact same pane
+                // twice, increasing opacity and transparent fill cost across the dome.
+                Quad(P(a,t),P(a,u),P(b,u),P(b,t),glass);if(ribs){Beam(P(a,t),P(a,u),.25f,"FutureSilver");if(j%2==0)Beam(P(a,t),P(b,t),.2f,"FutureSilver");}}
         }
         public void Stairs(Vector3 bottom,float width,float rise,float run,string mat)
         {

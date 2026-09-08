@@ -41,7 +41,7 @@ namespace AfterSignal
                 verticalSpeed=Mathf.MoveTowards(verticalSpeed,lift,dt*12);
                 delta+=Vector3.up*verticalSpeed*dt;
                 if(VehicleGround.Sample(car,old,.2f,4,out var floor)&&old.y+delta.y<floor.point.y+.12f)
-                {delta.y=floor.point.y+.12f-old.y;if(verticalSpeed< -10)car.Damage(-verticalSpeed*(car.speed>38?12:3),old);verticalSpeed=0;}
+                {delta.y=floor.point.y+.12f-old.y;if(verticalSpeed< -10)car.CollisionDamage(-verticalSpeed*2,old);verticalSpeed=0;}
             }
             else
             {

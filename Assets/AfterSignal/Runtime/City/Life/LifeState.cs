@@ -9,6 +9,7 @@ namespace AfterSignal
         public static bool SuppressSave;
         public static int Credits { get; private set; }
         public static int Savings { get; private set; }
+        public static int HomeCash { get; private set; }
         public static int Outfit { get; private set; }
         public static int Outfits { get; private set; }
 
@@ -25,6 +26,7 @@ namespace AfterSignal
             loaded = true;
             Credits = PlayerPrefs.GetInt(Prefix + "Credits", 1500);
             Savings = PlayerPrefs.GetInt(Prefix + "Savings", 0);
+            HomeCash = PlayerPrefs.GetInt(Prefix + "HomeCash", 0);
             Outfit = PlayerPrefs.GetInt(Prefix + "Outfit", 0);
             Outfits = PlayerPrefs.GetInt(Prefix + "Outfits", 3);
             Hours = PlayerPrefs.GetFloat(Prefix + "Hours", 8);
@@ -80,6 +82,17 @@ namespace AfterSignal
             return true;
         }
 
+        public static bool StoreHomeCash(int amount)
+        {
+            Load();if(amount<=0||Credits<amount||HomeCash>9999999-amount)return false;
+            Credits-=amount;HomeCash+=amount;Save();return true;
+        }
+        public static bool TakeHomeCash(int amount)
+        {
+            Load();if(amount<=0||HomeCash<amount||Credits>9999999-amount)return false;
+            HomeCash-=amount;Credits+=amount;Save();return true;
+        }
+
         public static void Wear(int index)
         {
             Load();
@@ -114,6 +127,7 @@ namespace AfterSignal
                 return;
             PlayerPrefs.SetInt(Prefix + "Credits", Credits);
             PlayerPrefs.SetInt(Prefix + "Savings", Savings);
+            PlayerPrefs.SetInt(Prefix + "HomeCash", HomeCash);
             PlayerPrefs.SetInt(Prefix + "Outfit", Outfit);
             PlayerPrefs.SetInt(Prefix + "Outfits", Outfits);
             PlayerPrefs.SetFloat(Prefix + "Hours", Hours);
@@ -128,7 +142,7 @@ namespace AfterSignal
             ArmoryInventory.Reset();
             loaded = true;
             Credits = 1500;
-            Savings = Outfit = 0;
+            HomeCash = Savings = Outfit = 0;
             Outfits = 3;
             Hours = 8;
             Heat = HiddenSeconds = 0;

@@ -15,6 +15,7 @@ namespace AfterSignal
         Vector3 crashVelocity;
         float smokeAt;
         bool crashing;
+        ParticleSystem damageSmoke,damageFire;
         public static PoliceHelicopter Create(WantedSystem owner, Vector3 at)
         {
             var go = new GameObject("POLICE / aerial response", typeof(WorldActor), typeof(PoliceHelicopter));
@@ -24,7 +25,7 @@ namespace AfterSignal
             h.system = owner;
             h.Body = go.GetComponent<WorldActor>();
             h.Body.police = h.Body.helicopter = true;
-            h.Body.health = 260;
+            h.Body.health = 4000;
             var c = go.AddComponent<SphereCollider>();
             c.radius = 2.5f;
             c.isTrigger = true;
@@ -60,9 +61,9 @@ namespace AfterSignal
             spot.transform.localPosition = new Vector3(0, -1, 1.8f);
             h.searchlight = spot.AddComponent<Light>();
             h.searchlight.type = LightType.Spot;
-            h.searchlight.range = 85;
+            h.searchlight.range = 160;
             h.searchlight.spotAngle = 32;
-            h.searchlight.intensity = 28;
+            h.searchlight.intensity = 40;
             h.searchlight.shadows = UnityEngine.LightShadows.None;
             WorldGeometry.Part(go.transform, "Nose gun", new Vector3(0, -.75f, 3.3f), new Vector3(.18f, .2f, 1.5f), "Metal");
             return h;
@@ -71,7 +72,9 @@ namespace AfterSignal
         public bool CanSee()
         {
             var g = GameDirector.Instance;
-            return g && Body.Alive && Vector3.Distance(transform.position, g.Player.Shoulder) < 95 && !Physics.Linecast(transform.position, g.Player.Shoulder, 1, QueryTriggerInteraction.Ignore);
+            if(!g||!Body.Alive||Vector3.Distance(transform.position,g.Player.Shoulder)>150)return false;
+            if(!Physics.Linecast(transform.position,g.Player.Shoulder,out var hit,1,QueryTriggerInteraction.Ignore))return true;
+            return UrbanSimulation.Instance&&UrbanSimulation.Instance.Current&&hit.transform.IsChildOf(UrbanSimulation.Instance.Current.transform);
         }
 
         void Update()
@@ -81,6 +84,8 @@ namespace AfterSignal
                 return;
             float dt = Mathf.Min(.07f, Time.deltaTime);
             clock += dt;
+            if(Body.health<2000&&!damageSmoke)damageSmoke=VehicleDamagePresentation.Emitter(transform,"Engine smoke",Vector3.up,2,false);
+            if(Body.health<1000&&!damageFire)damageFire=VehicleDamagePresentation.Emitter(transform,"Engine fire",Vector3.up,1.5f,true);
             rotor.Rotate(0, (Body.Alive ? 1250 : 220) * dt, 0);
             tailRotor.Rotate(1400 * dt, 0, 0);
             if (!Body.Alive)
@@ -120,7 +125,8 @@ namespace AfterSignal
             direction.y = 0;
             if (direction.sqrMagnitude > .1f)
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), dt * 2);
-            searchlight.transform.rotation = Quaternion.LookRotation(g.Player.Shoulder - searchlight.transform.position);
+            var tracked=UrbanSimulation.Instance&&UrbanSimulation.Instance.Current?UrbanSimulation.Instance.Current.transform.position+Vector3.up:g.Player.Shoulder;
+            searchlight.transform.rotation=Quaternion.Slerp(searchlight.transform.rotation,Quaternion.LookRotation(tracked-searchlight.transform.position),1-Mathf.Exp(-dt*7));
             fireClock -= dt;
             if (warning > 0)
             {
@@ -153,7 +159,7 @@ namespace AfterSignal
                 var civilian=hit.collider.GetComponentInParent<WorldActor>();
                 if(civilian&&!civilian.police)civilian.Damage(16,direction*3,Body);
                 if (car)
-                    car.Damage(12, hit.point);
+                    car.Damage(12, hit.point,Body);
             }
 
             for (int i = 0; i < 3; i++)

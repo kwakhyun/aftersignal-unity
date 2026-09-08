@@ -9,7 +9,12 @@ namespace AfterSignal
         public static FourCityWorld Instance{get;private set;}
         public bool Built{get;private set;}
         public readonly List<VenueRuntime> Facilities=new();
-        readonly List<(Transform root,Renderer[] renderers)> chunks=new();
+        sealed class Chunk
+        {
+            public Transform root; public Renderer[] renderers; public Bounds bounds;
+            public bool culled;
+        }
+        readonly List<Chunk> chunks=new();
         float next;Vector3 lastVisibility;int announcedCity=-1;
         void Awake(){Instance=this;gameObject.AddComponent<FourCitySports>();gameObject.AddComponent<FourCityCampaign>();gameObject.AddComponent<FourCityAtmosphere>();gameObject.AddComponent<VenuePracticalLights>();}
         public VenueRuntime Find(string id)=>Facilities.Find(v=>v.Definition.id==id);
@@ -20,19 +25,24 @@ namespace AfterSignal
             for(int i=0;i<FourCityCatalog.Venues.Length;i++)
             {var v=FourCityCatalog.Venues[i];var r=Root(v.title,v.position);var venue=r.gameObject.AddComponent<VenueRuntime>();venue.Initialize(i);Facilities.Add(venue);Track(r);yield return null;}
             for(int city=0;city<4;city++){BuildNeighborhood(city);yield return null;}
-            BuildUnderseaShell();Physics.SyncTransforms();Built=true;
+            BuildUnderseaShell();RegionalTerrain.PressureDistrict(transform);gameObject.AddComponent<RegionalWorld>();Physics.SyncTransforms();Built=true;
             FourCityCampaign.Instance?.BuildObjectives();
         }
-        void Track(Transform r)=>chunks.Add((r,r.GetComponentsInChildren<Renderer>()));
+        void Track(Transform root)
+        {
+            var renderers=root.GetComponentsInChildren<Renderer>();if(renderers.Length==0)return;
+            var bounds=renderers[0].bounds;foreach(var r in renderers)bounds.Encapsulate(r.bounds);
+            chunks.Add(new Chunk{root=root,renderers=renderers,bounds=bounds});
+        }
         void BuildGround()
         {
-            foreach(var r in FourCityCatalog.Land){var root=Root("Expanded city foundation",new(r.center.x,0,r.center.y));var g=new CityGeometry(root);g.Box("Continuous city ground",new(0,-2,0),new(r.width,4,r.height),"NovaConcrete",true);g.Finish();}
+            foreach(var r in FourCityCatalog.Land){var root=Root("Expanded city foundation",new(r.center.x,0,r.center.y));if(RegionalTerrain.Foundation(r,root))continue;var g=new CityGeometry(root);g.Box("Continuous city ground",new(0,-2,0),new(r.width,4,r.height),"NovaConcrete",true);g.Finish();}
             var seabed=Root("Nereid basin",new(3900,-110,-4470));var bed=new CityGeometry(seabed);bed.Box("Deep basin",Vector3.zero,new(2850,4,2950),"NovaSeabed",true);bed.Finish();
             var deck=GameObject.CreatePrimitive(PrimitiveType.Cylinder);deck.name="Nereid sealed continuous foundation";deck.transform.SetParent(transform);deck.transform.position=FourCityCatalog.Centers[3]-Vector3.up*.25f;deck.transform.localScale=new Vector3(2060,.25f,1860);Destroy(deck.GetComponent<Collider>());deck.AddComponent<MeshCollider>().sharedMesh=deck.GetComponent<MeshFilter>().sharedMesh;deck.GetComponent<Renderer>().sharedMaterial=CityGeometry.Material("DeepDeck");
-            Water(new Rect(2199,-6200,3201,6600));Water(new Rect(0,-6200,2200,1651));
+            Water(new Rect(2199,FourCityCatalog.South,FourCityCatalog.East-2199,400-FourCityCatalog.South));Water(new Rect(0,FourCityCatalog.South,2200,-4549-FourCityCatalog.South));
         }
         void Water(Rect r)
-        {var root=Root("Extended sea surface",new(r.center.x,OceanLife.Surface,r.center.y));var g=new CityGeometry(root);const float tile=80;for(float x=-r.width*.5f;x<r.width*.5f;x+=tile)for(float z=-r.height*.5f;z<r.height*.5f;z+=tile){float xx=Mathf.Min(x+tile,r.width*.5f),zz=Mathf.Min(z+tile,r.height*.5f);g.Quad(new(x,0,z),new(x,0,zz),new(xx,0,zz),new(xx,0,z),"Ocean");}g.Finish();}
+        {var root=Root("Extended sea surface",new(r.center.x,OceanLife.Surface,r.center.y));var g=new CityGeometry(root);const float tile=80;for(float x=-r.width*.5f;x<r.width*.5f;x+=tile)for(float z=-r.height*.5f;z<r.height*.5f;z+=tile){float xx=Mathf.Min(x+tile,r.width*.5f),zz=Mathf.Min(z+tile,r.height*.5f);if(!RegionalCatalog.InRift(root.TransformPoint(new Vector3((x+xx)*.5f,0,(z+zz)*.5f)),58))g.Quad(new(x,0,z),new(x,0,zz),new(xx,0,zz),new(xx,0,z),"Ocean");}g.Finish();}
         void BuildConnections()
         {
             int id=0;
@@ -75,7 +85,7 @@ namespace AfterSignal
                 else if(city==3){float a=i*2.39996f,r=300+(float)rng.NextDouble()*470;x=3900+Mathf.Cos(a)*r;z=-4480+Mathf.Sin(a)*r*.85f;}
                 else {x=200+(float)rng.NextDouble()*1800;z=city==0?1200+(float)rng.NextDouble()*1040:-5500+(float)rng.NextDouble()*1250;}
                 var p=new Vector3(x,y,z);float w=18+i%5*5,d=18+i%4*5;
-                bool clear=true;foreach(var v in FourCityCatalog.Venues)if(Mathf.Abs(v.position.y-y)<5&&Mathf.Abs(x-v.position.x)<v.size.x*.5f+w&&Mathf.Abs(z-v.position.z)<v.size.y*.5f+d){clear=false;break;}
+                bool clear=!RegionalCatalog.InRift(p,80);foreach(var v in FourCityCatalog.Venues)if(Mathf.Abs(v.position.y-y)<5&&Mathf.Abs(x-v.position.x)<v.size.x*.5f+w&&Mathf.Abs(z-v.position.z)<v.size.y*.5f+d){clear=false;break;}
                 if(!clear)continue;foreach(var road in FourCityCatalog.Roads)for(int n=1;n<road.Length;n++)if(Vector3.Distance(p,FourCityCatalog.Closest(p,road[n-1],road[n]))<Mathf.Max(w,d)+18)clear=false;
                 var footprint=new Rect(x-w*.5f-10,z-d*.5f-10,w+20,d+20);foreach(var rect in occupied)if(rect.Overlaps(footprint)){clear=false;break;}
                 if(!clear)continue;occupied.Add(footprint);var root=Root(city==2?"Fractured Erebos block":"Mixed use city block",p);var g=new CityGeometry(root);float h=city==3?12+i%5*4:city==2?20+i%8*14:18+i%8*11;
@@ -90,7 +100,18 @@ namespace AfterSignal
         {
             var game=GameDirector.Instance;if(!game||!game.Ready)return;var p=game.Player.transform.position;if(Time.time<next&&(p-lastVisibility).sqrMagnitude<100*100)return;next=Time.time+.4f;lastVisibility=p;
             int city=FourCityCatalog.CityAt(p);if(city!=announcedCity&&!game.Blocked){announcedCity=city;if(city==2)game.Toast("EREBOS / 에레보스 잠식도시\n격리 관문 · 붕괴된 기억 · 잠식체 출몰 지역",5);if(city==3)game.Toast("NEREID / 네레이드 수중도시\n기밀 생활 돔 · 심해 연구원 · 블루 아카이브",5);}
-            foreach(var c in chunks){if(!c.root||HighriseInterior.Active&&HighriseInterior.Active.Building.transform==c.root)continue;bool visible=(c.root.position-p).sqrMagnitude<2200*2200;foreach(var r in c.renderers)if(r)r.enabled=visible;}
+            // Distance culling owns only forceRenderingOff. Renderer.enabled belongs to
+            // interiors, destruction and LOD presentation; never resurrect those objects.
+            var camera=Camera.main;var eye=camera?camera.transform.position:p;
+            float range=Mathf.Lerp(2200,5000,Mathf.InverseLerp(25,180,p.y));
+            foreach(var c in chunks)
+            {
+                if(!c.root)continue;
+                float limit=range+(c.culled?0:180); // Hysteresis prevents boundary flicker.
+                bool hide=Mathf.Min(c.bounds.SqrDistance(p),c.bounds.SqrDistance(eye))>limit*limit;
+                if(hide==c.culled)continue;c.culled=hide;
+                foreach(var r in c.renderers)if(r)r.forceRenderingOff=hide;
+            }
         }
         void OnDestroy(){if(Instance==this)Instance=null;}
     }

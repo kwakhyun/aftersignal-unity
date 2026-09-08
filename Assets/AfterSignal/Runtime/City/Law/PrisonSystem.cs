@@ -13,7 +13,7 @@ namespace AfterSignal
         GameDirector game;
         public static bool Capture(GameDirector g)
         {
-            if(WantedSystem.Level<=0||!CivicWorld.Exploration(g.stage))return false;
+            if(!g||g.Player.Health<=0||g.Dead||WantedSystem.Level<=0||!CivicWorld.Exploration(g.stage))return false;
             var sim=UrbanSimulation.Instance;if(sim&&sim.Current){sim.Current.speed=0;sim.EmergencyExit(sim.Current);}
             int level=WantedSystem.Level;WantedSystem.Clear("");
             if(!LifeState.SuppressSave)PlayerPrefs.SetFloat(SaveKey,45+level*8);
@@ -31,6 +31,7 @@ namespace AfterSignal
             if(Instance.Jailed){input.attack=input.grapple=input.skill=false;input.weapon=-1;}
             if(WantedSystem.Level>0&&input.surrender)
             {
+                input.attack=input.skill=input.grapple=false;input.move=Vector2.zero;
                 bool near=false;foreach(var a in WorldActor.All)if(a&&a.police&&a.Alive&&(a.transform.position-Instance.game.Player.transform.position).sqrMagnitude<64){near=true;break;}
                 Instance.surrender=near?Instance.surrender+dt:0;
                 if(Instance.surrender>1.4f){Instance.surrender=0;Capture(Instance.game);}

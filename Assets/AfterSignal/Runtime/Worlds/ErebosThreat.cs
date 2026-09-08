@@ -26,7 +26,7 @@ namespace AfterSignal
         {
             var game=GameDirector.Instance;if(!game||!game.Ready||game.Blocked||!Body)return;
             if(!Body.Alive){if(large){transform.localScale=Vector3.Lerp(transform.localScale,Vector3.one*.15f,Time.deltaTime*2);head.localPosition=Vector3.Lerp(head.localPosition,Vector3.up*.3f,Time.deltaTime*2);}else{var sr=GetComponent<SpriteRenderer>();if(sr)sr.transform.rotation=Quaternion.Euler(0,Camera.main.transform.eulerAngles.y,88);}return;}
-            var player=game.Player;var delta=player.transform.position-transform.position;float distance=delta.magnitude;
+            var player=game.Player;var opponent=FactionCombat.NearestOpponent(Body,64);var target=opponent?opponent.transform.position:player.transform.position;var aim=opponent?opponent.Center:player.Shoulder;var delta=target-transform.position;float distance=delta.magnitude;
             if(distance>64||Mathf.Abs(delta.y)>2.5f)return;
             delta.y=0;var dir=delta.normalized;
             if(distance>(large?3.2f:1.4f))
@@ -35,8 +35,8 @@ namespace AfterSignal
                 if(!Physics.Raycast(transform.position+Vector3.up,dir,large?1.5f:.6f,1,QueryTriggerInteraction.Ignore)&&NpcGroundSupport.Floor(next,next.y+.5f,1.7f,out float floor))
                 {next.y=floor+.08f;transform.position=next;}
             }
-            else if(Time.time>hit&&!Physics.Linecast(transform.position+Vector3.up,player.Shoulder,1,QueryTriggerInteraction.Ignore))
-            {hit=Time.time+(large?1.4f:1.1f);player.ReceiveDamage(large?18:7,transform.position);GetComponent<DirectionalPerson>()?.Face(player.transform.position,.5f);SignalEffects.Impact(player.Shoulder,-dir,SignalEffects.Cyan,.5f);game.Audio.Play("urban_impact",player.Shoulder,.3f,2);}
+            else if(Time.time>hit&&!Physics.Linecast(transform.position+Vector3.up,aim,1,QueryTriggerInteraction.Ignore))
+            {hit=Time.time+(large?1.4f:1.1f);if(opponent)opponent.Damage(large?26:13,dir*3,Body);else player.ReceiveDamage(large?18:7,transform.position);GetComponent<DirectionalPerson>()?.Face(target,.5f);SignalEffects.Impact(aim,-dir,SignalEffects.Cyan,.5f);game.Audio.Play("urban_impact",aim,.3f,2);}
             if(large){head.localPosition=Vector3.up*(3+Mathf.Sin(Time.time*2+phase)*.25f);head.Rotate(0,Time.deltaTime*28,0);for(int i=0;i<legs.Count;i++)legs[i].localRotation=Quaternion.Euler(0,Mathf.Sin(Time.time*4+i)*8,0);}
         }
     }

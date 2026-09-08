@@ -1,5 +1,43 @@
 # 다음 Codex 작업을 위한 인계 — 2026-09-08
 
+## 최신 작업: 차량 디자인·새벽 저지대·지역 기관·섬 확장
+
+현재 `PLAY.cmd` → `Builds/RegionalExpansion/AFTERSIGNAL.exe`. `Documentation/RegionalExpansion/README.md`와 `REFERENCES.md`에 구현·조작·출처를 기록했다. 최종 빌드 오류 0건(기존 경고 47개), native 116항목 통과, 런타임 오류 0건. 결과 `Documentation/RegionalExpansion/validation.json`, 캡처 `Artifacts/RegionalExpansion/Final`, 로그 `Artifacts/RegionalExpansion/player-final.log`. 별도 커밋·푸시 요청은 없어 기존 미커밋 변경과 함께 유지했다.
+
+실차 참고 자체 모델 10종은 `Tools/WorldExpansion/create_reference_fleet.py`로 제작했다. 독립 바퀴와 휠하우스/유리/좌석을 갖추고 FleetDesign에서 타입·디자인 번호로 선택한다. 모델 좌표는 Blender +X 앞, FBX 후 런타임 180도 회전 유지. 휠하우스 Boolean을 차체 전체 폭으로 절개하지 말 것. 슈퍼카 지붕 1.29m, 좌석/머리받침과 VehicleSeats 높이를 함께 맞춰 두었다. `VehicleDrift`는 SPACE+조향의 횡방향 관성을 담당하며 특수 탈것·탱크 전용 물리와 분리된다.
+
+FourCityCatalog의 기존 28개 인덱스를 보존한 뒤 RegionalCatalog가 32항목을 추가한다. 새벽 저지대 주택/증축층 534개, 주민 180명과 순찰 12명. 전체 신규 지역 배치 정원 1,560명은 근거리 활성화한다. 기존 Haven WORLD를 HavenQuarter.prefab으로 추출하고 (430,0,2670)으로 이동했다. ResidentWalker의 절대 경로도 같이 이동한다. CivicWorld/GameDirector/RegionalOrigin이 Haven 목적지·저장 진입을 연속된 도시 고향으로 연결한다. 원본 Haven 장면은 삭제하지 않는다. NeighborBond는 친밀도를 저장하고 AI context에 고향 관계를 넣는다.
+
+에레보스 싱크홀은 단순 검은 판이 아니다. 지면을 네 조각+고리 MeshCollider로 만들고 중앙을 뚫었다. 전체 바다 메시 생성 시 붕괴구를 제외해야 해수면이 구멍을 덮지 않는다. 진입 도로를 275m 반경으로 우회시킨다. ErebosThreat와 ArmyResponder는 FactionCombat으로 서로 공격한다. RegionalUniform이 에레보스 특수부대/시설 죄수의 외형을 보존한다.
+
+노바 12기관, 네레이드 8신규 기관+기존 시청/병원 개편, 에레보스 7기관/지형, 저지대, 섬 4개. RegionalBuilding의 Floor는 기존 계단/승강기 구멍을 유지한다. CashContainer.locationId로 신규 은행 금고가 다른 시설의 일일 탈취 상태와 섞이지 않는다. 죄수는 실내 셀에 생성하고 외부 산책 목록으로 이동하지 않는다. 섬은 불규칙 해안 MeshCollider+해안 재질, 부두, 보트와 RegionalFerry 순환선을 사용한다. x>2700의 모든 바다를 에레보스로 취급하면 섬 하늘까지 검어지므로 CityAt의 z 경계를 유지할 것.
+
+사용자가 실행해 둔 기존 게임 프로세스를 종료하지 않았다. 이 작업의 build/native 도구 프로세스만 실행했으며 검증은 저장을 억제한다.
+
+## 최신 작업: 차량 내구도·범죄 대응·시설 현금
+
+최신 실행 대상은 `PLAY.cmd` → `Builds/TrafficJustice/AFTERSIGNAL.exe`. 전체 내용과 조작은 `Documentation/TrafficJustice/README.md`, 필수 확인 결과는 동 폴더 `validation.json`. 이전 지면 복구 변경을 유지했다. 이번 작업의 커밋·푸시는 요청받지 않아 실행하지 않았다.
+
+최종 Windows 빌드 성공(오류 0/경고 47), 필수 네이티브 검사 34개 통과 및 런타임 오류 0. 충돌 피해·탑승 사격·투명 창·추락/침몰·경찰 헬기 손상·신고/사고 책임 구분·장갑차 4인 하차·군 대응 5대·근접 생포·금고 강탈·개인 금고 입출금·수배 사망 비수감까지 확인했다. 최종 로그 `Artifacts/TrafficJustice/player-final.log`.
+
+VehicleDurability가 구형 100 체력을 차종별 용량으로 1회 변환한다. 차량 UI/수리/저장/승객 반응은 HealthFraction을 사용해야 한다. VehicleFailure는 치명 피해 이후 NPC 항로와 군 조종을 비활성화해 추락·침몰의 이동을 단독 관리한다. VehicleDamagePresentation은 연기/화염을 근거리에서만 만든다. MountedCombat은 기존 보유 총기/탄약을 사용하며 Ballistics가 현재 탑승 차량을 제외한다. VehicleHorn의 NPC 답신은 재귀 경적을 만들지 않는다.
+
+WantedSystem.Report는 CrimeObservation의 시야/목격 신고를 거치고, ConfirmReport만 실제 수배를 올린다. 플레이어 피해의 기존 null source 규약을 유지하되 환경 사고는 TrafficDamageSource.Environment를 전달한다. GameDirector.Die에서 Capture를 호출하지 않는다. PrisonSystem.Capture는 살아 있는 수배 대상만 허용한다. TacticalTransport, MilitaryResponse/VehicleAI, FacilitySecurity/StationDefender를 분리했다. CashLocations/CashContainer는 물리 금고/현금함과 탈취 시간을 담당하고 HomeCash는 LifeState에서 저장한다.
+
+검증 프로세스와 사용자 게임 프로세스를 구분할 것. 작업 시작부터 실행되어 있던 과거 Fidelity 게임을 종료하지 않았다. 본 작업의 native 검증은 저장을 억제하며 종료 후 실행 프로세스가 남지 않아야 한다.
+
+## 최신 작업: 대규모 지면 복구·수중 돔 렌더링
+
+시작 커밋은 `13459344`. 최신 실행은 `PLAY.cmd` → `Builds/WorldRecovery/AFTERSIGNAL.exe`. `Documentation/WorldRecovery/README.md`에 원인·복구·검증·미완성 범위를 정리했다. 아래 Fidelity 실행 경로·성능 결과는 과거 기록이다.
+
+`AfterlightExpansion.prefab`의 비어 있던 배치 하위 트리가 실제 누락 원인이다. `2dc22dce`에서 691개 배치/3,455개 컴포넌트를 복구하고 715개 의존 GUID가 존재함을 확인했다. 최신 게임플레이 데이터는 유지했다. `restore_coastal_batches.py`를 반복 실행하면 이미 채워진 트리를 덮어쓰지 않도록 중단한다. 정확한 배치 삭제 작업은 확정하지 않았다. `WorldPresentationPreflight`가 빌드 전 5개 프리팹의 배치·메시를 확인하며 원본 정리 코드에서 배치 내부를 보호한다.
+
+FourCityWorld는 경계 기반 거리 판단·항공 시점 가시거리·히스테리시스·forceRenderingOff 전환 갱신을 사용한다. CameraOcclusion은 대형 통합 배치와 발밑 지면을 제외하고 재질 교체를 줄인다. StructuralGlass는 돔/기밀 터널용으로 투명도·반사를 제한하며 돔 중복 삼각형을 제거했다. Bloom clamp 6, 야간 발광 대상 판별도 보완했다. 원래 흰 번짐의 정확한 재현에는 실패했으므로 완전한 원인 확정으로 보고하지 말 것.
+
+네이티브 `WorldRecoverySmoke`에서 12개 화면과 지면 충돌/표시 3개 통과. 이전 자동 촬영의 `SingleCameraRequest`가 URP volume 갱신을 건너뛰는 문제를 발견해 `StandardRequest`로 변경했다. FidelityBenchmark도 같은 방식으로 수정했다. 이전 프레임 시간 수치는 최종 후처리 경로의 성능으로 인용하지 말 것.
+
+서하 실험은 `Artifacts/CharacterLab/Refined`에 있다. 팔·손 두께 보정, 27종 검토 액션과 발 접촉 제어까지 진행했다. 얼굴/헤어/의상 연결부/동작은 목표 품질 미달이며 게임에는 적용하지 않았다. 기존 스프라이트를 대체하거나 고품질 3D 완성으로 보고하지 않는다.
+
 ## 최신 작업: 물리 재질·건축 표현·거리 소품·식생·보행자 품질
 
 기존 네 도시 변경사항을 `0968b341`로 main에 커밋·푸시한 뒤 진행했다. 최신 실행은 `PLAY.cmd` → `Builds/Fidelity/AFTERSIGNAL.exe`. 적용 범위·조작·AAA 제작 격차는 `Documentation/Fidelity/README.md`, 1차 참고 자료와 코드 조사 결과는 `QUALITY-DIRECTION.md`, 최종 빌드·네이티브 검사·비교 프레임 시간은 `validation.json`에 있다. AAA 게임 수준을 완성했다고 보고하지 말 것.

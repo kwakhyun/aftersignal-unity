@@ -10,6 +10,7 @@ namespace AfterSignal
         {
             public Material[] originals, faded;
             public float opacity = 1;
+            public bool applied;
             public MaterialPropertyBlock block = new MaterialPropertyBlock();
         }
 
@@ -93,18 +94,21 @@ namespace AfterSignal
                     continue;
                 var surface = pair.Value;
                 float target = blocking.Contains(r) ? .04f : 1;
-                if (target == 1 && surface.opacity >= 1)
+                if (Mathf.Approximately(target,surface.opacity))
                     continue;
                 surface.opacity = Mathf.MoveTowards(surface.opacity, target, Time.unscaledDeltaTime * 5);
                 if (surface.opacity < .999f)
                 {
-                    r.sharedMaterials = surface.faded;
+                    if(!surface.applied){r.sharedMaterials=surface.faded;surface.applied=true;}
                     r.GetPropertyBlock(surface.block);
                     surface.block.SetFloat("_Opacity", surface.opacity);
                     r.SetPropertyBlock(surface.block);
                 }
                 else
+                {
                     r.sharedMaterials = surface.originals;
+                    surface.applied=false;
+                }
             }
         }
 
@@ -122,6 +126,12 @@ namespace AfterSignal
         {
             if (!r || !r.enabled || !r.gameObject.activeInHierarchy)
                 return;
+            // World-scale material batches also contain roads and foundations. They
+            // cannot be faded as if they were one building along the sightline.
+            var bounds=r.bounds;
+            if(Mathf.Max(bounds.size.x,bounds.size.z)>180)return;
+            var player=GameDirector.Instance?GameDirector.Instance.Player:null;
+            if(player&&bounds.max.y<player.transform.position.y+.12f)return;
             blocking.Add(r);
             if (surfaces.ContainsKey(r))
                 return;
@@ -162,7 +172,10 @@ namespace AfterSignal
         {
             foreach (var pair in surfaces)
                 if (pair.Key)
+                {
                     pair.Key.sharedMaterials = pair.Value.originals;
+                    pair.Value.opacity=1;pair.Value.applied=false;
+                }
         }
 
         void OnDestroy()

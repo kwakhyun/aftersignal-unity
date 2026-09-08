@@ -23,7 +23,7 @@ namespace AfterSignal
             game=GameDirector.Instance;Preset=Mathf.Clamp(PlayerPrefs.GetInt("AFTERSIGNAL.Unity.Graphics",1),0,2);ApplyQuality();
             volume=gameObject.AddComponent<Volume>();volume.isGlobal=true;volume.priority=25;profile=ScriptableObject.CreateInstance<VolumeProfile>();volume.sharedProfile=profile;
             grade=profile.Add<ColorAdjustments>(true);grade.contrast.Override(14);grade.saturation.Override(-3);
-            bloom=profile.Add<Bloom>(true);bloom.threshold.Override(1.25f);bloom.intensity.Override(.28f);bloom.scatter.Override(.65f);
+            bloom=profile.Add<Bloom>(true);bloom.threshold.Override(1.25f);bloom.intensity.Override(.28f);bloom.scatter.Override(.55f);bloom.clamp.Override(6);
             var vignette=profile.Add<Vignette>(true);vignette.intensity.Override(.11f);vignette.smoothness.Override(.6f);
             var tone=profile.Add<Tonemapping>(true);tone.mode.Override(TonemappingMode.ACES);
             var go=new GameObject("Local city reflection");go.transform.SetParent(transform,false);probe=go.AddComponent<ReflectionProbe>();probe.mode=ReflectionProbeMode.Realtime;probe.refreshMode=ReflectionProbeRefreshMode.ViaScripting;probe.timeSlicingMode=ReflectionProbeTimeSlicingMode.IndividualFaces;probe.resolution=128;probe.size=new Vector3(120,70,120);probe.boxProjection=true;probe.blendDistance=16;probe.nearClipPlane=.4f;probe.farClipPlane=110;probe.hdr=true;probe.cullingMask=1;probe.shadowDistance=45;probe.intensity=.75f;

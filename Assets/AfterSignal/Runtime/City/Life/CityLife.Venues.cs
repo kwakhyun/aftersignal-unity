@@ -8,6 +8,7 @@ namespace AfterSignal
             var v=FourCityCatalog.Venues[service.index];var live=FourCityWorld.Instance?.Find(v.id);
             if(service.action=="campaign"){FourCityCampaign.Instance?.Interact(service.index);return;}
             if(service.action=="lift"){if(live&&live.Lift){if(live.Lift.Aboard(game.Player))LiftServices(live.Lift);else live.Lift.Call(service.floor);return;}}
+            if(RegionalMenu(service,v,live))return;
             Panel("venue",v.title,v.description+"\n\n"+FacilityGuide.For(v)+"\n\n"+(v.Sport?"경기 관람과 승부예측은 매표소에서 이용합니다.":"직원에게 질문하거나 안내 단말을 이용하세요."));
             if(v.Sport){Option("오늘 경기 · 점수 / 규칙 / 승부예측",()=>VenueMatch(v));Option("관중석으로 이동",()=>{Dismiss();live?.Observe();});}
             else if(v.kind==VenueKind.Cinema){Option("영화 관람 · 25 C",()=>{if(!LifeState.Spend(25)){game.Toast("보유 크레딧이 부족합니다.");return;}Dismiss();live?.WatchFilm();});Option("상영작 / 이용 허가",()=>{Panel("venue","SIGNAL / 심해의 빛","이 게임을 위해 직접 제작한 60초 길이의 3D 애니메이션 영상입니다.\n도시의 기억이 바다 아래에서 깨어나는 장면을 상영합니다.\n\n제작: AFTERSIGNAL 프로젝트 · 외부 영화·음악·상표 미사용");Option("돌아가기",()=>VenueMenu(service));});}

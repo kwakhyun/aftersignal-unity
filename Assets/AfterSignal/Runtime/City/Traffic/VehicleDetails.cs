@@ -10,7 +10,7 @@ namespace AfterSignal
             var detail=vehicle.gameObject.AddComponent<VehicleDetails>();detail.car=vehicle;
             if(!vehicle.GetComponent<AuthoredCraft>())
             {
-                var taxi=vehicle.GetComponent<CityTaxiService>();string modelName=taxi?(taxi.Air?"AirTaxi":"WaterTaxi"):VehicleFleet.ModelName(vehicle.type);
+                var taxi=vehicle.GetComponent<CityTaxiService>();string modelName=taxi?(taxi.Air?"AirTaxi":"WaterTaxi"):FleetDesign.Model(vehicle);
                 var asset=Resources.Load<GameObject>("WorldAssets/"+modelName+"/"+modelName);if(!asset)return;
                 Material basePaint=Resources.Load<Material>("Materials/SedanIvory");
                 foreach(var renderer in vehicle.GetComponentsInChildren<MeshRenderer>())if(renderer.name=="Sculpted chassis"&&renderer.sharedMaterial)basePaint=renderer.sharedMaterial;

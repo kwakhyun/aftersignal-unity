@@ -9,44 +9,22 @@ namespace AfterSignal
         public static int RobbedSite=-1;
         public static float RobberyExpires;
         public static bool InsideRobbery=>GameDirector.Instance&&GameDirector.Instance.stage==StageId.UrbanInterior&&UrbanCatalog.Current==RobbedSite&&Time.realtimeSinceStartup<RobberyExpires;
-        GameDirector game;bool playerHeist;float cashTimer,notice;Vector3 till;
         public int CompletedHeists{get;private set;}
         void Awake(){Instance=this;}
         IEnumerator Start()
         {
-            game=GameDirector.Instance;yield return new WaitForSeconds(.5f);
+            yield return new WaitForSeconds(.5f);
             if(InsideRobbery)
             {
                 for(int i=0;i<2;i++){var g=GangMember.Create(new Vector3(18+i*3,.1f,3),i,0);g.gameObject.AddComponent<GangCrime>().inside=true;NpcSpeech.Say(g,"움직이지 마! 돈부터 내놔!",6);}
                 CitySafety.Shock(new Vector3(18,0,3));
             }
         }
+        public void RecordHeist()=>CompletedHeists++;
         public void StartHeist()
         {
-            if(playerHeist)return;
-            CityLife.Instance.Dismiss();playerHeist=true;cashTimer=10;till=game.Player.transform.position;
-            WantedSystem.Report(38,till);CitySafety.Alarm(till);CitySafety.Shock(till);
-            NpcSpeech.Say(game.Player,"금고를 열어.",3);
-            game.Toast("금고 개방 중 · 창구 근처를 지키세요 (10초)",3);
-            if(CivicWorld.Interior(game.stage))StartCoroutine(PoliceAtDoor());
-        }
-        IEnumerator PoliceAtDoor()
-        {
-            yield return new WaitForSeconds(5);
-            for(int i=0;i<2;i++)PoliceOfficer.Create(WantedSystem.Instance,new Vector3(5+i*2,.12f,0),2,i);
-        }
-        void Update()
-        {
-            if(!game||game.Blocked||!playerHeist)return;
-            if(Vector3.Distance(game.Player.transform.position,till)>11||game.Player.Health<=0){playerHeist=false;game.Toast("창구에서 벗어나 강도가 중단됐습니다.");return;}
-            cashTimer-=Time.deltaTime;
-            if(Time.time>notice){notice=Time.time+1;game.Toast("금고 개방 · "+Mathf.CeilToInt(cashTimer)+"초",1.1f);}
-            if(cashTimer<=0)
-            {
-                playerHeist=false;int amount=UrbanCatalog.Kind(UrbanCatalog.Current)==3?1600:450;
-                LifeState.Earn(amount);CompletedHeists++;WantedSystem.Report(20,till);
-                game.Toast("현금 "+amount+" C 획득 · 출동한 경찰을 피해 탈출하세요",6);
-            }
+            if(CashLocations.Instance&&CashLocations.Instance.Counter){CashLocations.Instance.Counter.Open();return;}
+            GameDirector.Instance?.Toast("매장 안의 현금 보관함에 접근하세요.");
         }
         void OnDestroy(){if(Instance==this)Instance=null;}
     }

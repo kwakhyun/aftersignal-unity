@@ -1,0 +1,82 @@
+{
+  "date": "2026-09-08",
+  "unity": "6000.4.0f1",
+  "device": "NVIDIA GeForce RTX 4060 Ti",
+  "baselineCommit": "13459344",
+  "restored": {
+    "source": "2dc22dce",
+    "prefab": "Assets/AfterSignal/Resources/WorldAssets/AfterlightExpansion.prefab",
+    "restored_components": 3455,
+    "restored_batches": 691,
+    "dependencies_present": 715
+  },
+  "testedBuild": {
+    "log": "Artifacts/WorldRecovery/build-final.log",
+    "result": "Succeeded",
+    "bytes": 1860839123,
+    "errors": 0,
+    "warnings": 47
+  },
+  "native": {
+    "log": "Artifacts/WorldRecovery/final-player.log",
+    "audit": "Artifacts/WorldRecovery/Final/audit.txt",
+    "resolution": [
+      1440,
+      810
+    ],
+    "cameraRequest": "RenderPipeline.StandardRequest",
+    "viewCount": 12,
+    "checkCount": 15,
+    "passed": [
+      "PASS Coastal connector / physical floor=True / visible surface=True",
+      "PASS Afterlight airport apron / physical floor=True / visible surface=True",
+      "PASS 01-expansion-ground / excessive whiteout",
+      "PASS 02-airport / excessive whiteout",
+      "PASS 03-garden-aerial / excessive whiteout",
+      "PASS 04-botanical-aerial / excessive whiteout",
+      "PASS 04-close-canopy / excessive whiteout",
+      "PASS 05-nova / excessive whiteout",
+      "PASS 06-nereid-above / excessive whiteout",
+      "PASS 07-nereid-street / excessive whiteout",
+      "PASS 07-nereid-garden / excessive whiteout",
+      "PASS 07b-erebos-coast / excessive whiteout",
+      "PASS 08-airport-return / excessive whiteout",
+      "PASS Airport after return from Nereid / physical floor=True / visible surface=True",
+      "PASS 09-garden-night / excessive whiteout"
+    ],
+    "errors": [],
+    "missingMeshes": 0,
+    "completed": true
+  },
+  "preflight": {
+    "AfterlightExpansion": 691,
+    "MobilityDistricts": 1013,
+    "CivicRenewal": 820,
+    "NeonHarbor": 1516,
+    "TransitFacilities": 30
+  },
+  "originalWhiteoutReproduced": false,
+  "reviewLimitations": [
+    "The missing coastal ground and airport were reproduced and restored. The original oversized white bloom was not reproduced at the sampled viewpoints.",
+    "No new frame-rate benchmark; historical SingleCameraRequest timings are not directly comparable.",
+    "Native scope is the coastal ground, airport, Nereid, Erebos coast, botanical dome and night rendering, not a full campaign replay."
+  ],
+  "seo3D": {
+    "appliedToGame": false,
+    "reviewedBlend": "Artifacts/CharacterLab/Refined/Seo-Actions-Review.blend",
+    "draftClipCount": 27,
+    "qualityAccepted": false,
+    "remaining": "Face, hair, garment seams, action posing and contact polish"
+  },
+  "shippingBuild": {
+    "log": "Artifacts/WorldRecovery/build-shipping.log",
+    "result": {
+      "result": "Succeeded",
+      "bytes": 1860839123,
+      "errors": 0,
+      "warnings": 47
+    },
+    "executable": "Builds/WorldRecovery/AFTERSIGNAL.exe",
+    "differenceFromNativeTestedBuild": "Only the opt-in FidelityBenchmark capture request changed to StandardRequest; shipping gameplay and WorldRecoverySmoke are identical."
+  }
+}

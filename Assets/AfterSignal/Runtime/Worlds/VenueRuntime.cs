@@ -65,18 +65,19 @@ namespace AfterSignal
             {
                 bool staff=i<Mathf.Min(12,Mathf.Max(3,count/7));string role=Role(staff,i),art=Art(staff,i);
                 var points=staff&&staffPoints.Count>0?staffPoints:activityPoints;Vector3 p=points.Count>0?points[i%points.Count]:new Vector3((i%7-3)*2,.08f,-Definition.size.y*.5f+16+i/7*2);
+                if(Definition.kind==VenueKind.Prison&&!staff){int n=i%8,f=(i/8)%Mathf.Max(1,floorCount);p=new Vector3((n<4?-1:1)*roomWidth*.21f-1,f*floorHeight+.1f,-roomDepth*.17f+n%4*6);}
                 bool spectator=!staff&&seatPoints.Count>0&&i%4!=0;if(spectator)p=seatPoints[i%seatPoints.Count];
-                var npc=VenueActor.Create(this,40000+Index*200+i,role,art,p);npc.transform.SetParent(crowd.transform,false);npc.transform.localPosition=p;npc.origin=p;npc.staff=staff;npc.spectator=spectator;npc.serial=i;if(staff)StaffOnDuty++;
+                var npc=VenueActor.Create(this,40000+Index*200+i,role,art,p);npc.transform.SetParent(crowd.transform,false);npc.transform.localPosition=p;npc.origin=p;npc.staff=staff;npc.spectator=spectator;npc.serial=i;RegionalResidents.Apply(npc,this,staff,i);if(staff)StaffOnDuty++;
             }
             Admissions+=count;
         }
         string Art(bool staff,int i)
-        {if(Definition.kind==VenueKind.Circuit&&staff&&i%2==0)return "RacingDriver";if(Definition.city==3)return staff?(Definition.kind==VenueKind.Hospital?"AbyssMedic":"AbyssEngineer"):i%3==0?"AbyssEngineer":i%3==1?"AbyssCitizen":"AbyssMedic";if(Definition.city==2)return "Soldier";return staff?Definition.kind==VenueKind.Hospital?(i%2==0?"Doctor":"Nurse"):i%3==0?"Worker":i%3==1?"OfficeWoman":"Bartender":PeopleArt.Citizens[(i+Index)%PeopleArt.Citizens.Length];}
+        {var regional=RegionalResidents.Art(Definition,staff,i);if(regional!=null)return regional;if(Definition.kind==VenueKind.Circuit&&staff&&i%2==0)return "RacingDriver";if(Definition.city==3)return staff?(Definition.kind==VenueKind.Hospital?"AbyssMedic":"AbyssEngineer"):i%3==0?"AbyssEngineer":i%3==1?"AbyssCitizen":"AbyssMedic";if(Definition.city==2)return "Soldier";return staff?Definition.kind==VenueKind.Hospital?(i%2==0?"Doctor":"Nurse"):i%3==0?"Worker":i%3==1?"OfficeWoman":"Bartender":PeopleArt.Citizens[(i+Index)%PeopleArt.Citizens.Length];}
         string Role(bool staff,int i)
-        {if(!staff)return Definition.Sport?"경기 관람객":Definition.kind==VenueKind.Hotel?"호텔 투숙객":Definition.city==3?"수중 도시 주민":"문화 시설 방문객";return Definition.kind switch{VenueKind.Football or VenueKind.Baseball or VenueKind.Basketball=>i%3==0?"경기장 운영 직원":i%3==1?"경기 심판":"경기장 매점 직원",VenueKind.Circuit=>i%2==0?"레이스 정비사":"경기 진행 요원",VenueKind.Amusement=>i%2==0?"놀이기구 운전원":"놀이공원 안내 직원",VenueKind.Hospital=>i%2==0?"담당 의사":"간호사",VenueKind.Hotel=>i%3==0?"프런트 직원":i%3==1?"객실 관리 직원":"호텔 요리사",VenueKind.Cinema=>i%2==0?"영사 기사":"영화관 안내 직원",VenueKind.Research=>"심해 연구원",VenueKind.Garden=>"정원 해설사",_=>"시설 안내 직원"};}
+        {var regional=RegionalResidents.Role(Definition,staff,i);if(regional!=null)return regional;if(!staff)return Definition.Sport?"경기 관람객":Definition.kind==VenueKind.Hotel?"호텔 투숙객":Definition.city==3?"수중 도시 주민":"문화 시설 방문객";return Definition.kind switch{VenueKind.Football or VenueKind.Baseball or VenueKind.Basketball=>i%3==0?"경기장 운영 직원":i%3==1?"경기 심판":"경기장 매점 직원",VenueKind.Circuit=>i%2==0?"레이스 정비사":"경기 진행 요원",VenueKind.Amusement=>i%2==0?"놀이기구 운전원":"놀이공원 안내 직원",VenueKind.Hospital=>i%2==0?"담당 의사":"간호사",VenueKind.Hotel=>i%3==0?"프런트 직원":i%3==1?"객실 관리 직원":"호텔 요리사",VenueKind.Cinema=>i%2==0?"영사 기사":"영화관 안내 직원",VenueKind.Research=>"심해 연구원",VenueKind.Garden=>"정원 해설사",_=>"시설 안내 직원"};}
         void Update()
         {
-            var g=GameDirector.Instance;if(!g||!g.Ready)return;float distance=(g.Player.transform.position-transform.position).sqrMagnitude;
+            var g=GameDirector.Instance;if(!g||!g.Ready)return;float distance=(g.Player.transform.position-transform.position).sqrMagnitude;if(Definition.kind==VenueKind.Slum||Definition.kind==VenueKind.Island)distance=new Bounds(transform.position,new Vector3(Definition.size.x,40,Definition.size.y)).SqrDistance(g.Player.transform.position);
             if(Time.time>next){next=Time.time+.45f;if(distance<260*260&&!spawned)SpawnCrowd();if(crowd)crowd.SetActive(distance<420*420);foreach(var p in players)if(p)p.gameObject.SetActive(distance<260*260);
                 if(film){if(distance<100*100&&!film.isPlaying&&!film.isPrepared)film.Prepare();if(distance<100*100&&film.isPrepared&&!film.isPlaying)film.Play();else if(distance>140*140&&film.isPlaying)film.Pause();}}
             if(Definition.Sport)Sports(distance<420*420);

@@ -5,7 +5,7 @@ namespace AfterSignal
     {
         int customColor=-1;
         static readonly Color[] colors={new Color(.06f,.16f,.3f),new Color(.64f,.06f,.32f),new Color(.12f,.54f,.46f),new Color(.68f,.5f,.23f),new Color(.8f,.83f,.8f),new Color(.04f,.045f,.05f)};
-        public void Repair(){health=100;exploded=false;ApplyDamageLook();UrbanSimulation.Instance?.SaveCar();}
+        public void Repair(){if(Wrecked)return;InitializeDurability();health=MaxHealth;exploded=false;ApplyDamageLook();UrbanSimulation.Instance?.SaveCar();}
         public void ApplyCustomization()
         {
             if(!owned||IsSpecial||type==CityVehicleType.Tank||type==CityVehicleType.Motorcycle)return;

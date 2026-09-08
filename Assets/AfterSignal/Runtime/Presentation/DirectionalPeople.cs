@@ -58,7 +58,9 @@ namespace AfterSignal
                 return;
             }
             var routine=GetComponent<CivicRoutine>();
-            if(routine&&routine.prisoner)art="Prisoner";
+            var regionalUniform=GetComponent<RegionalUniform>();
+            if(regionalUniform)art=regionalUniform.art;
+            else if(routine&&routine.prisoner)art="Prisoner";
             else if(body&&body.military)art="Soldier";
             else if(art=="Prisoner")art="Worker";
             var game=GameDirector.Instance;if(!game)return;

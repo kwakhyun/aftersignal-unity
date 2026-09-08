@@ -24,6 +24,8 @@ Unity의 `AFTERSIGNAL > Quality > Apply physical city materials and rendering` �
 
 ## 검증 기록
 
+2026-09-08 정정: 당시 `SingleCameraRequest` 촬영은 URP volume 갱신을 건너뛰어 실제 게임의 후처리 경로와 달라질 수 있었다. 아래 시간은 당시 경로의 기록이며 후처리를 포함한 최종 성능 결과로 해석하지 않는다. 수정된 촬영 방식과 지면·돔 복구는 [WorldRecovery](../WorldRecovery/README.md)를 참고한다.
+
 실제 Windows 플레이어에서 낮·밤 도심, 경기장, 노바 구역, 수중 도시, 실내, 정원, 거리 소품, 설정 화면을 확인했다. 출입·계단·승강기 검사와 새 이동·상호작용·유리 파손 검사를 수행했다. 상세 통과 항목, 빌드 결과, 동일 카메라 비교 시간은 [validation.json](validation.json)에 기록한다.
 
 최종 필수 검사 **70개 통과**, 실행 오류 **0개**, Windows 빌드 성공(오류 0개, 경고 47개). 검수 원본: [야간 이전](Review/night-before.png) / [야간 적용 후](Review/night-after.png), [실내 이전](Review/interior-before.png) / [실내 적용 후](Review/interior-after.png), [정원](Review/garden-after.png), [거리 소품](Review/street-after.png).

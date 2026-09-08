@@ -26,6 +26,7 @@ namespace AfterSignal
         readonly PursuitPath path = new PursuitPath();
         float clock, cooldown, aimTime, recoil, gravity, death, hurt, search, facing = 1;
         int burst;
+        float restraint;
         Vector3 shotTarget, knockback, patrolHome;
         bool retreat, playerTarget;
         WorldActor dispatchTarget;
@@ -130,6 +131,15 @@ namespace AfterSignal
             Vector3 delta = targetPosition - transform.position;
             facing = Vector3.Dot(delta, Camera.main ? Camera.main.transform.right : Vector3.right) >= 0 ? 1 : -1;
             bool visible = playerTarget ? CanSee() : FactionCombat.Visible(Body.Center, targetCenter);
+            bool close=playerTarget&&visible&&delta.magnitude<2.2f&&hurt<=0&&!(UrbanSimulation.Instance&&UrbanSimulation.Instance.Current)&&game.Player.Health>0;
+            if(close)
+            {
+                if(restraint==0)NpcSpeech.Say(this,"움직이지 마! 무기를 내려놔!",2);
+                restraint+=dt;aimTime=0;burst=0;cooldown=.5f;
+                if(restraint>(game.Player.Health<45?1.3f:2.5f)){restraint=0;PrisonSystem.Capture(game);return;}
+                Ground(dt);actor.Pose(3,facing);return;
+            }
+            restraint=0;
             float range = Weapon == PoliceWeapon.Shotgun ? 12 : Weapon == PoliceWeapon.Rifle ? 29 : 21;
             int frame = 0;
             if (aimTime > 0)
@@ -155,7 +165,7 @@ namespace AfterSignal
                 shotTarget = targetCenter;
                 frame = 3;
             }
-            else if ((!visible || delta.magnitude > range * .78f) && hurt <= 0)
+            else if ((!visible || delta.magnitude > range * .78f || playerTarget&&game.Player.Health<45&&delta.magnitude>1.8f) && hurt <= 0)
             {
                 Vector3 target = playerTarget && !visible && system ? system.LastSeen : targetPosition;
                 if (game.stage == StageId.UrbanCity && target.y > transform.position.y + 6)
@@ -199,6 +209,7 @@ namespace AfterSignal
 
         public void OnHit(Vector3 force)
         {
+            restraint=0;
             hurt = .22f;
             aimTime = 0;
             burst = 0;

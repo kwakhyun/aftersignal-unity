@@ -7,7 +7,7 @@ namespace AfterSignal
     {
         public Vector2 move, pointer, lookDelta;
         public float zoom, vertical;
-        public bool boost, passenger, surrender, vehicleView, secondaryFire;
+        public bool boost, passenger, surrender, vehicleView, secondaryFire, horn;
         public bool journal;
         public bool look, cameraReset, run;
         public bool attack, grapple, jump, interact, dash, skill, guard, pause, reload, map, exit;
@@ -96,6 +96,7 @@ namespace AfterSignal
             {
                 boost = Keyboard.current != null && (Keyboard.current.leftShiftKey.isPressed || Keyboard.current.rightShiftKey.isPressed),
                 vehicleView = Keyboard.current != null && Keyboard.current.cKey.wasPressedThisFrame,
+                horn = Keyboard.current != null && Keyboard.current.bKey.wasPressedThisFrame,
                 secondaryFire = Mouse.current != null && Mouse.current.rightButton.isPressed,
                 passenger = Keyboard.current != null && Keyboard.current.gKey.wasPressedThisFrame,
                 surrender = Keyboard.current != null && Keyboard.current.hKey.isPressed,

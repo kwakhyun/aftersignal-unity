@@ -27,6 +27,7 @@ namespace AfterSignal
         public void Tick(ControlFrame input,float dt)
         {
             if(!car)car=GetComponent<CityVehicle>();if(!car||car.Wrecked||!Camera.main)return;
+            if(car.GetComponent<MilitaryVehicleAI>()&&(!UrbanSimulation.Instance||UrbanSimulation.Instance.Current!=car))return;
             cooldown-=dt;secondaryCooldown-=dt;
             var ray=Camera.main.ViewportPointToRay(new Vector3(.5f,.5f));Aim=Ballistics.AimPoint(ray,transform);
             bool tank=car.type==CityVehicleType.Tank;

@@ -20,10 +20,10 @@ namespace AfterSignal
         {
             if(fatal){if(State==Reaction.Destroyed)return;Evacuate(true,danger);State=Reaction.Destroyed;return;}
             if(State==Reaction.Evacuated||State==Reaction.Destroyed)return;
-            if(!car.occupied&&(!car.GetComponent<VehicleCabin>()||car.GetComponent<VehicleCabin>().PassengerCount==0)||car.GetComponent<PoliceCar>()||car.GetComponent<StolenVehicle>()||UrbanSimulation.Instance&&UrbanSimulation.Instance.Current==car)return;
+            if(!car.occupied&&(!car.GetComponent<VehicleCabin>()||car.GetComponent<VehicleCabin>().PassengerCount==0)||car.GetComponent<PoliceCar>()||car.GetComponent<TacticalTransport>()||car.GetComponent<MilitaryVehicleAI>()||car.GetComponent<StolenVehicle>()||UrbanSimulation.Instance&&UrbanSimulation.Instance.Current==car)return;
             var intercity=car.GetComponent<IntercityService>();if(intercity&&!intercity.Boarding)return;
             CitySafety.Shock(car.transform.position);
-            if(car.health<28||Mathf.Abs(car.speed)<2.5f||!car.traffic||car.route==null||car.route.Length<2)
+            if(car.HealthFraction<.25f||Mathf.Abs(car.speed)<2.5f||!car.traffic||car.route==null||car.route.Length<2)
                 Evacuate(false,danger);
             else
             {
@@ -35,7 +35,7 @@ namespace AfterSignal
         {
             var game=GameDirector.Instance;if(!game||game.Blocked||!car||!Escaping)return;
             blocked=car.speed<1?blocked+Time.deltaTime:0;
-            if(blocked>1.8f||car.health<28)Evacuate(false,game.Player.transform.position);
+            if(blocked>1.8f||car.HealthFraction<.25f)Evacuate(false,game.Player.transform.position);
             else if(Time.time>expires)State=Reaction.Calm;
         }
         void Evacuate(bool fallen,Vector3 danger)
@@ -56,6 +56,7 @@ namespace AfterSignal
                 var visual=person.GetComponent<SpriteRenderer>();visual.sprite=PeopleArt.Get(role,0);visual.sharedMaterial=Resources.Load<Material>("Materials/PixelActor");
                 var npc=person.AddComponent<CityNpc>();npc.Configure(Mathf.Abs(car.GetInstanceID())+i,"승객",null,"차량 공격에서 탈출한 애프터라이트 시민.");
                 PeopleArt.Attach(person,role);
+                if(!fallen)person.GetComponent<WorldActor>().health=Mathf.Max(20,70-(cabin?cabin.OccupantInjury:0));
                 person.AddComponent<VehicleSurvivor>().Initialize(fallen,danger,car.transform.position);
                 Destroy(person,fallen?90:60);
             }
@@ -63,7 +64,7 @@ namespace AfterSignal
             if(CityBusService.Instance&&CityBusService.Instance.Riding==car)
             {
                 CityBusService.Instance.EmergencyLeave(car);
-                if(fallen)GameDirector.Instance.Player.ReceiveDamage(GameDirector.Instance.Player.Health,car.transform.position,true);
+                if(fallen){GameDirector.Instance.Player.ProtectVehicleImpact();GameDirector.Instance.Player.ReceiveDamage(30,car.transform.position,true);}
             }
             if(!playerDriver){car.occupied=false;car.traffic=false;car.speed=0;}
             State=fallen?Reaction.Destroyed:Reaction.Evacuated;

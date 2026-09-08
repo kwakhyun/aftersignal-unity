@@ -15,7 +15,9 @@ namespace AfterSignal
             if(!building && col.bounds.size.y>9 && col.bounds.size.x>3 && col.bounds.size.z>3)
             {building=col.gameObject.AddComponent<CollapsibleBuilding>();building.worldBounds=col.bounds;building.cutBatches=true;}
             if(!building)return false;
-            building.Collapse(point,car.Forward);car.Damage(10000,point);return true;
+            building.Collapse(point,car.Forward);
+            bool player=UrbanSimulation.Instance&&UrbanSimulation.Instance.Current==car;
+            car.Damage(car.MaxHealth*2,point,player?null:TrafficDamageSource.Environment,false);return true;
         }
         public static bool CheckCraft(CityVehicle car,Vector3 delta)
         {
@@ -24,7 +26,7 @@ namespace AfterSignal
             int best=-1;float distance=float.MaxValue;
             for(int i=0;i<count;i++){var hit=hits[i];if(!hit.collider||hit.collider.transform.IsChildOf(car.transform)||hit.normal.y>.7f)continue;if(hit.distance<distance){best=i;distance=hit.distance;}}
             if(best<0)return false;var h=hits[best];Hit(car,h.collider,h.point,Mathf.Abs(car.speed));
-            if(!car.Wrecked)car.Damage(Mathf.Max(5,Mathf.Abs(car.speed)*.5f),h.point);car.speed=0;return true;
+            if(!car.Wrecked)car.CollisionDamage(Mathf.Abs(car.speed),h.point);car.speed=0;return true;
         }
     }
 
