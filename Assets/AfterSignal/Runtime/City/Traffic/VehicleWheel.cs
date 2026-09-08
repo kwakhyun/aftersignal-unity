@@ -7,7 +7,7 @@ namespace AfterSignal
         public CityVehicle car;
         Quaternion rest;
         Vector3 axle, up, previous;
-        float spin;
+        float spin,previousYaw;
         bool front;
         public Vector3 WorldAxle => transform.parent.TransformDirection(axle);
         public void Initialize(CityVehicle owner)
@@ -16,14 +16,17 @@ namespace AfterSignal
             axle = transform.parent.InverseTransformDirection(car.transform.forward).normalized;
             up = transform.parent.InverseTransformDirection(car.transform.up).normalized;
             front = car.transform.InverseTransformPoint(transform.position).x > 0;
+            previousYaw=car.transform.eulerAngles.y;
         }
         void LateUpdate()
         {
             if (!car || car.Wrecked) return;
             float travel = Vector3.Dot(car.transform.position - previous, car.Forward);
+            if(car.type==CityVehicleType.Tank)travel+=Mathf.DeltaAngle(previousYaw,car.transform.eulerAngles.y)*Mathf.Deg2Rad*car.transform.InverseTransformPoint(transform.position).z;
+            previousYaw=car.transform.eulerAngles.y;
             previous = car.transform.position;
             spin = Mathf.Repeat(spin - travel * 130, 360);
-            var steering = Quaternion.AngleAxis(front ? car.Steering * 24 : 0, up);
+            var steering = Quaternion.AngleAxis(front && car.type!=CityVehicleType.Tank ? car.Steering * 24 : 0, up);
             transform.localRotation = steering * Quaternion.AngleAxis(spin, axle) * rest;
         }
     }

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace AfterSignal
 {
-    public sealed class CameraRig : MonoBehaviour
+    public sealed partial class CameraRig : MonoBehaviour
     {
         public GameDirector director;
         public bool ReducedMotion { get; set; }
@@ -15,13 +15,14 @@ namespace AfterSignal
         public float OrbitYaw => orbitYaw;
         public float OrbitPitch => orbitPitch;
         public bool CanLook => director && director.Ready && !director.Blocked && !(UrbanSimulation.Instance && UrbanSimulation.Instance.MapOpen);
-        Vector3 Focus => (Driving ? UrbanSimulation.Instance.Current.transform.position + Vector3.up * (UrbanSimulation.Instance.Current.IsAircraft?3:1.6f) : director.Player.Shoulder) + Quaternion.Euler(0,orbitYaw,0)*Vector3.right*.75f + Vector3.up*.25f;
+        Vector3 Focus => Driving ? VehicleFocus() : director.Player.Shoulder + Quaternion.Euler(0,orbitYaw,0)*Vector3.right*.75f + Vector3.up*.25f;
         public Vector3 ViewRight => FreeOrbit ? Vector3.ProjectOnPlane(transform.right, Vector3.up).normalized : Vector3.right;
         public Vector3 MoveDirection(Vector2 input) => ViewRight * input.x + Vector3.Cross(ViewRight, Vector3.up) * input.y;
 
         public void ReadLook(ControlFrame input)
         {
             if (!CanLook) return;
+            ReadVehicleView(input);
             if (input.cameraReset) { FreeOrbit = true; orbitYaw=-8;orbitPitch=15;orbitDistance=8.5f; velocity = Vector3.zero; if (Viewing) { CityLife.Instance.PanoramaYaw = -15; CityLife.Instance.PanoramaPitch = 14; } return; }
             if(Mathf.Abs(input.zoom)>.01f){orbitDistance=Mathf.Clamp(orbitDistance-Mathf.Sign(input.zoom)*.9f,3.5f,18);FreeOrbit=true;}
             if (!input.look || input.lookDelta.sqrMagnitude < .001f) return;
@@ -83,6 +84,7 @@ namespace AfterSignal
 
         public void Snap()
         {
+            if (FirstPersonVehicle) { SetCockpit(); return; }
             basePosition = Target();
             velocity = Vector3.zero;
             transform.position = basePosition;
@@ -151,6 +153,8 @@ namespace AfterSignal
         {
             if (!director || !director.Player || director.Blocked)
                 return;
+            if (FirstPersonVehicle) { SetCockpit(); return; }
+            GetComponent<Camera>().nearClipPlane=.15f;
             lead = Mathf.Lerp(lead, Mathf.Clamp(director.Player.Velocity.x * .22f + director.Player.Facing * .65f, -2.4f, 2.4f), 1 - Mathf.Exp(-Time.deltaTime * 4));
             basePosition = Vector3.SmoothDamp(basePosition, Target(), ref velocity, Driving ? .22f : .14f);
             if (FreeOrbit || Viewing) basePosition = AvoidWalls(basePosition);

@@ -1,4 +1,12 @@
-# 다음 Codex 작업을 위한 인계 — 2026-09-07
+# 다음 Codex 작업을 위한 인계 — 2026-09-08
+
+## 최신 작업: 노바 해협과 탈것 조종석
+
+이번 요청 시작 시 기존 변경 전체를 main의 `dbc0255c`로 커밋하고 origin/main에 푸시했다. 그 이후 작업은 [Documentation/NEON-HARBOR.md](Documentation/NEON-HARBOR.md)에 정리했다. 실행 파일은 `Builds/NeonRelease/AFTERSIGNAL.exe`, `PLAY.cmd`가 active-player를 통해 선택한다. 아래 이전 작업의 커밋·빌드 경로 안내는 당시 기록이다.
+
+`WorldAssets/NeonHarbor.prefab`이 기존 확장에 추가된다. 4개 섬, 운하·교량·11개 도로, 추가 건물 538동(기존 도시 125동 포함), 진입 가능한 다층 건물 31동, 주민 외형 24종, main25–30 및 서브 의뢰 4건을 연결했다. 여객선은 실제 해협을 왕복한다. C는 탈것 전용 1인칭, 전차는 독립 포탑과 제자리 선회, 전투헬기·전투기는 우클릭 미사일/R 장전이다. 수영에는 별도 32프레임과 호흡·잠수·턱 오르기를 적용했다. 효과음 18개 출처와 라이선스는 `Documentation/Audio/TRANSPORT-LICENSES.md` 및 빌드 크레딧에 기록했다.
+
+이 확장의 생성 메시를 다시 만들 때는 `WorldExpansionBuilder.BuildNeonHarbor`만 사용한다. 기존 씬 전체를 재생성할 필요가 없다. 배칭 후 꺼진 원본 렌더러·불필요한 메시를 제거하도록 구현했고, 현재 확장의 미사용 메시 781개(약 75MB)와 메타를 정리했다. 수영 PNG 원본은 RGB이므로 임포터의 RGBA32 지정과 전용 처리 경로를 유지해야 한다. 전체 회귀 대신 `-neon-harbor-smoke` 필수 동작만 확인한다.
 
 ## 추가 적용: 구매 아이템 이미지 8종
 

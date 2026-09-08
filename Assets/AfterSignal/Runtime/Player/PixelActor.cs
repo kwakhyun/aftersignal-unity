@@ -133,6 +133,7 @@ namespace AfterSignal
         public void TickHero(PlayerMotor p, float dt)
         {
             Initialize();
+            if(OceanLife.Swimming){clock+=dt;if(SeoSwimming.Apply(p,visual,clock)){lastFrame=-1;return;}}
             bool illustratedFlip;
             var illustrated = SeoSpriteSet.Pose(p, clock, out illustratedFlip);
             if(!locomotion)locomotion=gameObject.AddComponent<SeoLocomotion>();

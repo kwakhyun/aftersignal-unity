@@ -55,6 +55,7 @@ namespace AfterSignal
             if (IsSpecial) gameObject.AddComponent<CraftDynamics>().Initialize(this);
             else VehicleGround.Settle(this, .02f, true);
             gameObject.AddComponent<VehicleCabin>().Initialize(this);
+            gameObject.AddComponent<VehicleCockpit>();
             foreach (var t in GetComponentsInChildren<Transform>())
                 if (t.name == "Wheel tire" || t.name == "Wheel alloy")
                 {
@@ -80,7 +81,7 @@ namespace AfterSignal
             }
 
             engine = gameObject.AddComponent<AudioSource>();
-            engine.clip = Resources.Load<AudioClip>("Audio/urban_engine_" + type.ToString().ToLowerInvariant());
+            engine.clip = Resources.Load<AudioClip>("Audio/Transport/" + (GetComponent<AuthoredCraft>()?"ship":type.ToString().ToLowerInvariant()));
             if (!engine.clip)
                 engine.clip = Resources.Load<AudioClip>("Audio/urban_engine");
             engine.loop = true;
@@ -92,6 +93,7 @@ namespace AfterSignal
             engine.volume = 0;
             if (engine.clip)
                 engine.Play();
+            gameObject.AddComponent<VehicleSoundscape>().Initialize(this,engine);
             ApplyDamageLook();
             ApplyCustomization();
         }
@@ -105,7 +107,7 @@ namespace AfterSignal
             }
 
             if (IsSpecial) { GetComponent<CraftDynamics>()?.Drive(input, dt); return; }
-            if (type == CityVehicleType.Tank) GetComponent<VehicleArmament>()?.Tick(input, dt);
+            if (type == CityVehicleType.Tank) { DriveTank(input,dt); return; }
             bool braking=input.vertical>0||input.jump||input.guard;
             Steering = Mathf.MoveTowards(Steering, input.move.x, dt * 5);
             float throttle = input.move.y, top = TopSpeed * (input.boost ? 1.32f : 1);
@@ -297,6 +299,7 @@ namespace AfterSignal
 
         void AudioLevel()
         {
+            if(GetComponent<VehicleSoundscape>())return;
             if (!engine)
                 return;
             var g = GameDirector.Instance;

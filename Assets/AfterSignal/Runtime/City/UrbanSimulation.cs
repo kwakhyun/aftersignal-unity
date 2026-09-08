@@ -169,7 +169,9 @@ namespace AfterSignal
 
                 bool armed=Current&&(Current.type==CityVehicleType.Tank||Current.type==CityVehicleType.Fighter||Current.type==CityVehicleType.CombatHelicopter);
                 if(!armed||SeatIndex>0)input.attack=false;
-                input.grapple = input.dash = input.skill = input.reload = false;
+                input.grapple = input.dash = input.skill = false;
+                if(!armed||SeatIndex>0){input.reload=false;input.secondaryFire=false;}
+                var crossing=Current?Current.GetComponent<CrossStraitFerry>():null;if(crossing)Prompt+=" · "+crossing.Status;
             }
             else
             {
@@ -189,6 +191,7 @@ namespace AfterSignal
                 {
                     Prompt = VehicleSeats.Title(nearest.type)+" · E "+(nearest.IsAircraft?"조종석":nearest.IsWatercraft?"선장석":"운전석")+(VehicleSeats.Count(nearest)>1?" / G 조수석·승객석":"");
                     var scheduled=nearest.GetComponent<PassengerRoute>();if(scheduled)Prompt+=" · "+scheduled.Status;
+                    var strait=nearest.GetComponent<CrossStraitFerry>();if(strait)Prompt+=" · "+strait.Status;
                     if(input.passenger&&VehicleSeats.Count(nearest)>1){input.passenger=false;int count=nearest.GetComponent<VehicleCabin>()?nearest.GetComponent<VehicleCabin>().PassengerCount:0;Enter(nearest,Mathf.Clamp(count+1,1,VehicleSeats.Count(nearest)-1));}
                     if (input.interact)
                     {
@@ -203,6 +206,7 @@ namespace AfterSignal
                 input.move = Vector2.zero;
                 input.guard = true;
                 input.attack = input.grapple = input.jump = input.dash = input.skill = false;
+                input.secondaryFire = input.reload = input.vehicleView = false;
             }
 
             spawnClock -= dt;
@@ -330,6 +334,8 @@ namespace AfterSignal
             )
             {
                 var p = Current.IsSpecial?VehicleSeats.Door(Current):Current.transform.position + offset;
+                var ferry=Current.GetComponent<CrossStraitFerry>();
+                if(ferry&&ferry.Boarding)p=NeonHarbor.Region(Current.transform.position)?new Vector3(927.4f,.1f,-2390):new Vector3(1250,.1f,-664);
                 if(VehicleGround.Sample(Current,p,3,8,out var floor))p.y=floor.point.y+.06f;
                 else if(Current.IsWatercraft)p.y=OceanLife.Surface;
                 if (Physics.CheckCapsule(p + Vector3.up * .4f, p + Vector3.up * 1.7f, .34f, 1, QueryTriggerInteraction.Ignore))

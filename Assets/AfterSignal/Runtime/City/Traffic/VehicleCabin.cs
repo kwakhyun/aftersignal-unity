@@ -97,6 +97,7 @@ namespace AfterSignal
                 var r=occupants[i];
                 bool isSeo=seo&&i==UrbanSimulation.Instance.SeatIndex||rider&&i==occupants.Count-1;
                 r.enabled=!car.Wrecked&&(isSeo||(i==0?car.occupied:i<=PassengerCount));
+                if(isSeo&&GameDirector.Instance&&GameDirector.Instance.CameraRig.FirstPersonVehicle)r.enabled=false;
                 string identity=identities[i];
                 var stolen=car.GetComponent<StolenVehicle>();
                 if(i==0&&stolen&&stolen.Driver)

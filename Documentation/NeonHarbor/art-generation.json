@@ -1,0 +1,65 @@
+{
+  "mode": "built-in imagegen",
+  "entries": [
+    {
+      "name": "Pelagic",
+      "prompt": "Unity anime cyberpunk NPC sprite production asset for AFTERSIGNAL. EXACTLY 4 columns x 4 rows grid, 16 full-body separate sprites, transparent background, no text labels, no props outside cell, no grid lines. Each ROW one unique adult character: male marine robotics engineer with teal waterproof jacket and tool harness; female kelp biologist with green field vest and sample pack; older male ferry dispatcher in ivory navy uniform and cap; female salvage diver in orange black drysuit, hood removed. Each row depicts exactly the SAME character in these FOUR views column 1 FRONT toward viewer, column 2 LEFT PROFILE facing screen LEFT, column 3 BACK away from viewer, column 4 RIGHT PROFILE facing screen RIGHT. Neutral relaxed standing ready for game locomotion, arms clear from silhouette. Illustrated anime high quality, slender believable anatomy, modern layered clothing, crisp light shading, detailed faces and boots, subtle cybernetic accessories. All feet same baseline in their row, same human height and same scale in all16cells, generous empty margins, full head to boots. Each person visually distinct, different hair, gender, age, body shape and color palette. No weapons, no shadows, no checkerboard painted. Square2048canvas.",
+      "path": "C:\\Users\\82105\\.codex\\generated_images\\01a07a0d-ee6b-7872-b1e5-a1587b0c4ec4\\exec-a0ffefec-14ab-454d-83a7-0b0bf3047207.png",
+      "type": "npc"
+    },
+    {
+      "name": "NeonTrade",
+      "prompt": "Unity anime cyberpunk NPC sprite production asset for AFTERSIGNAL. EXACTLY 4 columns x 4 rows grid, 16 full-body separate sprites, transparent background, no text labels, no props outside cell, no grid lines. Each ROW one unique adult character: female neon sign artisan in violet work overalls; male street noodle cook with crimson apron; female courier with yellow technical jacket and messenger bag; older male street musician in burgundy coat carrying compact synthesizer. Each row depicts exactly the SAME character in these FOUR views column 1 FRONT toward viewer, column 2 LEFT PROFILE facing screen LEFT, column 3 BACK away from viewer, column 4 RIGHT PROFILE facing screen RIGHT. Neutral relaxed standing ready for game locomotion, arms clear from silhouette. Illustrated anime high quality, slender believable anatomy, modern layered clothing, crisp light shading, detailed faces and boots, subtle cybernetic accessories. All feet same baseline in their row, same human height and same scale in all16cells, generous empty margins, full head to boots. Each person visually distinct, different hair, gender, age, body shape and color palette. No weapons, no shadows, no checkerboard painted. Square2048canvas.",
+      "path": "C:\\Users\\82105\\.codex\\generated_images\\01a07a0d-ee6b-7872-b1e5-a1587b0c4ec4\\exec-6be8e144-a78d-424c-ae6d-630341b3663b.png",
+      "type": "npc"
+    },
+    {
+      "name": "Arcology",
+      "prompt": "Unity anime cyberpunk NPC sprite production asset for AFTERSIGNAL. EXACTLY 4 columns x 4 rows grid, 16 full-body separate sprites, transparent background, no text labels, no props outside cell, no grid lines. Each ROW one unique adult character: female corporate investigator in ivory angular suit; male data archivist in cobalt long coat and glasses; female urban infrastructure architect in teal tailored outfit; male private security officer in silver grey armor helmet held at belt. Each row depicts exactly the SAME character in these FOUR views column 1 FRONT toward viewer, column 2 LEFT PROFILE facing screen LEFT, column 3 BACK away from viewer, column 4 RIGHT PROFILE facing screen RIGHT. Neutral relaxed standing ready for game locomotion, arms clear from silhouette. Illustrated anime high quality, slender believable anatomy, modern layered clothing, crisp light shading, detailed faces and boots, subtle cybernetic accessories. All feet same baseline in their row, same human height and same scale in all16cells, generous empty margins, full head to boots. Each person visually distinct, different hair, gender, age, body shape and color palette. No weapons, no shadows, no checkerboard painted. Square2048canvas.",
+      "path": "C:\\Users\\82105\\.codex\\generated_images\\01a07a0d-ee6b-7872-b1e5-a1587b0c4ec4\\exec-9c129cd5-ae46-48ae-a72f-7f78b5de28f5.png",
+      "type": "npc"
+    },
+    {
+      "name": "CanalLife",
+      "prompt": "Unity anime cyberpunk NPC sprite production asset for AFTERSIGNAL. EXACTLY 4 columns x 4 rows grid, 16 full-body separate sprites, transparent background, no text labels, no external props, no grid lines. Each ROW one distinct adult character: older woman in coral waterproof coat selling ferry tickets; broad male harbor mechanic in charcoal overalls with orange suspenders; female night club singer in cobalt silver jacket and tall boots; young adult male student in mint techwear and headset. Each row SAME character in FOUR directions: column1 FRONT toward viewer, column2 SIDE PROFILE FACE TOWARD LEFT EDGE, column3 BACK away from viewer, column4 SIDE PROFILE FACE TOWARD RIGHT EDGE. The profile columns must be opposite directions. Neutral standing for game locomotion, arms clear from silhouette. High quality illustrated anime, believable diverse anatomy and ages, detailed clothes, layered technical fabrics and subtle cybernetics. Full heads and boots, same scale, feet aligned at baseline, generous empty margins, no shadows, true alpha transparency. Square canvas.",
+      "path": "C:\\Users\\82105\\.codex\\generated_images\\01a07a0d-ee6b-7872-b1e5-a1587b0c4ec4\\exec-93e52adc-01ae-4a2c-ae31-f172918decad.png",
+      "type": "npc"
+    },
+    {
+      "name": "CivicFuture",
+      "prompt": "Unity anime cyberpunk NPC sprite production asset for AFTERSIGNAL. EXACTLY 4 columns x 4 rows grid, 16 full-body separate sprites, transparent background, no text labels, no external props, no grid lines. Each ROW one distinct adult character: female coast guard officer in navy white uniform; male flood barrier technician in yellow helmet and green jacket; older female physician in teal medical coat; male transit inspector in magenta charcoal suit. Each row SAME character in FOUR directions: column1 FRONT toward viewer, column2 SIDE PROFILE FACE TOWARD LEFT EDGE, column3 BACK away from viewer, column4 SIDE PROFILE FACE TOWARD RIGHT EDGE. The profile columns must be opposite directions. Neutral standing for game locomotion, arms clear from silhouette. High quality illustrated anime, believable diverse anatomy and ages, detailed clothes, layered technical fabrics and subtle cybernetics. Full heads and boots, same scale, feet aligned at baseline, generous empty margins, no shadows, true alpha transparency. Square canvas.",
+      "path": "C:\\Users\\82105\\.codex\\generated_images\\01a07a0d-ee6b-7872-b1e5-a1587b0c4ec4\\exec-6521e4ef-ec15-4f8f-887b-2ecac55acca3.png",
+      "type": "npc"
+    },
+    {
+      "name": "SkyWard",
+      "prompt": "Unity anime cyberpunk NPC sprite production asset for AFTERSIGNAL. EXACTLY 4 columns x 4 rows grid, 16 full-body separate sprites, transparent background, no text labels, no external props, no grid lines. Each ROW one distinct adult character: female drone racing pilot in amber grey flight jacket; male sky garden horticulturist in sage vest; female news reporter in red long blazer and compact camera; older male city council member in plum ceremonial coat. Each row SAME character in FOUR directions: column1 FRONT toward viewer, column2 SIDE PROFILE FACE TOWARD LEFT EDGE, column3 BACK away from viewer, column4 SIDE PROFILE FACE TOWARD RIGHT EDGE. The profile columns must be opposite directions. Neutral standing for game locomotion, arms clear from silhouette. High quality illustrated anime, believable diverse anatomy and ages, detailed clothes, layered technical fabrics and subtle cybernetics. Full heads and boots, same scale, feet aligned at baseline, generous empty margins, no shadows, true alpha transparency. Square canvas.",
+      "path": "C:\\Users\\82105\\.codex\\generated_images\\01a07a0d-ee6b-7872-b1e5-a1587b0c4ec4\\exec-2be10788-f38c-4329-b4e4-439120b47229.png",
+      "type": "npc"
+    },
+    {
+      "name": "SwimFront",
+      "prompt": "Production sprite animation sheet for Unity AFTERSIGNAL. Reference is character identity and clothing only. Seoha slim adult anime woman, silver-lilac side bun, black cropped tactical jacket and fitted trousers and boots. NEW water locomotion animation: FRONT THREE-QUARTER view, swimming diagonally toward viewer and screen RIGHT, face visible, torso foreshortened with feet receding. Exactly8 sequential full-body animation frames, 4 columns x2rows, single complete seamless cycle. Natural alternating arm swimming strokes and flutter kicks (or eggbeater when upright), distinct phases and consistent center of torso anchor. Identical proportions and scale allcells, full hands and feet inside cells with margin. Detailed anime rendering, crisp opaque body clothing and hair, TRUE transparent background. No water, no backgrounds, no shadows, no text, no painted checkerboard. Wide landscape sheet. Never standing or running.",
+      "path": "C:\\Users\\82105\\.codex\\generated_images\\01a07a0d-ee6b-7872-b1e5-a1587b0c4ec4\\exec-4dd15d2e-04ec-4746-978b-fbe0ea05d6dc.png",
+      "type": "swim"
+    },
+    {
+      "name": "SwimBack",
+      "prompt": "Production sprite animation sheet for Unity AFTERSIGNAL. Reference is character identity and clothing only. Seoha slim adult anime woman, silver-lilac side bun, black cropped tactical jacket and fitted trousers and boots. NEW water locomotion animation: BACK THREE-QUARTER view swimming diagonally away from viewer toward screen RIGHT, back of head and jacket visible. Exactly8 sequential full-body animation frames, 4 columns x2rows, single complete seamless cycle. Natural alternating arm swimming strokes and flutter kicks (or eggbeater when upright), distinct phases and consistent center of torso anchor. Identical proportions and scale allcells, full hands and feet inside cells with margin. Detailed anime rendering, crisp opaque body clothing and hair, TRUE transparent background. No water, no backgrounds, no shadows, no text, no painted checkerboard. Wide landscape sheet. Never standing or running.",
+      "path": "C:\\Users\\82105\\.codex\\generated_images\\01a07a0d-ee6b-7872-b1e5-a1587b0c4ec4\\exec-44633c60-d0bc-4bfc-bf9d-f9b3b000086a.png",
+      "type": "swim"
+    },
+    {
+      "name": "Tread",
+      "prompt": "Production sprite animation sheet for Unity AFTERSIGNAL. Reference is character identity and clothing only. Seoha slim adult anime woman, silver-lilac side bun, black cropped tactical jacket and fitted trousers and boots. NEW water locomotion animation: FRONT view, treading water upright with bent knees below torso, shoulders above imaginary waterline, hands sweep out and inward at chest and hip level, alternating eggbeater kick. Exactly8 sequential full-body animation frames, 4 columns x2rows, single complete seamless cycle. Natural alternating arm swimming strokes and flutter kicks (or eggbeater when upright), distinct phases and consistent center of torso anchor. Identical proportions and scale allcells, full hands and feet inside cells with margin. Detailed anime rendering, crisp opaque body clothing and hair, TRUE transparent background. No water, no backgrounds, no shadows, no text, no painted checkerboard. Wide landscape sheet. Never standing or running.",
+      "path": "C:\\Users\\82105\\.codex\\generated_images\\01a07a0d-ee6b-7872-b1e5-a1587b0c4ec4\\exec-effee42d-cfce-4222-9b00-af9f83ab5f8b.png",
+      "type": "swim"
+    },
+    {
+      "name": "SwimRight",
+      "prompt": "Production sprite animation sheet for Unity game AFTERSIGNAL. Reference images identify Seoha exactly: slim adult silver-lilac side-bun hair, black cropped asymmetrical tactical jacket, black fitted trousers and boots, cyan wrist detail, anime illustrated finish. NEW SWIMMING animation, no running, no weapons. Exactly 8 evenly spaced full-body frames in a 4 columns by 2 rows grid, reading order left-right top-bottom. All frames true side view, head toward RIGHT, body HORIZONTAL, alternating crawl strokes and flutter kicks through one complete continuous swimming cycle: reach, catch, pull, recover of opposite arms, subtle body roll. Head and torso centered same anchor within each cell, identical proportions and scale. Space around hands and feet, no clipping, entire figure in each cell. Clean detailed anime game sprite shading, opaque clothing and hair, precise transparent-background edges. Transparent background, no checkerboard painted, no water, no shadows, no text, no borders. Wide landscape canvas, each cell wide enough for horizontal swimmer. Reference sheet is style only, replace poses with swimming.",
+      "path": "C:\\Users\\82105\\.codex\\generated_images\\01a07a0d-ee6b-7872-b1e5-a1587b0c4ec4\\exec-3de85fda-fb3b-4f15-ba33-bcb0450a735b.png",
+      "type": "swim"
+    }
+  ]
+}

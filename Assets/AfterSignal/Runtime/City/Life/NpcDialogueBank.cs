@@ -23,6 +23,7 @@ namespace AfterSignal
             {
                 string site=role.Contains("Aircrew")||role.Contains("Travellers")?"airport":role.Contains("Harbour")?"harbour":role.Contains("Coast")?"coast":role.Contains("NightMarket")?"market":role.Contains("Utilities")?"transit":LifeState.Hour>=20||LifeState.Hour<6?"night":"day";
                 key="ambient."+site;
+                if(npc&&NeonHarbor.Region(npc.transform.position))key="ambient.nova";
             }
             if(!bank.TryGetValue(key,out var choices)&&!bank.TryGetValue(eventName+".general",out choices)&&!bank.TryGetValue("ambient.day",out choices))return "...";
             string memory=(npc?npc.identity:"world")+":"+key;int next=Random.Range(0,choices.Length);

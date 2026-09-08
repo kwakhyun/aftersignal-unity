@@ -6,7 +6,7 @@ namespace AfterSignal.Editor
     {
         void OnPreprocessTexture()
         {
-            if(assetPath.Contains("/SeoMotion/")||assetPath.Contains("/NpcDirections/"))return;
+            if(assetPath.Contains("/SeoMotion/")||assetPath.Contains("/NpcDirections/")||assetPath.Contains("/SeoSwimming/")||assetPath.Contains("/FacilityCitizens/"))return;
             if(!assetPath.Contains("/Resources/Art/"))return;
             if(assetPath.Contains("/LawEnforcement/")||assetPath.Contains("/Gangs/")||assetPath.Contains("/SeoIllustrated/")||assetPath.Contains("/Portraits/"))return;
             var importer=(TextureImporter)assetImporter;

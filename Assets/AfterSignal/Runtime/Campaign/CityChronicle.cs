@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 namespace AfterSignal
 {
-    [Serializable] public sealed class StoryStep { public int site; public string kind,person,label,line; }
+    [Serializable] public sealed class StoryStep { public int site; public string kind,person,label,line; public bool world;public Vector3 position; }
     [Serializable] public sealed class StoryQuest { public string id,title,arc,after,summary; public bool main;public int unlockAt,reward;public StoryStep[] steps; }
     [Serializable] public sealed class StoryCatalog { public StoryQuest[] quests; }
     [Serializable] public sealed class StoryEntry { public string id; public int step,choice;public bool accepted,rewarded; }
@@ -34,6 +34,7 @@ namespace AfterSignal
             foreach(var q in Quests){var e=Entry(q);e.step=Mathf.Clamp(e.step,0,q.steps.Length);}
             Entry(Quests[0]).accepted=true;
             if(Tracked==null)Progress.tracked=Quests[0].id;
+            if(Tracked!=null&&Done(Tracked)&&Tracked.main){var continuation=Quests.FirstOrDefault(q=>q.main&&q.after==Tracked.id&&!Done(q));if(continuation!=null){Entry(continuation).accepted=true;Progress.tracked=continuation.id;}}
         }
         public void Track(StoryQuest q){if(!Available(q)||Done(q))return;Entry(q).accepted=true;Progress.tracked=q.id;Save();Refresh();}
         public void ResetProgress(){Progress=new StorySave();Entry(Quests[0]).accepted=true;Save();Refresh();}
@@ -41,10 +42,11 @@ namespace AfterSignal
         public void Refresh(){if(marker)Destroy(marker);marker=null;markerKey=null;scanning=false;combatStarted=false;foreach(var g in guards)if(g)Destroy(g.gameObject);guards.Clear();}
         bool AtSite(StoryStep step)
         {
+            if(step.world)return game.stage==StageId.UrbanCity;
             if(game.stage==StageId.UrbanInterior)return ResidentialWorld.VisitHome<0&&UrbanCatalog.Current==step.site;
             return game.stage==StageId.Residence&&step.site==0||game.stage==StageId.School&&step.site==5||game.stage==StageId.Clinic&&step.site==4||game.stage==StageId.Headquarters&&step.site==14;
         }
-        Vector3 LocalTarget()=>game.stage==StageId.Residence?new Vector3(18,22.1f,-5):new Vector3(18,.1f,-3);
+        Vector3 LocalTarget()=>CurrentStep!=null&&CurrentStep.world?CurrentStep.position:game.stage==StageId.Residence?new Vector3(18,22.1f,-5):new Vector3(18,.1f,-3);
         void Update()
         {
             if(!game||!game.Ready)return;
@@ -84,6 +86,14 @@ namespace AfterSignal
         static string WitnessArt(string name)
         {
             if(string.IsNullOrEmpty(name))return "OfficeWoman";
+            if(name.Contains("유라"))return FacilityPeople.Key(26);
+            if(name.Contains("리안"))return FacilityPeople.Key(28);
+            if(name.Contains("해린"))return FacilityPeople.Key(42);
+            if(name.Contains("도윤"))return FacilityPeople.Key(27);
+            if(name.Contains("세린"))return FacilityPeople.Key(32);
+            if(name.Contains("수호"))return FacilityPeople.Key(47);
+            if(name.Contains("나리"))return FacilityPeople.Key(44);
+            if(name.Contains("미루"))return FacilityPeople.Key(25);
             if(name.Contains("한결"))return "Doctor";
             if(name.Contains("다은")||name.Contains("유진"))return "Nurse";
             if(name.Contains("민재")||name.Contains("태오"))return "Worker";
@@ -106,7 +116,7 @@ namespace AfterSignal
             if(CurrentStep.kind=="combat")
             {
                 if(combatStarted)return;combatStarted=true;
-                for(int i=0;i<3;i++){var g=GangMember.Create(new Vector3(26+i*3,.1f,3),i,0);guards.Add(g);g.OnHit(Vector3.zero,true);NpcSpeech.Say(g,"그 기록은 두고 가!");}
+                for(int i=0;i<3;i++){var at=CurrentStep.world?LocalTarget()+new Vector3(-5+i*5,0,6):new Vector3(26+i*3,.1f,3);var g=GangMember.Create(at,i,0);guards.Add(g);g.OnHit(Vector3.zero,true);NpcSpeech.Say(g,"그 기록은 두고 가!");}
                 game.Toast("증거 방어 · 갱단 3명을 제압하세요",5);return;
             }
             ReadCurrent();
@@ -140,7 +150,7 @@ namespace AfterSignal
         {
             target=Vector3.zero;label="";var step=CurrentStep;if(step==null)return false;
             label=(Tracked.main?"메인":"서브")+" · "+Tracked.title+" · "+step.label+" [J]";
-            if(game.stage==StageId.UrbanCity){target=UrbanCatalog.Door(step.site)+Vector3.up;return true;}
+            if(game.stage==StageId.UrbanCity){target=step.world?step.position+Vector3.up:UrbanCatalog.Door(step.site)+Vector3.up;if(step.world&&NeonHarbor.Region(target)!=NeonHarbor.Region(game.Player.transform.position))label+=" · 여객선/항공기로 해협 횡단";return true;}
             if(AtSite(step)){target=LocalTarget()+Vector3.up;return true;}
             if(CivicWorld.Interior(game.stage))
             {

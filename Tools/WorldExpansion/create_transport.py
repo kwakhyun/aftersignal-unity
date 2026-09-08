@@ -190,9 +190,25 @@ def boat():
     rod('Radar mast',(4,0,3.95),(4,0,5.2),.07,alloy);box('Marine radar',(4,0,5.2),(.5,1.65,.16),alloy)
     export('Boat')
 def helicopter():
-    clear();ellipsoid('Armored fuselage',(0,0,1.8),(3.65,1.03,1.3),paint)
+    clear();body=ellipsoid('Armored fuselage',(0,0,1.8),(3.65,1.03,1.3),paint)
+    # Real cockpit opening, not a transparent canopy laid over an opaque nose.
+    bm=bmesh.new();bm.from_mesh(body.data)
+    opening=[f for f in bm.faces if (body.matrix_world@f.calc_center_median()).x>1.65 and (body.matrix_world@f.calc_center_median()).z>1.5]
+    bmesh.ops.delete(bm,geom=opening,context='FACES');bm.to_mesh(body.data);bm.free()
     ellipsoid('Cockpit glass',(2.65,0,2.03),(1.46,.93,1.04),glass)
     rod('Cockpit divider',(3.8,0,1.5),(2.56,0,3.02),.055,black)
+    seats(1,2.35,1,1.22,.48)
+    box('Instrument glareshield',(3.38,0,1.7),(.5,1.5,.16),black,.04)
+    for s in [-1,1]:
+        box('Cockpit display',(3.34,s*.39,1.8),(.08,.42,.27),glass,.015)
+        rod('Control cyclic',(2.4,s*.48,1.32),(2.55,s*.48,1.81),.025,black)
+        ellipsoid('Turboshaft engine nacelle',(-.9,s*.76,2.96),(1.58,.4,.47),paint)
+        rod('Turbine exhaust',(-2.4,s*.76,2.95),(-2.68,s*.76,2.97),.26,black)
+        for j in range(9):box('Engine intake grille',(.35,s*.76,2.85+j*.034),(.045,.59,.016),alloy,.002)
+        for j in range(6):box('Armored door rivet',(-1+j*.36,s*1.028,1.12),(.033,.022,.033),alloy,.004)
+    ellipsoid('Electro optical chin turret',(3.12,0,.95),(.45,.43,.36),black)
+    rod('Chin autocannon',(3.25,0,.93),(4.6,0,.93),.085,black)
+    for j in range(4):rod('Cannon barrel rib',(3.4,-.055+j*.035,.9),(4.55,-.055+j*.035,.9),.012,alloy)
     rod('Tail boom',(-2.5,0,1.85),(-7.2,0,2.65),.28,paint)
     wing('Tail fin',[(-6.3,0,2.5),(-7.2,0,4.0),(-7.8,0,4),(-7.6,0,2.4)],.13,paint)
     for s in [-1,1]:
@@ -202,13 +218,19 @@ def helicopter():
         wing('Weapon stub wing',[(.2,s*.8,1.35),(-.8,s*2.8,1.4),(-2,s*2.8,1.4),(-2,s*.8,1.35)],.15,paint)
         for j in range(3):rod('Rocket tube',(-1.7,s*(1.6+j*.32),1.08),(.9,s*(1.6+j*.32),1.08),.14,alloy)
     main=pivot('Main rotor',(0,0,3.52));parent(rod('Rotor shaft',(0,0,2.8),(0,0,3.6),.13,alloy),main)
+    parent(ellipsoid('Rotor hub',(0,0,3.6),(.42,.42,.18),alloy),main)
     for i in range(4):
         a=i*math.pi/2;c,s=math.cos(a),math.sin(a)
         points=[(.3,-.1,3.57),(6.8,-.35,3.57),(6.7,.12,3.57),(.3,.13,3.57)]
         parent(wing('Rotor blade',[(x*c-y*s,x*s+y*c,z) for x,y,z in points],.045,black),main)
+        parent(rod('Pitch link',(.2*c,.2*s,3.26),(.72*c,.72*s,3.58),.029,alloy),main)
+        parent(wing('Blade tip marker',[(x*c-y*s,x*s+y*c,z+.006) for x,y,z in [(6.25,-.3,3.57),(6.8,-.35,3.57),(6.7,.12,3.57),(6.25,.12,3.57)]],.014,lamp),main)
     tail=pivot('Tail rotor',(-7.2,-.3,2.8))
     for i in range(4):
-        a=i*math.pi/2;parent(rod('Tail rotor blade',(-7.2,-.4,2.8),(-7.2+math.cos(a)*1.1,-.4,2.8+math.sin(a)*1.1),.045,black),tail)
+        a=i*math.pi/2;c,s=math.cos(a),math.sin(a)
+        points=[(-7.2+x*c-z*s,-.4,2.8+x*s+z*c) for x,z in [(.12,-.06),(1.12,-.12),(1.14,.09),(.12,.05)]]
+        parent(mesh('Tail rotor airfoil',points,[(0,1,2,3)],black),tail)
+    parent(rod('Tail hub',(-7.2,-.7,2.8),(-7.2,0,2.8),.12,alloy),tail)
     export('CombatHelicopter')
 def tank():
     clear();box('Armored hull',(0,0,1.03),(7.4,3.35,1.35),paint,.25)
@@ -220,12 +242,23 @@ def tank():
             o=box('Track shoe',(x,s*1.68,z),(.22,.62,.13),black,.012);o.rotation_euler.y=-math.atan2(.55*math.cos(t),-3.36*math.sin(t))
         box('Side armor skirt',(0,s*1.99,1.34),(7.1,.18,.65),paint,.055)
     turret=pivot('Turret assembly',(-.4,0,1.85));parent(ellipsoid('Turret armor',(-.4,0,1.98),(2,1.3,.67),paint),turret)
-    parent(rod('Main cannon',(1,0,2.12),(6.5,0,2.12),.16,alloy),turret)
-    parent(box('Muzzle brake',(6.3,0,2.12),(.5,.38,.35),black),turret)
+    barrel=parent(pivot('Cannon elevation',(1,0,2.12)),turret)
+    parent(rod('Main cannon',(1,0,2.12),(6.5,0,2.12),.16,alloy),barrel)
+    parent(box('Muzzle brake',(6.3,0,2.12),(.5,.38,.35),black),barrel)
+    parent(pivot('Muzzle reference',(6.62,0,2.12)),barrel)
+    for i in range(6):
+        parent(box('Reactive armor cassette',(1.05-i*.56,-1.05,2.32),(.46,.38,.28),paint,.045),turret)
+        parent(box('Reactive armor cassette',(1.05-i*.56,1.05,2.32),(.46,.38,.28),paint,.045),turret)
+    for side in [-1,1]:
+        for i in range(4):parent(rod('Smoke dispenser',(.7-i*.24,side*1.28,2.25),(1-i*.24,side*1.52,2.47),.075,black),turret)
+    parent(box('Periscope glass',(.6,0,2.83),(.18,.44,.15),glass),turret)
     for s in [-1,1]:
         parent(box('Commander hatch',(-.7,s*.6,2.6),(.6,.6,.12),black,.09),turret)
         box('Front headlamp',(3.71,s*1.25,1.15),(.1,.35,.25),lamp)
         box('Rear lamp',(-3.71,s*1.25,1.15),(.1,.3,.15),red)
     rod('Radio antenna',(-1.7,.8,2.4),(-1.7,.8,4.1),.016,black)
     export('Tank')
-for fn in [sports,bike,lambda:aircraft('Airliner'),lambda:aircraft('Fighter',True),boat,helicopter,tank]:fn()
+if __name__=='__main__':
+    import sys
+    funcs=[helicopter,tank] if '--military-only' in sys.argv else [sports,bike,lambda:aircraft('Airliner'),lambda:aircraft('Fighter',True),boat,helicopter,tank]
+    for fn in funcs:fn()

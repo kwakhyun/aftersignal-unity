@@ -122,7 +122,7 @@ namespace AfterSignal.Editor
             var groups=new Dictionary<string,List<CombineInstance>>();var paints=new Dictionary<string,Material>();
             foreach(var f in root.GetComponentsInChildren<MeshFilter>())
             {
-                var r=f.GetComponent<MeshRenderer>();if(!r||!r.enabled||!f.sharedMesh||!f.sharedMesh.isReadable||f.GetComponentInParent<MultiFloorLift>())continue;
+                var r=f.GetComponent<MeshRenderer>();if(!r||!r.enabled||!f.sharedMesh||!f.sharedMesh.isReadable||f.GetComponentInParent<MultiFloorLift>()||f.GetComponentInParent<NeonTransit>()||f.GetComponentInParent<KelpCurrent>())continue;
                 var usable=f.GetComponentInParent<UsableProp>();if(usable&&usable.use==PropUse.Television)continue;
                 Vector3 c=r.bounds.center;string cell=Mathf.FloorToInt(c.x/100)+"_"+Mathf.FloorToInt(c.y/60)+"_"+Mathf.FloorToInt(c.z/100);
                 for(int sub=0;sub<f.sharedMesh.subMeshCount;sub++)

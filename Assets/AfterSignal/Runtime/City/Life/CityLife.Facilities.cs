@@ -8,6 +8,12 @@ namespace AfterSignal
             Panel("service",string.IsNullOrEmpty(title)?kind.ToString():title,"잔액 "+LifeState.Credits.ToString("N0")+" C · 현장 시설 운영 안내");
             void Job(string label,string id,int reward,float hours){Option(label,()=>{Dismiss();FacilityOperation.Begin(id,reward,hours);});}
             void Buy(string label,int cost,System.Action effect){Option(label,()=>{if(!LifeState.Spend(cost)){Body="잔액이 부족합니다.";Revision++;return;}effect();FacilityServices(kind,title);Body+="\n이용 완료 · "+cost+" C 사용";Revision++;});}
+            if(kind==FacilityFunction.Military||kind==FacilityFunction.Garage)
+            {
+                CityVehicle equipment=null;float near=35;
+                if(UrbanSimulation.Instance)foreach(var c in UrbanSimulation.Instance.Cars)if(c&&!c.Wrecked&&c.GetComponent<VehicleArmament>()){float d=Vector3.Distance(c.transform.position,game.Player.transform.position);if(d<near){near=d;equipment=c;}}
+                if(equipment){var target=equipment;Buy("근처 군용 탈것 탄약 재보급 / 200 C",200,()=>target.GetComponent<VehicleArmament>().Resupply());}
+            }
             switch(kind)
             {
                 case FacilityFunction.Registry:
@@ -34,7 +40,7 @@ namespace AfterSignal
                 case FacilityFunction.Bar:Buy("시그널 칵테일 / 60 C",60,()=>game.Player.RestoreEnergy(90));Job("오픈 준비·재고 관리 / 210 C","bar",210,1);break;
                 case FacilityFunction.Garage:Option("차량 수리·튜닝",Garage);Job("공구·부품 점검 / 240 C","repair",240,1);break;
                 case FacilityFunction.Airport:Job("수하물 보안 검사 / 280 C","airport",280,2);Option("운항 안내",()=>{Body="계류장의 여객기는 E 조종 / G 승객 탑승. NPC 기장이 정차 후 이륙해 도시를 순환합니다.";Revision++;});break;
-                case FacilityFunction.Ferry:Job("선박 안전 점검 / 250 C","harbour",250,1);Option("승선 안내",()=>{Body="부두 끝에서 E 선장석 / G 승객석. NPC 선장은 정박 중 승객을 교체하고 해안을 순환합니다.";Revision++;});break;
+                case FacilityFunction.Ferry:Job("선박 안전 점검 / 250 C","harbour",250,1);Option("승선 안내",()=>{Body="부두 끝에서 E 선장석 / G 승객석. 노바 해협 여객선은 애프터라이트와 노바를 왕복하며 양쪽 여객항에서 40초간 정박합니다. C 조종석 시점, 정박 중 F 하선.";Revision++;});break;
                 case FacilityFunction.Military:Job("통신·보급·무장 점검 / 300 C","military",300,2);Option("방위 장비 보급",()=>Armory());break;
             }
         }

@@ -52,7 +52,7 @@ namespace AfterSignal
                 b.GetComponentInChildren<Text>().fontSize=14;
                 Label(cityMapOverlay.transform,ExpansionWorld.Names[i],55+m.x*790,675-m.y*550,150,20,12,mint);
             }
-            MakeButton(cityMapOverlay.transform,"메인 의뢰 경로",1147,287,264,26,()=>{ExpansionWorld.Selected=-1;selectedSite=-1;});
+            MakeButton(cityMapOverlay.transform,"메인 의뢰 경로",1147,318,264,26,()=>{ExpansionWorld.Selected=-1;selectedSite=-1;});
             for (int i = 0; i < UrbanCatalog.SiteCount; i++)
             {
                 int id = i;
@@ -61,7 +61,7 @@ namespace AfterSignal
                 button.GetComponentInChildren<Text>().fontSize = 12;
                 Rect(button.GetComponentInChildren<Text>().rectTransform, 1, 4, 30, 20);
                 button.GetComponentInChildren<Text>().alignment = TextAnchor.MiddleCenter;
-                var list = MakeButton(cityMapOverlay.transform, $"{i + 1:00}  {UrbanCatalog.Name(i)}", 872 + (i / 20) * 275, 320 + (i % 20) * 18, 264, 18, () => {selectedSite = id;ExpansionWorld.Selected=-1;});
+                var list = MakeButton(cityMapOverlay.transform, $"{i + 1:00}  {UrbanCatalog.Name(i)}", 872 + (i / 20) * 275, 350 + (i % 20) * 16, 264, 16, () => {selectedSite = id;ExpansionWorld.Selected=-1;});
                 list.GetComponentInChildren<Text>().fontSize = 12;
             }
 

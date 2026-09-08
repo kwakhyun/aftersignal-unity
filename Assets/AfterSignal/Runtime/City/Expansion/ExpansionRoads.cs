@@ -3,7 +3,7 @@ namespace AfterSignal
 {
     public static class ExpansionRoads
     {
-        public const float Width=2200,Depth=3300,South=-2200;
+        public const float Width=2200,Depth=5650,South=NeonHarbor.South;
         public static bool Outside(Vector3 p)=>p.x>778||p.z>315||p.z< -315;
         public static Vector2 Map(Vector3 p)=>new Vector2(Mathf.Clamp01(p.x/Width),Mathf.Clamp01((p.z-South)/Depth));
         static Vector3 P(float x,float z)=>new Vector3(x,.035f,z);
@@ -29,7 +29,7 @@ namespace AfterSignal
         static List<Vector3[]> roads;
         public static List<Vector3[]> Roads
         {
-            get{if(roads!=null)return roads;roads=new List<Vector3[]>();foreach(var c in Controls){var r=new List<Vector3>();for(int i=0;i<c.Length-1;i++){var a=c[Mathf.Max(0,i-1)];var b=c[i];var d=c[i+1];var e=c[Mathf.Min(c.Length-1,i+2)];int n=Mathf.CeilToInt(Vector3.Distance(b,d)/10);for(int j=0;j<n;j++){float t=j/(float)n;var q=.5f*((2*b)+(-a+d)*t+(2*a-5*b+4*d-e)*t*t+(-a+3*b-3*d+e)*t*t*t);q.y=.035f;r.Add(q);}}r.Add(c[c.Length-1]);roads.Add(r.ToArray());}return roads;}
+            get{if(roads!=null)return roads;roads=new List<Vector3[]>();foreach(var c in Controls){var r=new List<Vector3>();for(int i=0;i<c.Length-1;i++){var a=c[Mathf.Max(0,i-1)];var b=c[i];var d=c[i+1];var e=c[Mathf.Min(c.Length-1,i+2)];int n=Mathf.CeilToInt(Vector3.Distance(b,d)/10);for(int j=0;j<n;j++){float t=j/(float)n;var q=.5f*((2*b)+(-a+d)*t+(2*a-5*b+4*d-e)*t*t+(-a+3*b-3*d+e)*t*t*t);q.y=.035f;r.Add(q);}}r.Add(c[c.Length-1]);roads.Add(r.ToArray());}roads.AddRange(NeonHarbor.Roads);return roads;}
         }
         public static Vector3 Nearest(Vector3 point,out int road,out int sample)
         {
@@ -53,7 +53,7 @@ namespace AfterSignal
             foreach(var road in Roads)for(int i=1;i<road.Length;i++)Link(road[i-1],road[i]);
             for(int x=0;x<6;x++)for(int z=0;z<5;z++){var a=CityRoadNetwork.Junction(x,z);if(x<5)Link(a,CityRoadNetwork.Junction(x+1,z));if(z<4)Link(a,CityRoadNetwork.Junction(x,z+1));}
             int NearestNode(Vector3 p){int best=0;float d=float.MaxValue;for(int i=0;i<points.Count;i++){float v=(points[i]-p).sqrMagnitude;if(v<d){best=i;d=v;}}return best;}
-            int start=NearestNode(from),end=NearestNode(to);var dist=new float[points.Count];var prev=new int[points.Count];var used=new bool[points.Count];Array.Fill(dist,float.PositiveInfinity);Array.Fill(prev,-1);dist[start]=0;
+            Link(NeonHarbor.OldDock,NeonHarbor.NewDock);Link(NeonHarbor.OldDock,new Vector3(1250,.035f,-666));Link(NeonHarbor.NewDock,new Vector3(920,.035f,-2412));int start=NearestNode(from),end=NearestNode(to);var dist=new float[points.Count];var prev=new int[points.Count];var used=new bool[points.Count];Array.Fill(dist,float.PositiveInfinity);Array.Fill(prev,-1);dist[start]=0;
             for(int step=0;step<points.Count;step++){int k=-1;for(int i=0;i<points.Count;i++)if(!used[i]&&(k<0||dist[i]<dist[k]))k=i;if(k<0||float.IsInfinity(dist[k]))break;if(k==end)break;used[k]=true;foreach(int n in edges[k]){float d=dist[k]+Vector3.Distance(points[k],points[n]);if(d<dist[n]){dist[n]=d;prev[n]=k;}}}
             var result=new List<Vector3>{to};int walk=end;while(walk>=0){result.Add(points[walk]);if(walk==start)break;walk=prev[walk];}result.Add(from);result.Reverse();return result;
         }

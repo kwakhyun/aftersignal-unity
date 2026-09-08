@@ -3,7 +3,8 @@ using UnityEngine;
 
 namespace AfterSignal
 {
-    public sealed class OceanLife : MonoBehaviour
+    [DefaultExecutionOrder(150)]
+    public sealed partial class OceanLife : MonoBehaviour
     {
         public const float Surface=-.95f;
         public static bool Swimming {get;private set;}
@@ -13,19 +14,31 @@ namespace AfterSignal
             float[] xs={0,250,480,780,1050,1250,1450,2200},zs={-510,-545,-610,-655,-590,-580,-565,-565};
             for(int i=1;i<xs.Length;i++)if(x<=xs[i])return Mathf.Lerp(zs[i-1],zs[i],Mathf.InverseLerp(xs[i-1],xs[i],x));return -565;
         }
-        public static bool Contains(Vector3 p)=>p.x>2&&p.x<2198&&p.z<Shore(p.x)-12&&p.z> -2160;
-        public static float Bed(float x,float z)=>-3-Mathf.Min(42,(Shore(x)-z)*.065f)+Mathf.Sin(x*.033f)*Mathf.Sin(z*.022f)*1.5f;
-        readonly List<MarineAnimal> fauna=new List<MarineAnimal>();float next;
+        public static bool Contains(Vector3 p)=>p.x>2&&p.x<2198&&p.z<Shore(p.x)-12&&p.z>NeonHarbor.South+2&&!NeonHarbor.OnIsland(p);
+        public static float Bed(float x,float z)
+        {
+            float shoreDepth=-3-Mathf.Min(42,(Shore(x)-z)*.065f);
+            if(z< -2100)shoreDepth=-38+Mathf.Sin(x*.004f+z*.003f)*7+Mathf.Sin(z*.012f)*2;
+            return shoreDepth+Mathf.Sin(x*.033f)*Mathf.Sin(z*.022f)*1.5f;
+        }
+        readonly List<MarineAnimal> fauna=new List<MarineAnimal>();float next;bool underwaterFog;FogMode landFogMode;
+        void OnEnable()=>UnityEngine.Rendering.RenderPipelineManager.beginCameraRendering+=BeforeWaterCamera;
+        void OnDisable()=>UnityEngine.Rendering.RenderPipelineManager.beginCameraRendering-=BeforeWaterCamera;
+        void BeforeWaterCamera(UnityEngine.Rendering.ScriptableRenderContext context,Camera camera)
+        {if(camera==Camera.main)ApplyWaterCamera();}
         void Start()
         {
             var rng=new System.Random(3721);
-            for(int i=0;i<180;i++)
+            for(int i=0;i<430;i++)
             {
                 float x=150+(float)rng.NextDouble()*1840,z=Shore(x)-65-(float)rng.NextDouble()*310;
+                if(i>=180)z=-1050-(float)rng.NextDouble()*3300;
+                if(!Contains(new Vector3(x,0,z)))continue;
                 float y=Mathf.Lerp(Bed(x,z)+2,-2,(float)rng.NextDouble());
                 var fish=new GameObject(i%23==0?"Reef manta":i%17==0?"Sea turtle":"Reef fish school").AddComponent<MarineAnimal>();
                 fish.transform.SetParent(transform);fish.transform.position=new Vector3(x,y,z);fish.Initialize(i);fauna.Add(fish);
             }
+            InitializeWaterAudio();
         }
         void Update()
         {
@@ -34,32 +47,37 @@ namespace AfterSignal
         }
         public static bool Tick(PlayerMotor player,ControlFrame input,float dt)
         {
-            if(player.Director.stage!=StageId.UrbanCity){Swimming=false;return false;}
+            if(player.Director.stage!=StageId.UrbanCity){ExitWater(player);return false;}
             var at=player.transform.position;
-            if(!Contains(at)||at.y>Surface+.5f){Swimming=false;return false;}
-            Swimming=true;player.Rope.Release();
+            if(!Contains(at)||at.y>Surface+.5f){ExitWater(player);return false;}
+            EnterWater(player);player.Rope.Release();
             var direction=player.Director.CameraRig.MoveDirection(input.move);
             float vertical=input.vertical;
             if(Mathf.Abs(vertical)<.1f)vertical=at.y<Surface-1?0:.15f;
             float speed=input.boost?7:4;
             player.Velocity=Vector3.MoveTowards(player.Velocity,direction*speed+Vector3.up*vertical*3.4f,dt*14);
             player.Controller.Move(player.Velocity*dt);
-            at=player.transform.position;at.y=Mathf.Clamp(at.y,Bed(at.x,at.z)+.25f,Surface+.35f);player.transform.position=at;
-            if(input.jump&&at.y>Surface-.3f){player.Velocity.y=6;player.Controller.Move(Vector3.up*.65f);Swimming=false;}
+            at=player.transform.position;
+            float limit=Mathf.Clamp(at.y,Bed(at.x,at.z)+.5f,Surface-.04f);player.Controller.Move(Vector3.up*(limit-at.y));
+            WaterSurvival(player,input,dt);
             player.GetComponent<PixelActor>().TickHero(player,dt);
             return true;
         }
         void LateUpdate()
+        {var g=GameDirector.Instance;if(!g||!g.Ready||!g.Player)return;ApplyWaterCamera();WaterAudioAndEffects();}
+        void ApplyWaterCamera()
         {
             var g=GameDirector.Instance;if(!g||!g.Ready||!Camera.main)return;
-            if(Camera.main.transform.position.y<Surface&&Contains(Camera.main.transform.position))
+            bool deep=Camera.main.transform.position.y<Surface&&Contains(Camera.main.transform.position);SetWaterVeil(deep);
+            if(deep)
             {
-                RenderSettings.fog=true;RenderSettings.fogDensity=.035f;RenderSettings.fogColor=new Color(.025f,.19f,.24f);
+                if(!underwaterFog){landFogMode=RenderSettings.fogMode;underwaterFog=true;}
+                RenderSettings.fog=true;RenderSettings.fogMode=FogMode.ExponentialSquared;RenderSettings.fogDensity=.026f;RenderSettings.fogColor=new Color(.025f,.19f,.24f);
                 Camera.main.clearFlags=CameraClearFlags.SolidColor;Camera.main.backgroundColor=RenderSettings.fogColor;
             }
-            else if(g.stage==StageId.UrbanCity)Camera.main.clearFlags=CameraClearFlags.Skybox;
+            else if(g.stage==StageId.UrbanCity){if(underwaterFog){RenderSettings.fogMode=landFogMode;underwaterFog=false;}Camera.main.clearFlags=CameraClearFlags.Skybox;}
         }
-        void OnDestroy(){Swimming=false;}
+        void OnDestroy(){if(GameDirector.Instance&&GameDirector.Instance.Player)ExitWater(GameDirector.Instance.Player);Swimming=false;Oxygen=90;if(waterVeil)Destroy(waterVeil.gameObject);if(waterVeilMaterial)Destroy(waterVeilMaterial);}
     }
     public sealed class MarineAnimal : MonoBehaviour
     {

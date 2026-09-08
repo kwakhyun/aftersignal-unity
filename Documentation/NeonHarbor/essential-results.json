@@ -1,0 +1,24 @@
+{
+    "completed": true,
+    "population": 3292,
+    "frames": 0,
+    "buildings": 507,
+    "passed": [
+        "Dense second city and additional citizens instantiate",
+        "All 24 new NPC archetypes load four directional sprites",
+        "Four islands have solid ground and central canal remains water",
+        "New roads and bridges participate in the city road network",
+        "All 11 drivable vehicle types use imported engine recordings",
+        "All drivable types enter a vehicle-specific first-person camera",
+        "Tank pivots its tracks while stationary",
+        "Independent articulated turret aims and a cannon projectile damages a distant vehicle",
+        "Helicopter missile consumes ammunition, flies and explodes on target",
+        "Piloted boat crosses the old world boundary without rising or clamping",
+        "Diving has swimming physics, breathing and a dedicated water animation",
+        "Swimming texture preserves the generated alpha mask",
+        "Returning to land restores the standing collision capsule",
+        "Six main chapters and four side quests connect 30 real world objectives",
+        "NPC ferry completes an actual ocean crossing and docks at Nova"
+    ],
+    "errors": []
+}

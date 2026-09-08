@@ -4,17 +4,18 @@ namespace AfterSignal
     public sealed class ExpansionWorld:MonoBehaviour
     {
         public static ExpansionWorld Instance{get;private set;}
-        public static readonly string[] Names={"루멘 해변","블루워터 항만","애프터라이트 국제공항","홍련 야시장","환승역 광장","오로라 전망공원","동부 물류센터","해변 호텔","항만 진료소","동부 변전소","루멘 방위기지","애프터라이트 교도소","해양 여객터미널","도시기억관리청"};
-        public static readonly Vector3[] Places={new Vector3(570,0,-545),new Vector3(1730,0,-475),new Vector3(1730,0,525),new Vector3(980,0,-225),new Vector3(880,0,70),new Vector3(860,0,630),new Vector3(1360,0,-276),new Vector3(1100,0,-421),new Vector3(1910,0,-310),new Vector3(1370,0,-88),new Vector3(420,0,720),new Vector3(1180,0,737),new Vector3(1250,0,-673),new Vector3(1270,0,284)};
+        public static readonly string[] Names={"루멘 해변","블루워터 항만","애프터라이트 국제공항","홍련 야시장","환승역 광장","오로라 전망공원","동부 물류센터","해변 호텔","항만 진료소","동부 변전소","루멘 방위기지","애프터라이트 교도소","해양 여객터미널","도시기억관리청","노바 해협도시"};
+        public static readonly Vector3[] Places={new Vector3(570,0,-545),new Vector3(1730,0,-475),new Vector3(1730,0,525),new Vector3(980,0,-225),new Vector3(880,0,70),new Vector3(860,0,630),new Vector3(1360,0,-276),new Vector3(1100,0,-421),new Vector3(1910,0,-310),new Vector3(1370,0,-88),new Vector3(420,0,720),new Vector3(1180,0,737),new Vector3(1250,0,-673),new Vector3(1270,0,284),new Vector3(920,0,-2460)};
         public static int Selected=-1;
         public static void Install(GameDirector game)
         {
-            if(game.stage!=StageId.UrbanCity)return;game.stageLength=ExpansionRoads.Width;game.halfDepth=2200;
+            if(game.stage!=StageId.UrbanCity)return;game.stageLength=ExpansionRoads.Width;game.halfDepth=-NeonHarbor.South;
             var prefab=Resources.Load<GameObject>("WorldAssets/AfterlightExpansion");var expanded=prefab?Instantiate(prefab):null;
             var addon=Resources.Load<GameObject>("WorldAssets/MobilityDistricts");if(addon)Instantiate(addon,expanded?expanded.transform:null);
             var renewal=Resources.Load<GameObject>("WorldAssets/CivicRenewal");if(renewal)Instantiate(renewal,expanded?expanded.transform:null);
+            var harbor=Resources.Load<GameObject>("WorldAssets/NeonHarbor");if(harbor)Instantiate(harbor,expanded?expanded.transform:null);
             game.gameObject.AddComponent<VehicleFleet>();game.gameObject.AddComponent<OceanLife>();game.gameObject.AddComponent<PrisonSystem>();
-            Camera.main.farClipPlane=3200;
+            Camera.main.farClipPlane=5400;
         }
         public int Population{get;private set;}
         readonly List<FacilityCitizen> people=new List<FacilityCitizen>();float next;
@@ -26,7 +27,7 @@ namespace AfterSignal
                 for(int i=0;i<seed.count;i++)
                 {
                     var go=new GameObject("Citizen / "+seed.title+" / "+i,typeof(SpriteRenderer),typeof(CityNpc),typeof(FacilityCitizen));go.transform.SetParent(seed.transform,false);
-                    int role=(seed.firstRole+i%seed.roleCount)%24;
+                    int role=(seed.firstRole+i%seed.roleCount)%FacilityPeople.Jobs.Length;
                     string art=seed.arts!=null&&seed.arts.Length>0?seed.arts[i%seed.arts.Length]:FacilityPeople.Key(role);
                     string job=seed.jobs!=null&&seed.jobs.Length>0?seed.jobs[i%seed.jobs.Length]:FacilityPeople.Jobs[role];
                     go.transform.position=SpawnPosition(seed,i);

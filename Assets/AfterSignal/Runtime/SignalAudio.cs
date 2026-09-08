@@ -31,6 +31,7 @@ namespace AfterSignal
             SignalMusic.Ensure();
             foreach(var clip in Resources.LoadAll<AudioClip>("Audio/Quality"))Register(clip);
             foreach(var clip in Resources.LoadAll<AudioClip>("Audio/Firearms"))Register(clip);
+            foreach(var clip in Resources.LoadAll<AudioClip>("Audio/Transport"))Register(clip);
             SfxVolume=Mathf.Clamp01(PlayerPrefs.GetFloat("AFTERSIGNAL.Unity.SfxVolume",.9f));
             for(int i=0;i<voices.Length;i++)
             {

@@ -1,0 +1,11 @@
+{
+    "completed": true,
+    "population": 0,
+    "frames": 0,
+    "buildings": 0,
+    "passed": [
+        "Cockpit instruments are rendered in the driver view",
+        "Underwater camera applies its fog and clear colour at render time"
+    ],
+    "errors": []
+}

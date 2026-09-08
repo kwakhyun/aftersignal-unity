@@ -6,13 +6,14 @@ namespace AfterSignal
     {
         CityVehicle car;
         float throttle, verticalSpeed;
-        Transform model, rotor;Quaternion modelRest=Quaternion.identity;
+        Transform model, rotor,tailRotor;Quaternion modelRest=Quaternion.identity;float rotorSpeed;
         public float Throttle => throttle;
         public void Initialize(CityVehicle vehicle)
         {
             car=vehicle;model=transform.Find("Detailed vehicle coachwork");
             if(model)modelRest=model.localRotation;
             foreach(var t in GetComponentsInChildren<Transform>())if(t.name.StartsWith("Main rotor"))rotor=t;
+            foreach(var t in GetComponentsInChildren<Transform>())if(t.name=="Tail rotor")tailRotor=t;
         }
         public void Drive(ControlFrame input,float dt)
         {
@@ -24,6 +25,7 @@ namespace AfterSignal
             if(car.IsWatercraft||helicopter)throttle=input.move.y;
             else throttle=Mathf.Clamp01(throttle+input.move.y*dt*.32f);
             if(car.fuel<=0)throttle=0;
+            car.GetComponent<VehicleSoundscape>()?.SetThrottle(throttle);
             float target=throttle*max;
             if(car.IsWatercraft&&input.vertical>0)target=0;
             car.speed=Mathf.MoveTowards(car.speed,target,dt*(car.IsWatercraft?4:helicopter?12:18));
@@ -56,7 +58,7 @@ namespace AfterSignal
                     if(Mathf.Abs(car.speed)>9)car.Damage(Mathf.Abs(car.speed)*.4f,hit.point);
                     car.speed=0;throttle=0;break;
                 }
-                var p=old+delta;p.x=Mathf.Clamp(p.x,8,2192);p.z=Mathf.Clamp(p.z,-2140,1088);p.y=Mathf.Clamp(p.y,-3,420);transform.position=p;
+                var p=old+delta;p.x=Mathf.Clamp(p.x,8,2192);p.z=Mathf.Clamp(p.z,NeonHarbor.South+10,1088);p.y=Mathf.Clamp(p.y,-3,520);transform.position=p;
                 car.fuel=Mathf.Max(0,car.fuel-(old-p).magnitude*.0018f);
             }
             if(model)model.localRotation=Quaternion.Euler(input.move.x*(car.IsAircraft?-12:2),0,car.IsAircraft?verticalSpeed*.5f:Mathf.Sin(Time.time)*.6f)*modelRest;
@@ -64,8 +66,10 @@ namespace AfterSignal
         }
         void Update()
         {
-            if(!car||car.Wrecked||!car.occupied||GameDirector.Instance.Blocked)return;
-            if(rotor)rotor.Rotate(car.transform.up,Time.deltaTime*1900,Space.World);
+            if(!car||GameDirector.Instance&&GameDirector.Instance.Blocked)return;
+            rotorSpeed=Mathf.MoveTowards(rotorSpeed,!car.Wrecked&&car.occupied&&car.fuel>0?1550:0,Time.deltaTime*320);
+            if(rotor)rotor.Rotate(car.transform.up,Time.deltaTime*rotorSpeed,Space.World);
+            if(tailRotor)tailRotor.Rotate(car.transform.forward,Time.deltaTime*rotorSpeed*2.1f,Space.World);
         }
     }
 }
