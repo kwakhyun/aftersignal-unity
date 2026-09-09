@@ -31,7 +31,7 @@ namespace AfterSignal
             member.home = at;
             member.Body = go.GetComponent<WorldActor>();
             member.Body.gang = true;
-            member.Body.health = 58 + index * 6;
+            member.Body.health = 180 + index%5 * 22;
             member.motor = go.GetComponent<CharacterController>();
             member.motor.height = 2.1f;
             member.motor.center = Vector3.up * 1.05f;
@@ -45,10 +45,11 @@ namespace AfterSignal
             member.weaponBounds = aimSprite ? aimSprite.bounds : member.visual.sprite.bounds;
             member.cooldown = 1.1f + index * .25f;
             PeopleArt.Attach(go,new[]{"GangCrimson","GangViolet","GangChrome"}[crew%3]);
+            NpcPersona.Ensure(member.Body,"GangCrimson",CrewName(crew)+" 무장 조직원");
             return member;
         }
 
-        public static string CrewName(int crew) => crew % 3 == 0 ? "적철단" : crew % 3 == 1 ? "바이올렛 크루" : "녹슨 송곳니";
+        public static string CrewName(int crew) => crew % 3 == 0 ? "혈선 연합" : crew % 3 == 1 ? "유령 회로" : "크롬 신디케이트";
 
         void Update()
         {
@@ -72,7 +73,10 @@ namespace AfterSignal
             if (search <= 0 || Target && !Target.Alive)
             {
                 search = .4f;
-                var next = FactionCombat.NearestOpponent(Body, 44);
+                bool eventAllowed=CampaignUnit||CityEventGate.Enrolled(Body)||!CityEventGate.Busy;
+                var next = eventAllowed?FactionCombat.NearestOpponent(Body, 65):null;
+                if(!next&&eventAllowed&&!CampaignUnit)next=FactionCombat.WoundedVictim(Body,30);
+                if(next&&!CampaignUnit&&!CityEventGate.JoinGang(Body))next=null;
                 bool attackPlayer = CampaignUnit || provoked > 0 && FactionCombat.Visible(Body.Center, game.Player.Shoulder, 32)
                     && (!next || (game.Player.Shoulder - Body.Center).sqrMagnitude < (next.Center - Body.Center).sqrMagnitude);
                 if (next != Target || playerTarget != attackPlayer) aim = 0;
@@ -88,7 +92,7 @@ namespace AfterSignal
             if (hasTarget && hurt <= 0)
             {
                 Vector3 center = playerTarget ? game.Player.Shoulder : Target.Center;
-                bool visible = FactionCombat.Visible(Body.Center, center, 30);
+                bool visible = FactionCombat.Visible(Body.Center, center, 48);
                 if (aim > 0)
                 {
                     aim -= dt;
@@ -97,20 +101,20 @@ namespace AfterSignal
                     {
                         actor.Pose(3, facing);
                         Vector3 muzzle = Body.Center+Vector3.up*.35f+(shotTarget-Body.Center).normalized*.65f;
-                        FactionCombat.Fire(Body, muzzle, shotTarget, 40, CampaignUnit?CampaignWeapon==1?15:8:10, SignalEffects.Red, playerTarget);
-                        game.Audio.PlayGun(CampaignUnit?CampaignWeapon==1?GunshotKind.Shotgun:GunshotKind.Rifle:GunshotKind.GangPistol, muzzle);
+                        FactionCombat.Fire(Body, muzzle, center, 65, Target&&Target.Downed?Mathf.Max(45,Target.health+5):CampaignUnit?CampaignWeapon==1?15:8:10, SignalEffects.Red, playerTarget);
+                        game.Audio.PlayGun(CampaignUnit?CampaignWeapon==1?GunshotKind.Shotgun:GunshotKind.Rifle:GunshotKind.Rifle, muzzle);
                         ShotsFired++;
                         recoil = .2f;
-                        cooldown = CampaignUnit?CampaignWeapon==1?1.5f:.48f:1.5f;
+                        cooldown = CampaignUnit?CampaignWeapon==1?1.5f:.48f:.5f;
                     }
                 }
                 else if (visible && delta.magnitude < 23 && cooldown <= 0)
                 {
-                    aim = .7f;
+                    aim = .34f;
                     shotTarget = center;
                     frame = 3;
                 }
-                else if (delta.magnitude > 16)
+                else if (!visible || delta.magnitude > 16)
                 {
                     motor.Move(path.Direction(transform.position, destination) * dt * 3.2f);
                     frame = 1 + (int)(clock * 8) % 2;

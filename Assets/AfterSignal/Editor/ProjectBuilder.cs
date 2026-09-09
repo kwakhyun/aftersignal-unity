@@ -50,7 +50,8 @@ namespace AfterSignal.Editor
             var args=Environment.GetCommandLineArgs();int outputIndex=Array.IndexOf(args,"-player-output");
             if(outputIndex>=0&&outputIndex+1<args.Length)output=args[outputIndex+1];
             Directory.CreateDirectory(Path.GetDirectoryName(output));
-            var options=new BuildPlayerOptions {scenes=Array.ConvertAll(EditorBuildSettings.scenes,s=>s.path),locationPathName=output,target=BuildTarget.StandaloneWindows64,options=mode|BuildOptions.CleanBuildCache};
+            bool incremental=Array.IndexOf(Environment.GetCommandLineArgs(),"-incremental-player")>=0;
+            var options=new BuildPlayerOptions {scenes=Array.ConvertAll(EditorBuildSettings.scenes,s=>s.path),locationPathName=output,target=BuildTarget.StandaloneWindows64,options=mode|(incremental?BuildOptions.None:BuildOptions.CleanBuildCache)};
             var report=BuildPipeline.BuildPlayer(options);File.WriteAllText("Artifacts/build-result.json",JsonUtility.ToJson(new BuildResult {result=report.summary.result.ToString(),bytes=report.summary.totalSize,errors=report.summary.totalErrors,warnings=report.summary.totalWarnings},true));
             if(report.summary.result!=UnityEditor.Build.Reporting.BuildResult.Succeeded)throw new Exception("Windows build failed: "+report.summary.result);
             File.WriteAllText("Builds/active-player.txt",Path.GetRelativePath(Directory.GetCurrentDirectory(),Path.GetFullPath(output)));

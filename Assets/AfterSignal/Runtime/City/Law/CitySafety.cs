@@ -10,6 +10,12 @@ namespace AfterSignal
         public readonly List<PoliceOfficer> Patrol=new List<PoliceOfficer>();
         public int Reports{get;private set;}public int Dispatches{get;private set;}public int Transports{get;set;}
         GameDirector game;float next;int ambulances;
+        public int ActiveAmbulances=>ambulances;public int RescueReports{get;private set;}public int FieldTreatments{get;set;}
+        public void RequestRescue(WorldActor body){if(body&&body.Alive)RescueReports++;}
+        public static int PlayerReport()
+        {
+            var g=GameDirector.Instance;if(!g||g.Blocked)return 0;int count=0;foreach(var a in WorldActor.All){if(!a||!a.Alive||(a.Center-g.Player.Shoulder).sqrMagnitude>130*130)continue;var m=a.GetComponent<MedicalState>();if(m&&m.NeedsRescue){m.Report();count++;}}g.Toast(count>0?$"119 구조 신고 접수 · 부상자 {count}명, 구급대 출동 요청":"주변에 구조가 필요한 부상자가 없습니다.",5);return count;
+        }
         readonly HashSet<int> reported=new HashSet<int>();
         void Awake(){Instance=this;}
         IEnumerator Start()
@@ -34,33 +40,29 @@ namespace AfterSignal
         {
             // Player reports belong to CrimeObservation; accidents have no suspect.
             if(!suspect||suspect.environmental)return;
-            if(suspect.monster)return; // Giant incursions have delayed military logistics, not instant police reinforcements.
+            if(suspect.monster){SecurityResponse.Request(suspect,true);return;}
             int id=suspect?suspect.GetInstanceID():-1;
             if(reported.Contains(id))return;
-            reported.Add(id);Reports++;
             bool witness=victim&&victim.GetComponent<WorldActor>().Alive;
             foreach(var npc in FindObjectsByType<CityNpc>())
             {
                 if(!npc.gameObject.activeInHierarchy||Vector3.Distance(npc.transform.position,at)>34)continue;
-                var body=npc.GetComponent<WorldActor>();if(body&&!body.Alive)continue;
-                if(npc==victim)NpcSpeech.Say(npc,"도와주세요! 강도예요!",4);
-                else{npc.Panic(at,8);NpcSpeech.Say(npc,witness?"여기서 벗어나요!":"경찰이죠? 강도 사건이에요!",4);witness=true;}
+                var body=npc.GetComponent<WorldActor>();if(!body||!body.Alive||body==suspect||body.gang||body.terrorist||body.military||body.monster)continue;
+                if(body.police){witness=true;NpcSpeech.Say(npc,"무장 용의자 확인. 현장 지원 요청!",4);continue;}
+                if(npc==victim)NpcSpeech.Say(npc,suspect.terrorist?"테러예요! 경찰과 구급대를 보내 주세요!":"도와주세요! 강도예요!",4);
+                else{npc.Panic(at,8);NpcSpeech.Say(npc,witness?"여기서 벗어나요!":suspect.terrorist?"경찰이죠? 무차별 공격이에요! 특수대응팀을 보내 주세요!":"경찰이죠? 강도 사건이에요!",4);witness=true;}
             }
-            if(suspect)StartCoroutine(Respond(at,suspect,witness?3:7));
+            if(!witness)return;
+            reported.Add(id);Reports++;
+            if(suspect)StartCoroutine(Respond(at,suspect,3));
         }
         IEnumerator Respond(Vector3 at,WorldActor suspect,float delay)
         {
             yield return new WaitForSeconds(delay);
             if(!suspect||!suspect.Alive)yield break;
             Dispatches++;
-            foreach(var officer in Patrol)if(officer&&officer.Body.Alive){officer.Dispatch(suspect);NpcSpeech.Say(officer,"신고 접수. 현장으로 이동!",3);}
-            int count=Patrol.FindAll(o=>o&&o.Body.Alive).Count;
-            if(count<2)for(int i=0;i<2;i++)
-            {
-                Vector3 spawn=at+new Vector3(14+i*2,0,-9);
-                if(game.stage==StageId.UrbanCity)spawn=CityRoadNetwork.Sidewalk(spawn);
-                if(CityGangWar.FindGround(spawn,out var safe)){var o=PoliceOfficer.Create(WantedSystem.Instance,safe,2,i);o.Ambient=true;o.Dispatch(suspect);Patrol.Add(o);}
-            }
+            foreach(var officer in Patrol)if(officer&&officer.Body.Alive&&!officer.Body.military){officer.Dispatch(suspect);NpcSpeech.Say(officer,"신고 접수. 현장으로 이동!",3);}
+            SecurityResponse.Request(suspect,false);
         }
         IEnumerator InteriorResponse()
         {
@@ -75,14 +77,21 @@ namespace AfterSignal
         }
         void Update()
         {
-            if(!game||!game.Ready||game.Blocked||Time.time<next)return;next=Time.time+2;
-            if(game.stage!=StageId.UrbanCity||ambulances>=2||!UrbanSimulation.Instance)return;
+            if(!game||!game.Ready||game.Blocked)return;
+            if(UnityEngine.InputSystem.Keyboard.current!=null&&UnityEngine.InputSystem.Keyboard.current.f6Key.wasPressedThisFrame)PlayerReport();
+            if(Time.time<next)return;next=Time.time+1;
+            if(game.stage!=StageId.UrbanCity||!UrbanSimulation.Instance)return;
+            int waiting=0;foreach(var a in WorldActor.All){var m=a?a.GetComponent<MedicalState>():null;if(m&&m.NeedsRescue&&!a.GetComponent<MedicalPending>())waiting++;}
+            int capacity=Mathf.Clamp(waiting+ambulances,2,24);int launched=0;
             foreach(var body in WorldActor.All)
             {
-                if(!body||body.police||body.gang||body.protectedResident||!body.GetComponent<CityNpc>()||body.health>40||body.GetComponent<MedicalPending>())continue;
-                if(Vector3.Distance(body.transform.position,game.Player.transform.position)>220)continue;
-                body.gameObject.AddComponent<MedicalPending>();ambulances++;
-                EmergencyAmbulance.Create(body,()=>ambulances--);break;
+                if(!body||!body.Alive||body.robot||body.monster||body.helicopter||body.GetComponent<MedicalPending>())continue;
+                var injury=body.GetComponent<MedicalState>();if(!injury||!injury.NeedsRescue)continue;
+                if(Vector3.Distance(body.transform.position,game.Player.transform.position)>650)continue;
+                if(!injury.Reported)foreach(var witness in WorldActor.All){if(!witness||witness==body||!witness.Alive||witness.Downed||witness.gang||witness.monster||witness.environmental||witness.helicopter||witness.terrorist)continue;if((witness.Center-body.Center).sqrMagnitude<48*48&&FactionCombat.Visible(witness.Center,body.Center,48)){NpcSpeech.Say(witness,"119죠? 여기 사람이 다쳤어요! 구조대를 보내주세요!",5,9);injury.Report();break;}}
+                if(!injury.Reported||ambulances>=capacity||launched>=4)continue;
+                body.gameObject.AddComponent<MedicalPending>();ambulances++;launched++;
+                EmergencyAmbulance.Create(body,()=>ambulances=Mathf.Max(0,ambulances-1));
             }
         }
         void OnDestroy(){if(Instance==this)Instance=null;}

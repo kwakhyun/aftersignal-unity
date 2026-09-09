@@ -11,7 +11,7 @@ namespace AfterSignal
         AudioSource siren;
         float clock, pathClock;
         Vector3 waypoint;
-        bool retreat;
+        bool retreat;readonly ResponseDrive emergencyRoute=new();
         public static PoliceCar Create(WantedSystem owner, Vector3 point)
         {
             var sim = UrbanSimulation.Instance;
@@ -96,33 +96,7 @@ namespace AfterSignal
                 return;
             }
 
-            pathClock -= dt;
-            var position = transform.position;
-            Vector3 destination = system.LastSeen;
-            float distance = Vector3.Distance(position, destination);
-            if (pathClock <= 0 || Vector3.Distance(position, waypoint) < 5)
-            {
-                pathClock = 2;
-                var junction = CityRoadNetwork.NearestJunction(position);
-                var goal = CityRoadNetwork.NearestJunction(destination);
-                if (Vector3.Distance(new Vector3(position.x, 0, position.z), junction) > 12)
-                    waypoint = junction;
-                else if (Mathf.Abs(goal.x - junction.x) > 10)
-                    waypoint = junction + Vector3.right * Mathf.Sign(goal.x - junction.x) * 140;
-                else if (Mathf.Abs(goal.z - junction.z) > 10)
-                    waypoint = junction + Vector3.forward * Mathf.Sign(goal.z - junction.z) * 140;
-                else
-                    waypoint = goal;
-                waypoint.y = position.y;
-            }
-
-            var delta = waypoint - position;
-            delta.y = 0;
-            float angle = Vector3.SignedAngle(Vehicle.Forward, delta, Vector3.up);
-            var control = ControlFrame.Empty;
-            control.move = new Vector2(Mathf.Clamp(angle / 28, -1, 1), distance < 18 ? 0 : Mathf.Abs(angle) > 70 ? .17f : .55f);
-            control.guard = distance < 18;
-            Vehicle.Drive(control, dt);
+            if(Vehicle.occupied)emergencyRoute.Drive(Vehicle,IncidentCommand.Emergency?IncidentCommand.Position:system.LastSeen,dt,22);
         }
 
         public void Withdraw()

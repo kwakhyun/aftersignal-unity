@@ -1,0 +1,7 @@
+# Injury sprite layers
+
+Generated using the built-in image generation tool. Original: `SourceArt/InjuryLayers.png`. Runtime: `Assets/AfterSignal/Resources/Art/Medical/InjuryLayers.png`. The generated checkerboard is removed by `MedicalArtImporter`; NPC identity is preserved using the original body sprite underneath these layers.
+
+Exact prompt:
+
+Use case: stylized-concept. Asset type: transparent game sprite overlay atlas for a cyberpunk medical injury system. Create ONE square sprite sheet with exactly 4 columns and 2 rows, equal cells, eight isolated overlays centered individually with wide empty gutters. Pixel-art, carefully shaded at 128 pixel game-art detail, neutral lighting. These are overlay layers applied to EXISTING character sprites, so NO person, NO face, NO human silhouette, NO mannequin and NO background. Top row: 1 small red bruise and scuffed black cloth patch, 2 small shoulder blood-stained torn cloth patch, 3 fabric abdomen wound patch with modest red stain, 4 scratched grey armor plate with red scuff. Bottom row: 1 white medical gauze patch with two adhesive strips, 2 white wrapped arm sling isolated (no arm), 3 compact folded emergency thermal blanket silver exterior orange lining, 4 small white limb splint with dark straps (no limb). Non-graphic injuries, no exposed organs, no lettering, no labels, no shadows outside the object, no grid lines, no checkerboard painted in image. Background MUST be truly transparent alpha. Each object contained in its own cell, never overlapping. Clean crisp edges suitable for attaching to sprites.

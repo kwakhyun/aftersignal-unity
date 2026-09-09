@@ -8,11 +8,11 @@ namespace AfterSignal
         public static int Detonations{get;private set;}
         public static void Detonate(Vector3 p,float radius)
         {
-            Detonations++;CitySafety.Shock(p,"explosion");
+            Detonations++;CitySafety.Shock(p,"explosion");CombatVfx.Explosion(p,radius);
             if(PresentationSettings.Effects<=0)return;
             var go=new GameObject("DETONATION / fireball, pressure, smoke");go.transform.position=p;
             var fx=go.AddComponent<ExplosionPresentation>();fx.size=Mathf.Clamp(radius,2,7);
-            fx.flash=go.AddComponent<Light>();fx.flash.type=LightType.Point;fx.flash.color=new Color(1,.55f,.15f);fx.flash.range=radius*12;fx.flash.intensity=180;
+            fx.flash=go.AddComponent<Light>();fx.flash.type=LightType.Point;fx.flash.color=new Color(1,.55f,.15f);fx.flash.range=Mathf.Min(38,radius*7);fx.flash.intensity=14;fx.flash.shadows=LightShadows.None;
             var shader=Shader.Find("AfterSignal/ExplosionVolume");
             if(!fire){fire=new Material(shader);smoke=new Material(shader);smoke.SetFloat("_Smoke",1);}
             fx.Cloud("Primary fireball",false,42,1.1f,radius*1.1f,radius*1.8f,14);
@@ -37,7 +37,7 @@ namespace AfterSignal
             var rend=ps.GetComponent<ParticleSystemRenderer>();rend.sharedMaterial=dark?smoke:fire;rend.sortMode=ParticleSystemSortMode.Distance;
             ps.Emit(count);Destroy(go,life+.5f);
         }
-        void Update(){if(GameDirector.Instance&&GameDirector.Instance.Blocked)return;age+=Time.deltaTime;if(flash)flash.intensity=180*Mathf.Exp(-age*10);
+        void Update(){if(GameDirector.Instance&&GameDirector.Instance.Blocked)return;age+=Time.deltaTime;if(flash)flash.intensity=14*Mathf.Exp(-age*10);
             if(age>nextFire&&age<3.2f){nextFire=age+.4f;Cloud("Secondary fuel ignition",false,6,.65f,size*.42f,1,5);}}
     }
     public static class WreckFragments

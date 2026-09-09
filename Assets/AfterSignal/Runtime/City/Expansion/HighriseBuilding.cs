@@ -34,6 +34,7 @@ namespace AfterSignal
             var collapse=GetComponent<CollapsibleBuilding>();if(collapse&&collapse.Collapsed)return;
             HighriseInterior.Open(this);
         }
+        public void Relocate(Vector3 delta){transform.position+=delta;var b=Bounds;b.center+=delta;Bounds=b;Door+=delta;var collapse=GetComponent<CollapsibleBuilding>();if(collapse){var bounds=collapse.worldBounds;bounds.center+=delta;collapse.worldBounds=bounds;}exterior=GetComponentsInChildren<Renderer>();}
         public void ShowExterior(bool show)
         {
             if(!show)

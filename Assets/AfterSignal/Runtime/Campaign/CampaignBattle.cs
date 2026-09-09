@@ -8,12 +8,11 @@ namespace AfterSignal
         public static bool Active=>current;
         static CampaignBattle current;
         public int Wave {get;private set;}
-        public int Remaining=>enemies.FindAll(a=>a&&a.Alive).Count;
+        public int Remaining=>enemies.FindAll(a=>a&&a.Alive&&!a.Downed).Count;
         public bool Completed {get;private set;}
         public string Objective {get;private set;}
         CityChronicle chronicle;StoryStep step;string quest;int expected;GameDirector game;
         readonly List<WorldActor> enemies=new(),devices=new();readonly List<GameObject> props=new();
-        readonly PursuitPath escortPath=new();
         CityNpc survivor;Vector3 extraction;Text goalLabel,radio;float age,nextWave=4,held,speechUntil,failedUntil,nextPulse;bool finishing;
         public static CampaignBattle Begin(CityChronicle owner,StoryStep step)
         {
@@ -23,6 +22,8 @@ namespace AfterSignal
         void Build()
         {
             transform.position=step.position;extraction=step.position+new Vector3(-24,0,-18);
+            if(CrowdFlow.Place(extraction,expected,out var safeExtraction,20))extraction=safeExtraction;
+            else if(CrowdFlow.Place(step.position,expected,out safeExtraction,25))extraction=safeExtraction;
             var canvas=new GameObject("Combat objective and radio",typeof(Canvas),typeof(CanvasScaler));canvas.transform.SetParent(transform,false);canvas.GetComponent<Canvas>().renderMode=RenderMode.ScreenSpaceOverlay;canvas.GetComponent<Canvas>().sortingOrder=210;
             var scale=canvas.GetComponent<CanvasScaler>();scale.uiScaleMode=CanvasScaler.ScaleMode.ScaleWithScreenSize;scale.referenceResolution=new Vector2(1600,900);
             Text Label(string name,Vector2 min,Vector2 max,int size)
@@ -43,18 +44,21 @@ namespace AfterSignal
             }
             if(step.battleMode=="sabotage")for(int i=0;i<3;i++)
             {
-                var go=new GameObject("N-17 기억 소거 증폭기");go.transform.position=step.position+new Vector3((i-1)*9,0,6);props.Add(go);
+                var desired=step.position+new Vector3((i-1)*9,0,6);if(!CrowdFlow.Place(desired,i,out var support,12))support=extraction+Vector3.right*(i-1)*3;
+                var go=new GameObject("N-17 기억 소거 증폭기");go.transform.position=support;props.Add(go);
                 var body=go.AddComponent<WorldActor>();body.gang=true;body.helicopter=true;body.health=180;devices.Add(body);
                 var box=CommunityWorld.Box(go.transform,"Power housing",Vector3.up,new Vector3(1.5f,2,1.1f),"Metal");
                 CommunityWorld.Box(go.transform,"Exposed coupler",new Vector3(0,1.4f,-.61f),new Vector3(.65f,.5f,.12f),"NeonAzure",false);
             }
             if(step.battleMode=="rescue")
             {
-                var go=new GameObject("구출 대상 / 기억 실험 생존자",typeof(SpriteRenderer),typeof(CityNpc));go.transform.position=step.position+Vector3.right*10;survivor=go.GetComponent<CityNpc>();survivor.fixedQuest=true;survivor.Configure(9800+expected,"구조 대상","실종 주민","저 사람들을 막아 줘요. 같이 빠져나가요!");PeopleArt.Attach(go,"CivilianWoman");props.Add(go);survivor.GetComponent<WorldActor>().health=200;
+                var go=new GameObject("구출 대상 / 기억 실험 생존자",typeof(SpriteRenderer),typeof(CityNpc),typeof(EscortFollower));go.transform.position=CrowdFlow.Place(step.position+Vector3.right*10,expected,out var safeSurvivor,18)?safeSurvivor:extraction;
+                go.GetComponent<SpriteRenderer>().sharedMaterial=Resources.Load<Material>("Materials/PixelActor");survivor=go.GetComponent<CityNpc>();survivor.fixedQuest=true;survivor.Configure(9800+expected,"구조 대상","실종 주민","저 사람들을 막아 줘요. 같이 빠져나가요!");PeopleArt.Attach(go,"CivilianWoman");props.Add(go);survivor.GetComponent<WorldActor>().health=200;
             }
             if(step.battleMode=="boss")
             {
-                var at=step.position+Vector3.forward*38;if(CityGangWar.FindGround(at,out var floor)){var boss=RiftCreature.Create(floor,Mathf.Abs(quest.GetHashCode())%3);boss.Campaign=true;boss.Body.health=5200;enemies.Add(boss.Body);Wave=1;}
+                var at=step.position+Vector3.forward*38;if(!CrowdFlow.Place(at,expected,out var floor,30))floor=extraction;
+                var boss=RiftCreature.Create(floor,Mathf.Abs(quest.GetHashCode()%3));boss.Campaign=true;boss.Body.health=5200;enemies.Add(boss.Body);Wave=1;
             }
             SignalEffects.Ring(extraction+Vector3.up*.13f,SignalEffects.Cyan,4,60);
         }
@@ -65,7 +69,8 @@ namespace AfterSignal
             for(int i=0;i<count;i++)
             {
                 Vector3 at=step.position+new Vector3(Mathf.Cos(i*2.4f+Wave)*27,0,Mathf.Sin(i*2.4f+Wave)*27);
-                if(!CityGangWar.FindGround(at,out var safe)||Physics.CheckCapsule(safe+Vector3.up*.5f,safe+Vector3.up*1.5f,.5f,1,QueryTriggerInteraction.Ignore))continue;
+                if(quest.StartsWith("gang-main-"))at=step.position+(i<4?new Vector3((i-1.5f)*5,.1f,16):new Vector3(i%2==0?-18:18,.1f,5+i%3*5));
+                if(!CrowdFlow.Place(at,i+Wave*11,out var safe,16))continue;
                 var enemy=GangMember.Create(safe,i%3,i);enemy.name=i%3==0?"N-17 기억 회수대 / 돌격병":i%3==1?"N-17 기억 회수대 / 산탄병":"N-17 기억 회수대 / 소총수";enemy.CampaignUnit=true;enemy.CampaignWeapon=i%3==1?1:0;enemy.Body.health=95+expected*18;enemies.Add(enemy.Body);spawned++;
                 if(i==0)NpcSpeech.Say(enemy,"대상을 확보해! 증거를 남기지 마!",3,4);
             }
@@ -81,7 +86,7 @@ namespace AfterSignal
             if(Vector3.Distance(game.Player.transform.position,step.position)>180){Say("노아: 작전 구역을 벗어났어. 현장으로 돌아오면 다시 진입하자.");Destroy(gameObject);return;}
             if(survivor&&!survivor.GetComponent<WorldActor>().Alive){Say("노아: 구조 대상이 쓰러졌다. 진입 지점에서 다시 시도하자.");failedUntil=age+7;survivor=null;}
             if(failedUntil>0){if(age>failedUntil)Destroy(gameObject);return;}
-            int waves=Mathf.Max(1,step.waves);
+            int waves=step.battleMode=="boss"?1:Mathf.Max(1,step.waves);
             if(step.battleMode!="boss"&&Remaining==0&&Wave<waves&&age>=nextWave){if(SpawnWave())nextWave=age+8;else nextWave=age+3;}
             bool defeated=Wave>=waves&&Remaining==0;
             string mode=step.battleMode;
@@ -99,9 +104,11 @@ namespace AfterSignal
                 Objective=$"주민 구출 · 적 {Remaining}명\n생존자에게 다가간 뒤 청록색 집결점까지 천천히 호위";
                 if(defeated&&survivor)
                 {
-                    var p=survivor.transform.position;float distance=Vector3.Distance(p,game.Player.transform.position);
-                    if(distance<16){var goal=game.Player.transform.position;if(Vector3.Distance(goal,extraction)<5)goal=extraction;var next=p+escortPath.Direction(p,goal)*Mathf.Min(dt*3.6f,Vector3.Distance(p,goal));if(CityGangWar.FindGround(next,out var ground)&&(ground-next).sqrMagnitude<.4f)survivor.transform.position=ground;survivor.GetComponent<DirectionalPerson>()?.Face(goal,.3f);}
-                    defeated=Vector3.Distance(survivor.transform.position,extraction)<4;
+                    var body=survivor.GetComponent<WorldActor>();
+                    if(body.Downed){Objective+="\n부상자에게 접근해 응급 처치";if(Vector3.Distance(game.Player.transform.position,survivor.transform.position)<3){body.ResetHealth();body.health=200;NpcSpeech.Say(survivor,"고마워요. 이제 움직일 수 있어요!",4,5);}else defeated=false;}
+                    if(!body.Downed)
+                    survivor.GetComponent<EscortFollower>().Tick(game.Player,extraction,dt);
+                    defeated=!body.Downed&&Vector3.Distance(survivor.transform.position,extraction)<4;
                 }
             }
             else if(mode=="escape"){Objective=$"추격대 격파 후 청록색 탈출 지점으로 이동\n남은 적 {Remaining}명 · 탈출 {Vector3.Distance(game.Player.transform.position,extraction):0} m";defeated&=Vector3.Distance(game.Player.transform.position,extraction)<5;}

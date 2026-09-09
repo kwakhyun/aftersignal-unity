@@ -25,7 +25,7 @@ namespace AfterSignal
             if(!actor||controller||actor.helicopter||actor.monster||CivilianImpact.Active(this))return;
             var art=GetComponent<DirectionalPerson>();if(art&&(art.Lying||art.Sitting))return;
             var ped=GetComponent<CityPedestrian>();if(ped&&ped.struck&&ped.velocity.sqrMagnitude>.1f)return;
-            if(Time.time<next)return;next=Time.time+.09f;
+            if(Time.time<next)return;float distance=ActorWorkBudget.DistanceSquared(this);next=Time.time+(distance>160*160?.55f:distance>70*70?.24f:.09f);
             var p=transform.position;
             // A short upward allowance cannot select the next storey or a roof overhead.
             float origin=p.y+.65f;

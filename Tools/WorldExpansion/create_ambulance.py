@@ -1,0 +1,51 @@
+"""Original modular cyberpunk ambulance; Blender source and runtime FBX."""
+import pathlib, math
+import bpy
+R=pathlib.Path(__file__).resolve().parents[2]
+source=(R/'Tools/WorldExpansion/create_security_units.py').read_text(encoding='utf-8')
+exec(compile(source.split("for name,kind in [")[0],str(R/'Tools/WorldExpansion/create_security_units.py'),'exec'))
+OUT=R/'Assets/AfterSignal/Resources/Response';OUT.mkdir(parents=True,exist_ok=True)
+ART=R/'Artifacts/ResponseRenewal/Models';ART.mkdir(parents=True,exist_ok=True)
+clear();root=pivot('AmbulanceRoot',(0,0,0))
+white=mat('MedicalPearl',(.86,.89,.86),.18,.32);teal=mat('MedicalTeal',(.025,.3,.32),.4,.34);orange=mat('MedicalOrange',(1,.21,.025),.15,.36)
+cube('Chassis',(0,0,.7),(7.4,2.5,.55),black,root,bevel=.2)
+cube('Patient cell',(-1.15,0,1.92),(4.8,2.55,2.25),white,root,bevel=.17)
+cube('Sloping hood',(2.85,0,1.1),(1.7,2.45,.45),white,root,rot=(0,-.18,0),bevel=.12)
+cube('Cab roof',(1.65,0,2.55),(2.15,2.5,.21),white,root,bevel=.09)
+cube('Forward glazing',(2.5,0,2.04),(.055,2.22,.8),glass,root,rot=(0,-.26,0),bevel=.012)
+for side in [-1,1]:
+ y=side*1.25
+ cube('Driver door',(1.55,y,1.3),(1.87,.1,.8),white,root)
+ cube('Driver glass',(1.57,y,2.07),(1.62,.05,.71),glass,root,bevel=.02)
+ for x in [.62,2.48]:cube('Cab pillar',(x,y,2.02),(.13,.12,.99),teal,root)
+ cube('Rescue stripe',(-.65,y+side*.04,1.48),(5.7,.03,.32),orange,root,bevel=.012)
+ cube('Lower cladding',(-.6,y+side*.04,.92),(5.9,.07,.24),teal,root)
+ cube('Patient observation window',(-1.75,y+side*.04,2.47),(1.5,.055,.48),glass,root,bevel=.05)
+ cube('Medical plus horizontal',(-.5,y+side*.08,2.3),(.6,.03,.15),teal,root)
+ cube('Medical plus vertical',(-.5,y+side*.08,2.3),(.15,.03,.6),teal,root)
+ cube('Side mirror',(2.28,y+side*.3,2.03),(.45,.21,.33),black,root)
+ cube('Mirror arm',(2.19,y+side*.1,1.91),(.12,.32,.1),steel,root)
+ cube('Rescue running step',(.35,y+side*.12,.58),(4.9,.45,.12),steel,root)
+ for x in [-2.25,2.35]:
+  wheel=pivot('Wheel',(x,side*1.23,.62),root)
+  cyl('Tire',(0,0,0),.61,.32,rubber,wheel,(math.pi/2,0,0),32)
+  cyl('Hub',(0,side*.19,0),.37,.08,steel,wheel,(math.pi/2,0,0),24)
+  for k in range(6):
+   a=k*math.tau/6;cube('Hub spoke',(math.cos(a)*.2,side*.25,math.sin(a)*.2),(.25,.045,.065),white,wheel,rot=(0,-a,0),bevel=.01)
+ for i in range(5):cube('Cooling vent',(-2.95+i*.15,y+side*.04,1.83),(.07,.04,.28),black,root,bevel=.006)
+ cube('Headlamp',(3.73,side*.82,1.22),(.055,.63,.19),white,root,bevel=.025)
+ cube('Amber corner beacon',(3.74,side*1.12,1.48),(.045,.17,.13),orange,root)
+ cube('Rear lamps',(-3.58,side*1.05,1.18),(.06,.17,.52),red,root)
+ door=pivot('RearDoor'+str(side),(-3.57,side*1.21,.87),root)
+ cube('Rear patient door',(0,-side*.59,.98),(.1,1.15,1.87),white,door,bevel=.06)
+ cube('Rear door glass',(-.07,-side*.59,1.45),(.03,.82,.46),glass,door,bevel=.04)
+ cube('Grab handle',(-.12,-side*.93,.76),(.12,.06,.32),steel,door)
+cube('Grille',(3.76,0,1.03),(.04,.9,.25),black,root)
+cube('Front crashbar',(3.79,0,.73),(.23,2.6,.2),teal,root)
+cube('Rear loading step',(-3.8,0,.53),(.45,2.1,.12),steel,root)
+cube('Roof climate control',(-1.58,0,3.15),(1.8,1.5,.26),teal,root,bevel=.1)
+cube('Emergency lightbar',(1.05,0,2.75),(.42,1.9,.18),black,root)
+for side in [-1,1]:cube('Emergency lens',(1.06,side*.59,2.87),(.35,.62,.18),red if side<0 else cyan,root,bevel=.04)
+for x in [-2.4,-.1]:
+ for side in [-1,1]:cube('Scene floodlamp',(x,side*1.28,2.96),(.34,.1,.12),white,root)
+save('Ambulance',root)

@@ -9,6 +9,7 @@ namespace AfterSignal
         MeshRenderer visual;
         MaterialPropertyBlock properties;
         static readonly int Tint = Shader.PropertyToID("_BaseColor");
+        float next;
         void Start()
         {
             var go = GameObject.CreatePrimitive(PrimitiveType.Quad);
@@ -26,6 +27,8 @@ namespace AfterSignal
         {
             if (!shadow)
                 return;
+            if(Time.time<next)return;next=Time.time+.06f;
+            if(ActorWorkBudget.DistanceSquared(this)>75*75){visual.enabled=false;next=Time.time+.3f;return;}
             if (Physics.Raycast(transform.position + Vector3.up * .4f, Vector3.down, out var hit, 16, 1, QueryTriggerInteraction.Ignore))
             {
                 float height = Mathf.Max(0, hit.distance - .4f);

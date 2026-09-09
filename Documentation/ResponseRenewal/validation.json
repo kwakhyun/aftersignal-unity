@@ -1,0 +1,18 @@
+{
+  "completed": true,
+  "uniqueChecks": 46,
+  "unresolved": [],
+  "runs": [
+    "Native",
+    "Followup",
+    "Complete"
+  ],
+  "build": "Builds/ResponseRenewal/AFTERSIGNAL.exe",
+  "scope": "Essential native scenarios; see VALIDATION.md for limits",
+  "shipping": {
+    "result": "Succeeded",
+    "bytes": 2065631534,
+    "errors": 0,
+    "warnings": 85
+  }
+}

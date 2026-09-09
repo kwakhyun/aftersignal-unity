@@ -20,7 +20,8 @@ namespace AfterSignal
         {
             if(fatal){if(State==Reaction.Destroyed)return;Evacuate(true,danger);State=Reaction.Destroyed;return;}
             if(State==Reaction.Evacuated||State==Reaction.Destroyed)return;
-            if(!car.occupied&&(!car.GetComponent<VehicleCabin>()||car.GetComponent<VehicleCabin>().PassengerCount==0)||car.GetComponent<PoliceCar>()||car.GetComponent<TacticalTransport>()||car.GetComponent<MilitaryVehicleAI>()||car.GetComponent<StolenVehicle>()||UrbanSimulation.Instance&&UrbanSimulation.Instance.Current==car)return;
+            if(car.GetComponent<EmergencyAmbulance>())return;
+            if(!car.occupied&&(!car.GetComponent<VehicleCabin>()||car.GetComponent<VehicleCabin>().PassengerCount==0)||car.GetComponent<PoliceCar>()||car.GetComponent<TacticalTransport>()||car.GetComponent<MilitaryVehicleAI>()||car.GetComponent<SeaCombat>()||car.GetComponent<GangConvoy>()||car.GetComponent<StolenVehicle>()||UrbanSimulation.Instance&&UrbanSimulation.Instance.Current==car)return;
             var intercity=car.GetComponent<IntercityService>();if(intercity&&!intercity.Boarding)return;
             CitySafety.Shock(car.transform.position);
             if(car.HealthFraction<.25f||Mathf.Abs(car.speed)<2.5f||!car.traffic||car.route==null||car.route.Length<2)
@@ -40,6 +41,7 @@ namespace AfterSignal
         }
         void Evacuate(bool fallen,Vector3 danger)
         {
+            car.GetComponent<GangConvoy>()?.PrepareEvacuation();
             var cabin=car.GetComponent<VehicleCabin>();
             var service=car.GetComponent<IntercityService>();if(service&&fallen){service.ReleaseAfterCrash();cabin?.SetPassengers(0);}
             var stolen=car.GetComponent<StolenVehicle>();
@@ -56,6 +58,7 @@ namespace AfterSignal
                 var visual=person.GetComponent<SpriteRenderer>();visual.sprite=PeopleArt.Get(role,0);visual.sharedMaterial=Resources.Load<Material>("Materials/PixelActor");
                 var npc=person.AddComponent<CityNpc>();npc.Configure(Mathf.Abs(car.GetInstanceID())+i,"승객",null,"차량 공격에서 탈출한 애프터라이트 시민.");
                 PeopleArt.Attach(person,role);
+                var body=person.GetComponent<WorldActor>();body.police=role.Contains("Police")||role=="Swat";body.military=role=="Soldier";body.gang=role.StartsWith("Gang");npc.occupation=NpcPersona.Job(role);
                 if(!fallen)person.GetComponent<WorldActor>().health=Mathf.Max(20,70-(cabin?cabin.OccupantInjury:0));
                 person.AddComponent<VehicleSurvivor>().Initialize(fallen,danger,car.transform.position);
                 Destroy(person,fallen?90:60);

@@ -69,7 +69,7 @@ namespace AfterSignal
             foreach(var enemy in FindObjectsByType<EnemyBrain>()){Enemies.Add(enemy);enemy.Initialize(this);if(enemy.boss)Boss=enemy;}
             Glass.AddRange(FindObjectsByType<BreakableGlass>());
             gameObject.AddComponent<CityLife>().Initialize(this);
-            gameObject.AddComponent<CityChronicle>();gameObject.AddComponent<CitySocial>();
+            gameObject.AddComponent<CityChronicle>();gameObject.AddComponent<CitySocial>();gameObject.AddComponent<RespawnNetwork>();
             interactions=FindObjectsByType<InteractionPoint>();
             Hud=gameObject.AddComponent<SignalHud>();Hud.Initialize(this);
             bool pacingProbe=System.Array.IndexOf(System.Environment.GetCommandLineArgs(),"-quality-probe")>=0;
@@ -146,7 +146,7 @@ namespace AfterSignal
         public void EnemyDied(EnemyBrain enemy){Kills++;LifeState.Earn(enemy.boss?350:25);Player.Heal(enemy.boss?30:3);if(enemy.boss){Toast("컨덕터 정지 · 기억 코어를 회수하세요",6);ExposeTimer=WaveWarning=0;}else if(Cleared)Toast("구역 확보 · 다음 목표로 이동하세요");}
         public void GlassBroken(){BrokenGlass=true;Toast("유리 격벽 파괴 · 다음 객실로 진입하세요");}
         public void Die(){WantedSystem.Clear("");CrimeObservation.Forget();Dead=true;Player.Rope.Release();Time.timeScale=0;}
-        public void Retry(){Time.timeScale=1;SkipTitle=true;SceneManager.LoadScene(CampaignRules.Scene(stage));}
+        public void Retry(){Time.timeScale=1;SkipTitle=true;Dead=false;CloseDialogue();RespawnNetwork.Respawn(this);}
         public void Restart(){Time.timeScale=1;SkipTitle=false;PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Stage",0);PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Memories",0);ResetExpansion();SceneManager.LoadScene(CampaignRules.Scene(StageId.Station));}
         static void ResetExpansion(){if(CityChronicle.Instance)CityChronicle.Instance.ResetProgress();else PlayerPrefs.DeleteKey(CityChronicle.SaveKey);foreach(string key in new[]{"Chapters","Accepted","Jobs"})PlayerPrefs.DeleteKey("AFTERSIGNAL.Unity.Expansion."+key);}
         public void Travel(StageId next){if(Transition)return;if(next==StageId.Haven){CivicWorld.Travel(this,StageId.Haven,new Vector3(20,.15f,-10));return;}StartCoroutine(TravelRoutine(next));}
@@ -154,7 +154,7 @@ namespace AfterSignal
         {
             Transition=true;Player.Rope.Release();UrbanSimulation.Instance?.SaveCar();LifeState.Save();
             for(float t=0;t<.8f;t+=Time.unscaledDeltaTime){Fade=t/.8f;yield return null;}
-            PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Stage",(int)next);PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Memories",Memories);PlayerPrefs.Save();
+            if(!LifeState.SuppressSave){PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Stage",(int)next);PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Memories",Memories);PlayerPrefs.Save();}
             SceneManager.LoadScene(CampaignRules.Scene(next));
         }
         public void OnAnchor(GrappleAnchor anchor)

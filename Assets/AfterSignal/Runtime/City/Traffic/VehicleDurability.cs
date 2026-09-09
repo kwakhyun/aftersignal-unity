@@ -5,6 +5,7 @@ namespace AfterSignal
     {
         public static float Capacity(CityVehicle car)
         {
+            var naval=car.GetComponent<MaritimeHull>();if(naval)return naval.Faction==SeaFaction.Navy?32000:naval.Faction==SeaFaction.CoastGuard?14000:9000;
             if(car.GetComponent<AuthoredCraft>())return 50000;
             if(car.GetComponent<TacticalTransport>()&&!car.GetComponent<PoliceCar>())return 6500;
             return car.type switch {

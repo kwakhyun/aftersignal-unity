@@ -10,10 +10,10 @@ namespace AfterSignal
         int index;
         float next;
         Vector3 last;
+        public void Invalidate(){route.Clear();next=0;}
         public Vector3 Direction(Vector3 from, Vector3 target)
         {
-            target.y = from.y;
-            if (Time.time >= next && (route.Count == 0 || Vector3.Distance(last, target) > 4 || index >= route.Count))
+                if (Time.time >= next && (route.Count == 0 || Vector3.Distance(last, target) > 4 || index >= route.Count))
             {
                 next = Time.time + 1.5f;
                 last = target;
@@ -32,9 +32,9 @@ namespace AfterSignal
             route.Clear();
             index = 0;
             float y = start.y;
-            if (!Physics.SphereCast(start + Vector3.up, .38f, (target - start).normalized, out _, Vector3.Distance(start, target), 1, QueryTriggerInteraction.Ignore))
+            if (PedestrianGround.Stand(target,start.y,1.05f,out var direct) && !Physics.SphereCast(start + Vector3.up*1.4f, .28f, (direct - start).normalized, out _, Vector3.Distance(start, direct), 1, QueryTriggerInteraction.Ignore))
             {
-                route.Add(target);
+                route.Add(direct);
                 return;
             }
 
@@ -52,6 +52,7 @@ namespace AfterSignal
                 }
             };
             var parent = new Dictionary<Vector2Int, Vector2Int>();
+            var floors = new Dictionary<Vector2Int,float>{{begin,start.y}};
             Vector2Int best = begin;
             float nearest = Vector2Int.Distance(begin, end);
             Vector2Int[] axes =
@@ -59,7 +60,8 @@ namespace AfterSignal
                 Vector2Int.up,
                 Vector2Int.right,
                 Vector2Int.down,
-                Vector2Int.left
+                Vector2Int.left,
+                new Vector2Int(1,1),new Vector2Int(1,-1),new Vector2Int(-1,1),new Vector2Int(-1,-1)
             };
             for (int count = 0; count < 420 && open.Count > 0; count++)
             {
@@ -92,14 +94,15 @@ namespace AfterSignal
                     var cell = current + axis;
                     if (visited.Contains(cell) || Mathf.Abs(cell.x - begin.x) > 35 || Mathf.Abs(cell.y - begin.y) > 35)
                         continue;
-                    Vector3 p = new Vector3(cell.x * 2, y, cell.y * 2), a = new Vector3(current.x * 2, y + 1, current.y * 2);
-                    if (Physics.CheckCapsule(p + Vector3.up * .5f, p + Vector3.up * 1.6f, .38f, 1, QueryTriggerInteraction.Ignore) || Physics.SphereCast(a, .38f, (p + Vector3.up - a).normalized, out _, 2, 1, QueryTriggerInteraction.Ignore) || !Physics.Raycast(p + Vector3.up * .5f, Vector3.down, 1.3f, 1, QueryTriggerInteraction.Ignore))
+                    Vector3 a = new Vector3(current.x*2,floors[current],current.y*2), p = new Vector3(cell.x*2,a.y,cell.y*2);
+                    if (!PedestrianGround.Step(a,Vector3.Lerp(a,p,.5f),out var middle,1.05f)||!PedestrianGround.Step(middle,p,out var surface,1.05f))
                         continue;
-                    float c = cost[current] + 1;
+                    float c = cost[current] + axis.magnitude+Mathf.Abs(surface.y-a.y)*.3f;
                     if (cost.TryGetValue(cell, out float old) && old <= c)
                         continue;
                     cost[cell] = c;
                     parent[cell] = current;
+                    floors[cell]=surface.y;
                     if (!open.Contains(cell))
                         open.Add(cell);
                 }
@@ -108,7 +111,7 @@ namespace AfterSignal
             var cursor = best;
             for (int i = 0; i < 200 && cursor != begin; i++)
             {
-                route.Add(new Vector3(cursor.x * 2, y, cursor.y * 2));
+                route.Add(new Vector3(cursor.x * 2, floors[cursor], cursor.y * 2));
                 if (!parent.TryGetValue(cursor, out cursor))
                     break;
             }

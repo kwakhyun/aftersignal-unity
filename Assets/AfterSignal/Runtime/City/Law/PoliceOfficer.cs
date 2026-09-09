@@ -55,9 +55,10 @@ namespace AfterSignal
             p.actor.Initialize();
             p.silhouette = p.actor.Visual.GetComponent<SpriteRenderer>();
             var aimSprite = System.Array.Find(Resources.LoadAll<Sprite>("Art/" + p.actor.art), s => s.name.EndsWith("-03"));
-            p.weaponBounds = aimSprite.bounds;
+            p.weaponBounds = aimSprite ? aimSprite.bounds : new Bounds(Vector3.zero,Vector3.one);
             p.cooldown = 1.5f + index * .12f;
-            PeopleArt.Attach(go,p.Weapon==PoliceWeapon.Rifle?"Swat":p.Weapon==PoliceWeapon.Shotgun?"PoliceShotgun":"Police");
+            string uniform=(index%3==2?"Legacy":"")+(p.Weapon==PoliceWeapon.Rifle?"Swat":p.Weapon==PoliceWeapon.Shotgun?"PoliceShotgun":"Police");
+            NpcPersona.Ensure(p.Body,uniform,p.Weapon==PoliceWeapon.Rifle?"특수대응팀 대원":"도시 치안대 순경");
             return p;
         }
 
@@ -104,8 +105,10 @@ namespace AfterSignal
             if (search <= 0 || GangTarget && !GangTarget.Alive || playerTarget && WantedSystem.Level == 0)
             {
                 search = .4f;
-                var next = dispatchTarget&&dispatchTarget.Alive?dispatchTarget:FactionCombat.NearestOpponent(Body, 44);
-                bool pursuePlayer = WantedSystem.Level > 0 && (!next || CanSee()
+                var next = IncidentCommand.Monster(Body.Center,450);
+                if(!next)next=FactionCombat.NearestOpponent(Body,90);
+                if(!next&&dispatchTarget&&dispatchTarget.Alive&&!dispatchTarget.Downed)next=dispatchTarget;
+                bool pursuePlayer = !IncidentCommand.Emergency && WantedSystem.Level > 0 && (!next || CanSee()
                     && (game.Player.Shoulder - Body.Center).sqrMagnitude < (next.Center - Body.Center).sqrMagnitude);
                 if (next != GangTarget || pursuePlayer != playerTarget) { aimTime = 0; burst = 0; }
                 GangTarget = next;
@@ -130,7 +133,7 @@ namespace AfterSignal
             Vector3 targetCenter = playerTarget ? game.Player.Shoulder : GangTarget.Center;
             Vector3 delta = targetPosition - transform.position;
             facing = Vector3.Dot(delta, Camera.main ? Camera.main.transform.right : Vector3.right) >= 0 ? 1 : -1;
-            bool visible = playerTarget ? CanSee() : FactionCombat.Visible(Body.Center, targetCenter);
+            bool visible = playerTarget ? CanSee() : FactionCombat.Visible(Body.Center+Vector3.up*.35f, targetCenter,90);
             bool close=playerTarget&&visible&&delta.magnitude<2.2f&&hurt<=0&&!(UrbanSimulation.Instance&&UrbanSimulation.Instance.Current)&&game.Player.Health>0;
             if(close)
             {
@@ -154,7 +157,7 @@ namespace AfterSignal
             }
             else if (burst > 0 && cooldown <= 0)
             {
-                if (visible) Fire();
+                if (visible){shotTarget=targetCenter;Fire();}
                 burst--;
                 recoil = .18f;
                 cooldown = burst > 0 ? .15f : Weapon == PoliceWeapon.Shotgun ? 2.3f : Weapon == PoliceWeapon.Rifle ? 1.7f : 1.35f;
@@ -194,7 +197,7 @@ namespace AfterSignal
             Vector3 start = Body.Center+Vector3.up*.35f+(shotTarget-Body.Center).normalized*.7f;
             var direction = (shotTarget - start).normalized;
             int pellets = Weapon == PoliceWeapon.Shotgun ? 5 : 1;
-            float distance = Weapon == PoliceWeapon.Shotgun ? 15 : 36;
+            float distance = Weapon == PoliceWeapon.Shotgun ? 22 : 100;
             for (int i = 0; i < pellets; i++)
             {
                 Vector3 aim = Quaternion.Euler(0, (i - (pellets - 1) * .5f) * 2.6f, 0) * direction;
@@ -224,6 +227,7 @@ namespace AfterSignal
 
         public void Withdraw()
         {
+            if(Body.Downed||IncidentCommand.Emergency){Ambient=true;return;}
             retreat = true;
             clock = 0;
             var hit = GetComponent<Collider>();

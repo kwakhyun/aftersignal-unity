@@ -1,0 +1,41 @@
+{
+  "date": "2026-09-09",
+  "checkpointCommit": "61e34d8d5640bab1b73c2ee65cacaed8d069229c",
+  "checkpointPushedTo": "origin/main",
+  "newChangesCommitted": false,
+  "activePlayer": "Builds\\CyberConflict\\AFTERSIGNAL.exe",
+  "build": {
+    "result": "Succeeded",
+    "bytes": 2024401166,
+    "errors": 0,
+    "warnings": 52
+  },
+  "buildLog": "Artifacts/CyberConflict/build-social.log",
+  "native": {
+    "completed": true,
+    "passed": [
+      "Three accessible gang compounds fit existing city parcels",
+      "Three linked main-plot gang combat missions",
+      "Four directions by four poses / CyberGang",
+      "Human scale and crop / CyberGang",
+      "Four directions by four poses / CyberPolice",
+      "Human scale and crop / CyberPolice",
+      "Hijacked police driver retains the same identity outside",
+      "Police sedan uses cabin coordinates, not armoured truck coordinates",
+      "NPC-driven vehicle collision damages a soldier outside pedestrian pool",
+      "Wounded soldier stays alive and becomes incapacitated",
+      "Soldier uses military dialogue persona",
+      "Separate articulated police and military robot models",
+      "Military carrier has dedicated rear deployment ramp",
+      "Titan prioritizes its attacker over a closer civilian",
+      "Security response prioritizes monster over nearby gang",
+      "Titan health bar and maximum health are connected",
+      "Two paramedics carry original patient on a stretcher",
+      "Ambulance loads, transports and discharges the same wounded soldier"
+    ],
+    "errors": []
+  },
+  "nativeLog": "Artifacts/CyberConflict/player-social.log",
+  "screenshots": "Artifacts/CyberConflict/Final",
+  "scope": "Essential integration checks only; full campaign playthrough and broad performance benchmarks were not run."
+}

@@ -8,7 +8,7 @@ namespace AfterSignal
     public sealed class CityGangWar : MonoBehaviour
     {
         public static CityGangWar Instance { get; private set; }
-        public const int MaxEncounters = 3;
+        public const int MaxEncounters = 1;
         public int ActiveEncounters { get; private set; }
         public int SiteCount => sites.Count;
         public int TotalSpawned { get; private set; }
@@ -72,6 +72,7 @@ namespace AfterSignal
 
         void SpawnNearby(bool initial)
         {
+            if(CityEventGate.Busy||CampaignBattle.Active)return;
             sites.Sort((a, b) => (a.center - game.Player.transform.position).sqrMagnitude.CompareTo((b.center - game.Player.transform.position).sqrMagnitude));
             foreach (var site in sites)
             {
@@ -93,6 +94,7 @@ namespace AfterSignal
                 if (!initial && OnCamera(positions[i] + Vector3.up)) return false;
             }
             site.root = new GameObject("거리 교전 / " + GangMember.CrewName(site.crew));
+            if(!CityEventGate.Begin(site.root,CityEventKind.Gang)){Destroy(site.root);site.root=null;return false;}
             site.root.transform.SetParent(transform, false);
             site.age = site.resolved = 0;
             for (int i = 0; i < positions.Length; i++)
@@ -106,7 +108,7 @@ namespace AfterSignal
                     body = officer.Body;
                 }
                 body.transform.SetParent(site.root.transform, true);
-                site.units.Add(body);
+                site.units.Add(body);if(body.gang)CityEventGate.Enroll(body);
             }
             TotalSpawned++;
             return true;

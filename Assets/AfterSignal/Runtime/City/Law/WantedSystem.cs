@@ -106,6 +106,7 @@ namespace AfterSignal
         {
             if (!game || !game.Ready || game.Blocked || Level == 0)
                 return;
+            if(IncidentCommand.Emergency){Seen=false;return;}
             float dt = Mathf.Min(.1f, Time.deltaTime);
             incidentClock -= dt;responseAge+=dt;
             Seen = incidentClock > 0;

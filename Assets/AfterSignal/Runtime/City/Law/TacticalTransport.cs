@@ -8,8 +8,10 @@ namespace AfterSignal
         static readonly List<TacticalTransport> all=new();
         public static bool Pending=>all.Exists(t=>t&&t.remaining>0&&t.car&&!t.car.Wrecked);
         public int Deployed{get;private set;}
+        WorldActor incidentTarget;
+        public void AssignIncident(WorldActor target){incidentTarget=target;incidentAssignment=true;}
         readonly ResponseDrive route=new();
-        CityVehicle car;WantedSystem owner;int remaining,rank=4;float elapsed,release;Transform ramp;bool withdrawing,patrol;
+        CityVehicle car;WantedSystem owner;int remaining,rank=4;float elapsed,release;bool withdrawing,patrol,incidentAssignment;
         public static TacticalTransport Create(WantedSystem system,Vector3 at,int count,int rank=4)
         {
             CityVehicle vehicle;
@@ -25,22 +27,10 @@ namespace AfterSignal
         {
             yield return null;
             if(patrol){car.GetComponent<VehicleCabin>()?.SetPassengers(remaining);yield break;}
-            foreach(var renderer in GetComponentsInChildren<MeshRenderer>())if(renderer.name=="Sculpted chassis"||renderer.name.Contains("Cargo")||renderer.name.Contains("roof"))renderer.enabled=false;
-            var root=new GameObject("Tactical armoured body").transform;root.SetParent(transform,false);
-            WorldGeometry.Part(root,"Armoured troop compartment",new Vector3(-1,1.65f,0),new Vector3(5,2.5f,2.65f),"DarkMetal");
-            WorldGeometry.Part(root,"Armoured cab",new Vector3(2.2f,1.65f,0),new Vector3(1.4f,2,2.6f),"DarkMetal");
-            for(int s=-1;s<=1;s+=2)
-            {
-                for(int i=0;i<5;i++){var plate=WorldGeometry.Part(root,"Sloped composite armour",new Vector3(-2.8f+i,.95f,s*1.4f),new Vector3(.9f,1.4f,.17f),"Metal");plate.transform.localRotation=Quaternion.Euler(s*12,0,0);}
-                WorldGeometry.Part(root,"Ballistic side glazing",new Vector3(2.1f,2.1f,s*1.32f),new Vector3(.8f,.45f,.035f),"Glass");
-                WorldGeometry.Part(root,"Side step",new Vector3(.2f,.55f,s*1.6f),new Vector3(5.8f,.13f,.35f),"DarkMetal");
-            }
-            var windshield=WorldGeometry.Part(root,"Armoured windshield",new Vector3(2.95f,2.05f,0),new Vector3(.05f,.55f,2),"Glass");
-            windshield.GetComponent<Renderer>().sharedMaterial=new Material(Resources.Load<Shader>("Shaders/StructuralGlass")){name="Tactical safety glass"};
-            ramp=new GameObject("Rear deployment ramp").transform;ramp.SetParent(root,false);ramp.localPosition=new Vector3(-3.6f,.45f,0);
-            WorldGeometry.Part(ramp,"Rear ramp panel",new Vector3(0,1,0),new Vector3(.17f,2,2.25f),"Metal");
-            gameObject.AddComponent<ResponseLightbar>();
+            SecurityVehicleArt.Install(car,false);
             car.GetComponent<VehicleCabin>()?.SetPassengers(remaining);
+            yield break;
+
         }
         void Update()
         {
@@ -49,17 +39,22 @@ namespace AfterSignal
             if(withdrawing){if(!car.owned)Destroy(gameObject,8);enabled=false;return;}
             if(UrbanSimulation.Instance.Current==car){remaining=0;return;}
             elapsed+=Time.deltaTime;
-            var delta=owner.LastSeen-transform.position;delta.y=0;
+            if(incidentAssignment&&(!incidentTarget||!incidentTarget.Alive||incidentTarget.Downed)&&!IncidentCommand.Emergency){remaining=0;car.speed=0;if(elapsed>100&&ResponseDispatch.Hidden(transform.position))Destroy(gameObject);return;}
+            var goal=IncidentCommand.Emergency?IncidentCommand.Position:incidentTarget&&incidentTarget.Alive?incidentTarget.transform.position:owner.LastSeen;
+            var delta=goal-transform.position;delta.y=0;
             if(delta.magnitude>24&&remaining>0)
-            {route.Drive(car,owner.LastSeen,Mathf.Min(.05f,Time.deltaTime),24);return;}
-            car.speed=0;if(ramp)ramp.localRotation=Quaternion.RotateTowards(ramp.localRotation,Quaternion.Euler(0,0,88),Time.deltaTime*70);
+            {route.Drive(car,goal,Mathf.Min(.05f,Time.deltaTime),24);return;}
+            car.speed=0;GetComponent<SecurityVehicleArt>()?.OpenRear();
             if(remaining<=0||elapsed<2)return;
             release-=Time.deltaTime;if(release>0)return;release=.65f;
             Vector3 door=transform.position-car.Forward*(car.HalfLength+1.7f)+transform.forward*((Deployed%2==0?1:-1)*.65f);
             if(!CityGangWar.FindGround(door,out var ground))return;
-            var officer=PoliceOfficer.Create(owner,ground,rank,Deployed);owner.Officers.Add(officer);NpcSpeech.Say(officer,NpcDialogueBank.Line(null,"deployment"),3);
+            var officer=PoliceOfficer.Create(owner,ground,rank,Deployed);
+            if(incidentTarget){officer.Ambient=true;officer.Dispatch(incidentTarget);CitySafety.Instance?.Patrol.Add(officer);}else owner.Officers.Add(officer);
+            if(Deployed==0&&rank>=4)CombatRobot.Create(ground+transform.forward*2,false);
+            NpcSpeech.Say(officer,NpcDialogueBank.Line(officer.GetComponent<CityNpc>(),"deployment"),3);
             remaining--;Deployed++;car.GetComponent<VehicleCabin>()?.SetPassengers(remaining);
         }
-        public void Withdraw(){remaining=0;withdrawing=true;var lights=GetComponent<ResponseLightbar>();if(lights)lights.enabled=false;}
+        public void Withdraw(){if(incidentTarget||IncidentCommand.Emergency)return;remaining=0;withdrawing=true;var lights=GetComponent<ResponseLightbar>();if(lights)lights.enabled=false;}
     }
 }

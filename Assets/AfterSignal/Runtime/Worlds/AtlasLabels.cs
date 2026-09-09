@@ -13,6 +13,9 @@ namespace AfterSignal
         void Update()
         {
             if(!map||map.mini||Time.unscaledTime<next)return;next=Time.unscaledTime+.12f;count=0;occupied.Clear();
+            if(map.Span<2600)for(int i=0;i<4;i++)Add(RespawnNetwork.Points[i],"✚ "+RespawnNetwork.Names[i],new Color(.45f,1,.75f),14,true);
+            foreach(var incident in CityIncidentBoard.Active)Add(incident.position,"! "+incident.title,incident.color,14,true);
+            if(map.Span<2600){Add(MaritimeWorld.NavalBase,"해군 해협 방위사령부",new Color(.4f,.7f,1));Add(MaritimeWorld.AirBase,"공군 루멘 비행단",new Color(.6f,.82f,1));Add(MaritimeWorld.CoastBase,"해양경찰 구조 경비대",new Color(1,.7f,.35f));}
             if(FourCityAtlasSelection.Venue!=null){var v=FourCityAtlasSelection.Venue;Add(v.position,"◆ "+v.title,new Color(1,.88f,.45f),16,true);}
             if(map.Span>2600){for(int i=0;i<4;i++)Add(FourCityCatalog.Centers[i],FourCityCatalog.CityNames[i],new Color(.7f,.88f,.94f),21,true);}
             else

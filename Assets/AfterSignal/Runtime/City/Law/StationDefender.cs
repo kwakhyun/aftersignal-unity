@@ -9,6 +9,11 @@ namespace AfterSignal
         {
             var g=GameDirector.Instance;if(!active||!g||g.Blocked)return;
             if(!body||!body.Alive){active=false;return;}
+            if(IncidentCommand.Emergency)
+            {
+                restraint=0;fire-=Time.deltaTime;var titan=IncidentCommand.Monster(body.Center,100);
+                if(titan&&fire<=0&&FactionCombat.Visible(body.Center,titan.Center,100)){fire=.6f;FactionCombat.Fire(body,body.Center+Vector3.up*.25f,titan.Center,110,14,SignalEffects.Gold,false);g.Audio.PlayGun(GunshotKind.PolicePistol,body.Center,.7f);}return;
+            }
             if(WantedSystem.Level==0){active=false;if(npc)npc.enabled=true;return;}
             if(npc)npc.enabled=false;
             var direction=g.Player.Shoulder-body.Center;fire-=Time.deltaTime;

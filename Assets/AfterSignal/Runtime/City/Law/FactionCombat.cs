@@ -7,6 +7,7 @@ namespace AfterSignal
     public static class FactionCombat
     {
         static readonly RaycastHit[] hits = new RaycastHit[64];
+        static readonly System.Collections.Generic.List<WorldActor> neighbors=new();
         const int Mask = (1 << 0) | (1 << 8) | (1 << 9);
 
         public static bool Visible(Vector3 from, Vector3 to, float distance = 44)
@@ -17,11 +18,13 @@ namespace AfterSignal
 
         public static WorldActor NearestOpponent(WorldActor self, float range)
         {
+            if(self.police||self.military){var titan=IncidentCommand.Monster(self.Center,Mathf.Max(range,350));if(titan)return titan;}
             WorldActor result = null;
             float closest = range * range;
-            foreach (var other in WorldActor.All)
+            ActorSpatialIndex.Nearby(self.transform.position,range+4,neighbors);
+            foreach (var other in neighbors)
             {
-                if (!other || other==self || !other.Alive || other.helicopter || !(self.monster ? !other.monster : self.police||self.military ? other.gang||other.monster : other.police||other.military||other.monster)) continue;
+                if (!other || other==self || !other.Alive || other.Downed || other.helicopter || self.military&&other.terrorist || !(self.monster ? !other.monster : self.police||self.military ? other.gang||other.monster||other.terrorist : other.police||other.military||other.monster)) continue;
                 float distance = (other.Center - self.Center).sqrMagnitude;
                 if (distance >= closest || !Visible(self.Center, other.Center, range)) continue;
                 closest = distance;
@@ -30,8 +33,16 @@ namespace AfterSignal
             return result;
         }
 
+        public static WorldActor WoundedVictim(WorldActor self,float range)
+        {
+            WorldActor best=null;float nearest=range*range;ActorSpatialIndex.Nearby(self.transform.position,range+4,neighbors);foreach(var a in neighbors){if(!a||a==self||!a.Alive||!a.Downed||a.gang||a.monster||a.robot||a.environmental)continue;float d=(a.Center-self.Center).sqrMagnitude;if(d<nearest&&Visible(self.Center,a.Center,range)){nearest=d;best=a;}}return best;
+        }
+
         public static void Fire(WorldActor source, Vector3 muzzle, Vector3 target, float range, float damage, Color color, bool hostilePlayer, Transform firingMount=null)
         {
+            if(!source||!source.Alive)return;
+            var mounted=firingMount?firingMount.GetComponentInParent<CityVehicle>():source.GetComponentInParent<CityVehicle>();
+            if(mounted&&!mounted.occupied&&!(UrbanSimulation.Instance&&UrbanSimulation.Instance.Current==mounted))return;
             var direction = (target - muzzle).normalized;
             var end = muzzle + direction * range;
             if (!firingMount && Physics.Linecast(source.Center, muzzle, out var wall, 1, QueryTriggerInteraction.Ignore))
@@ -57,7 +68,7 @@ namespace AfterSignal
             if (nearest >= 0)
             {
                 var hit = contacts[nearest];
-                end = hit.point;
+                end = hit.point;CombatVfx.Hit(hit,direction);
                 var victim = hit.collider.GetComponentInParent<WorldActor>();
                 if (victim && victim.Alive && (source.monster ? !victim.monster : source.police||source.military ? !victim.police&&!victim.military : !victim.gang))
                     victim.Damage(damage, direction * 2, source);
@@ -66,7 +77,7 @@ namespace AfterSignal
                 if (hostilePlayer)
                     hit.collider.GetComponentInParent<PlayerMotor>()?.ReceiveDamage(Mathf.RoundToInt(damage), source.transform.position);
             }
-            SignalEffects.Beam(muzzle, end, color, .025f, .09f);
+            CombatVfx.Tracer(muzzle,end,color);
         }
     }
 }

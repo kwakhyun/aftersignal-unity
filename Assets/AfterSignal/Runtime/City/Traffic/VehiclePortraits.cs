@@ -8,12 +8,6 @@ namespace AfterSignal
     {
         static readonly Dictionary<string,Sprite[]> sheets=new();
         static readonly Dictionary<string,Sprite> passengers=new();
-        static readonly string[][] roles={
-            new[]{"CivilianMan","CivilianWoman","OfficeMan","OfficeWoman"},
-            new[]{"Worker","ElderMan","ElderWoman","TeacherMan"},
-            new[]{"TeacherWoman","Doctor","Nurse","Bartender"},
-            new[]{"PatientMan","PatientWoman","Police","Swat"}};
-        static readonly string[] atlases={"CabinCitizens","CabinCommunity","CabinServices","CabinSpecialists"};
         static readonly int[] seoDirections={0,8,1,9,2,10,3,11};
         public static Sprite[] Sheet(string key)
         {
@@ -32,14 +26,7 @@ namespace AfterSignal
         }
         public static Sprite Driver(string role,int direction)
         {
-            if(role=="Worker"||role=="Soldier"||role=="Prisoner"||role.StartsWith("Facility"))return Passenger(role,direction);
-            for(int group=0;group<roles.Length;group++)
-            {
-                int row=Array.IndexOf(roles[group],role);
-                if(row<0)continue;
-                var frames=Sheet(atlases[group]);int n=row*4+Mathf.Clamp(direction,0,3);
-                if(n<frames.Length)return frames[n];
-            }
+            // The driver's face and clothing must come from the same identity as the person who exits.
             return Passenger(role,direction);
         }
         public static Sprite Passenger(string role,int direction)

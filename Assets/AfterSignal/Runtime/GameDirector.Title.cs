@@ -25,7 +25,7 @@ namespace AfterSignal
             if(resume) destination=(StageId)PlayerPrefs.GetInt(StageKey);
             else
             {
-                LifeState.Reset();Memories=0;
+                LifeState.Reset();RespawnNetwork.ResetHome();Memories=0;
                 PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Memories",0);PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Completed",0);
                 ResetExpansion();CivicWorld.ClearArrival();UrbanCatalog.Reset();ResidentialWorld.VisitHome=-1;
                 var args=System.Environment.GetCommandLineArgs();

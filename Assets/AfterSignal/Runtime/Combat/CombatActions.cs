@@ -107,7 +107,7 @@ namespace AfterSignal
             var end = muzzle + direction * Ballistics.Range;
             if (Ballistics.Cast(muzzle, direction, Ballistics.Range, transform, out var hit))
             {
-                end = hit.point;
+                end = hit.point;CombatVfx.Hit(hit,direction);
                 hit.collider.GetComponentInParent<FacadeGlass>()?.Hit(hit.point,damage);
                 var enemy = hit.collider.GetComponentInParent<EnemyBrain>();
                 if (enemy && enemy.Alive)
@@ -134,7 +134,7 @@ namespace AfterSignal
             }
 
             var color = charged ? SignalEffects.Cyan : SignalEffects.Gold;
-            SignalEffects.Beam(muzzle, end, color, charged ? .055f : .028f, .085f);
+            CombatVfx.Tracer(muzzle,end,color);
             SignalEffects.Impact(muzzle, direction, color, charged ? .52f : .32f);
             Director.Audio.PlayGun(GunshotKind.Pistol, muzzle, charged ? 1.12f : 1);
         }

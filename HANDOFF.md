@@ -1,5 +1,69 @@
 # 다음 Codex 작업을 위한 인계 — 2026-09-09
 
+## 최신 작업: 시민 생성 밀집 방지·게임 성능 최적화
+
+활성 실행 대상은 `Builds/CrowdPerformance/AFTERSIGNAL.exe`, `PLAY.cmd`로 실행한다. 이전 미커밋 작업을 보존했으며 이번 요청에는 커밋·푸시가 없어 로컬에 유지한다. 아래 활성 빌드 경로는 과거 기록이다. 상세 구현 및 측정 한계는 `Documentation/CrowdPerformance/README.md` 참고.
+
+ExpansionWorld의 실패한 지면 검색이 시설 원점으로 되돌아가던 스폰을 제거했다. 실패하면 생성을 미루고 재시도한다. PopulationBudget은 프레임당 4명, 보행 생성 간격 1.45m, 주변 보행 밀도 및 180m 내 이동 시민 220명 한도를 적용한다. 가족 구성원도 각각 집계한다. 좌석 관객/선수는 이동 인구 한도와 분리한다. VenueRuntime은 대규모 관객을 여러 프레임에 생성하며 멀리 있는 NPC 루트만 쉰다. 지면/도로/건물 렌더러는 변경하지 않았다.
+
+공항·항구의 TransitTraveller가 반복된 5×4 대기 좌표에 생성되고 한 탑승구에 동시에 모이던 문제도 수정했다. 서비스별 안전한 대기 위치를 찾아 생성하며 공간이 없으면 재시도한다. 한 명씩 탑승구에 접근하고 하차 공간이 막히면 정차 상태에서 재시도한다. CrowdFlow는 이동 경로 끝점 허용 거리 및 생성 예약을 사용하고 방문했던 공간 격자를 계속 누적하지 않는다.
+
+ActorSpatialIndex의 재사용 격자와 리스트로 차량별 전체 WorldActor 배열 복사, 전투 표적 및 일상 대화의 전체 장면 검색을 줄였다. 원거리 NPC 일과/스프라이트/지면 확인/접촉 그림자/차내 이미지 갱신 주기를 조절했다. 긴급 행동은 우회한다. 들리지 않는 차량 엔진 DSP를 일시 정지하며 BGM은 변경하지 않았다. VehicleGround는 비할당 ray 버퍼와 포화 시 fallback을 사용한다.
+
+동일 RTX 4060 Ti, 1600×900 진단 렌더 조건에서 평균 프레임 처리 시간이 시내 36.25→29.83ms, 경기장 주변 36.15→24.41ms로 감소했다. 시내 인물 수는 217→222명. GPU readback을 포함한 진단값이므로 실제 플레이 FPS 보장은 아니다. 수치는 최종 터미널/밀도 보완 전의 통합 빌드에서 측정했고 원본은 `Artifacts/CrowdPerformance/Before`, `After`다. Mono 할당 카운터의 0은 측정 불가로 취급한다.
+
+최종 Windows 빌드 성공(오류 0, 경고 85), native 필수 확인 14항목 통과/오류 0. `Artifacts/CrowdPerformance/SafetyFinal/result.json`과 `build-result.json`을 참고한다. 초기 Safety에서 발견된 밀도 실패를 실제 수정 후 재확인했으며 승객 간격과 실제 탑승도 통과했다. 전체 캠페인/장시간 전투/모든 도시 장기 검증은 수행하지 않았다. 사용자 게임은 종료하지 않았고 진단 저장은 억제했다.
+
+## 최신 작업: 리스폰·사건 직렬화·피해 단계·응급 출동·전투 연출
+
+활성 실행 대상은 `Builds/ResponseRenewal/AFTERSIGNAL.exe`, `PLAY.cmd`로 실행한다. 현재 요청에 커밋·푸시는 없어 이전 두 작업과 함께 로컬에 유지했다. 상세 내용은 `Documentation/ResponseRenewal/README.md`, `VALIDATION.md`, 자료 출처는 `REFERENCES.md`. 마지막 푸시 체크포인트는 여전히 `61e34d8d`다.
+
+`RespawnNetwork`는 기본 사망 복귀를 서하 집으로 변경하고 네 도시의 기존 병원/작전기지 앞에 E로 등록하는 회복 단말을 하나씩 배치한다. 지도에 표시하며 신규 게임은 집으로 초기화한다. `CityEventGate`는 몬스터 예고/출현, 갱단 교전/차량, 테러를 한 슬롯으로 관리한다. 폭탄과 도착 중 차량도 사건을 유지하며 마지막 위협 후 8초 정리 시간을 둔다. 갱단이 전투/범죄를 멈추고 장시간 배회하면 슬롯을 반환한다. 별도 캠페인 적과 사용자가 시작한 전투는 기존 규칙을 유지한다.
+
+`MedicalState`는 받은 피해와 남은 체력을 기준으로 부상/중상/즉사를 구분한다. 중상자는 실제로 맞출 수 있는 낮은 BoxCollider를 가지며 갱단의 확인 사격으로 사망한다. 경상은 현장 처치, 중상은 안정화/2인 들것/병원 이송. 시민 목격/자체 무전/F6 신고로 최대 24대 구급차(초당 최대 4대)를 배정한다. 범위는 외부 도시 장면 및 플레이어 650m이며 나머지는 대기열에 남는다. 전용 Blender 구급차는 `Tools/WorldExpansion/create_ambulance.py`로 생성한다. `MedicalArtImporter`는 생성된 4×2 RGB 체크무늬 원본을 RGBA로 변환해 기존 NPC 외형 위의 상처/치료 레이어로 사용한다. 단순 원본 PNG 재복사는 금지.
+
+경찰은 발포 시 현재 상대를 다시 조준하고 가까운 갱단과 교전한다. LegacyPolice/LegacySwat 외형을 NpcPersona가 덮어쓰던 문제를 수정했다. 경찰/군/갱단 말풍선은 전용 FactionVoice를 거친다. SecurityVehicleArt의 FBX +180Y 보정으로 차체 앞/진행축을 맞춘다. 빈 차량 총좌 발포 차단. 로봇은 6500/12000 체력, 공격자 기억/반격, 인간용 날림 제외, 사망 폭발을 적용한다.
+
+긴급차량은 ResponseDrive와 EmergencyTraffic으로 신호 대기를 건너뛰고 전방 차량에게 양보를 요청하며 우회한다. 바닥을 관통하지 않는 BoxCast, 다른 층 도로 제외, 조기 회피 점수가 핵심이다. 물리 충돌은 유지한다. 구급차는 가벼운 충돌 시 대원을 내리지 않으며 전용 지붕 위 경광등의 발광을 제한했다.
+
+CombatVfx는 발포 가스/연기/탄피/이동 예광탄, 재질별 피격 입자/소리, 폭압 먼지/불붙은 파편/거리별 흔들림/시점 반동을 추가한다. 기존 실제 발포 소리는 보존하고 23개 파생 잔향/자체 합성 효과를 CombatDetail에 추가했다. TitanBarrage는 48m 예고 후 회전 레이저/반복 열 피해/차량 점화/건물 파괴를 사용한다. 품질 설정과 효과 예산을 유지한다.
+
+완료한 필수 native 실행은 초기 39항목, 후속 8항목, 최종 6항목 통과. 초기 네 실패는 수정 후 재확인했고 최종 Complete 결과 오류 0이다. 실제 집 복귀, 경찰 사격, 로봇 반격, 4대 이상 구급차, 부상/이송, 차량 우회, 포탄/레이저 피해를 확인했다. 마지막 경광등 재질만 shipping 빌드에서 컴파일 확인한다. 전체 수동 캠페인/장시간 도시 부하 검사는 하지 않았다. 진단의 첫 실제 복귀 검사는 저장 Stage를 Residence로 남겼을 수 있어, 이후 TravelRoutine에도 SuppressSave 가드를 적용했다. 사용자 게임은 종료하지 않았다.
+
+## 최신 작업: 군중·구출 경로·관람 경기·해상 활동
+
+활성 실행 대상은 `Builds/LivingHarbor/AFTERSIGNAL.exe`, `PLAY.cmd`로 실행한다. 이번 요청에는 커밋·푸시가 없어 직전 CyberConflict 구현과 함께 로컬 작업 트리에 유지했다. 마지막 푸시된 체크포인트는 `61e34d8d`다. 상세 구현/제한/필수 확인은 `Documentation/LivingHarbor/IMPLEMENTATION.md`, `VALIDATION.md`, 이미지 프롬프트는 `ART-PROMPTS.md`에 있다. 아래의 활성 빌드 경로는 과거 기록이다.
+
+CrowdFlow는 장면별 재생성, 공간 격자 분산, 실패한 스폰 생략으로 한 점 집중을 줄인다. PedestrianGround의 턱 윗면 선행 검사와 PursuitPath의 높이 유지가 핵심이며, EscortFollower는 안전한 플레이어 발자국만 복구 지점으로 사용한다. 구출 응급처치와 보스 웨이브 완료 조건을 보완했다. 가족·커플의 대피는 FamilyGroup이 단독으로 이동을 담당해 CityNpc 도주와 충돌하지 않는다. 출퇴근은 인근 보도 목적지 일과이며 모든 NPC에 실내 직장까지 지정한 것은 아니다.
+
+경기장 관람 정원은 180~360명, 지정 좌석/분산 출입을 사용한다. VenueSafety가 난입·부상 시 경기 시간과 배팅 정산을 멈추고 안전 확보 후 재개한다. 선수/직원/관객별 반응과 4종 스포츠 공·동작 연출을 추가했다. 스포츠 점수/규칙은 기존 이벤트 시뮬레이션이며 완전한 공 접촉 물리는 아니다.
+
+CityIncidentBoard는 몬스터·활동 중 갱단·해적·테러 위치와 플레이어 기여 보상을 관리한다. 몬스터가 무너뜨린 일반 건물은 180초 후 안전할 때 복구한다. ReversibleMeshCut은 원본 메시와 겹친 절개를 유지하며 반드시 지면 위로 절개 하한을 제한해야 한다. 지하 기초 Bounds를 그대로 절개하면 공용 바닥이 사라진다. 고유 시설 VenueRuntime은 붕괴 제외다.
+
+HarborAccess는 조종석/조타석 실제 접근 지점과 터미널 승객 대기를 제공한다. HarborParcelRepair는 11개 부두 고층 건물을 기존 도시 빈 부지로 이동했다. 독립 메시를 복제하지 말고 직접 이동하며 통합 메시 추출은 바닥을 제외한다. 별도 해군/해경/공군 시설과 군용기 12대 이동, 해군 함정·해경 경비정·해적 보트 순찰/실탄 교전/수동 포격을 적용했다. 함정은 비치명 피해 시 승조원을 유지하고 치명 피해 이후에는 VehicleFailure가 침몰을 담당한다.
+
+CoastGuard/NavyCrew/AirForceCrew/SeaRaider/NullCell 5종 원본을 `Documentation/LivingHarbor/SourceArt`에 보존했다. CyberSecurityImporter가 RGB 체크무늬를 RGBA로 변환하고 4방향×4포즈를 가져온다. 자체 함정 모델은 `Tools/WorldExpansion/create_maritime_fleet.py`로 생성한다. 폐쇄 선체의 바깥쪽 노멀을 반드시 재계산해야 Unity에서 갑판이 사라지지 않는다. MaritimeMaterials는 전용 URP/Lit 재질이다.
+
+CivicTerrorEvents는 갱단과 별도 세력이며 시민/경찰 목격 후 경찰·SWAT만 대응한다. 테러리스트 자신·갱단·군인은 신고 목격자로 쓰지 않는다. 군인 표적 검색은 테러리스트를 제외한다. 경찰은 기존 SecurityResponse의 차량 출동을 사용한다.
+
+Windows 최종 빌드 오류 0, 경고 77. 주요 미션 6유형/군중/경기/보상/탑승을 확인한 초기 실행에서 49항목, 후속 실행에서 14항목 통과했다. 초기의 절대 좌표·파괴된 배 선택·무적 시간 관련 진단 fixture 오류는 수정하고 해당 항목을 재확인했다. 마지막 `Artifacts/LivingHarbor/Complete/result.json`은 2항목 통과/오류 0이며 함정 3종 native 화면도 확인했다. 전체 캠페인 수동 완주는 하지 않았다. 사용자 기존 게임은 종료하지 않았고 진단 저장은 억제했다.
+
+## 최신 작업: 사이버펑크 무장 조직·공권력·구조 이송
+
+작업 시작 시 기존 변경 전체 1,083파일을 `61e34d8d`로 main에 커밋하고 origin/main에 정상 푸시했다. 그 이후 이번 구현은 로컬 작업 트리에 있다. 활성 실행 대상은 `Builds/CyberConflict/AFTERSIGNAL.exe`, `PLAY.cmd`로 실행한다. 아래 CompactCities 이하의 활성 경로·미커밋 상태는 과거 기록이다. 상세 내용과 필수 확인 기록은 `Documentation/CyberConflict` 참고.
+
+운전 조작은 문맥 카드 한 곳으로 통합했다. 차량 내부·하차 외형은 동일한 PeopleArt 식별자를 사용한다. 일반 경찰차에 TacticalTransport가 붙어 장갑차 좌석 좌표가 적용되던 분기를 바로잡았다. VehicleSweep는 보행자 풀에 없는 경찰·군인·시설 인물까지 검사하며, NPC 운전 사고는 환경 피해 원인을 전달한다. 갱단 실제 운전자의 탈취·폭발 하차는 GangConvoy와 VehicleCabin에서 한 번만 처리한다.
+
+새 4방향·4포즈 CyberGang/CyberPolice 원본 생성 이미지는 `Documentation/CyberConflict/SourceArt`에 보존한다. 생성 결과는 RGB 체크무늬 배경이었으므로 게임용 PNG는 반드시 RGBA로 변환해 사용해야 한다. CyberSecurityImporter가 연결된 매트 제거, 발 피벗, 2.12m 기준 크기를 적용한다. 일반 ArtImporter와 중복 처리하지 않는다. 군 수송차·갱단 습격차·경찰 로봇·군 로봇은 자체 Blender/FBX 모델이며 `Tools/WorldExpansion/create_security_units.py`로 재생성한다. SecurityMaterials에서 URP 재질을 적용하고 바퀴·후방 램프·로봇 관절은 독립적으로 움직인다.
+
+GangStrongholds는 기존 애프터라이트·노바 내부 빈 부지를 찾아 아지트 3곳을 만든다. 새 땅은 추가하지 않았다. 인근 경비, 최대 3개 습격 차량, 단계적 경찰·특수대 출동으로 예산을 제한했다. CityChronicle에는 기존 ID·진행을 보존하면서 메인 작전 3개/전투 단계 9개를 추가했다. 아지트 실제 배치 후 목표 좌표를 갱신한다. 전체 캠페인을 수동 완주하지는 않았다.
+
+IncidentCommand는 거신 재난 우선순위를 공유한다. 수배 열기는 보존하되 경찰·군의 서하 추격을 멈추고 몬스터에 집중한다. SecurityResponse는 사건 중복을 합치고 원거리 차량 출동 뒤 현장 하차하며, 기존 군 대응 지연을 유지한다. RiftCreature는 최근 공격자 위협도, 체력·공격 예고 HUD, 충격파·파편·카메라 흔들림을 사용한다.
+
+MedicalState는 인간의 중상·전투 불능·출혈·안정화·회복을 관리하며 사망자는 부활시키지 않는다. CitySafety가 최대 4대 구급차를 배정한다. EmergencyAmbulance의 두 구조대원은 같은 부상자를 들것으로 운반하고 구급차에 싣고 병원에 내려 치료한다. 경찰·군인도 동일하다. 구조 도중 차량·구조대 손상으로 중단되면 부상자 배정을 해제해 재출동할 수 있다. Downed는 전투 대상·임무 잔존 적·일상 대화에서 제외한다. CitySocial은 구조대나 교전 중 전투원의 잡담을 막는다. NpcPersona와 StreetVoices는 직업·연령에 따른 위기 및 일상 대사를 제공한다.
+
+필수 native 결과 `Artifacts/CyberConflict/Final/result.json`: 18항목 통과, 오류 0. 새 아틀라스, 좌석·탑승자 동일성, 군인 차량 충돌과 중상, 로봇·군 수송차, 공격자 우선 조준, 거신 우선 진압, 들것·병원 회복을 확인했다. 첫 검수에서 RGB 배경과 구조대 잡담을 발견해 수정했다. 검증은 LifeState/CityChronicle 저장을 억제한다. 사용자의 기존 게임 프로세스는 종료하지 않았다.
+
 ## 최신 작업: 기존 도시 안으로 시설·빈민가 통합
 
 활성 실행 대상은 `Builds/CompactCities/AFTERSIGNAL.exe`, `PLAY.cmd`로 실행한다. 이번 요청에는 커밋·푸시가 없어 기존 미커밋 전투 캠페인 변경과 함께 로컬에 유지했다. 상세 내용은 `Documentation/CompactCities/README.md`, 배포·검증 기록은 같은 폴더 `validation.json`.

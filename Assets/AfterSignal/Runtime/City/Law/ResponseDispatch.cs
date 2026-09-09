@@ -88,13 +88,18 @@ namespace AfterSignal
             var p=car.transform.position;var delta=destination-p;delta.y=0;
             if(delta.magnitude<stop){car.Drive(new ControlFrame{guard=true},dt);return;}
             if(Time.time>=next&&(route==null||Vector3.Distance(destination,lastTarget)>60))
-            {next=Time.time+8;route=ResponseDispatch.Route(p,destination);index=0;lastTarget=destination;}
+            {
+                next=Time.time+8;route=ResponseDispatch.Route(p,destination);index=0;lastTarget=destination;
+                // Forecourts and elevated service decks are not connected to a road on another floor.
+                if(route.Count>0&&(Mathf.Abs(route[0].y-p.y)>5||Mathf.Abs(route[route.Count-1].y-destination.y)>5))route.Clear();
+                if(delta.magnitude<65&&!Physics.Linecast(p+Vector3.up*4,destination+Vector3.up*4,1,QueryTriggerInteraction.Ignore))route.Clear();
+            }
             while(route!=null&&index<route.Count&&Vector3.ProjectOnPlane(route[index]-p,Vector3.up).magnitude<11)index++;
             var goal=route!=null&&index<route.Count?route[index]:destination;
-            var d=Vector3.ProjectOnPlane(goal-p,Vector3.up);float angle=Vector3.SignedAngle(car.Forward,d,Vector3.up);
+            car.traffic=false;var d=EmergencyTraffic.Steer(car,Vector3.ProjectOnPlane(goal-p,Vector3.up));float angle=Vector3.SignedAngle(car.Forward,d,Vector3.up);
             stuck=Mathf.Abs(car.speed)<.6f?stuck+dt:0;
-            if(stuck>3){reverse=1.4f;stuck=0;}reverse-=dt;
-            var input=ControlFrame.Empty;input.move=new Vector2(Mathf.Clamp(angle/28,-1,1)*(reverse>0?-1:1),reverse>0?-.35f:Mathf.Abs(angle)>65?.22f:.72f);car.Drive(input,dt);
+            if(stuck>2.2f){reverse=1.1f;stuck=0;route=null;next=0;}reverse-=dt;
+            var input=ControlFrame.Empty;input.boost=reverse<=0&&Mathf.Abs(angle)<20;input.move=new Vector2(Mathf.Clamp(angle/28,-1,1)*(reverse>0?-1:1),reverse>0?-.35f:Mathf.Abs(angle)>65?.22f:.72f);car.Drive(input,dt);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace AfterSignal
         void Update()
         {
             var g=GameDirector.Instance;if(!g||g.Blocked||!body||!body.Alive)return;
-            var opponent=FactionCombat.NearestOpponent(body,65);bool player=Alerted&&WantedSystem.Level>0;
+            var opponent=FactionCombat.NearestOpponent(body,65);bool player=!IncidentCommand.Emergency&&Alerted&&WantedSystem.Level>0;
             if(activity)activity.enabled=!opponent&&!player;
             if(!opponent&&!player)return;Vector3 aim=opponent?opponent.Center:g.Player.Shoulder;
             GetComponent<DirectionalPerson>()?.Face(aim,.6f);

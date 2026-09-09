@@ -10,16 +10,17 @@ namespace AfterSignal
         public static int Count {get{Load();int n=0;foreach(var x in bank.Values)n+=x.Length;return n;}}
         public static string Line(CityNpc npc,string eventName)
         {
-            Load();string role=npc?NpcVoice.Role(npc):"";string group="general";
-            if(role.Contains("Elder"))group="elder";
-            else if(role.Contains("Student"))group="student";
-            else if(role.Contains("Patient"))group="patient";
-            else if(role.Contains("Doctor")||role.Contains("Nurse"))group="medical";
-            else if(role.Contains("Police")||role.Contains("Swat"))group="police";
-            else if(role.Contains("Gang"))group="gang";
-            else if(role.Contains("Worker")||role.Contains("Harbour")||role.Contains("Utilities"))group="worker";
+            Load();string role=npc?NpcVoice.Role(npc):"";string group=NpcPersona.Group(npc);
             string key=eventName+"."+group;
+            var family=npc?npc.GetComponent<FamilyMember>():null;
+            if(family&&eventName.StartsWith("companion_"))key=eventName+"."+(family.Child?"child":family.Group&&family.Group.Family?"parent":"lover");
             if(eventName=="ambient")
+            {
+                float hour=LifeState.Hour;string period=hour>=6&&hour<9?"morning":hour>=17&&hour<21?"evening":hour>=21||hour<6?"night":"day";
+                if(bank.ContainsKey(period+"."+group))key=period+"."+group;
+                else if((period=="morning"||period=="evening")&&bank.ContainsKey(period+".general"))key=period+".general";
+            }
+            if(eventName=="ambient"&&!bank.ContainsKey(key))
             {
                 string site=role.Contains("Aircrew")||role.Contains("Travellers")?"airport":role.Contains("Harbour")?"harbour":role.Contains("Coast")?"coast":role.Contains("NightMarket")?"market":role.Contains("Utilities")?"transit":LifeState.Hour>=20||LifeState.Hour<6?"night":"day";
                 key="ambient."+site;

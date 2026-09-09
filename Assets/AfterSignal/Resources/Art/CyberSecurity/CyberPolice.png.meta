@@ -1,0 +1,511 @@
+fileFormatVersion: 2
+guid: 72224e5b9cc3e84478f2b347579eb291
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.05357143}
+  spritePixelsToUnits: 137.73586
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 0
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: CyberPolice-00
+      rect:
+        serializedVersion: 2
+        x: 102
+        y: 954
+        width: 130
+        height: 295
+      alignment: 9
+      pivot: {x: 0.4902781, y: 0.006779661}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b34ad9e6d4de2590800000000000000
+      internalID: -7696980693618113613
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CyberPolice-01
+      rect:
+        serializedVersion: 2
+        x: 397
+        y: 956
+        width: 144
+        height: 291
+      alignment: 9
+      pivot: {x: 0.49955255, y: 0.0068728523}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 896f1f4f5e6fab8b0800000000000000
+      internalID: -5135520957545187688
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CyberPolice-02
+      rect:
+        serializedVersion: 2
+        x: 707
+        y: 955
+        width: 151
+        height: 292
+      alignment: 9
+      pivot: {x: 0.38578343, y: 0.006849315}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e941ff816f9665600800000000000000
+      internalID: 456668917926925470
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CyberPolice-03
+      rect:
+        serializedVersion: 2
+        x: 1010
+        y: 956
+        width: 166
+        height: 291
+      alignment: 9
+      pivot: {x: 0.47224706, y: 0.0068728523}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed6f1df7802c6ca30800000000000000
+      internalID: 4235285841348523742
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CyberPolice-04
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 643
+        width: 128
+        height: 292
+      alignment: 9
+      pivot: {x: 0.44424412, y: 0.006849315}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 68a1ea7fb5844b770800000000000000
+      internalID: 8625598746155948678
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CyberPolice-05
+      rect:
+        serializedVersion: 2
+        x: 386
+        y: 644
+        width: 184
+        height: 290
+      alignment: 9
+      pivot: {x: 0.42274636, y: 0.0068965517}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed1eb08e2aaed6a00800000000000000
+      internalID: 751514698239435230
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CyberPolice-06
+      rect:
+        serializedVersion: 2
+        x: 694
+        y: 644
+        width: 179
+        height: 290
+      alignment: 9
+      pivot: {x: 0.49924546, y: 0.0068965517}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 21d16927cf000f0c0800000000000000
+      internalID: -4544130939762631406
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CyberPolice-07
+      rect:
+        serializedVersion: 2
+        x: 1007
+        y: 643
+        width: 211
+        height: 291
+      alignment: 9
+      pivot: {x: 0.25364563, y: 0.0068728523}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 38d4c7ec15dd15c10800000000000000
+      internalID: 2040655449601887619
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CyberPolice-08
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 328
+        width: 133
+        height: 296
+      alignment: 9
+      pivot: {x: 0.48024473, y: 0.006756757}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ff409fc705cbb2ad0800000000000000
+      internalID: -2725878095562603265
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CyberPolice-09
+      rect:
+        serializedVersion: 2
+        x: 401
+        y: 331
+        width: 140
+        height: 292
+      alignment: 9
+      pivot: {x: 0.45841992, y: 0.006849315}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 46f710ff272611d30800000000000000
+      internalID: 4400406556961767268
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CyberPolice-10
+      rect:
+        serializedVersion: 2
+        x: 706
+        y: 328
+        width: 148
+        height: 295
+      alignment: 9
+      pivot: {x: 0.43418565, y: 0.006779661}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5c2d99becf8572e0800000000000000
+      internalID: -2128637130822570917
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CyberPolice-11
+      rect:
+        serializedVersion: 2
+        x: 992
+        y: 329
+        width: 176
+        height: 293
+      alignment: 9
+      pivot: {x: 0.6228369, y: 0.0068259384}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a33d60a313bd5650800000000000000
+      internalID: 6223327156973155232
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CyberPolice-12
+      rect:
+        serializedVersion: 2
+        x: 87
+        y: 12
+        width: 138
+        height: 296
+      alignment: 9
+      pivot: {x: 0.63667023, y: 0.006756757}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d84628dd89116040800000000000000
+      internalID: 4639017188175792341
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CyberPolice-13
+      rect:
+        serializedVersion: 2
+        x: 380
+        y: 15
+        width: 181
+        height: 293
+      alignment: 9
+      pivot: {x: 0.4894406, y: 0.0068259384}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3d664b743c88bfd50800000000000000
+      internalID: 6772156836984678099
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CyberPolice-14
+      rect:
+        serializedVersion: 2
+        x: 687
+        y: 18
+        width: 193
+        height: 290
+      alignment: 9
+      pivot: {x: 0.5124794, y: 0.0068965517}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 85864c0d4180448f0800000000000000
+      internalID: -557311568392198056
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CyberPolice-15
+      rect:
+        serializedVersion: 2
+        x: 968
+        y: 18
+        width: 218
+        height: 290
+      alignment: 9
+      pivot: {x: 0.5951647, y: 0.0068965517}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0935b54b780f7d180800000000000000
+      internalID: -9090532857186921584
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      CyberPolice-00: -7696980693618113613
+      CyberPolice-01: -5135520957545187688
+      CyberPolice-02: 456668917926925470
+      CyberPolice-03: 4235285841348523742
+      CyberPolice-04: 8625598746155948678
+      CyberPolice-05: 751514698239435230
+      CyberPolice-06: -4544130939762631406
+      CyberPolice-07: 2040655449601887619
+      CyberPolice-08: -2725878095562603265
+      CyberPolice-09: 4400406556961767268
+      CyberPolice-10: -2128637130822570917
+      CyberPolice-11: 6223327156973155232
+      CyberPolice-12: 4639017188175792341
+      CyberPolice-13: 6772156836984678099
+      CyberPolice-14: -557311568392198056
+      CyberPolice-15: -9090532857186921584
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

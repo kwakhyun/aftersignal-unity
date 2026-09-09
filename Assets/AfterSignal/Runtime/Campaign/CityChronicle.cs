@@ -58,7 +58,7 @@ namespace AfterSignal
                 scan-=Time.deltaTime;game.Toast("기록 복원 중 · "+Mathf.Max(0,scan).ToString("0.0")+"초",.2f);
                 if(scan<=0){scanning=false;ReadCurrent();}
             }
-            if(combatStarted&&guards.Count>0&&guards.All(g=>!g||!g.Body.Alive)){combatStarted=false;ReadCurrent();}
+            if(combatStarted&&guards.Count>0&&guards.All(g=>!g||!g.Body.Alive||g.Body.Downed)){combatStarted=false;ReadCurrent();}
             if(Time.time<next)return;next=Time.time+.4f;
             var step=CurrentStep;if(step==null||!AtSite(step)){if(marker)Refresh();return;}
             if(step.kind=="battle")

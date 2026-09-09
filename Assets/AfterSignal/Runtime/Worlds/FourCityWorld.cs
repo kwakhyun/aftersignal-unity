@@ -25,7 +25,7 @@ namespace AfterSignal
             for(int i=0;i<FourCityCatalog.Venues.Length;i++)
             {var v=FourCityCatalog.Venues[i];var r=Root(v.title,v.position);var venue=r.gameObject.AddComponent<VenueRuntime>();venue.Initialize(i);Facilities.Add(venue);Track(r);yield return null;}
             for(int city=0;city<4;city++){BuildNeighborhood(city);yield return null;}
-            BuildUnderseaShell();gameObject.AddComponent<RegionalWorld>();Physics.SyncTransforms();Built=true;
+            BuildUnderseaShell();gameObject.AddComponent<RegionalWorld>();Physics.SyncTransforms();Built=true;gameObject.AddComponent<GangStrongholds>();
             FourCityCampaign.Instance?.BuildObjectives();
         }
         void Track(Transform root)

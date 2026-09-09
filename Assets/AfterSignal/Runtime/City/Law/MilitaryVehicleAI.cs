@@ -8,14 +8,15 @@ namespace AfterSignal
         {
             car=c;response=r;var source=new GameObject("Military vehicle gunner");source.transform.SetParent(transform,false);gunner=source.AddComponent<WorldActor>();gunner.military=true;gunner.helicopter=true;gunner.enabled=false;
         }
-        void Start(){car.GetComponent<VehicleCabin>()?.SetPassengers(car.type==CityVehicleType.Truck?6:0);}
+        void Start(){if(car.type==CityVehicleType.Truck)SecurityVehicleArt.Install(car,false);car.GetComponent<VehicleCabin>()?.SetPassengers(car.type==CityVehicleType.Truck?6:0);}
         void Update()
         {
             var g=GameDirector.Instance;if(!g||g.Blocked||!car||car.Wrecked||!response||!response.Active)return;
+            if(!car.occupied)return;
             if(UrbanSimulation.Instance.Current==car){enabled=false;return;}
             float dt=Mathf.Min(.05f,Time.deltaTime);clock+=dt;shot-=dt;missile-=dt;disembark-=dt;
             var target=response.Target;WorldActor monster=null;
-            if(response.Incident)foreach(var actor in WorldActor.All)if(actor&&actor.monster&&actor.Alive&&(!monster||(actor.Center-transform.position).sqrMagnitude<(monster.Center-transform.position).sqrMagnitude))monster=actor;
+            if(response.Incident||IncidentCommand.Emergency)foreach(var actor in WorldActor.All)if(actor&&actor.monster&&actor.Alive&&(!monster||(actor.Center-transform.position).sqrMagnitude<(monster.Center-transform.position).sqrMagnitude))monster=actor;
             if(monster)target=monster.transform.position;
             var delta=target-transform.position;
             if(car.IsAircraft)
@@ -27,9 +28,9 @@ namespace AfterSignal
             if(car.type==CityVehicleType.Truck)
             {
                 if(Vector3.ProjectOnPlane(delta,Vector3.up).magnitude<40&&deployed<6&&disembark<=0)
-                {car.speed=0;response.Deploy(transform.position-car.Forward*(car.HalfLength+2)+transform.forward*(deployed%2==0?-1:1),deployed);deployed++;disembark=.8f;car.GetComponent<VehicleCabin>()?.SetPassengers(6-deployed);}return;
+                {car.speed=0;GetComponent<SecurityVehicleArt>()?.OpenRear();response.Deploy(transform.position-car.Forward*(car.HalfLength+2)+transform.forward*(deployed%2==0?-1:1),deployed);deployed++;disembark=.8f;car.GetComponent<VehicleCabin>()?.SetPassengers(6-deployed);}return;
             }
-            if(response.Incident&&!monster)return;
+            if((response.Incident||IncidentCommand.Emergency)&&!monster)return;
             Vector3 aim=monster?monster.Center:UrbanSimulation.Instance.Current?UrbanSimulation.Instance.Current.transform.position+Vector3.up:g.Player.Shoulder;
             var mount=transform.position+Vector3.up*(car.type==CityVehicleType.Tank?3.2f:-1)+car.Forward*(car.HalfLength+.8f);
             var armament=car.GetComponent<VehicleArmament>();if(car.type==CityVehicleType.Tank&&armament)mount=armament.AimForAI(aim,dt);
@@ -41,7 +42,7 @@ namespace AfterSignal
                 if(response.Incident)response.Incident.MilitaryShots++;g.Audio.Play("cannon",mount,.3f,2);
             }
             if(shot<=0&&car.type!=CityVehicleType.Tank)
-            {shot=.32f;FactionCombat.Fire(gunner,mount,aim,620,monster?45:16,SignalEffects.Gold,!response.Incident,transform);g.Audio.PlayGun(GunshotKind.Automatic,mount,.8f);}
+            {shot=.32f;FactionCombat.Fire(gunner,mount,aim,620,monster?45:16,SignalEffects.Gold,!response.Incident&&!IncidentCommand.Emergency,transform);g.Audio.PlayGun(GunshotKind.Automatic,mount,.8f);}
         }
     }
 }

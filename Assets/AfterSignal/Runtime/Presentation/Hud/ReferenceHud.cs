@@ -59,6 +59,7 @@ namespace AfterSignal
             var guide = Label(root, "WASD 달리기 · E 상호작용 · 마우스 시점 · 휠 줌 · J 일지 · ESC 설정", 0, 0, 650, 22, 11, muted);
             CenterBottom(guide.rectTransform, 22, 650, 22);
             guide.alignment = TextAnchor.MiddleCenter;
+            basicGuide=guide;
             notice = Label(root, "", 0, 200, 850, 34, 17, mint, FontStyle.Bold);
             CenterTop(notice.rectTransform, 200, 850, 34);
             notice.alignment = TextAnchor.MiddleCenter;

@@ -47,10 +47,10 @@ namespace AfterSignal
             Vector3 end=start+direction*1400;
             if(Ballistics.Cast(start,direction,1400,transform,out var hit))
             {
-                end=hit.point;var actor=hit.collider.GetComponentInParent<WorldActor>();if(actor)actor.Damage(damage,direction*6);
+                end=hit.point;CombatVfx.Hit(hit,direction);var actor=hit.collider.GetComponentInParent<WorldActor>();if(actor)actor.Damage(damage,direction*6);
                 var vehicle=hit.collider.GetComponentInParent<CityVehicle>();if(vehicle)vehicle.Damage(damage*.9f,end);
             }
-            SignalEffects.Beam(start,end,SignalEffects.Gold,.055f,.08f);GameDirector.Instance.Audio.PlayGun(GunshotKind.Automatic,start,.8f);
+            CombatVfx.Tracer(start,end,SignalEffects.Gold);GameDirector.Instance.Audio.PlayGun(GunshotKind.Automatic,start,.8f);
         }
         void OnGUI()
         {

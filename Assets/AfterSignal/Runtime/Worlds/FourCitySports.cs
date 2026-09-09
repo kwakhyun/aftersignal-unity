@@ -21,7 +21,7 @@ namespace AfterSignal
         void Update()
         {
             var g=GameDirector.Instance;if(!g||!g.Ready||g.Paused||g.Title||g.Dead)return;
-            foreach(var m in league.matches){m.Tick(Mathf.Min(Time.deltaTime,.1f));Settle(m);}
+            foreach(var m in league.matches){if(VenueSafety.IsSuspended(m.venue))continue;m.Tick(Mathf.Min(Time.deltaTime,.1f));Settle(m);}
             for(int i=0;i<league.matches.Count;i++){var m=league.matches[i];if(m.phase==MatchPhase.Final&&m.finalSeconds>90){var v=Array.Find(FourCityCatalog.Venues,v=>v.id==m.venue);var next=new SportsMatch(v){round=m.round+1,random=m.random,wait=90};for(int car=0;car<6;car++)next.racePace[car]=(next.Roll()-.5f)*4;if(v.kind==VenueKind.Baseball)next.battingTeam=1;league.matches[i]=next;}}
             if(Time.unscaledTime>saveTime){saveTime=Time.unscaledTime+10;Save();}
         }

@@ -2759,6 +2759,204 @@
           "line": "기억 복원 지원에 생활 지원을 함께 넣겠소. 의자 하나를 채우는 데 이만큼 먼 길이 필요했구려."
         }
       ]
+    },
+    {
+      "id": "gang-main-0",
+      "title": "혈선의 공방",
+      "arc": "도시전 · N-17의 무장 하청 조직",
+      "main": true,
+      "after": "main03",
+      "unlockAt": 0,
+      "reward": 1900,
+      "summary": "납치에 사용된 군용 장비가 혈선 연합의 공방에서 나왔어. 주민들을 숨길 시간은 끝났어. 안으로 들어가 생산선을 끊자.",
+      "steps": [
+        {
+          "site": 0,
+          "world": true,
+          "position": {
+            "x": 490,
+            "y": 0,
+            "z": 180
+          },
+          "kind": "battle",
+          "person": "노아",
+          "label": "아지트 방어선 돌파",
+          "line": "납치에 사용된 군용 장비가 혈선 연합의 공방에서 나왔어. 주민들을 숨길 시간은 끝났어. 안으로 들어가 생산선을 끊자.",
+          "outro": "다음 목표는 건물 안쪽이야. 탄약을 확인하고 움직이자.",
+          "battleMode": "assault",
+          "waves": 2,
+          "enemyCount": 7,
+          "duration": 45
+        },
+        {
+          "site": 0,
+          "world": true,
+          "position": {
+            "x": 490,
+            "y": 0,
+            "z": 180
+          },
+          "kind": "battle",
+          "person": "노아",
+          "label": "장비·통신 지휘망 파괴",
+          "line": "공방과 통신실을 확보하자. 증거를 지우게 두면 안 돼.",
+          "outro": "다음 목표는 건물 안쪽이야. 탄약을 확인하고 움직이자.",
+          "battleMode": "sabotage",
+          "waves": 2,
+          "enemyCount": 7,
+          "duration": 45
+        },
+        {
+          "site": 0,
+          "world": true,
+          "position": {
+            "x": 490,
+            "y": 0,
+            "z": 180
+          },
+          "kind": "battle",
+          "person": "서하",
+          "label": "생존자 구출",
+          "line": "이제 사람들을 데리고 나가자. 경찰이 출구를 지키고 있어.",
+          "outro": "공방 서버에서 N-17의 구매 내역을 찾았어. 그들은 범죄조직에 실험 대상까지 주문했어.",
+          "battleMode": "rescue",
+          "waves": 2,
+          "enemyCount": 7,
+          "duration": 45
+        }
+      ]
+    },
+    {
+      "id": "gang-main-1",
+      "title": "유령 회로의 거래",
+      "arc": "도시전 · N-17의 무장 하청 조직",
+      "main": true,
+      "after": "gang-main-0",
+      "unlockAt": 0,
+      "reward": 2600,
+      "summary": "유령 회로가 납치 명단을 팔고 있어. 서버를 끊고 갇힌 사람들을 구출하자. 경찰 지원은 입구를 막아 줄 거야.",
+      "steps": [
+        {
+          "site": 0,
+          "world": true,
+          "position": {
+            "x": 1320,
+            "y": 0,
+            "z": 110
+          },
+          "kind": "battle",
+          "person": "노아",
+          "label": "아지트 방어선 돌파",
+          "line": "유령 회로가 납치 명단을 팔고 있어. 서버를 끊고 갇힌 사람들을 구출하자. 경찰 지원은 입구를 막아 줄 거야.",
+          "outro": "다음 목표는 건물 안쪽이야. 탄약을 확인하고 움직이자.",
+          "battleMode": "assault",
+          "waves": 2,
+          "enemyCount": 8,
+          "duration": 45
+        },
+        {
+          "site": 0,
+          "world": true,
+          "position": {
+            "x": 1320,
+            "y": 0,
+            "z": 110
+          },
+          "kind": "battle",
+          "person": "노아",
+          "label": "장비·통신 지휘망 파괴",
+          "line": "공방과 통신실을 확보하자. 증거를 지우게 두면 안 돼.",
+          "outro": "다음 목표는 건물 안쪽이야. 탄약을 확인하고 움직이자.",
+          "battleMode": "sabotage",
+          "waves": 2,
+          "enemyCount": 8,
+          "duration": 45
+        },
+        {
+          "site": 0,
+          "world": true,
+          "position": {
+            "x": 1320,
+            "y": 0,
+            "z": 110
+          },
+          "kind": "battle",
+          "person": "서하",
+          "label": "생존자 구출",
+          "line": "이제 사람들을 데리고 나가자. 경찰이 출구를 지키고 있어.",
+          "outro": "명단의 마지막 목적지는 노바야. 크롬 신디케이트가 해협 운송을 맡고 있어.",
+          "battleMode": "rescue",
+          "waves": 2,
+          "enemyCount": 8,
+          "duration": 45
+        }
+      ]
+    },
+    {
+      "id": "gang-main-2",
+      "title": "크롬 신디케이트 격멸",
+      "arc": "도시전 · N-17의 무장 하청 조직",
+      "main": true,
+      "after": "gang-main-1",
+      "unlockAt": 0,
+      "reward": 3300,
+      "summary": "노바 지부가 무장 호송대를 준비하고 있어. 아지트를 돌파하고 수송 지휘망을 파괴하자. 이 거래를 오늘 끝내는 거야.",
+      "steps": [
+        {
+          "site": 0,
+          "world": true,
+          "position": {
+            "x": 1050,
+            "y": 0,
+            "z": -3040
+          },
+          "kind": "battle",
+          "person": "노아",
+          "label": "아지트 방어선 돌파",
+          "line": "노바 지부가 무장 호송대를 준비하고 있어. 아지트를 돌파하고 수송 지휘망을 파괴하자. 이 거래를 오늘 끝내는 거야.",
+          "outro": "다음 목표는 건물 안쪽이야. 탄약을 확인하고 움직이자.",
+          "battleMode": "assault",
+          "waves": 2,
+          "enemyCount": 9,
+          "duration": 45
+        },
+        {
+          "site": 0,
+          "world": true,
+          "position": {
+            "x": 1050,
+            "y": 0,
+            "z": -3040
+          },
+          "kind": "battle",
+          "person": "노아",
+          "label": "장비·통신 지휘망 파괴",
+          "line": "공방과 통신실을 확보하자. 증거를 지우게 두면 안 돼.",
+          "outro": "다음 목표는 건물 안쪽이야. 탄약을 확인하고 움직이자.",
+          "battleMode": "sabotage",
+          "waves": 2,
+          "enemyCount": 9,
+          "duration": 45
+        },
+        {
+          "site": 0,
+          "world": true,
+          "position": {
+            "x": 1050,
+            "y": 0,
+            "z": -3040
+          },
+          "kind": "battle",
+          "person": "서하",
+          "label": "호송대 반격 저지",
+          "line": "이제 사람들을 데리고 나가자. 경찰이 출구를 지키고 있어.",
+          "outro": "서하: 사람을 화물로 취급한 대가는 치러야지. 노아, 증거를 시민 방송에 넘겨. 더는 숨기지 못하게.",
+          "battleMode": "defend",
+          "waves": 2,
+          "enemyCount": 9,
+          "duration": 45
+        }
+      ]
     }
   ]
 }

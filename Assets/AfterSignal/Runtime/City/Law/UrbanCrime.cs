@@ -37,10 +37,12 @@ namespace AfterSignal
         public string State{get;private set;}="배회";
         GangMember gang;CityNpc victim;CityVehicle stolen;Vector3 target;float timer,nextPlan;
         bool acting,hidden;int site;
+        public bool ActiveCrime=>acting||hidden||stolen||inside;
         void Start(){gang=GetComponent<GangMember>();nextPlan=Time.time+Random.Range(2,8);}
         void Update()
         {
             var game=GameDirector.Instance;if(!game||game.Blocked||!gang||!gang.Body.Alive)return;
+            if(CityEventGate.Busy&&CityEventGate.Kind!=CityEventKind.Gang)return;
             if(stolen)
             {
                 transform.position=stolen.transform.position;
@@ -87,12 +89,13 @@ namespace AfterSignal
         }
         public void Plan(int requested=-1)
         {
+            if(!gang||!CityEventGate.JoinGang(gang.Body)){nextPlan=Time.time+15;return;}
             CrimeKind=requested>=0?requested:Random.Range(0,3);var sim=UrbanSimulation.Instance;if(!sim)return;
             acting=false;
             if(CrimeKind==0)
             {
                 float distance=60;
-                foreach(var n in FindObjectsByType<CityNpc>())if(n&&n.GetComponent<WorldActor>().Alive&&!n.fixedQuest){float d=Vector3.Distance(transform.position,n.transform.position);if(d<distance){distance=d;victim=n;}}
+                foreach(var n in FindObjectsByType<CityNpc>())if(n&&n.GetComponent<WorldActor>().Alive&&!n.GetComponent<WorldActor>().Downed&&!n.GetComponent<WorldActor>().gang&&!n.GetComponent<WorldActor>().police&&!n.GetComponent<WorldActor>().military&&!n.fixedQuest){float d=Vector3.Distance(transform.position,n.transform.position);if(d<distance){distance=d;victim=n;}}
                 if(victim){target=victim.transform.position;acting=true;}
             }
             else if(CrimeKind==1)
@@ -105,12 +108,12 @@ namespace AfterSignal
             }
             State=CrimeKind==0?"대상에게 접근":CrimeKind==1?"주차 차량 접근":"시설로 이동";nextPlan=Time.time+12;
         }
-        public void EjectFromWreck(CityVehicle vehicle)
+        public void EjectFromWreck(CityVehicle vehicle,bool fatal=true)
         {
             SetHidden(false);stolen=null;acting=false;hidden=false;
             transform.position=vehicle.transform.position+vehicle.transform.forward*(vehicle.HalfWidth+1);
             var motor=GetComponent<CharacterController>();motor.enabled=true;
-            var body=GetComponent<WorldActor>();body.health=0;
+            var body=GetComponent<WorldActor>();if(fatal)body.health=0;
             gang.OnHit(vehicle.transform.forward*5,false);
             Destroy(vehicle.GetComponent<StolenVehicle>());
         }

@@ -50,9 +50,12 @@ namespace AfterSignal
             bool nova=NeonHarbor.Region(game.Player.transform.position);
             foreach(var line in IntercityService.All)if(line&&line.Aircraft==aircraft)
             {
-                var selected=line;Option(line.Status,()=>{Body=selected.Status+"\n승객이 모두 탑승하면 출발합니다. 탑승구에서 G로 승차권을 구매하세요.";Revision++;});
+                if(line.AtNova!=nova)continue;
+                var selected=line;Option(line.Boarding?"지금 승객으로 탑승 · "+line.Fare+" C":line.Status,()=>{Dismiss();if(selected.Boarding)selected.BuyTicket();else HarborAccess.Instance?.Queue(aircraft,nova);});
                 if(line.AtNova==nova)Option("탑승구로 안내",()=>{Dismiss();game.Player.Respawn(selected.Terminal(nova),false);game.CameraRig.Snap();});
             }
+            Option("다음 편 자동 탑승 대기",()=>{Dismiss();HarborAccess.Instance?.Queue(aircraft,nova);});
+            if(HarborAccess.Instance&&HarborAccess.Instance.Waiting)Option("탑승 대기 취소",()=>{HarborAccess.Instance.Cancel();Dismiss();});
         }
     }
 }

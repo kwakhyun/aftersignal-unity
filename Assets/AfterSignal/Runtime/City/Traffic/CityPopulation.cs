@@ -40,14 +40,14 @@ namespace AfterSignal
             }
 
             for (int i = 0; i < (game.stage == StageId.Haven ? 18 : ResidentialWorld.AtHome(LifeState.Hour) ? 16 : 40); i++)
-                Spawn(false);
+            {Spawn(false);if(i%3==2)yield return null;}
         }
 
         Vector3 Position(bool hidden)
         {
             var center = game.Player.transform.position;
             if(game.stage==StageId.UrbanCity&&ExpansionRoads.Outside(center))
-            {var p=LocalCityRoutes.Sidewalk(center+new Vector3(Random.Range(-100,100),0,Random.Range(-100,100)));return p;}
+            {var p=LocalCityRoutes.Sidewalk(center+new Vector3(Random.Range(-100,100),0,Random.Range(-100,100)));return CrowdFlow.Place(p,Random.Range(0,10000),out var safe,22)?safe:new Vector3(float.NaN,0,0);}
             for (int tries = 0; tries < 30; tries++)
             {
                 Vector3 p;
@@ -85,13 +85,17 @@ namespace AfterSignal
                 return p;
             }
 
-            return new Vector3(24, .06f, -300);
+            return new Vector3(float.NaN,0,0);
         }
 
         CityPedestrian Spawn(bool hidden)
         {
+            if(!PopulationBudget.ClaimFrame())return null;
             var p = Position(hidden);
+            if(float.IsNaN(p.x))return null;
             if(!CityGangWar.FindGround(p,out p))return null;
+            if(!PopulationBudget.Room(p))return null;
+            Citizens.RemoveAll(person=>!person);
             CityPedestrian c = Citizens.Find(person => !person.gameObject.activeSelf);
             if (!c)
             {
@@ -139,12 +143,12 @@ namespace AfterSignal
                 return;
             float dt = Mathf.Min(Time.deltaTime, .08f);
             foreach (var c in Citizens)
-                if (c.gameObject.activeSelf)
+                if (c&&c.gameObject.activeSelf && !c.GetComponent<WorldActor>().Downed)
                 {
                     c.Tick(dt);
                     if ((c.dead && c.age > 12 && !c.GetComponent<MedicalPending>()) || !c.GetComponent<MedicalPending>() && Vector3.Distance(c.transform.position, game.Player.transform.position) > 250)
                         c.gameObject.SetActive(false);
-                    else if (!c.struck && Vector3.Distance(c.transform.position, c.target) < .3f)
+                    else if (!c.struck && Vector3.Distance(c.transform.position, c.target) < 1.4f)
                         SetDestination(c);
                 }
 
@@ -172,46 +176,28 @@ namespace AfterSignal
             }
         }
 
+        readonly Dictionary<int,float> impactCooldown=new();
+        readonly List<WorldActor> sweepActors=new();
         public void VehicleSweep(CityVehicle car, Vector3 a, Vector3 b, float speed)
         {
-            if (Mathf.Abs(speed) < 2)
-                return;
-            Vector3 line = b - a;
-            float denom = line.sqrMagnitude;
-            bool player = UrbanSimulation.Instance && UrbanSimulation.Instance.Current == car;
-            foreach (var c in Citizens)
-                if (c.gameObject.activeSelf && !c.struck && !c.dead)
-                {
-                    var pos = c.transform.position;
-                    float t = denom > .00001f ? Mathf.Clamp01(Vector3.Dot(pos - a, line) / denom) : 0;
-                    var local = Quaternion.Inverse(car.transform.rotation) * (pos - (a + line * t));
-                    if (Mathf.Abs(local.x) < car.HalfLength + .25f && Mathf.Abs(local.z) < car.HalfWidth + .3f && Mathf.Abs(local.y) < 1.7f)
-                    {
-                        if (player)
-                            c.GetComponent<WorldActor>()?.VehicleHit(car.Forward * Mathf.Sign(speed), Mathf.Abs(speed));
-                        else
-                        {
-                            c.Hit(car.Forward * Mathf.Sign(speed), Mathf.Abs(speed));
-                            var victim=c.GetComponent<WorldActor>();if(victim)victim.health=Mathf.Min(victim.health,30);
-                            CitySafety.Shock(c.transform.position);
-                        }
-                        Impacts++;
-                        if (c.dead)
-                            Fatalities++;
-                        game.Audio.Play("urban_impact", pos, .22f, 1);
-                    }
-                }
-
-            if (player)
-                foreach (var actor in WorldActor.All)
-                    if (actor && actor.Alive && !actor.GetComponent<CityPedestrian>())
-                    {
-                        var pos = actor.transform.position;
-                        float t = denom > .00001f ? Mathf.Clamp01(Vector3.Dot(pos - a, line) / denom) : 0;
-                        var local = Quaternion.Inverse(car.transform.rotation) * (pos - (a + line * t));
-                        if (Mathf.Abs(local.x) < car.HalfLength + .3f && Mathf.Abs(local.z) < car.HalfWidth + .4f && Mathf.Abs(local.y) < 1.7f)
-                            actor.VehicleHit(car.Forward * Mathf.Sign(speed), Mathf.Abs(speed));
-                    }
+            if(Mathf.Abs(speed)<.8f)return;
+            Vector3 line=b-a;float denom=line.sqrMagnitude;
+            bool player=UrbanSimulation.Instance&&UrbanSimulation.Instance.Current==car;
+            ActorSpatialIndex.Nearby((a+b)*.5f,car.HalfLength+car.HalfWidth+line.magnitude*.5f+3,sweepActors);
+            foreach(var actor in sweepActors)
+            {
+                if(!actor||!actor.Alive||actor.helicopter||actor.environmental||actor.transform.IsChildOf(car.transform)||actor.GetComponent<MedicalPending>() is MedicalPending pending&&pending.carried)continue;
+                var stolen=car.GetComponent<StolenVehicle>();if(stolen&&stolen.Driver&&stolen.Driver.Body==actor)continue;
+                int id=actor.GetInstanceID();if(impactCooldown.TryGetValue(id,out float next)&&Time.time<next)continue;
+                var pos=actor.transform.position;float t=denom>.00001f?Mathf.Clamp01(Vector3.Dot(pos-a,line)/denom):0;
+                var local=Quaternion.Inverse(car.transform.rotation)*(pos-(a+line*t));
+                if(Mathf.Abs(local.x)>car.HalfLength+.3f||Mathf.Abs(local.z)>car.HalfWidth+.35f||Mathf.Abs(local.y)>1.8f)continue;
+                impactCooldown[id]=Time.time+.8f;
+                actor.VehicleHit(car.Forward*Mathf.Sign(speed),Mathf.Abs(speed),player?null:TrafficDamageSource.Environment);
+                Impacts++;if(!actor.Alive)Fatalities++;
+                game?.Audio.Play("urban_impact",pos,.22f,1);
+            }
+            if(impactCooldown.Count>2048)impactCooldown.Clear();
         }
 
         public bool CrossingAhead(CityVehicle car)

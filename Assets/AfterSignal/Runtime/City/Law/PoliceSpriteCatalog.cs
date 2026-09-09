@@ -6,12 +6,7 @@ namespace AfterSignal
 
         public static string Art(PoliceWeapon weapon)
         {
-            switch (weapon)
-            {
-                case PoliceWeapon.Shotgun: return "LawEnforcement/PoliceShotgun";
-                case PoliceWeapon.Rifle: return "LawEnforcement/SwatRifle";
-                default: return "LawEnforcement/PolicePistol";
-            }
+            return "CyberSecurity/CyberPolice";
         }
     }
 }

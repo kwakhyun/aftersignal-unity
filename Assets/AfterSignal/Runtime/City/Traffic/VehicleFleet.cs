@@ -58,10 +58,11 @@ namespace AfterSignal
 
     public static class VehicleSeats
     {
-        public static int Count(CityVehicle c) => c.GetComponent<TacticalTransport>()||c.GetComponent<MilitaryVehicleAI>()&&c.type==CityVehicleType.Truck?8:c.GetComponent<CityTaxiService>()&&c.IsWatercraft?13:c.type == CityVehicleType.Bus ? 15 : c.type == CityVehicleType.Airliner ? 26 : c.type == CityVehicleType.Boat ? 15 : c.type == CityVehicleType.Motorcycle || c.type == CityVehicleType.Fighter || c.type == CityVehicleType.Tank ? 1 : c.type == CityVehicleType.CombatHelicopter ? 4 : c.type == CityVehicleType.Truck || c.type == CityVehicleType.SportsCar ? 2 : 4;
+        public static int Count(CityVehicle c) => c.GetComponent<TacticalTransport>()&&!c.GetComponent<PoliceCar>()||c.GetComponent<MilitaryVehicleAI>()&&c.type==CityVehicleType.Truck?8:c.GetComponent<CityTaxiService>()&&c.IsWatercraft?13:c.type == CityVehicleType.Bus ? 15 : c.type == CityVehicleType.Airliner ? 26 : c.type == CityVehicleType.Boat ? 15 : c.type == CityVehicleType.Motorcycle || c.type == CityVehicleType.Fighter || c.type == CityVehicleType.Tank ? 1 : c.type == CityVehicleType.CombatHelicopter ? 4 : c.type == CityVehicleType.Truck || c.type == CityVehicleType.SportsCar ? 2 : 4;
         public static Vector3 Local(CityVehicle c, int seat)
         {
-            if(c.GetComponent<TacticalTransport>()||c.GetComponent<MilitaryVehicleAI>()&&c.type==CityVehicleType.Truck)return seat<2?new Vector3(2.25f,1.7f,seat==0?-.6f:.6f):new Vector3(.2f-(seat-2)/2*1.05f,1.45f,seat%2==0?-.85f:.85f);
+            var naval=c.GetComponent<MaritimeHull>();if(naval)return naval.Helm+new Vector3(seat<2?0:-2-(seat-2)/2*1.4f,seat<2?0:-2,seat%2==0?-.6f:.6f);
+            if(c.GetComponent<TacticalTransport>()&&!c.GetComponent<PoliceCar>()||c.GetComponent<MilitaryVehicleAI>()&&c.type==CityVehicleType.Truck)return seat<2?new Vector3(2.25f,1.45f,seat==0?-.6f:.6f):new Vector3(.2f-(seat-2)/2*1.05f,1.45f,seat%2==0?-.85f:.85f);
             var taxi=c.GetComponent<CityTaxiService>();if(taxi)return taxi.Air?new Vector3(seat<2?1.7f:-.7f,1.43f,seat%2==0?-.55f:.55f):seat==0?new Vector3(4,1.55f,0):new Vector3(-4+(seat-1)/2*1.25f,1.47f,seat%2==0?-1.2f:1.2f);
             var authored=c.GetComponent<AuthoredCraft>();if(authored)return authored.helm+new Vector3(seat==0?0:-8+seat*1.1f,0,seat==0?0:seat%2==0?-7:7);
             if (c.type == CityVehicleType.Airliner) return seat < 2 ? new Vector3(10,2.3f,seat==0?-.7f:.7f) : new Vector3(6-(seat-2)/4*2.4f,1.8f,((seat-2)%4-1.5f)*.8f);

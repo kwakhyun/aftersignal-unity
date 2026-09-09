@@ -10,7 +10,7 @@ namespace AfterSignal
         {
             if(!actor)return;
             var speech=actor.GetComponent<NpcSpeech>();if(!speech)speech=actor.gameObject.AddComponent<NpcSpeech>();
-            speech.Show(line,seconds,importance);
+            speech.Show(FactionVoice.Filter(actor,line,importance),seconds,importance);
         }
         void Show(string line,float seconds,int importance)
         {

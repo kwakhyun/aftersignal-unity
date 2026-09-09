@@ -5,7 +5,7 @@ namespace AfterSignal
     public sealed partial class SignalHud
     {
         RectTransform interactionCard,travelStatus;
-        Text traversalReadout,contextKeys;
+        Text traversalReadout,contextKeys,basicGuide;
         readonly Image[] quickSlots=new Image[7];
         bool experienceBuilt;MovingLift statusLift;float liftSearch;
         void BuildClientExperience()
@@ -30,8 +30,10 @@ namespace AfterSignal
             BuildClientExperience();
             bool playing=!game.Blocked;
             bool driving=UrbanSimulation.Instance&&UrbanSimulation.Instance.Driving;
+            if(basicGuide)basicGuide.gameObject.SetActive(playing&&!driving);
             bool bus=CityBusService.Instance&&CityBusService.Instance.Riding;
             interactionCard.gameObject.SetActive(playing&&!string.IsNullOrEmpty(prompt.text));
+            CenterBottom(interactionCard,114,driving?980:680,driving?62:50);Rect(prompt.rectTransform,18,9,driving?944:644,driving?44:32);
             travelStatus.gameObject.SetActive(playing&&!driving&&!bus);
             for(int i=0;i<7;i++){quickSlots[i].transform.parent.gameObject.SetActive(playing&&!driving&&!bus);quickSlots[i].color=i==game.Player.Equipment.Slot?new Color(.12f,.42f,.42f,.95f):ArmoryInventory.Equipped(i)<0?new Color(.03f,.035f,.04f,.5f):new Color(.02f,.055f,.08f,.85f);}
             var p=game.Player;

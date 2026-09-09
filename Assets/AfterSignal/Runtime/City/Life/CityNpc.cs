@@ -130,8 +130,11 @@ namespace AfterSignal
 
         public void Panic(Vector3 danger,float duration)
         {
+            if(GetComponent<RescueMedic>())return;
             if(CivilianDefense.Active(this))return;
+            if(body&&(body.police||body.military||body.gang||body.monster||body.terrorist||body.Downed))return;
             if(fixedQuest||body&&!body.Alive)return;
+            GetComponent<FamilyMember>()?.Group?.Panic(danger,duration);
             fleeUntil=Time.time+duration;fleeDirection=(transform.position-danger).normalized;
             if(fleeDirection.sqrMagnitude<.01f)fleeDirection=Vector3.right;
             var ped=GetComponent<CityPedestrian>();
@@ -139,6 +142,7 @@ namespace AfterSignal
         }
         public void ReactToAttack(bool down, Vector3 force)
         {
+            if(body&&(body.police||body.military||body.gang||body.terrorist||body.Downed))return;
             if(!down&&CivilianDefense.Active(this))return;
             fleeUntil = Time.time + (down ? 3600 : 7);
             fleeDirection = new Vector3(force.x, 0, force.z).normalized;
@@ -164,7 +168,7 @@ namespace AfterSignal
                 return;
             }
 
-            if (fixedQuest || GetComponent<CityPedestrian>())
+            if (fixedQuest || GetComponent<CityPedestrian>() || GetComponent<FamilyMember>())
                 return;
             var step = fleeDirection * Time.deltaTime * 2.8f;
             if (!Physics.Raycast(transform.position + Vector3.up, step.normalized, step.magnitude + .6f, 1, QueryTriggerInteraction.Ignore) && Physics.Raycast(transform.position + step + Vector3.up, Vector3.down, 1.5f, 1, QueryTriggerInteraction.Ignore))

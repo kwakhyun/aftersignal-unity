@@ -1,0 +1,511 @@
+fileFormatVersion: 2
+guid: a0e66cceea0db01438ef4edc8b721cdf
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 147.64151
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 0
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: AirForceCrew-00
+      rect:
+        serializedVersion: 2
+        x: 123
+        y: 943
+        width: 117
+        height: 307
+      alignment: 9
+      pivot: {x: 0.48387498, y: 0.0065146578}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2925e4e7db1b6cac0800000000000000
+      internalID: -3835182605233401198
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AirForceCrew-01
+      rect:
+        serializedVersion: 2
+        x: 414
+        y: 943
+        width: 129
+        height: 307
+      alignment: 9
+      pivot: {x: 0.44949204, y: 0.0065146578}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d30681673d3c8a60800000000000000
+      internalID: 7677578772828521429
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AirForceCrew-02
+      rect:
+        serializedVersion: 2
+        x: 723
+        y: 943
+        width: 127
+        height: 307
+      alignment: 9
+      pivot: {x: 0.40753016, y: 0.0065146578}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 16061c006447eb200800000000000000
+      internalID: 197723277660086369
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AirForceCrew-03
+      rect:
+        serializedVersion: 2
+        x: 1010
+        y: 943
+        width: 148
+        height: 307
+      alignment: 9
+      pivot: {x: 0.50403196, y: 0.0065146578}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31e3626002bb9aa40800000000000000
+      internalID: 5380036976087285267
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AirForceCrew-04
+      rect:
+        serializedVersion: 2
+        x: 124
+        y: 635
+        width: 93
+        height: 304
+      alignment: 9
+      pivot: {x: 0.6320752, y: 0.0065789474}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5fd4e84de3789dea0800000000000000
+      internalID: -5847493937240060427
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AirForceCrew-05
+      rect:
+        serializedVersion: 2
+        x: 404
+        y: 637
+        width: 161
+        height: 302
+      alignment: 9
+      pivot: {x: 0.495806, y: 0.0066225166}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e3c82867ff8ed81e0800000000000000
+      internalID: -2193841259556991938
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AirForceCrew-06
+      rect:
+        serializedVersion: 2
+        x: 701
+        y: 636
+        width: 172
+        height: 303
+      alignment: 9
+      pivot: {x: 0.5239441, y: 0.0066006603}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 20908903ca8339270800000000000000
+      internalID: 8256004854101051650
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AirForceCrew-07
+      rect:
+        serializedVersion: 2
+        x: 995
+        y: 637
+        width: 196
+        height: 301
+      alignment: 9
+      pivot: {x: 0.40704787, y: 0.006644518}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e67e04e46959126d0800000000000000
+      internalID: -3016965802571012242
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AirForceCrew-08
+      rect:
+        serializedVersion: 2
+        x: 123
+        y: 313
+        width: 121
+        height: 314
+      alignment: 9
+      pivot: {x: 0.51550317, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f50f266962f5b3d80800000000000000
+      internalID: -8269911671399321505
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AirForceCrew-09
+      rect:
+        serializedVersion: 2
+        x: 414
+        y: 313
+        width: 137
+        height: 314
+      alignment: 9
+      pivot: {x: 0.47875586, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1eaf63bf07b4cfea0800000000000000
+      internalID: -5837708068355900703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AirForceCrew-10
+      rect:
+        serializedVersion: 2
+        x: 713
+        y: 313
+        width: 137
+        height: 314
+      alignment: 9
+      pivot: {x: 0.49762774, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 043e5d34f22927410800000000000000
+      internalID: 1473400759802782528
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AirForceCrew-11
+      rect:
+        serializedVersion: 2
+        x: 1006
+        y: 313
+        width: 151
+        height: 314
+      alignment: 9
+      pivot: {x: 0.6816939, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1878ff3654e987f40800000000000000
+      internalID: 5726500947069208449
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AirForceCrew-12
+      rect:
+        serializedVersion: 2
+        x: 147
+        y: 17
+        width: 92
+        height: 296
+      alignment: 9
+      pivot: {x: 0.34604856, y: 0.006756757}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 80811d6ff0adc7cf0800000000000000
+      internalID: -253087716939327480
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AirForceCrew-13
+      rect:
+        serializedVersion: 2
+        x: 389
+        y: 18
+        width: 174
+        height: 295
+      alignment: 9
+      pivot: {x: 0.4655417, y: 0.006779661}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 94a3f1ae679f60990800000000000000
+      internalID: -7419969046916941239
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AirForceCrew-14
+      rect:
+        serializedVersion: 2
+        x: 690
+        y: 17
+        width: 180
+        height: 296
+      alignment: 9
+      pivot: {x: 0.4432255, y: 0.006756757}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0bb5b97ea59aa41b0800000000000000
+      internalID: -5671534572821849168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AirForceCrew-15
+      rect:
+        serializedVersion: 2
+        x: 976
+        y: 20
+        width: 203
+        height: 293
+      alignment: 9
+      pivot: {x: 0.5717629, y: 0.0068259384}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf28b3529b4fcfb00800000000000000
+      internalID: 863834304579076860
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      AirForceCrew-00: -3835182605233401198
+      AirForceCrew-01: 7677578772828521429
+      AirForceCrew-02: 197723277660086369
+      AirForceCrew-03: 5380036976087285267
+      AirForceCrew-04: -5847493937240060427
+      AirForceCrew-05: -2193841259556991938
+      AirForceCrew-06: 8256004854101051650
+      AirForceCrew-07: -3016965802571012242
+      AirForceCrew-08: -8269911671399321505
+      AirForceCrew-09: -5837708068355900703
+      AirForceCrew-10: 1473400759802782528
+      AirForceCrew-11: 5726500947069208449
+      AirForceCrew-12: -253087716939327480
+      AirForceCrew-13: -7419969046916941239
+      AirForceCrew-14: -5671534572821849168
+      AirForceCrew-15: 863834304579076860
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

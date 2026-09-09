@@ -10,6 +10,7 @@ namespace AfterSignal
         public static bool Active(Component who){var c=who.GetComponent<CivilianImpact>();return c&&c.Flying;}
         public static void Launch(WorldActor target,Vector3 direction,float speed)
         {
+            if(!target||target.robot||target.monster||target.helicopter)return;
             var c=target.GetComponent<CivilianImpact>()??target.gameObject.AddComponent<CivilianImpact>();
             c.actor=target;c.age=c.settled=0;c.Flying=true;
             direction.y=0;direction.Normalize();

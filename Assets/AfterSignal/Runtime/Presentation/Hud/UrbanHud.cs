@@ -35,7 +35,7 @@ namespace AfterSignal
             cityMapOverlay.AddComponent<GraphicRaycaster>();
             Label(cityMapOverlay.transform,"CITY ATLAS / 네 도시를 탐색하세요",30,22,1080,42,29,white,FontStyle.Bold);
             Label(cityMapOverlay.transform,"휠 확대·축소 · 드래그 탐색 · 시설 / 빈 곳 클릭으로 목적지 지정",30,752,1030,20,14,mint);
-            MakeButton(cityMapOverlay.transform,"닫기 M",1290,28,126,36,()=>UrbanSimulation.Instance?.CloseMap());
+            MakeButton(cityMapOverlay.transform,"닫기 ESC",1290,28,126,36,()=>UrbanSimulation.Instance?.CloseMap());
             atlas=CreateAtlas(cityMapOverlay.transform,30,120,1000,630,false);
             MakeButton(cityMapOverlay.transform,"+",40,132,40,40,()=>atlas.Zoom(.7f,atlas.rectTransform.rect.center));
             MakeButton(cityMapOverlay.transform,"−",40,178,40,40,()=>atlas.Zoom(1.4f,atlas.rectTransform.rect.center));
@@ -59,7 +59,7 @@ namespace AfterSignal
             if (Time.unscaledTime >= nextCityText)
             {
                 nextCityText = Time.unscaledTime + .1f;
-                drivingInfo.text = sim.Current ? $"{Mathf.Abs(sim.Current.speed) * 3.6f:000} km/h    ·    연료 {sim.Current.fuel:0.0} L    ·    차체 {sim.Current.HealthFraction*100:0}%\n" + (sim.Current.fuel < 3 ? "연료 부족 · 가까운 주유소로 이동하세요" : VehicleSeats.Name(sim.Current,sim.SeatIndex)+" · "+(sim.SeatIndex==0?VehicleSeats.Controls(sim.Current):"승객 탑승 · F 하차")) : selectedSite >= 0 ? $"{UrbanCatalog.Name(selectedSite)}  ·  {Vector3.Distance(game.Player.transform.position, UrbanCatalog.Door(selectedSite)):0} m" : "";
+                drivingInfo.text = sim.Current ? $"{Mathf.Abs(sim.Current.speed) * 3.6f:000} km/h    ·    연료 {sim.Current.fuel:0.0} L    ·    차체 {sim.Current.HealthFraction*100:0}%" + (sim.Current.fuel < 3 ? "\n연료 부족 · 가까운 주유소로 이동하세요" : "") : selectedSite >= 0 ? $"{UrbanCatalog.Name(selectedSite)}  ·  {Vector3.Distance(game.Player.transform.position, UrbanCatalog.Door(selectedSite)):0} m" : "";
             }
 
             arsenalPanel.SetActive(!sim.Driving);

@@ -11,6 +11,8 @@ namespace AfterSignal
             facility=Mathf.Clamp(facility,0,ExpansionWorld.Names.Length-1);
             Panel("service",ExpansionWorld.Names[facility],"잔액 "+LifeState.Credits.ToString("N0")+" C · 지역 시설 안내");
             int site=facility;
+            if(facility==2||facility==20)TransitOptions(true);
+            if(facility==1||facility==12)TransitOptions(false);
             Option("이 장소를 지도 목적지로 지정",()=>{ExpansionWorld.Selected=site;Dismiss();game.Toast("목적지: "+ExpansionWorld.Names[site]);});
             if(facility==0){Option("해변 매점 · 음료 / 25 C",()=>Purchase(25,()=>game.Player.RestoreEnergy(55)),"EnergyDrink");Option("해변 정화 활동 / 1시간 · 130 C",()=>Work("coast-cleanup",130,1));}
             if(facility==1||facility==6){Option("화물 검수 아르바이트 / 2시간 · 320 C",()=>Work("port-inspection",320,2));Option("구내식당 / 50 C",()=>Purchase(50,()=>game.Player.Heal(60)),"WarmMeal");}

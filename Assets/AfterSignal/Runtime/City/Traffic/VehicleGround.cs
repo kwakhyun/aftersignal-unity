@@ -5,12 +5,16 @@ namespace AfterSignal
     // A vehicle body is never a road. All probes share this filter, including recovery.
     public static class VehicleGround
     {
+        static readonly RaycastHit[] contacts=new RaycastHit[64];
         public static bool Sample(CityVehicle car, Vector3 at, float rise, float drop, out RaycastHit floor)
         {
             floor = default;
             float best = float.PositiveInfinity;
-            foreach (var h in Physics.RaycastAll(at + Vector3.up * rise, Vector3.down, rise + drop, 1, QueryTriggerInteraction.Ignore))
+            int count=Physics.RaycastNonAlloc(at+Vector3.up*rise,Vector3.down,contacts,rise+drop,1,QueryTriggerInteraction.Ignore);var buffer=contacts;
+            if(count==contacts.Length){buffer=Physics.RaycastAll(at+Vector3.up*rise,Vector3.down,rise+drop,1,QueryTriggerInteraction.Ignore);count=buffer.Length;}
+            for(int i=0;i<count;i++)
             {
+                var h=buffer[i];
                 if (!h.collider || h.normal.y < .72f || h.collider.transform.IsChildOf(car.transform)
                     || h.collider.GetComponentInParent<CityVehicle>() || h.collider.attachedRigidbody) continue;
                 if (h.distance < best) { best = h.distance; floor = h; }

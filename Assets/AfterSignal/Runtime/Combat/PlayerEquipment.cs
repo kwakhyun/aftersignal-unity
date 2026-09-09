@@ -57,9 +57,9 @@ namespace AfterSignal
                     var car=hit.collider.GetComponentInParent<CityVehicle>();if(car){vehicles.TryGetValue(car,out var total);vehicles[car]=total+damage;}
                     hit.collider.GetComponentInParent<BreakableGlass>()?.Hit(damage);
                     hit.collider.GetComponentInParent<FacadeGlass>()?.Hit(hit.point,damage);
-                    SignalEffects.Impact(end,-d,SignalEffects.Gold,.25f);
+                    CombatVfx.Hit(hit,d);
                 }
-                SignalEffects.Beam(player.Muzzle,end,SignalEffects.Gold,.018f,.06f);
+                CombatVfx.Tracer(player.Muzzle,end,SignalEffects.Gold);
             }
             foreach(var hit in people)hit.Key.Damage(hit.Value,direction*4);
             foreach(var hit in enemies)hit.Key.Damage(hit.Value,direction*3);

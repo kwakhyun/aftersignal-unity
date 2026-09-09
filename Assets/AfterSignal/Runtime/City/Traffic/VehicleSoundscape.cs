@@ -5,6 +5,7 @@ namespace AfterSignal
     {
         CityVehicle car;AudioSource engine,load;AudioLowPassFilter low;
         float rpm,throttle,previousSpeed;bool wasRunning;
+        float nextMix;bool distant;
         public string Cue=>engine&&engine.clip?engine.clip.name:"missing";
         public void Initialize(CityVehicle owner,AudioSource source)
         {
@@ -20,6 +21,12 @@ namespace AfterSignal
             var g=GameDirector.Instance;if(!car||!g||!engine)return;
             bool active=!car.Wrecked&&car.fuel>0&&(car.occupied||car.traffic);
             bool current=UrbanSimulation.Instance&&UrbanSimulation.Instance.Current==car;
+            if(!current&&Time.time<nextMix)return;
+            var view=PeopleArt.ViewCamera;float distance=view?(transform.position-view.transform.position).sqrMagnitude:0;
+            bool outside=!current&&distance>(engine.maxDistance+25)*(engine.maxDistance+25);
+            if(outside){if(!distant){engine.Pause();load.Pause();distant=true;}nextMix=Time.time+.5f;return;}
+            if(distant){engine.UnPause();load.UnPause();distant=false;}
+            nextMix=Time.time+(current||distance<30*30?0:.08f);
             bool inside=current&&g.CameraRig.FirstPersonVehicle;
             float master=g.Blocked?0:g.Audio.Volume*g.Audio.SfxVolume;
             float motion=Mathf.Clamp01(Mathf.Abs(car.speed)/(car.IsAircraft?90:car.IsWatercraft?19:car.TopSpeed));

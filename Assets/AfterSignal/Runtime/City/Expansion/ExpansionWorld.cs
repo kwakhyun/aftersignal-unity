@@ -25,7 +25,7 @@ namespace AfterSignal
         public int Population{get;private set;}
         sealed class DistrictResidents
         {
-            public FacilityCrowd seed;public int first;public readonly List<FacilityCitizen> live=new();public float[] health;public int created;
+            public FacilityCrowd seed;public int first;public readonly List<FacilityCitizen> live=new();public float[] health;public int created;public float retry;
         }
         readonly List<DistrictResidents> districts=new();float next;Material actorMaterial;
         public int ResidentObjects{get;private set;}
@@ -40,6 +40,7 @@ namespace AfterSignal
         FacilityCitizen SpawnResident(DistrictResidents district,int i)
         {
             if(district.health[i]<0)return null;
+            if(!PopulationBudget.ClaimFrame()||!TrySpawnPosition(district.seed,i,out var spawn))return null;
             var seed=district.seed;var go=new GameObject("Citizen / "+seed.title+" / "+i,typeof(SpriteRenderer),typeof(CityNpc),typeof(FacilityCitizen));go.transform.SetParent(seed.transform,false);
             int role=(seed.firstRole+i%Mathf.Max(1,seed.roleCount))%FacilityPeople.Jobs.Length;
             string art=seed.arts!=null&&seed.arts.Length>0?seed.arts[i%seed.arts.Length]:FacilityPeople.Key(role);
@@ -47,7 +48,7 @@ namespace AfterSignal
             bool prisoner=job.Contains("수감자")&&seed.title.Contains("수감자");
             bool soldier=job.Contains("기지")||job.Contains("정비병")||job.Contains("작전 장교");
             if(prisoner)art="Prisoner";else if(soldier)art="Soldier";else if(art=="Prisoner")art="Worker";
-            go.transform.position=SpawnPosition(seed,i);var sr=go.GetComponent<SpriteRenderer>();sr.sharedMaterial=actorMaterial;sr.sprite=PeopleArt.Get(art,0);
+            go.transform.position=spawn;var sr=go.GetComponent<SpriteRenderer>();sr.sharedMaterial=actorMaterial;sr.sprite=PeopleArt.Get(art,0);
             var npc=go.GetComponent<CityNpc>();npc.Configure(6000+district.first+i,job,null,seed.title+"에서 생활한다. 주변 시설과 교통편을 잘 안다. 실제 위치와 직업에 맞게 대화한다.");
             PeopleArt.Attach(go,art);var c=go.GetComponent<FacilityCitizen>();c.origin=go.transform.position;c.radius=seed.radius;c.district=seed.title;c.serial=district.first+i;
             if(soldier)go.GetComponent<WorldActor>().military=true;
@@ -56,22 +57,23 @@ namespace AfterSignal
             else if(district.health[i]>0)go.GetComponent<WorldActor>().health=district.health[i];
             return c;
         }
-        static Vector3 SpawnPosition(FacilityCrowd seed,int index)
+        public static bool TrySpawnPosition(FacilityCrowd seed,int index,out Vector3 point)
         {
-            for(int attempt=0;attempt<64;attempt++)
+            for(int attempt=0;attempt<20;attempt++)
             {
                 float angle=(index+attempt*7)*2.399963f;
                 float spread=Mathf.Sqrt(((index+attempt*13)%seed.count+.5f)/seed.count)*seed.radius*.82f;
                 var p=seed.transform.TransformPoint(new Vector3(Mathf.Cos(angle)*spread,0,Mathf.Sin(angle)*spread));
+                if(!PopulationBudget.Room(p)||!CrowdFlow.Vacant(p,1.45f))continue;
                 if(Physics.Raycast(p+Vector3.up*2,Vector3.down,out var ground,5,1,QueryTriggerInteraction.Ignore)&&ground.normal.y>.8f&&Mathf.Abs(ground.point.y-seed.transform.position.y)<.28f)
-                {p=ground.point+Vector3.up*.05f;if(!Physics.CheckCapsule(p+Vector3.up*.45f,p+Vector3.up*1.5f,.3f,1,QueryTriggerInteraction.Ignore))return p;}
+                {p=ground.point+Vector3.up*.05f;if(!Physics.CheckCapsule(p+Vector3.up*.45f,p+Vector3.up*1.5f,.3f,1,QueryTriggerInteraction.Ignore)){point=p;return true;}}
             }
-            return seed.transform.position+Vector3.up*.12f;
+            point=default;return false;
         }
         void Update()
         {
             var g=GameDirector.Instance;if(!g||!g.Ready||Time.time<next)return;next=Time.time+.2f;
-            int budget=20;ResidentObjects=ActiveResidents=0;var player=g.Player.transform.position;
+            int budget=4;ResidentObjects=ActiveResidents=0;var player=g.Player.transform.position;
             foreach(var district in districts)
             {
                 if(!district.seed)continue;float distance=(district.seed.transform.position-player).sqrMagnitude;
@@ -82,6 +84,7 @@ namespace AfterSignal
                 }
                 if(distance<250*250)while(district.created<district.seed.count&&budget>0)
                 {district.live.Add(SpawnResident(district,district.created++));budget--;}
+                if(distance<230*230&&district.created>=district.seed.count&&Time.time>district.retry){district.retry=Time.time+5;for(int i=0;i<district.live.Count&&budget>0;i++)if(!district.live[i]&&district.health[i]>=0){district.live[i]=SpawnResident(district,i);budget--;}}
                 foreach(var c in district.live)if(c){bool active=(c.transform.position-player).sqrMagnitude<210*210;if(c.gameObject.activeSelf!=active)c.gameObject.SetActive(active);ResidentObjects++;if(active)ActiveResidents++;}
             }
         }
@@ -90,13 +93,14 @@ namespace AfterSignal
     public sealed class FacilityCitizen:MonoBehaviour
     {
         public Vector3 origin;public float radius;public string district;public int serial;
-        Vector3 target;float next,chat;WorldActor body;CityNpc npc;PedestrianSteering steering;
+        Vector3 target;float next,chat,tick,lastTick;WorldActor body;CityNpc npc;PedestrianSteering steering;
         void Start(){body=GetComponent<WorldActor>();npc=GetComponent<CityNpc>();target=origin;chat=Time.time+Random.Range(8f,28f);}
         void Update()
         {
             var g=GameDirector.Instance;if(!g||g.Blocked||!body||!body.Alive||npc.Fleeing||CivilianImpact.Active(this)||CivilianDefense.Active(this)||Time.time<npc.SocialUntil)return;
-            if(Time.time>next){next=Time.time+Random.Range(8f,19f);var d=Random.insideUnitCircle*radius;var p=origin+new Vector3(d.x,0,d.y);if(Physics.Raycast(p+Vector3.up*3,Vector3.down,out var ground,5,1,QueryTriggerInteraction.Ignore)&&ground.normal.y>.8f&&Mathf.Abs(ground.point.y-origin.y)<.3f)target=ground.point+Vector3.up*.04f;}
-            if(!steering)steering=PedestrianSteering.For(this);steering.Move(target,Time.deltaTime*(1.05f+serial%4*.17f));
+            if(body.Downed||!ActorWorkBudget.Tick(this,ref tick,ref lastTick,out var dt))return;
+            if(Time.time>next){next=Time.time+Random.Range(8f,19f);var d=Random.insideUnitCircle*radius;var p=origin+new Vector3(d.x,0,d.y);if(PopulationBudget.Room(p)&&CrowdFlow.Place(p,serial,out var safe,6))target=safe;}
+            if(!steering)steering=PedestrianSteering.For(this);steering.Move(target,dt*(1.05f+serial%4*.17f));
             if(Time.time>chat&&(transform.position-g.Player.transform.position).sqrMagnitude<30*30){chat=Time.time+Random.Range(22f,45f);NpcSpeech.Say(npc,NpcDialogueBank.Line(npc,"ambient"),4);}
         }
     }

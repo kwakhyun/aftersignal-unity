@@ -32,6 +32,7 @@ namespace AfterSignal
             foreach(var clip in Resources.LoadAll<AudioClip>("Audio/Quality"))Register(clip);
             foreach(var clip in Resources.LoadAll<AudioClip>("Audio/Firearms"))Register(clip);
             foreach(var clip in Resources.LoadAll<AudioClip>("Audio/Transport"))Register(clip);
+            foreach(var clip in Resources.LoadAll<AudioClip>("Audio/CombatDetail"))Register(clip);
             SfxVolume=Mathf.Clamp01(PlayerPrefs.GetFloat("AFTERSIGNAL.Unity.SfxVolume",.9f));
             for(int i=0;i<voices.Length;i++)
             {
@@ -88,7 +89,8 @@ namespace AfterSignal
         public void PlayGun(GunshotKind kind,Vector3 position,float strength=1)
         {
             string cue=kind==GunshotKind.PolicePistol?"gun_police_pistol":kind==GunshotKind.GangPistol?"gun_gang_pistol":kind==GunshotKind.Shotgun?"gun_shotgun":kind==GunshotKind.Rifle?"gun_rifle":kind==GunshotKind.Automatic?"gun_auto":"gun_pistol";
-            Play(cue,position,.38f*strength,3);
+            CombatVfx.Muzzle(position,kind);Play(cue,position,.38f*strength,3);
+            Play(kind==GunshotKind.Shotgun?"tail_shotgun":kind==GunshotKind.Rifle||kind==GunshotKind.Automatic?"tail_rifle":"tail_pistol",position,.105f*strength,2);
         }
         public void Play(string cue,Vector3 position,float gain=.45f,int priority=2)
         {
@@ -105,7 +107,9 @@ namespace AfterSignal
             var listener=game&&game.Player?game.Player.Shoulder:Camera.main?Camera.main.transform.position:position;
             var delta=position-listener;float distance=delta.magnitude;
             float attenuation=distance<4?1:1/(1+Mathf.Pow((distance-4)/19f,1.45f));
-            if(distance>135)return;
+            bool battle=cue.StartsWith("gun_")||cue.StartsWith("tail_")||cue=="blast_pressure"||cue=="urban_explosion"||cue=="cannon";
+            if(distance>(battle?650:135))return;
+            if(battle&&distance>12){attenuation=1/(1+Mathf.Pow((distance-4)/38f,1.35f));if(Physics.Linecast(listener,position,1,QueryTriggerInteraction.Ignore))attenuation*=.48f;}
             int rank=priority+(distance<3?4:0);
             int slot=-1;
             for(int i=0;i<voices.Length;i++)if(!voices[i].isPlaying){slot=i;break;}

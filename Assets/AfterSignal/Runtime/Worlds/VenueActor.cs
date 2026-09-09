@@ -8,7 +8,7 @@ namespace AfterSignal
         public bool staff,spectator,athlete;
         public int team,slot,serial;
         public string Activity{get;private set;}="이동 중";
-        CityNpc npc;WorldActor body;DirectionalPerson art;SpriteRenderer sprite;Vector3 target;float wait,chat,actionUntil;int state;PedestrianSteering steering;
+        CityNpc npc;WorldActor body;DirectionalPerson art;SpriteRenderer sprite;Vector3 target;float wait,chat,actionUntil,tick,lastTick;int state;PedestrianSteering steering;
         public static VenueActor Create(VenueRuntime venue,int id,string role,string sheet,Vector3 at)
         {
             var go=new GameObject(role+" / "+id,typeof(SpriteRenderer),typeof(CityNpc),typeof(VenueActor));go.transform.SetParent(venue.transform,false);go.transform.localPosition=at;
@@ -16,7 +16,8 @@ namespace AfterSignal
             var npc=go.GetComponent<CityNpc>();npc.Configure(id,role,null,venue.Definition.title+"에서 "+role+"으로 생활한다. "+FacilityGuide.For(venue.Definition));PeopleArt.Attach(go,sheet);
             var a=go.GetComponent<VenueActor>();a.venue=venue;a.origin=at;a.target=at;a.npc=npc;a.body=go.GetComponent<WorldActor>();a.art=go.GetComponent<DirectionalPerson>();a.sprite=sr;a.chat=Time.time+10+id%19;return a;
         }
-        public void TakeStartingPosition(SportsMatch match){Play(match);transform.localPosition=target;}
+        public void TakeStartingPosition(SportsMatch match){Play(match);transform.localPosition=target;if(athlete&&!GetComponent<AthleteMotion>())gameObject.AddComponent<AthleteMotion>();}
+        public void EmergencyMove(Vector3 point){if(art){art.Sitting=false;art.Face(point,.2f);}Activity=staff?"대피 안내":"비상구로 대피";if(!steering)steering=PedestrianSteering.For(this);steering.Move(point,(staff?2.6f:athlete?5.2f:3.1f)*Mathf.Min(Time.deltaTime,.06f));}
         public void Play(SportsMatch m)
         {
             if(!body||!body.Alive)return;
@@ -47,7 +48,10 @@ namespace AfterSignal
         }
         void Update()
         {
-            var game=GameDirector.Instance;if(!game||!game.Ready||game.Paused||!body||!body.Alive||npc.Fleeing||Time.time<npc.SocialUntil||CivilianImpact.Active(this))return;
+            var game=GameDirector.Instance;if(!game||!game.Ready||game.Paused||!body||!body.Alive||body.Downed||CivilianImpact.Active(this))return;
+            var safety=venue.GetComponent<VenueSafety>();if(safety&&safety.React(this))return;
+            if(!ActorWorkBudget.Tick(this,ref tick,ref lastTick,out var dt,athlete))return;
+            if(npc.Fleeing||Time.time<npc.SocialUntil)return;
             if(!athlete&&Time.time>wait)ChooseActivity();
             var world=venue.transform.TransformPoint(target);var delta=world-transform.position;delta.y=0;
             bool arrived=delta.sqrMagnitude<.2f;
@@ -55,7 +59,7 @@ namespace AfterSignal
             if(!arrived)
             {
                 float speed=athlete?venue.Definition.kind==VenueKind.Basketball?4.5f:5.8f:1.1f+serial%5*.13f;var dir=delta.normalized;
-                if(!steering)steering=PedestrianSteering.For(this);steering.Move(world,speed*Time.deltaTime);
+                if(!steering)steering=PedestrianSteering.For(this);steering.Move(world,speed*dt);
             }
             else if(spectator)art.Face(venue.transform.TransformPoint(venue.lookPoint),.6f);
             if(!athlete&&Time.time>chat&&Vector3.Distance(game.Player.transform.position,transform.position)<24)
@@ -75,7 +79,7 @@ namespace AfterSignal
             else
             {
                 var choices=venue.activityPoints;Activity=state%3==0?"휴식":venue.Definition.kind==VenueKind.Museum?"전시 관람":venue.Definition.city==3?"심해 산책":"산책";
-                if(choices.Count>0){var candidate=choices[(serial+state*3)%choices.Count];if(Mathf.Abs(candidate.y-origin.y)<1)target=candidate;}
+                if(choices.Count>0){var candidate=choices[(serial+state*3)%choices.Count];if(Mathf.Abs(candidate.y-origin.y)<1&&CrowdFlow.Place(venue.transform.TransformPoint(candidate),serial,out var safe,7))target=venue.transform.InverseTransformPoint(safe);}
             }
         }
         string StaffLine()=>venue.Definition.Sport?new[]{"입장 안내 도와드릴게요. 전광판에서 경기 상황을 보실 수 있어요.","승부예측은 경기 시작 전에만 접수합니다.","선수 통로를 비워 주세요. 곧 경기가 시작됩니다.","휴게 공간과 매점은 중앙 통로에 있습니다."}[state%4]:venue.Definition.city==3?new[]{"돔 내부 압력은 정상입니다. 편하게 숨 쉬셔도 돼요.","심해 도로의 안내선을 따라가면 지상 도시와 이어집니다.","시설 이용 방법이 궁금하시면 말씀해 주세요.","순환 공기와 수질을 점검하고 있습니다."}[state%4]:new[]{"어서 오세요. 시설 이용을 안내해 드릴게요.","불편한 점이 있으시면 가까운 직원에게 알려 주세요.","승강기와 계단은 건물 양쪽에 있습니다.","편안한 관람 되세요."}[state%4];

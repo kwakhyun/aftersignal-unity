@@ -15,6 +15,14 @@ namespace AfterSignal
         static readonly string[] passengerRoles={"CivilianMan","CivilianWoman","OfficeMan","OfficeWoman","Worker","ElderMan","ElderWoman","TeacherMan","TeacherWoman","Doctor","Nurse","Bartender","PatientMan","PatientWoman"};
         readonly List<string> identities=new List<string>();
         int boardingSerial;float visualClock;
+        public string IdentityAt(int seat)=>car&&car.GetComponent<GangConvoy>()?"GangCrimson":seat>=0&&seat<identities.Count?identities[seat]:"CivilianMan";
+        public WorldActor EjectDriver()
+        {
+            var convoy=car.GetComponent<GangConvoy>();if(convoy)return convoy.EjectDriver();
+            var stolen=car.GetComponent<StolenVehicle>();
+            if(stolen&&stolen.Driver){var driver=stolen.Driver;driver.GetComponent<GangCrime>()?.EjectFromWreck(car,false);return driver.Body;}
+            return VehicleOccupant.Create(car,IdentityAt(0),0,false,GameDirector.Instance.Player.transform.position);
+        }
         
         public void Initialize(CityVehicle owner)
         {
@@ -56,8 +64,8 @@ namespace AfterSignal
                 r.sharedMaterial=Resources.Load<Material>("Materials/PixelActor");
                 string identity=passengerRoles[(i+Mathf.Abs(car.GetInstanceID())%passengerRoles.Length)%passengerRoles.Length];
                 if(i==0&&car.GetComponent<EmergencyAmbulance>())identity="Doctor";
-                if(car.GetComponent<PoliceCar>())identity="Police";
-                if(car.GetComponent<TacticalTransport>())identity="Swat";
+                if(car.GetComponent<PoliceCar>())identity="CyberPolice";
+                if(car.GetComponent<TacticalTransport>()&&!car.GetComponent<PoliceCar>())identity="CyberPolice";
                 if(car.GetComponent<MilitaryVehicleAI>())identity="Soldier";
                 if(car.IsAircraft)identity=i==0?FacilityPeople.Key(0):FacilityPeople.Key(4+i%4);
                 if(car.IsWatercraft)identity=i==0?FacilityPeople.Key(10):passengerRoles[i%passengerRoles.Length];
@@ -84,6 +92,7 @@ namespace AfterSignal
             PassengerCount=Mathf.Min(manifest.Count,occupants.Count-2);
             for(int i=0;i<PassengerCount;i++)identities[i+1]=manifest[i];
         }
+        public void SetCrew(string identity,int count){for(int i=0;i<identities.Count;i++)identities[i]=identity;PassengerCount=Mathf.Clamp(count,0,occupants.Count-1);}
         public List<string> ReleaseOccupants(bool playerDriver)
         {
             var result=new List<string>();
@@ -98,18 +107,21 @@ namespace AfterSignal
             bool cockpit=UrbanSimulation.Instance&&UrbanSimulation.Instance.Current==car&&GameDirector.Instance.CameraRig.FirstPersonVehicle;
             if(glass)glass.SetColor("_BaseColor",cockpit?new Color(.05f,.1f,.12f,.025f):new Color(.10f,.20f,.24f,.14f));
             var camera=Camera.main;bool nearby=camera&&(transform.position-camera.transform.position).sqrMagnitude<180*180;
-            if(Time.time<visualClock)return;visualClock=Time.time+(nearby?0:.75f);
+            if(Time.time<visualClock)return;visualClock=Time.time+(cockpit?0:nearby?.08f:.75f);
             bool seo=UrbanSimulation.Instance&&UrbanSimulation.Instance.Current==car;
             bool rider=CityBusService.Instance&&CityBusService.Instance.Riding==car;
             for(int i=0;i<occupants.Count;i++)
             {
                 var r=occupants[i];
+                r.transform.localPosition=VehicleSeats.Local(car,i);
                 bool isSeo=seo&&i==UrbanSimulation.Instance.SeatIndex||rider&&i==occupants.Count-1;
                 r.enabled=(nearby||seo||rider)&&(!car.Wrecked||car.GetComponent<VehicleFailure>())&&(isSeo||(i==0?car.occupied:i<=PassengerCount));
                 var taxi=car.GetComponent<CityTaxiService>();if(taxi&&taxi.Air&&i==0&&!isSeo)r.enabled=false;
                 if(!nearby&&!isSeo)continue;
                 if(isSeo&&GameDirector.Instance&&GameDirector.Instance.CameraRig.FirstPersonVehicle)r.enabled=false;
+                if(!r.enabled)continue;
                 string identity=identities[i];
+                if(car.GetComponent<GangConvoy>())identity="GangCrimson";
                 var stolen=car.GetComponent<StolenVehicle>();
                 if(i==0&&stolen&&stolen.Driver)
                 {
@@ -121,7 +133,9 @@ namespace AfterSignal
                     :i==0?VehiclePortraits.Driver(identity,view):VehiclePortraits.Passenger(identity,view);
                 if(!r.sprite)r.sprite=people[i];
                 float height=car.IsSpecial?1.05f:car.type==CityVehicleType.Bus?1.06f:car.type==CityVehicleType.Truck?.98f:car.type==CityVehicleType.Motorcycle?.9f:.72f;
-                r.transform.localScale=Vector3.one*(height/Mathf.Max(.1f,r.sprite.bounds.size.y));
+                float scale=height/Mathf.Max(.1f,r.sprite.bounds.size.y);
+                if(car.type!=CityVehicleType.Motorcycle)scale=Mathf.Min(scale,(car.IsHeavy?1.05f:.76f)/Mathf.Max(.1f,r.sprite.bounds.size.x));
+                r.transform.localScale=Vector3.one*scale;
                 r.flipX=false;
                 if(Camera.main)r.transform.rotation=Quaternion.Euler(0,Camera.main.transform.eulerAngles.y,0);
             }

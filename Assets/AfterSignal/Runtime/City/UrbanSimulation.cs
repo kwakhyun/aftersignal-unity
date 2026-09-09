@@ -175,6 +175,7 @@ namespace AfterSignal
                     }
                 }
 
+                var navalGun=Current?Current.GetComponent<SeaCombat>():null;if(navalGun&&SeatIndex==0){Prompt+=" · 좌클릭 함포";if(input.attack){navalGun.ManualFire();input.attack=false;}}
                 bool armed=Current&&(Current.type==CityVehicleType.Tank||Current.type==CityVehicleType.Fighter||Current.type==CityVehicleType.CombatHelicopter);
                 input.grapple = input.dash = input.skill = false;
                 if(!armed||SeatIndex>0)input.secondaryFire=false;
@@ -187,7 +188,7 @@ namespace AfterSignal
                 foreach (var c in Cars)
                     if (c && !c.Wrecked && !c.GetComponent<CityBusLine>())
                     {
-                        float d = Vector3.Distance(VehicleSeats.Door(c), game.Player.transform.position);
+                        float d = TransportAccess.Distance(c, game.Player.transform.position);
                         if (d < best)
                         {
                             best = d;
@@ -301,7 +302,7 @@ namespace AfterSignal
             if (seat==0 && car.occupied && !car.owned)
             {
                 Hijacks++;
-                CityPopulation.Instance?.Eject(car.transform.position - car.transform.forward * 2);
+                car.GetComponent<VehicleCabin>()?.EjectDriver();
                 WantedSystem.Report(car.GetComponent<PoliceCar>() ? 22 : 9, car.transform.position);
                 game.Toast("운전자가 하차했습니다");
             }

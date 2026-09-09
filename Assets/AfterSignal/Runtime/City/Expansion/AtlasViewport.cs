@@ -37,6 +37,7 @@ namespace AfterSignal
         {
             if(mini||dragged)return;RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform,e.position,e.pressEventCamera,out var p);
             float best=24;int id=-1;bool expanded=false;
+            foreach(var incident in CityIncidentBoard.Active)if(Vector2.Distance(p,Project(incident.position))<18){Waypoint?.Invoke(incident.position);GameDirector.Instance?.Toast(incident.title+" · 현장 지원 시 기여 보상",5);return;}
             CityVenue selected=null;foreach(var venue in FourCityCatalog.Venues)if(Visible(venue)){float d=Vector2.Distance(p,Project(venue.position));if(d<best){best=d;selected=venue;}}
             if(selected!=null){SelectVenue?.Invoke(selected);return;}
             for(int i=0;i<UrbanCatalog.SiteCount;i++){if(filter==2)continue;float d=Vector2.Distance(p,Project(UrbanCatalog.Center(i)));if(d<best){best=d;id=i;}}
@@ -70,6 +71,7 @@ namespace AfterSignal
             for(int i=0;i<ExpansionWorld.Places.Length;i++)if(VisibleLandmark(i))Pin(vh,ExpansionWorld.Places[i],mini?3:6,new Color(.34f,.77f,.96f));
             foreach(var venue in FourCityCatalog.Venues)if(Visible(venue)){Pin(vh,venue.position,mini?4:9,FourCityAtlasSelection.Color(venue.kind));if(FourCityAtlasSelection.Venue==venue)Disc(vh,venue.position,Span*.014f,Span*.014f,new Color(1,.87f,.42f,.35f),24);}
             var sim=UrbanSimulation.Instance;if(!mini&&sim)foreach(var c in sim.Cars)if(c&&c.GetComponent<IntercityService>())Pin(vh,c.transform.position,5,new Color(.83f,.55f,1));
+            foreach(var incident in CityIncidentBoard.Active){var tint=incident.color;tint.a=.18f;Disc(vh,incident.position,incident.radius,incident.radius,tint,20);Pin(vh,incident.position,mini?5:9,incident.color);}
             var g=GameDirector.Instance;if(g&&g.Ready){var p=Project(g.Player.transform.position);if(rectTransform.rect.Contains(p)){Pin(vh,g.Player.transform.position,mini?5:9,new Color(1,.86f,.36f));var f=g.CameraRig.ViewRight;Line(vh,g.Player.transform.position,g.Player.transform.position+Vector3.Cross(f,Vector3.up)*Span*.035f,new Color(1,.86f,.36f),1.5f);}}
         }
         void Land(VertexHelper vh,Rect r,Color c) {var a=Project(new(r.xMin,0,r.yMin));var b=Project(new(r.xMax,0,r.yMax));Quad(vh,Rect.MinMaxRect(a.x,a.y,b.x,b.y),c);}

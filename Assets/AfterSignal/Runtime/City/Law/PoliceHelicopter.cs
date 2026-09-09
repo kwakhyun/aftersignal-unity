@@ -116,8 +116,11 @@ namespace AfterSignal
                 return;
             }
 
-            Vector3 player = g.Player.transform.position;
-            Vector3 target = system.LastSeen + new Vector3(Mathf.Cos(clock * .16f) * 28, Mathf.Max(28, player.y - system.LastSeen.y + 22), Mathf.Sin(clock * .16f) * 28);
+            var priority=IncidentCommand.Monster(transform.position,650);
+            if(IncidentCommand.Emergency&&!priority){warning=0;return;}
+            Vector3 player = priority?priority.Center:g.Player.transform.position;
+            Vector3 focus=IncidentCommand.Emergency?IncidentCommand.Position:system.LastSeen;
+            Vector3 target = focus + new Vector3(Mathf.Cos(clock * .16f) * 28, Mathf.Max(28, player.y - system.LastSeen.y + 22), Mathf.Sin(clock * .16f) * 28);
             if (Physics.Linecast(transform.position, target, out var obstruction, 1, QueryTriggerInteraction.Ignore))
                 target.y = Mathf.Max(target.y, obstruction.collider.bounds.max.y + 8);
             transform.position = Vector3.MoveTowards(transform.position, target, 18 * dt);
@@ -125,7 +128,7 @@ namespace AfterSignal
             direction.y = 0;
             if (direction.sqrMagnitude > .1f)
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), dt * 2);
-            var tracked=UrbanSimulation.Instance&&UrbanSimulation.Instance.Current?UrbanSimulation.Instance.Current.transform.position+Vector3.up:g.Player.Shoulder;
+            var tracked=priority?priority.Center:UrbanSimulation.Instance&&UrbanSimulation.Instance.Current?UrbanSimulation.Instance.Current.transform.position+Vector3.up:g.Player.Shoulder;
             searchlight.transform.rotation=Quaternion.Slerp(searchlight.transform.rotation,Quaternion.LookRotation(tracked-searchlight.transform.position),1-Mathf.Exp(-dt*7));
             fireClock -= dt;
             if (warning > 0)
@@ -137,9 +140,9 @@ namespace AfterSignal
                     fireClock = WantedSystem.Level >= 5 ? 1.5f : 2.3f;
                 }
             }
-            else if (fireClock <= 0 && CanSee())
+            else if (fireClock <= 0 && (priority?FactionCombat.Visible(transform.position,priority.Center,200):CanSee()))
             {
-                aim = g.Player.Shoulder;
+                aim = priority?priority.Center:g.Player.Shoulder;
                 warning = .7f;
                 SignalEffects.Beam(transform.position + Vector3.down, aim, new Color(1, .2f, .12f, .5f), .015f, .7f);
             }
@@ -153,7 +156,7 @@ namespace AfterSignal
             if (Physics.Raycast(start, direction, out var hit, 95, (1 << 0) | (1 << 8) | (1 << 9), QueryTriggerInteraction.Collide))
             {
                 end = hit.point;
-                if (hit.collider.GetComponentInParent<PlayerMotor>())
+                if (!IncidentCommand.Emergency && hit.collider.GetComponentInParent<PlayerMotor>())
                     g.Player.ReceiveDamage(16, transform.position);
                 var car = hit.collider.GetComponentInParent<CityVehicle>();
                 var civilian=hit.collider.GetComponentInParent<WorldActor>();

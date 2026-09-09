@@ -38,8 +38,8 @@ namespace AfterSignal
         public bool IsSpecial => IsAircraft || IsWatercraft;
         public float Steering { get; private set; }
         public float TopSpeed => type == CityVehicleType.Motorcycle ? 45 : type == CityVehicleType.SportsCar ? 49 : type == CityVehicleType.Tank ? 18 : type == CityVehicleType.Bus ? 21 : type == CityVehicleType.Truck ? 23 : 27;
-        public float HalfLength => GetComponent<AuthoredCraft>() ? 235 : type == CityVehicleType.Bus ? 4.6f : type == CityVehicleType.Truck ? 3.9f : type == CityVehicleType.Motorcycle ? 1.25f : type == CityVehicleType.Airliner ? 15 : type == CityVehicleType.Boat ? 8 : type == CityVehicleType.CombatHelicopter ? 5.5f : type == CityVehicleType.Fighter ? 7.5f : type == CityVehicleType.Tank ? 4 : 2.55f;
-        public float HalfWidth => GetComponent<AuthoredCraft>() ? 19 : type == CityVehicleType.Motorcycle ? .42f : type == CityVehicleType.Airliner ? 2 : type == CityVehicleType.Boat ? 2.5f : type == CityVehicleType.Tank ? 1.9f : IsHeavy ? 1.25f : 1.05f;
+        public float HalfLength => GetComponent<MaritimeHull>() ? GetComponent<MaritimeHull>().Length*.5f : GetComponent<AuthoredCraft>() ? 235 : type == CityVehicleType.Bus ? 4.6f : type == CityVehicleType.Truck ? 3.9f : type == CityVehicleType.Motorcycle ? 1.25f : type == CityVehicleType.Airliner ? 15 : type == CityVehicleType.Boat ? 8 : type == CityVehicleType.CombatHelicopter ? 5.5f : type == CityVehicleType.Fighter ? 7.5f : type == CityVehicleType.Tank ? 4 : 2.55f;
+        public float HalfWidth => GetComponent<MaritimeHull>() ? GetComponent<MaritimeHull>().Beam*.5f : GetComponent<AuthoredCraft>() ? 19 : type == CityVehicleType.Motorcycle ? .42f : type == CityVehicleType.Airliner ? 2 : type == CityVehicleType.Boat ? 2.5f : type == CityVehicleType.Tank ? 1.9f : IsHeavy ? 1.25f : 1.05f;
 
         readonly System.Collections.Generic.List<Transform> wheels = new System.Collections.Generic.List<Transform>();
         Light[] lamps;
@@ -134,6 +134,7 @@ namespace AfterSignal
         public void TickTraffic(float dt)
         {
             if (IsSpecial) return;
+            if(GetComponent<TrafficYield>()){speed=Mathf.MoveTowards(speed,0,dt*18);return;}
             if (!traffic || Wrecked || route == null || route.Length < 2)
                 return;
             var emergency=GetComponent<VehicleEmergency>();
@@ -259,6 +260,7 @@ namespace AfterSignal
                 return;
             RecordDamageSource(source);
             health = Mathf.Max(0, health - amount);
+            var marine=GetComponent<SeaCombat>();if(marine&&marine.Body){marine.Body.health=health;CityIncidentBoard.Contribution(marine.Body,amount,source);}
             if(!Wrecked&&(alertOccupants||HealthFraction<.25f))VehicleEmergency.Hit(this,contact,false);
             ApplyDamageLook();
             SignalEffects.Burst(contact, SignalEffects.Gold, 8, 4);

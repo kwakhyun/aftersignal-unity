@@ -41,13 +41,13 @@ namespace AfterSignal
             var v=Definition;if(v.kind==VenueKind.Circuit)
             {
                 var prefab=Resources.Load<GameObject>("WorldAssets/FutureSportsCar/FutureSportsCar");
-                for(int i=0;i<6;i++){GameObject car=prefab?Instantiate(prefab,transform):new GameObject("Race car");car.name="Race team "+(i%2)+" / car "+(i+1);car.transform.SetParent(transform,false);foreach(var c in car.GetComponentsInChildren<MonoBehaviour>())Destroy(c);foreach(var c in car.GetComponentsInChildren<Collider>())Destroy(c);car.transform.localScale=Vector3.one;foreach(var renderer in car.GetComponentsInChildren<MeshRenderer>()){var mats=renderer.sharedMaterials;for(int n=0;n<mats.Length;n++){string key=mats[n]?mats[n].name:"";mats[n]=CityGeometry.Material(key.Contains("Glazing")?"Glass":key.Contains("Rubber")?"Rubber":key.Contains("Body")?(i%2==0?"SeatCoral":"SeatBlue"):key.Contains("lamp")?"NeonCyan":"FutureSilver");}renderer.sharedMaterials=mats;}raceCars.Add(car.transform);}
+                for(int i=0;i<6;i++){GameObject car=prefab?Instantiate(prefab,transform):new GameObject("Race car");car.name="Race team "+(i%2)+" / car "+(i+1);car.transform.SetParent(transform,false);foreach(var c in car.GetComponentsInChildren<MonoBehaviour>())Destroy(c);foreach(var c in car.GetComponentsInChildren<Collider>())Destroy(c);car.transform.localScale=Vector3.one;foreach(var renderer in car.GetComponentsInChildren<MeshRenderer>()){var mats=renderer.sharedMaterials;for(int n=0;n<mats.Length;n++){string key=mats[n]?mats[n].name:"";mats[n]=CityGeometry.Material(key.Contains("Glazing")?"Glass":key.Contains("Rubber")?"Rubber":key.Contains("Body")?(i%2==0?"SeatCoral":"SeatBlue"):key.Contains("lamp")?"NeonCyan":"FutureSilver");}renderer.sharedMaterials=mats;}var pilot=car.AddComponent<RaceDriverPresentation>();pilot.Venue=this;pilot.Serial=i;raceCars.Add(car.transform);}
                 return;
             }
             int perTeam=v.kind==VenueKind.Football?11:v.kind==VenueKind.Baseball?9:5;
             string art=v.kind==VenueKind.Football?"FootballPlayer":v.kind==VenueKind.Baseball?"BaseballPlayer":"BasketballPlayer";
             for(int i=0;i<perTeam*2;i++){var a=VenueActor.Create(this,30000+Index*100+i,i<perTeam?"홈 팀 선수":"원정 팀 선수",art,Vector3.zero);a.athlete=true;a.team=i/perTeam;a.slot=i%perTeam;a.TakeStartingPosition(FourCitySports.Instance.Get(v.id));a.gameObject.SetActive(false);players.Add(a);}
-            var go=GameObject.CreatePrimitive(PrimitiveType.Sphere);go.name="Live match ball";go.transform.SetParent(transform,false);Destroy(go.GetComponent<Collider>());go.transform.localScale=Vector3.one*(v.kind==VenueKind.Baseball?.18f:.35f);go.GetComponent<Renderer>().sharedMaterial=CityGeometry.Material(v.kind==VenueKind.Basketball?"SeatCoral":"PaintWhite");ball=go.transform;
+            var go=GameObject.CreatePrimitive(PrimitiveType.Sphere);go.name="Live match ball";go.transform.SetParent(transform,false);Destroy(go.GetComponent<Collider>());go.transform.localScale=Vector3.one*(v.kind==VenueKind.Baseball?.18f:.35f);go.GetComponent<Renderer>().sharedMaterial=CityGeometry.Material(v.kind==VenueKind.Basketball?"SeatCoral":"PaintWhite");ball=go.transform;go.AddComponent<MatchBallMotion>().Venue=this;
         }
         void BuildCinema()
         {
@@ -57,19 +57,25 @@ namespace AfterSignal
             var audio=screen.AddComponent<AudioSource>();audio.spatialBlend=1;audio.minDistance=7;audio.maxDistance=70;audio.rolloffMode=AudioRolloffMode.Linear;audio.volume=.28f;film.audioOutputMode=VideoAudioOutputMode.AudioSource;film.SetTargetAudioSource(0,audio);
             film.errorReceived+=(p,error)=>{Debug.LogWarning("Cinema playback: "+error);GameDirector.Instance?.Toast("상영 파일을 불러오지 못했습니다.");};
         }
-        void SpawnCrowd()
+        System.Collections.IEnumerator SpawnCrowd()
         {
             spawned=true;crowd=new GameObject("Facility residents / staff / spectators");crowd.transform.SetParent(transform,false);
-            int count=Definition.visitors;
+            int count=Definition.Sport?Mathf.Min(360,Mathf.Max(Definition.visitors*4,180)):Definition.visitors;
+            if(!GetComponent<VenueSafety>())gameObject.AddComponent<VenueSafety>();
+            int seatCursor=0;
             for(int i=0;i<count;i++)
             {
+                while(!PopulationBudget.ClaimFrame())yield return null;
                 bool staff=i<Mathf.Min(12,Mathf.Max(3,count/7));string role=Role(staff,i),art=Art(staff,i);
                 var points=staff&&staffPoints.Count>0?staffPoints:activityPoints;Vector3 p=points.Count>0?points[i%points.Count]:new Vector3((i%7-3)*2,.08f,-Definition.size.y*.5f+16+i/7*2);
                 if(Definition.kind==VenueKind.Prison&&!staff){int n=i%8,f=(i/8)%Mathf.Max(1,floorCount);p=new Vector3((n<4?-1:1)*roomWidth*.21f-1,f*floorHeight+.1f,-roomDepth*.17f+n%4*6);}
-                bool spectator=!staff&&seatPoints.Count>0&&i%4!=0;if(spectator)p=seatPoints[i%seatPoints.Count];
+                bool spectator=!staff&&seatCursor<seatPoints.Count&&i%7!=0;if(spectator)p=seatPoints[seatCursor++];
+                else if(CrowdFlow.Place(transform.TransformPoint(p),i,out var space,18))p=transform.InverseTransformPoint(space);else continue;
+                if(!PopulationBudget.Room(transform.TransformPoint(p),spectator))continue;
                 var npc=VenueActor.Create(this,40000+Index*200+i,role,art,p);npc.transform.SetParent(crowd.transform,false);npc.transform.localPosition=p;npc.origin=p;npc.staff=staff;npc.spectator=spectator;npc.serial=i;RegionalResidents.Apply(npc,this,staff,i);if(staff)StaffOnDuty++;
             }
             Admissions+=count;
+            if(Definition.city!=2&&Definition.kind!=VenueKind.Prison&&activityPoints.Count>0)for(int n=0;n<2;n++){yield return null;var origin=transform.TransformPoint(activityPoints[(n*7)%activityPoints.Count]);if(CrowdFlow.Place(origin,n,out var familyAt,12)){var family=FamilyGroup.Create(familyAt,51000+Index*10+n,n==0);if(family){family.Venue=this;family.transform.SetParent(crowd.transform,true);}}}
         }
         string Art(bool staff,int i)
         {var regional=RegionalResidents.Art(Definition,staff,i);if(regional!=null)return regional;if(Definition.kind==VenueKind.Circuit&&staff&&i%2==0)return "RacingDriver";if(Definition.city==3)return staff?(Definition.kind==VenueKind.Hospital?"AbyssMedic":"AbyssEngineer"):i%3==0?"AbyssEngineer":i%3==1?"AbyssCitizen":"AbyssMedic";if(Definition.city==2)return "Soldier";return staff?Definition.kind==VenueKind.Hospital?(i%2==0?"Doctor":"Nurse"):i%3==0?"Worker":i%3==1?"OfficeWoman":"Bartender":PeopleArt.Citizens[(i+Index)%PeopleArt.Citizens.Length];}
@@ -78,19 +84,21 @@ namespace AfterSignal
         void Update()
         {
             var g=GameDirector.Instance;if(!g||!g.Ready)return;float distance=(g.Player.transform.position-transform.position).sqrMagnitude;if(Definition.kind==VenueKind.Slum||Definition.kind==VenueKind.Island)distance=new Bounds(transform.position,new Vector3(Definition.size.x,40,Definition.size.y)).SqrDistance(g.Player.transform.position);
-            if(Time.time>next){next=Time.time+.45f;if(distance<260*260&&!spawned)SpawnCrowd();if(crowd)crowd.SetActive(distance<420*420);foreach(var p in players)if(p)p.gameObject.SetActive(distance<260*260);
+            if(Time.time>next){next=Time.time+.45f;if(distance<200*200&&!spawned)StartCoroutine(SpawnCrowd());if(crowd&&crowd.activeSelf!=(distance<280*280))crowd.SetActive(distance<280*280);foreach(var p in players)if(p&&p.gameObject.activeSelf!=(distance<260*260))p.gameObject.SetActive(distance<260*260);
                 if(film){if(distance<100*100&&!film.isPlaying&&!film.isPrepared)film.Prepare();if(distance<100*100&&film.isPrepared&&!film.isPlaying)film.Play();else if(distance>140*140&&film.isPlaying)film.Pause();}}
             if(Definition.Sport)Sports(distance<420*420);
         }
         void Sports(bool close)
         {
             var league=FourCitySports.Instance;if(!league)return;var m=league.Get(Definition.id);if(m==null)return;
-            if(scoreboard)scoreboard.text=m.home+"   "+m.homeScore+" : "+m.awayScore+"   "+m.away+"\n"+m.Status+"\n"+m.lastEvent;
+            if(scoreboard&&close&&Time.time>=scoreTime){scoreTime=Time.time+.5f;scoreboard.text=m.home+"   "+m.homeScore+" : "+m.awayScore+"   "+m.away+"\n"+(VenueSafety.IsSuspended(Definition.id)?"안전 확보 중 · 경기 일시 중단":m.Status)+"\n"+m.lastEvent;}
+            if(VenueSafety.IsSuspended(Definition.id))return;
             if(!close)return;
             if(Definition.kind==VenueKind.Circuit){for(int i=0;i<raceCars.Count;i++){float t=m.raceDistance[i]/1500;var p=FourCityArchitecture.Track(t);var tangent=FourCityArchitecture.Track(t+.001f)-p;var side=Vector3.Cross(tangent.normalized,Vector3.up);raceCars[i].localPosition=p+side*((i%3-1)*2.7f);raceCars[i].localRotation=Quaternion.LookRotation(-Vector3.Cross(tangent,Vector3.up));}return;}
             if(m.eventNumber!=lastEvent){lastEvent=m.eventNumber;ballFrom=Definition.kind==VenueKind.Baseball?new Vector3(0,1.6f,-25.56f):ball.localPosition;ballTo=new(m.ballX,.25f,m.ballZ);ballAge=0;foreach(var p in players)p.Play(m);}
-            if(GameDirector.Instance.Paused)return;ballAge+=Time.deltaTime;float duration=Definition.kind==VenueKind.Baseball?1.2f:.8f,tween=Mathf.Clamp01(ballAge/duration);ball.localPosition=Vector3.Lerp(ballFrom,ballTo,tween)+Vector3.up*Mathf.Sin(tween*Mathf.PI)*Mathf.Max(.25f,m.ballHeight);
+
         }
+        float scoreTime;
         public void Observe(){var g=GameDirector.Instance;g.Player.Respawn(transform.TransformPoint(viewPoint),false);g.CameraRig.SetView(transform.TransformPoint(lookPoint));g.Toast(Definition.Sport?"경기를 관람합니다 · 매표소에서 점수와 승부예측 확인":"마우스로 자유롭게 둘러보세요",5);}
         static VenueRuntime cinemaView;
         public static bool ViewingCinema=>cinemaView&&GameDirector.Instance&&GameDirector.Instance.Ready&&!GameDirector.Instance.Paused&&!GameDirector.Instance.Dialogue&&(GameDirector.Instance.Player.transform.position-cinemaView.transform.TransformPoint(cinemaView.viewPoint)).sqrMagnitude<2.25f;

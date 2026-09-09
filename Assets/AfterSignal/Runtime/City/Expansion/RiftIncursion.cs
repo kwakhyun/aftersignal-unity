@@ -16,10 +16,10 @@ namespace AfterSignal
             if(!Active)
             {
                 if(warning>0){warning-=Time.deltaTime;if(warning<=0)Trigger(pending);return;}
-                if(Time.time<next)return;next=Time.time+18;
+                if(Time.time<next||CityEventGate.Busy)return;next=Time.time+18;
                 if(OceanLife.Swimming||PrisonSystem.Instance&&PrisonSystem.Instance.Jailed||CampaignBattle.Active)return;
                 if(!ResponseDispatch.TryOrigin(g.Player.transform.position,true,false,0,out pending))return;
-                warning=7;g.Toast("긴급 재난 경보 · 인근에 대형 잠식 반응! 건물에서 떨어져 대피하세요.",7);return;
+                if(!CityEventGate.Begin(this,CityEventKind.Monster))return;warning=7;g.Toast("긴급 재난 경보 · 인근에 대형 잠식 반응! 건물에서 떨어져 대피하세요.",7);return;
             }
             if(Time.time>pulse){pulse=Time.time+6;SignalEffects.Ring(Position+Vector3.up*.12f,new Color(.7f,.2f,1),24,1.4f);}
             bool alive=creatures.Exists(c=>c&&c.Body.Alive);
@@ -35,13 +35,15 @@ namespace AfterSignal
         public bool Trigger(Vector3 requested)
         {
             if(Active||!CityGangWar.FindGround(requested,out var at))return false;
+            if(!CityEventGate.Begin(this,CityEventKind.Monster))return false;
             Position=at;Active=true;Incidents++;started=Time.time;creatures.Clear();creatures.Add(RiftCreature.Create(at,Incidents%3));
             if(Incidents%3==0&&CityGangWar.FindGround(at+Vector3.right*35,out var second))creatures.Add(RiftCreature.Create(second,(Incidents+1)%3));
-            response=MilitaryResponse.ForIncident(this);
+            foreach(var c in creatures)CityEventGate.Enroll(c.Body);
+            response=MilitaryResponse.ForIncident(this);SecurityResponse.Request(creatures[0].Body,true);
             foreach(var c in WorldActor.All)if(c&&!c.monster&&!c.helicopter&&(c.Center-at).sqrMagnitude<140*140){c.GetComponent<CityNpc>()?.Panic(at,35);NpcSpeech.Say(c,NpcDialogueBank.Line(c.GetComponent<CityNpc>(),"monster"),5,6);}
             GameDirector.Instance.Toast("대형 잠식체 출현 · 군 지원 도착까지 시민 대피 / 발광 기관이 열릴 때 공격",8);return true;
         }
-        void End(){Active=false;next=Time.time+Random.Range(65,115);if(response)response.Withdraw();foreach(var c in creatures)if(c)Destroy(c.gameObject,12);}
-        void OnDestroy(){if(response)response.Withdraw();if(Instance==this)Instance=null;}
+        void End(){CityEventGate.Cancel(this);Active=false;next=Time.time+Random.Range(65,115);if(response)response.Withdraw();foreach(var c in creatures)if(c)Destroy(c.gameObject,12);}
+        void OnDestroy(){CityEventGate.Cancel(this);if(response)response.Withdraw();if(Instance==this)Instance=null;}
     }
 }

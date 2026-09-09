@@ -34,23 +34,43 @@ namespace AfterSignal
     // Compatibility for legacy meshes that were combined across multiple buildings.
     public static class DistrictGeometryCut
     {
-        public static void Remove(Bounds bounds)
+        static int serial;static readonly Dictionary<int,Bounds> cuts=new();
+        public static void Reset(){cuts.Clear();serial=0;}
+        public static int Remove(Bounds bounds)
         {
+            // Foundation colliders can extend below street level. Never let their
+            // bounds cut a shared road/ground triangle when a building is removed.
+            var minimum=bounds.min;
+            if(NpcGroundSupport.Floor(bounds.center,minimum.y+4,8,out var ground))minimum.y=Mathf.Max(minimum.y,ground+.24f);
+            bounds.SetMinMax(minimum,bounds.max);
             bounds.Expand(new Vector3(1,.2f,1));
+            int id=++serial;cuts[id]=bounds;
             foreach(var f in Object.FindObjectsByType<MeshFilter>(FindObjectsSortMode.None))
             {
                 var r=f.GetComponent<MeshRenderer>();if(!r||!r.enabled||!r.bounds.Intersects(bounds)||f.GetComponentInParent<CityVehicle>())continue;
-                var mesh=f.sharedMesh;if(!mesh||!mesh.isReadable)continue;
-                var vertices=mesh.vertices;var groups=new List<int[]>();bool changed=false;
-                for(int sub=0;sub<mesh.subMeshCount;sub++)
-                {
-                    var source=mesh.GetTriangles(sub);var kept=new List<int>(source.Length);
-                    for(int i=0;i<source.Length;i+=3){var p=f.transform.TransformPoint((vertices[source[i]]+vertices[source[i+1]]+vertices[source[i+2]])/3);if(bounds.Contains(p)&&p.y>bounds.min.y+.15f){changed=true;continue;}kept.Add(source[i]);kept.Add(source[i+1]);kept.Add(source[i+2]);}groups.Add(kept.ToArray());
-                }
-                if(!changed)continue;var copy=Object.Instantiate(mesh);copy.name="Structural cut / "+mesh.name;for(int i=0;i<groups.Count;i++)copy.SetTriangles(groups[i],i);copy.RecalculateBounds();
-                f.sharedMesh=copy;f.gameObject.AddComponent<RuntimeMeshOwner>().mesh=copy;
+                var mesh=f.sharedMesh;if(!mesh||!mesh.isReadable)continue;var owner=f.GetComponent<ReversibleMeshCut>();if(!owner)owner=f.gameObject.AddComponent<ReversibleMeshCut>();owner.Apply(cuts);
             }
+            return id;
         }
+        public static void Restore(int id){if(!cuts.Remove(id))return;foreach(var owner in Object.FindObjectsByType<ReversibleMeshCut>(FindObjectsSortMode.None))owner.Apply(cuts);}
+    }
+    public sealed class ReversibleMeshCut:MonoBehaviour
+    {
+        Mesh original,copy;MeshFilter filter;
+        public void Apply(Dictionary<int,Bounds> cuts)
+        {
+            if(!filter){filter=GetComponent<MeshFilter>();original=filter.sharedMesh;}if(copy)Destroy(copy);
+            if(cuts.Count==0){filter.sharedMesh=original;copy=null;return;}
+            copy=Instantiate(original);var vertices=original.vertices;
+            for(int sub=0;sub<original.subMeshCount;sub++)
+            {
+                var source=original.GetTriangles(sub);var kept=new List<int>();
+                for(int i=0;i<source.Length;i+=3){var p=transform.TransformPoint((vertices[source[i]]+vertices[source[i+1]]+vertices[source[i+2]])/3);bool cut=false;foreach(var bounds in cuts.Values)if(bounds.Contains(p)&&p.y>bounds.min.y+.2f){cut=true;break;}if(!cut){kept.Add(source[i]);kept.Add(source[i+1]);kept.Add(source[i+2]);}}
+                copy.SetTriangles(kept,sub);
+            }
+            copy.RecalculateBounds();filter.sharedMesh=copy;
+        }
+        void OnDestroy(){if(copy)Destroy(copy);}
     }
 
 }

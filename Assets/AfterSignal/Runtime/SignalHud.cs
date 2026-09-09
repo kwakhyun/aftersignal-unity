@@ -117,9 +117,9 @@ namespace AfterSignal
             ButtonText(musicButton,musicLevel<.01f?"배경음악: 꺼짐  ·  클릭하여 변경":$"배경음악: {musicLevel*100:0}%  ·  클릭하여 변경");
             settingsRow.SetActive(mode=="pause");ButtonText(motionButton,PresentationSettings.Motion>0?"화면 충격: 켜짐":"화면 충격: 꺼짐");ButtonText(effectButton,PresentationSettings.Effects>0?"전투 효과: 켜짐":"전투 효과: 꺼짐");ButtonText(postButton,PresentationSettings.Post?"후처리: 켜짐":"후처리: 꺼짐");
             if(mode=="dead"){
-                modalTitle.text="SIGNAL LOST";modalBody.text="기억은 아직 사라지지 않았습니다.\n현재 구역의 입구에서 다시 시작합니다.";ButtonText(primary,"구역 재시도   →");ButtonText(secondary,"타이틀로 돌아가기");ButtonText(third,"게임 종료");secondary.interactable=true;
+                modalTitle.text="SIGNAL LOST";modalBody.text="기억은 아직 사라지지 않았습니다.\n등록된 회복 지점에서 다시 시작합니다.";ButtonText(primary,RespawnNetwork.Destination+"에서 리스폰   →");ButtonText(secondary,"타이틀로 돌아가기");ButtonText(third,"게임 종료");secondary.interactable=true;
             }else{
-                modalTitle.text="잠시 멈춘 밤";modalBody.text="WASD 달리기 · 마우스 왼쪽 공격 / 오른쪽 로프\n휠 확대·축소 / 1–3 무기 · R 장전 · Q 기술 · CTRL 방어\nSPACE 두 번 더블 점프 · 벽으로 W 등반 · SHIFT 대시\n마우스 시점 · J 사건 일지 · HOME 시점 초기화";ButtonText(primary,"계속하기   →");ButtonText(secondary,game.Audio.Volume>.01f?"소리 끄기":"소리 켜기");ButtonText(third,"저장하고 타이틀로");secondary.interactable=true;
+                modalTitle.text="잠시 멈춘 밤";modalBody.text="WASD 달리기 · 마우스 왼쪽 공격 / 오른쪽 로프\n휠 확대·축소 / 1–3 무기 · R 장전 · Q 기술 · CTRL 방어\nSPACE 두 번 더블 점프 · 벽으로 W 등반 · SHIFT 대시\n마우스 시점 · J 사건 일지 · F6 구조 신고 · HOME 시점 초기화";ButtonText(primary,"계속하기   →");ButtonText(secondary,game.Audio.Volume>.01f?"소리 끄기":"소리 켜기");ButtonText(third,"저장하고 타이틀로");secondary.interactable=true;
             }
         }
         void Primary(){if(game.Title)game.Begin();else if(game.Dead)game.Retry();else game.SetPaused(false);}
