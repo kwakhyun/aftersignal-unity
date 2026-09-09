@@ -111,6 +111,7 @@ namespace AfterSignal
             if (pedestrian)
             {
                 if(CivilianDefense.Active(this))return;
+                if(Alive&&medical&&medical.Grade==InjuryGrade.Wounded){pedestrian.struck=false;pedestrian.speed=1.15f;if(force.sqrMagnitude>.01f)pedestrian.WalkTo(transform.position+Vector3.ProjectOnPlane(force,Vector3.up).normalized*5,false);return;}
                 pedestrian.Hit(force, health <= 0 ? 14 : 6);
                 return;
             }

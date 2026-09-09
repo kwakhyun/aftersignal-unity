@@ -1,0 +1,10 @@
+{
+    "completed": true,
+    "passed": [
+        "All 22 named characters have 16 imported frames (four directions)",
+        "Every named story character resolves to an independent sprite region",
+        "New Seoha portrait and ensemble title resolve through shipping resource paths",
+        "Navigation card is above weapon selection UI"
+    ],
+    "errors": []
+}

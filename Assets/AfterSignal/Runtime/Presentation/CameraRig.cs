@@ -18,6 +18,7 @@ namespace AfterSignal
         public bool CanLook => director && director.Ready && !director.Blocked && !(UrbanSimulation.Instance && UrbanSimulation.Instance.MapOpen);
         Vector3 Focus => Driving ? VehicleFocus() : director.Player.Shoulder + Quaternion.Euler(0,orbitYaw,0)*Vector3.right*.75f + Vector3.up*.25f;
         public Vector3 ViewRight => FreeOrbit ? Vector3.ProjectOnPlane(transform.right, Vector3.up).normalized : Vector3.right;
+        public Vector3 LookForward=>Vector3.Cross(ViewRight,Vector3.up);
         public Vector3 MoveDirection(Vector2 input) => ViewRight * input.x + Vector3.Cross(ViewRight, Vector3.up) * input.y;
 
         public void ReadLook(ControlFrame input)

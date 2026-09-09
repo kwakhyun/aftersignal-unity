@@ -20,7 +20,7 @@ namespace AfterSignal
                     var h=hits[i];if(h.collider.transform.IsChildOf(car.transform)||h.normal.y>.65f)continue;
                     clearance=Mathf.Min(clearance,h.distance);
                     var other=h.collider.GetComponentInParent<CityVehicle>();
-                    if(other&&other.traffic&&!other.owned&&!other.GetComponent<EmergencyAmbulance>())TrafficYield.Request(other,car);
+                    if(other&&other.traffic&&!other.owned&&!other.GetComponent<EmergencyAmbulance>()&&!other.GetComponent<FireEngine>())TrafficYield.Request(other,car);
                 }
                 var sample=car.transform.position+direction*Mathf.Min(look,Mathf.Max(4,clearance));
                 if(!VehicleGround.Sample(car,sample,.8f,2,out var floor)||floor.normal.y<.75f||Mathf.Abs(floor.point.y-car.transform.position.y)>1.1f)continue;

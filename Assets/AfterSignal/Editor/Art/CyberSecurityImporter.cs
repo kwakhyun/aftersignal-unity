@@ -18,7 +18,7 @@ namespace AfterSignal.Editor
             }
             AssetDatabase.Refresh();
         }
-        public override uint GetVersion()=>3;
+        public override uint GetVersion()=>5;
         public override int GetPostprocessOrder()=>100;
         public static void BuildCyberConflictRelease()
         {
@@ -44,7 +44,7 @@ namespace AfterSignal.Editor
         }
         void OnPreprocessTexture()
         {
-            if(!Sheet)return;var t=new Texture2D(2,2);t.LoadImage(File.ReadAllBytes(assetPath));var p=Matte(t);var importer=(TextureImporter)assetImporter;
+            if(!Sheet)return;var t=new Texture2D(2,2);t.LoadImage(File.ReadAllBytes(assetPath));var p=Matte(t);SpriteSilhouetteFinish.Apply(p,t.width,t.height);var importer=(TextureImporter)assetImporter;
             importer.textureType=TextureImporterType.Sprite;importer.spriteImportMode=SpriteImportMode.Multiple;importer.mipmapEnabled=false;importer.filterMode=FilterMode.Point;importer.textureCompression=TextureImporterCompression.Uncompressed;importer.maxTextureSize=2048;importer.npotScale=TextureImporterNPOTScale.None;importer.alphaIsTransparency=true;importer.wrapMode=TextureWrapMode.Clamp;
             var sprites=new SpriteMetaData[16];float largest=0;string name=Path.GetFileNameWithoutExtension(assetPath);
             for(int i=0;i<16;i++)
@@ -61,6 +61,6 @@ namespace AfterSignal.Editor
 #pragma warning restore CS0618
             UnityEngine.Object.DestroyImmediate(t);
         }
-        void OnPostprocessTexture(Texture2D t){if(Sheet){t.SetPixels32(Matte(t));t.Apply(false,false);}}
+        void OnPostprocessTexture(Texture2D t){if(Sheet){var p=Matte(t);SpriteSilhouetteFinish.Apply(p,t.width,t.height);t.SetPixels32(p);t.Apply(false,false);}}
     }
 }

@@ -13,6 +13,7 @@ namespace AfterSignal
     {
         public const string SaveKey="AFTERSIGNAL.Unity.Chronicle.V1";
         public static CityChronicle Instance{get;private set;}
+        public static bool IntroProtected=>Instance&&Instance.Quests!=null&&!Instance.Done(Instance.Quests[0]);
         public static bool SuppressSave;
         public StoryQuest[] Quests{get;private set;}
         public StorySave Progress{get;private set;}
@@ -64,7 +65,7 @@ namespace AfterSignal
             if(step.kind=="battle")
             {
                 if(marker){Destroy(marker);marker=null;markerKey=null;}
-                if(!CampaignBattle.Active&&Vector3.Distance(game.Player.transform.position,step.position)<70)CampaignBattle.Begin(this,step);
+                if(!CampaignBattle.Active&&Vector3.Distance(game.Player.transform.position,step.position)<(Tracked.id=="main01"?34:60))CampaignBattle.Begin(this,step);
                 return;
             }
             string key=Tracked.id+":"+Entry(Tracked).step;
@@ -92,6 +93,7 @@ namespace AfterSignal
         }
         static string WitnessArt(string name)
         {
+            var dedicated=StorySprites.Key(name);if(dedicated!=null)return dedicated;
             if(string.IsNullOrEmpty(name))return "OfficeWoman";
             if(name.Contains("유라"))return FacilityPeople.Key(26);
             if(name.Contains("리안"))return FacilityPeople.Key(28);

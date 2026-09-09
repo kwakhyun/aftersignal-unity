@@ -8,26 +8,35 @@ namespace AfterSignal
         float Mass=>type==CityVehicleType.Tank?8:IsHeavy?3.5f:type==CityVehicleType.Motorcycle?.35f:1;
         void RecoverContact()
         {
-            if(!chassisCollider)chassisCollider=GetComponent<Collider>();
+            if(!chassisCollider)
+            {
+                float largest=0;
+                foreach(var c in GetComponentsInChildren<Collider>())
+                {
+                    if(!c.enabled||c.isTrigger||c.GetComponentInParent<CityVehicle>()!=this||!(c is BoxCollider||c is CapsuleCollider||c is MeshCollider mesh&&mesh.convex))continue;
+                    var size=c.bounds.size;float volume=size.x*size.y*size.z;if(volume>largest){largest=volume;chassisCollider=c;}
+                }
+            }
             if(!chassisCollider)return;
+            int count=Physics.OverlapBoxNonAlloc(transform.position+Vector3.up*.9f,new Vector3(HalfLength+.6f,.48f,HalfWidth+.6f),overlaps,transform.rotation,1,QueryTriggerInteraction.Ignore);
             for(int pass=0;pass<3;pass++)
             {
-                int count=Physics.OverlapBoxNonAlloc(transform.position+Vector3.up*.9f,new Vector3(HalfLength,.48f,HalfWidth),overlaps,transform.rotation,1,QueryTriggerInteraction.Ignore);
                 bool moved=false;
                 for(int i=0;i<count;i++)
                 {
                     var c=overlaps[i];if(!c||c.transform.IsChildOf(transform))continue;
-                    if(!Physics.ComputePenetration(chassisCollider,transform.position,transform.rotation,c,c.transform.position,c.transform.rotation,out var away,out var depth))continue;
+                    if(!Physics.ComputePenetration(chassisCollider,chassisCollider.transform.position,chassisCollider.transform.rotation,c,c.transform.position,c.transform.rotation,out var away,out var depth))continue;
                     if(Mathf.Abs(away.y)>.55f||depth<.001f)continue;
                     away.y=0;transform.position+=away.normalized*Mathf.Min(depth+.025f,.6f);moved=true;
                 }
                 if(!moved)break;
-                Physics.SyncTransforms();
+                // ComputePenetration consumes the explicit current poses. A world-wide physics
+                // synchronization for every car/contact/pass caused repeated broadphase rebuilds.
             }
         }
         bool MovingOut(Collider obstacle,Vector3 delta)
         {
-            if(chassisCollider&&Physics.ComputePenetration(chassisCollider,transform.position,transform.rotation,obstacle,obstacle.transform.position,obstacle.transform.rotation,out var away,out _)&&Vector3.Dot(delta,away)>.0001f)return true;
+            if(chassisCollider&&Physics.ComputePenetration(chassisCollider,chassisCollider.transform.position,chassisCollider.transform.rotation,obstacle,obstacle.transform.position,obstacle.transform.rotation,out var away,out _)&&Vector3.Dot(delta,away)>.0001f)return true;
             // Sweep clearance is slightly larger than the chassis. At a touching contact there
             // may be no physical penetration, but reversing still increases the separation.
             var center=transform.position+Vector3.up*.9f;

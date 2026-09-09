@@ -16,7 +16,7 @@ namespace AfterSignal
         {var r=new GameObject("국방 출동 지휘 / 잠식체").AddComponent<MilitaryResponse>();r.Incident=incident;return r;}
         IEnumerator Start()
         {
-            GameDirector.Instance.Toast(Incident?"방위기지에 긴급 지원 요청 · 중장비 출동 준비":"민간인 대규모 희생 확인 · 방위기지 출동 준비",6);
+            GameDirector.Instance.ToastNear(Incident?"방위기지에 긴급 지원 요청 · 중장비 출동 준비":"민간인 대규모 희생 확인 · 방위기지 출동 준비",Target,180,6);
             float wait=Incident?44:55;
             while(wait>0&&Active){if(!GameDirector.Instance.Blocked)wait-=Time.deltaTime;yield return null;}
             var kinds=new[]{CityVehicleType.Truck,CityVehicleType.Truck,CityVehicleType.Tank,CityVehicleType.Tank,CityVehicleType.CombatHelicopter,CityVehicleType.Fighter};

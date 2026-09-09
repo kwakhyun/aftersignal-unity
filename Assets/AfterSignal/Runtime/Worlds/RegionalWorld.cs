@@ -47,7 +47,7 @@ namespace AfterSignal
         }
         public void TriggerConflict(Vector3 desired)
         {
-            if(!RiftIncursion.Instance||RiftIncursion.Instance.Active||!ResponseDispatch.TryOrigin(desired,true,false,Battles%4,out desired))return;
+            if(CityEventGate.Busy||!RiftIncursion.Instance||RiftIncursion.Instance.Active||!ResponseDispatch.TryOrigin(desired,true,false,Battles%4,out desired))return;
             Vector3 at=desired;float best=float.MaxValue;
             foreach(var road in FourCityCatalog.Roads)for(int i=1;i<road.Length;i++)
             {var p=FourCityCatalog.Closest(desired,road[i-1],road[i]);if(FourCityCatalog.CityAt(p)!=2||RegionalCatalog.InRift(p,50))continue;float d=(desired-p).sqrMagnitude;if(d<best){best=d;at=p;}}
@@ -57,7 +57,7 @@ namespace AfterSignal
                 units.Add(ErebosThreat.Spawn(ground,false,84000+Battles*100+i,transform));
             }
             RiftIncursion.Instance.Trigger(at);
-            Battles++;GameDirector.Instance?.Toast("에레보스 격리선 교전 · 특수부대와 잠식체 충돌",5);
+            Battles++;GameDirector.Instance?.ToastNear("에레보스 격리선 교전 · 특수부대와 잠식체 충돌",at,180,5);
         }
         void OnDestroy(){RegionalErrand.Reset();if(Instance==this)Instance=null;}
     }
@@ -78,7 +78,7 @@ namespace AfterSignal
             }
             foreach(var p in patrol)if(p)p.gameObject.SetActive(near||WantedSystem.Level>0);
             gangs.RemoveAll(x=>!x||!x.Alive);
-            if(near&&(LifeState.Hour>=19||LifeState.Hour<6)&&Time.time>gangAt&&gangs.Count<6)
+            if(!CityChronicle.IntroProtected&&near&&(LifeState.Hour>=19||LifeState.Hour<6)&&Time.time>gangAt&&gangs.Count<6)
             {gangAt=Time.time+75;for(int i=0;i<3;i++){var p=g.Player.transform.position+new Vector3(32+i*3,0,24);if(CityGangWar.FindGround(p,out var at)){var gangster=GangMember.Create(at,1,i);gangster.gameObject.AddComponent<GangCrime>();gangs.Add(gangster.Body);}}}
         }
     }

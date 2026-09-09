@@ -60,7 +60,7 @@ namespace AfterSignal
         System.Collections.IEnumerator SpawnCrowd()
         {
             spawned=true;crowd=new GameObject("Facility residents / staff / spectators");crowd.transform.SetParent(transform,false);
-            int count=Definition.Sport?Mathf.Min(360,Mathf.Max(Definition.visitors*4,180)):Definition.visitors;
+            int count=Definition.Sport?(FidelityPresentation.Preset==0?Mathf.Min(156,Mathf.Max(Definition.visitors*2,96)):Mathf.Min(360,Mathf.Max(Definition.visitors*4,180))):Definition.visitors;
             if(!GetComponent<VenueSafety>())gameObject.AddComponent<VenueSafety>();
             int seatCursor=0;
             for(int i=0;i<count;i++)
@@ -75,7 +75,7 @@ namespace AfterSignal
                 var npc=VenueActor.Create(this,40000+Index*200+i,role,art,p);npc.transform.SetParent(crowd.transform,false);npc.transform.localPosition=p;npc.origin=p;npc.staff=staff;npc.spectator=spectator;npc.serial=i;RegionalResidents.Apply(npc,this,staff,i);if(staff)StaffOnDuty++;
             }
             Admissions+=count;
-            if(Definition.city!=2&&Definition.kind!=VenueKind.Prison&&activityPoints.Count>0)for(int n=0;n<2;n++){yield return null;var origin=transform.TransformPoint(activityPoints[(n*7)%activityPoints.Count]);if(CrowdFlow.Place(origin,n,out var familyAt,12)){var family=FamilyGroup.Create(familyAt,51000+Index*10+n,n==0);if(family){family.Venue=this;family.transform.SetParent(crowd.transform,true);}}}
+            if(Definition.city!=2&&Definition.kind!=VenueKind.Prison&&Definition.kind!=VenueKind.Military&&Definition.kind!=VenueKind.Laboratory&&activityPoints.Count>0)for(int n=0;n<2;n++){yield return null;var origin=transform.TransformPoint(activityPoints[(n*7)%activityPoints.Count]);if(CrowdFlow.Place(origin,n,out var familyAt,12)){var family=FamilyGroup.Create(familyAt,51000+Index*10+n,n==0);if(family){family.Venue=this;family.transform.SetParent(crowd.transform,true);}}}
         }
         string Art(bool staff,int i)
         {var regional=RegionalResidents.Art(Definition,staff,i);if(regional!=null)return regional;if(Definition.kind==VenueKind.Circuit&&staff&&i%2==0)return "RacingDriver";if(Definition.city==3)return staff?(Definition.kind==VenueKind.Hospital?"AbyssMedic":"AbyssEngineer"):i%3==0?"AbyssEngineer":i%3==1?"AbyssCitizen":"AbyssMedic";if(Definition.city==2)return "Soldier";return staff?Definition.kind==VenueKind.Hospital?(i%2==0?"Doctor":"Nurse"):i%3==0?"Worker":i%3==1?"OfficeWoman":"Bartender":PeopleArt.Citizens[(i+Index)%PeopleArt.Citizens.Length];}

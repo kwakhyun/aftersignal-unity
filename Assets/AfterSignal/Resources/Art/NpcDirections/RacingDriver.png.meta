@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 147.71635
+  spritePixelsToUnits: 141.40625
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
@@ -131,7 +131,7 @@ TextureImporter:
         width: 313
         height: 314
       alignment: 9
-      pivot: {x: 0.51085377, y: 0.0031847134}
+      pivot: {x: 0.5104054, y: 0.00955414}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -150,10 +150,10 @@ TextureImporter:
         serializedVersion: 2
         x: 313
         y: 939
-        width: 313
+        width: 314
         height: 315
       alignment: 9
-      pivot: {x: 0.4554724, y: 0.0031746032}
+      pivot: {x: 0.4509366, y: 0.0031746032}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -170,12 +170,12 @@ TextureImporter:
       name: RacingDriver-02
       rect:
         serializedVersion: 2
-        x: 626
+        x: 627
         y: 939
-        width: 314
+        width: 313
         height: 315
       alignment: 9
-      pivot: {x: 0.44653955, y: 0.0031746032}
+      pivot: {x: 0.44282833, y: 0.0031746032}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -197,7 +197,7 @@ TextureImporter:
         width: 314
         height: 314
       alignment: 9
-      pivot: {x: 0.43731213, y: 0.006369427}
+      pivot: {x: 0.43714064, y: 0.006369427}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -219,7 +219,7 @@ TextureImporter:
         width: 313
         height: 313
       alignment: 9
-      pivot: {x: 0.49328232, y: 0.015974442}
+      pivot: {x: 0.49080247, y: 0.028753994}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -238,10 +238,10 @@ TextureImporter:
         serializedVersion: 2
         x: 313
         y: 627
-        width: 313
+        width: 314
         height: 312
       alignment: 9
-      pivot: {x: 0.42635846, y: 0.022435898}
+      pivot: {x: 0.42339566, y: 0.022435898}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -258,12 +258,12 @@ TextureImporter:
       name: RacingDriver-06
       rect:
         serializedVersion: 2
-        x: 626
+        x: 627
         y: 627
-        width: 314
+        width: 313
         height: 312
       alignment: 9
-      pivot: {x: 0.43934822, y: 0.0064102565}
+      pivot: {x: 0.43663898, y: 0.022435898}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -285,7 +285,7 @@ TextureImporter:
         width: 314
         height: 313
       alignment: 9
-      pivot: {x: 0.45374075, y: 0.0063897762}
+      pivot: {x: 0.46067446, y: 0.028753994}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -307,7 +307,7 @@ TextureImporter:
         width: 313
         height: 299
       alignment: 9
-      pivot: {x: 0.5183328, y: 0.030100334}
+      pivot: {x: 0.5186946, y: 0.036789298}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -326,10 +326,10 @@ TextureImporter:
         serializedVersion: 2
         x: 313
         y: 327
-        width: 313
+        width: 314
         height: 300
       alignment: 9
-      pivot: {x: 0.46159196, y: 0.01}
+      pivot: {x: 0.459914, y: 0.033333335}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -346,12 +346,12 @@ TextureImporter:
       name: RacingDriver-10
       rect:
         serializedVersion: 2
-        x: 626
+        x: 627
         y: 328
-        width: 314
+        width: 313
         height: 299
       alignment: 9
-      pivot: {x: 0.46282738, y: 0.02341137}
+      pivot: {x: 0.4613999, y: 0.030100334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -373,7 +373,7 @@ TextureImporter:
         width: 314
         height: 299
       alignment: 9
-      pivot: {x: 0.47536254, y: 0.033444814}
+      pivot: {x: 0.47515112, y: 0.036789298}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -395,7 +395,7 @@ TextureImporter:
         width: 313
         height: 328
       alignment: 9
-      pivot: {x: 0.51413804, y: 0.0030487804}
+      pivot: {x: 0.51614183, y: 0.10670732}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -414,10 +414,10 @@ TextureImporter:
         serializedVersion: 2
         x: 313
         y: 0
-        width: 313
+        width: 314
         height: 327
       alignment: 9
-      pivot: {x: 0.48537758, y: 0.003058104}
+      pivot: {x: 0.48951623, y: 0.103975534}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -434,12 +434,12 @@ TextureImporter:
       name: RacingDriver-14
       rect:
         serializedVersion: 2
-        x: 626
+        x: 627
         y: 0
-        width: 314
+        width: 313
         height: 328
       alignment: 9
-      pivot: {x: 0.4674156, y: 0.0030487804}
+      pivot: {x: 0.47189525, y: 0.10060976}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -461,7 +461,7 @@ TextureImporter:
         width: 314
         height: 328
       alignment: 9
-      pivot: {x: 0.41701177, y: 0.0121951215}
+      pivot: {x: 0.42252365, y: 0.10670732}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []

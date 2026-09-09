@@ -6,7 +6,7 @@ namespace AfterSignal
     [DefaultExecutionOrder(2500)]
     public sealed class FidelityPresentation : MonoBehaviour
     {
-        public static int Preset { get; private set; }=1;
+        public static int Preset { get; private set; }=0;
         public static string PresetName => Preset==0?"성능":Preset==1?"고품질":"최고 품질";
         GameDirector game; Volume volume; VolumeProfile profile; ColorAdjustments grade; Bloom bloom;
         ReflectionProbe probe; int capture=-1; float nextProbe,lastHour=-99; Vector3 lastProbe;
@@ -14,13 +14,18 @@ namespace AfterSignal
         public static void ApplyQuality()
         {
             var pipeline=GraphicsSettings.currentRenderPipeline as UniversalRenderPipelineAsset;if(!pipeline)return;
-            pipeline.msaaSampleCount=Preset==0?2:4;pipeline.renderScale=Preset==0?.85f:1;pipeline.shadowDistance=Preset==0?80:Preset==1?140:210;
-            pipeline.mainLightShadowmapResolution=Preset==0?2048:4096;pipeline.shadowCascadeCount=4;
-            if(Camera.main){var data=Camera.main.GetUniversalAdditionalCameraData();data.antialiasing=AntialiasingMode.SubpixelMorphologicalAntiAliasing;data.antialiasingQuality=AntialiasingQuality.High;}
+            pipeline.msaaSampleCount=1;pipeline.renderScale=Preset==0?.85f:1;pipeline.shadowDistance=Preset==0?65:Preset==1?110:180;
+            pipeline.mainLightShadowmapResolution=Preset==0?1024:Preset==1?2048:4096;pipeline.shadowCascadeCount=Preset==0?2:4;
+            if(Camera.main){var data=Camera.main.GetUniversalAdditionalCameraData();data.antialiasing=AntialiasingMode.SubpixelMorphologicalAntiAliasing;data.antialiasingQuality=Preset==0?AntialiasingQuality.Medium:AntialiasingQuality.High;}
         }
         void Start()
         {
-            game=GameDirector.Instance;Preset=Mathf.Clamp(PlayerPrefs.GetInt("AFTERSIGNAL.Unity.Graphics",1),0,2);ApplyQuality();
+            game=GameDirector.Instance;
+            // One-time move to the requested low-stall default. Later menu choices remain persistent.
+            bool migrate=PlayerPrefs.GetInt("AFTERSIGNAL.Unity.GraphicsBudgetVersion",0)<2;
+            Preset=migrate?0:Mathf.Clamp(PlayerPrefs.GetInt("AFTERSIGNAL.Unity.Graphics",0),0,2);
+            if(migrate&&!LifeState.SuppressSave){PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Graphics",0);PlayerPrefs.SetInt("AFTERSIGNAL.Unity.GraphicsBudgetVersion",2);PlayerPrefs.Save();}
+            ApplyQuality();
             volume=gameObject.AddComponent<Volume>();volume.isGlobal=true;volume.priority=25;profile=ScriptableObject.CreateInstance<VolumeProfile>();volume.sharedProfile=profile;
             grade=profile.Add<ColorAdjustments>(true);grade.contrast.Override(14);grade.saturation.Override(-3);
             bloom=profile.Add<Bloom>(true);bloom.threshold.Override(1.25f);bloom.intensity.Override(.28f);bloom.scatter.Override(.55f);bloom.clamp.Override(6);
@@ -36,11 +41,12 @@ namespace AfterSignal
             grade.postExposure.Override(outdoor?Mathf.Lerp(.45f,.05f,day):.18f);bloom.intensity.Override(Mathf.Lerp(.36f,.2f,day));
             // A damp maritime city; roughness varies by material and position, never a mirrored sheet.
             Shader.SetGlobalFloat("_CityWetness",outdoor?Mathf.Lerp(.7f,.18f,day):0);
-            if(!probe||Preset==0){if(probe)probe.enabled=false;return;}probe.enabled=true;
+            // A moving six-face city capture was a periodic GPU spike. Only the explicit maximum preset uses it.
+            if(!probe||Preset<2){if(probe)probe.enabled=false;return;}probe.enabled=true;
             var p=Camera.main.transform.position;bool moved=(p-lastProbe).sqrMagnitude>28*28;bool hourChanged=Mathf.Abs(LifeState.Hour-lastHour)>.6f;
             if(Time.unscaledTime>nextProbe&&(capture<0||probe.IsFinishedRendering(capture))&&(moved||hourChanged))
             {
-                lastProbe=p;lastHour=LifeState.Hour;probe.transform.position=p+Vector3.up;probe.resolution=Preset==2?256:128;capture=probe.RenderProbe();nextProbe=Time.unscaledTime+8;
+                lastProbe=p;lastHour=LifeState.Hour;probe.transform.position=p+Vector3.up;probe.resolution=128;capture=probe.RenderProbe();nextProbe=Time.unscaledTime+20;
             }
         }
         void OnDestroy(){if(profile)Destroy(profile);Shader.SetGlobalFloat("_CityWetness",0);}

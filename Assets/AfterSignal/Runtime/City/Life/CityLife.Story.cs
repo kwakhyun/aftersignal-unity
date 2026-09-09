@@ -5,6 +5,7 @@ namespace AfterSignal
 {
     public sealed partial class CityLife
     {
+        public string StorySpeaker {get;private set;}
         public void StoryJournal()
         {
             var c=CityChronicle.Instance;if(!c)return;
@@ -36,6 +37,7 @@ namespace AfterSignal
         }
         public void StoryDialogue(string title,string speaker,string text,bool choice,Action<int> done)
         {
+            StorySpeaker=speaker;
             Panel("story",title+" · "+speaker,text);
             if(choice){Option("기록 공개 · 공동 감독",()=>{Dismiss();done(1);});Option("당사자 동의 · 보호 우선",()=>{Dismiss();done(2);});}
             else Option("확인 · 다음 단계",()=>{Dismiss();done(0);});

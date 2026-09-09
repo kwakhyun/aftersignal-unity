@@ -13,9 +13,19 @@ namespace AfterSignal
         public bool Charged { get; set; }
 
         public Renderer ring;
+        public bool Surface {get;private set;}
+        public Collider SurfaceCollider {get;private set;}
+        Vector3 localPoint;
+        public bool Valid=>isActiveAndEnabled&&(!Surface||SurfaceCollider&&SurfaceCollider.enabled&&SurfaceCollider.gameObject.activeInHierarchy);
+        public void SetSurface(Collider collider,Vector3 point)
+        {
+            Surface=true;SurfaceCollider=collider;localPoint=collider.transform.InverseTransformPoint(point);
+            cityAnchor=true;hasLanding=false;label=collider.GetComponentInParent<CityVehicle>()?"차량":"표면";All.Remove(this);FollowSurface();
+        }
+        public void FollowSurface(){if(Surface&&SurfaceCollider)transform.position=SurfaceCollider.transform.TransformPoint(localPoint);}
         void OnEnable()
         {
-            if (!All.Contains(this))
+            if (!Surface&&!All.Contains(this))
                 All.Add(this);
         }
 

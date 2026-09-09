@@ -10,14 +10,13 @@ namespace AfterSignal
         public static bool SuppressSave;
         static int transient=-1;
         public static int Selected=>Mathf.Clamp(SuppressSave?transient:PlayerPrefs.GetInt(Key,-1),-1,3);
-        public static string Destination=>Selected<0?"서하의 집":Names[Selected];
+        public static string Destination=>"서하의 집";
         public static void ResetHome(){if(SuppressSave)transient=-1;else PlayerPrefs.DeleteKey(Key);}
-        public static void Register(int city){city=Mathf.Clamp(city,0,3);if(SuppressSave)transient=city;else{PlayerPrefs.SetInt(Key,city);PlayerPrefs.Save();}GameDirector.Instance?.Player.Heal(100);GameDirector.Instance?.Toast(Names[city]+" · 리스폰 지점 등록 / 체력 회복",5);}
+        public static void Register(int city){city=Mathf.Clamp(city,0,3);ResetHome();GameDirector.Instance?.Player.Heal(100);GameDirector.Instance?.Toast(Names[city]+" · 체력 회복 / 사망 시 서하의 집으로 복귀",5);}
         public static void Respawn(GameDirector game)
         {
-            var city=Selected;
-            if(city<0){CivicWorld.Travel(game,StageId.Residence,CompactHome.Spawn);return;}
-            Resolve();CivicWorld.Travel(game,StageId.UrbanCity,Points[city]);
+            ResetHome();ResidentialWorld.VisitHome=-1;CivicWorld.ClearArrival();
+            CivicWorld.Travel(game,StageId.Residence,CompactHome.Spawn);
         }
         public static void Resolve()
         {
@@ -42,7 +41,7 @@ namespace AfterSignal
                 Vector3 at=Points[i];if(CrowdFlow.Place(at,i,out var safe,12))at=safe;Points[i]=at;
                 var root=new GameObject(Names[i],typeof(RespawnTerminal),typeof(InteractionPoint));root.transform.position=at;
                 root.GetComponent<RespawnTerminal>().City=i;
-                var point=root.GetComponent<InteractionPoint>();point.title=Names[i]+" · 리스폰 등록 / 회복";point.radius=4;
+                var point=root.GetComponent<InteractionPoint>();point.title=Names[i]+" · 체력 회복";point.radius=4;
                 WorldGeometry.Part(root.transform,"Medical terminal pedestal",Vector3.up*.6f,new Vector3(.8f,1.2f,.7f),"DarkMetal");
                 WorldGeometry.Part(root.transform,"Recovery screen",new Vector3(0,1.35f,-.05f),new Vector3(.72f,.45f,.15f),"DistrictBlue");
                 WorldGeometry.Part(root.transform,"Recovery symbol",new Vector3(0,1.36f,-.145f),new Vector3(.3f,.07f,.025f),"CyanFX");

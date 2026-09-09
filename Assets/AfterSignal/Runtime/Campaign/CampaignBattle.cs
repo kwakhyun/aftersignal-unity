@@ -8,10 +8,16 @@ namespace AfterSignal
         public static bool Active=>current;
         static CampaignBattle current;
         public int Wave {get;private set;}
-        public int Remaining=>enemies.FindAll(a=>a&&a.Alive&&!a.Downed).Count;
+        public int Remaining {get{int count=0;foreach(var a in enemies)if(a&&a.Alive&&!a.Downed)count++;return count;}}
         public bool Completed {get;private set;}
         public string Objective {get;private set;}
         CityChronicle chronicle;StoryStep step;string quest;int expected;GameDirector game;
+        bool Intro=>quest=="main01";
+        public static bool TutorialActive=>current&&current.Intro&&!current.finishing&&!current.Completed;
+        public static bool TutorialTarget(WorldActor actor)=>TutorialActive&&actor&&actor.gameObject.activeInHierarchy&&actor.Alive&&!actor.Downed&&!actor.environmental&&!actor.helicopter&&!actor.police&&!actor.military&&current.enemies.Contains(actor);
+        public static void TutorialTargets(List<WorldActor> targets){targets.Clear();if(TutorialActive)foreach(var actor in current.enemies)if(TutorialTarget(actor))targets.Add(actor);}
+        string Mode=>Intro&&step.battleMode=="sabotage"?"assault":step.battleMode;
+        Image radioPortrait;
         readonly List<WorldActor> enemies=new(),devices=new();readonly List<GameObject> props=new();
         CityNpc survivor;Vector3 extraction;Text goalLabel,radio;float age,nextWave=4,held,speechUntil,failedUntil,nextPulse;bool finishing;
         public static CampaignBattle Begin(CityChronicle owner,StoryStep step)
@@ -21,6 +27,7 @@ namespace AfterSignal
         }
         void Build()
         {
+            if(Intro)nextWave=16;
             transform.position=step.position;extraction=step.position+new Vector3(-24,0,-18);
             if(CrowdFlow.Place(extraction,expected,out var safeExtraction,20))extraction=safeExtraction;
             else if(CrowdFlow.Place(step.position,expected,out safeExtraction,25))extraction=safeExtraction;
@@ -32,9 +39,10 @@ namespace AfterSignal
                 var text=new GameObject("Text",typeof(RectTransform),typeof(Text));text.transform.SetParent(go.transform,false);var t=text.GetComponent<Text>();t.font=Resources.Load<Font>("Fonts/NotoSansKR");t.fontSize=size;t.color=new Color(.86f,.96f,.97f);t.alignment=TextAnchor.MiddleCenter;t.raycastTarget=false;t.rectTransform.anchorMin=Vector2.zero;t.rectTransform.anchorMax=Vector2.one;t.rectTransform.offsetMin=new Vector2(16,8);t.rectTransform.offsetMax=new Vector2(-16,-8);return t;
             }
             goalLabel=Label("Live mission",new(.28f,.69f),new(.72f,.84f),20);radio=Label("Live radio",new(.23f,.19f),new(.76f,.34f),24);
+            var portrait=new GameObject("Current radio speaker",typeof(RectTransform),typeof(Image));portrait.transform.SetParent(radio.transform.parent,false);radioPortrait=portrait.GetComponent<Image>();radioPortrait.preserveAspect=true;radioPortrait.raycastTarget=false;var pr=radioPortrait.rectTransform;pr.anchorMin=new Vector2(0,0);pr.anchorMax=new Vector2(0,1);pr.pivot=new Vector2(0,.5f);pr.offsetMin=new Vector2(5,4);pr.offsetMax=new Vector2(118,-4);radio.alignment=TextAnchor.MiddleLeft;radio.rectTransform.offsetMin=new Vector2(134,8);
             Say((step.person??"노아")+": "+step.line);
             // Small cover objects give each forecourt a readable combat space without sealing roads.
-            for(int i=0;i<5;i++)
+            for(int i=0;i<(Intro?0:5);i++)
             {
                 var at=step.position+new Vector3((i-2)*8,0,i%2==0?12:-11);
                 if(!CityGangWar.FindGround(at,out var floor))continue;
@@ -42,11 +50,11 @@ namespace AfterSignal
                 CommunityWorld.Box(root.transform,"Armoured barricade",new Vector3(0,.65f,0),new Vector3(3,1.3f,1.05f),"DarkMetal");
                 CommunityWorld.Box(root.transform,"Warning trim",new Vector3(0,1.24f,0),new Vector3(2.8f,.06f,1.1f),"Metal",false);
             }
-            if(step.battleMode=="sabotage")for(int i=0;i<3;i++)
+            if(Mode=="sabotage")for(int i=0;i<3;i++)
             {
                 var desired=step.position+new Vector3((i-1)*9,0,6);if(!CrowdFlow.Place(desired,i,out var support,12))support=extraction+Vector3.right*(i-1)*3;
                 var go=new GameObject("N-17 기억 소거 증폭기");go.transform.position=support;props.Add(go);
-                var body=go.AddComponent<WorldActor>();body.gang=true;body.helicopter=true;body.health=180;devices.Add(body);
+                var body=go.AddComponent<WorldActor>();body.gang=true;body.helicopter=true;body.health=Intro?75:180;devices.Add(body);
                 var box=CommunityWorld.Box(go.transform,"Power housing",Vector3.up,new Vector3(1.5f,2,1.1f),"Metal");
                 CommunityWorld.Box(go.transform,"Exposed coupler",new Vector3(0,1.4f,-.61f),new Vector3(.65f,.5f,.12f),"NeonAzure",false);
             }
@@ -62,16 +70,16 @@ namespace AfterSignal
             }
             SignalEffects.Ring(extraction+Vector3.up*.13f,SignalEffects.Cyan,4,60);
         }
-        void Say(string text){if(radio){radio.text=text;radio.transform.parent.gameObject.SetActive(true);speechUntil=age+Mathf.Clamp(text.Length*.12f,5,12);}}
+        void Say(string text){if(radio){radio.text=text;if(radioPortrait){radioPortrait.sprite=StoryPortraits.Get(text.Split(':')[0]);radioPortrait.enabled=radioPortrait.sprite;}radio.transform.parent.gameObject.SetActive(true);speechUntil=age+Mathf.Clamp(text.Length*.12f,5,12);}}
         bool SpawnWave()
         {
-            int count=Mathf.Clamp(step.enemyCount,3,8);int spawned=0;
+            int count=Intro?2:Mathf.Clamp(step.enemyCount,3,8);int spawned=0;
             for(int i=0;i<count;i++)
             {
                 Vector3 at=step.position+new Vector3(Mathf.Cos(i*2.4f+Wave)*27,0,Mathf.Sin(i*2.4f+Wave)*27);
                 if(quest.StartsWith("gang-main-"))at=step.position+(i<4?new Vector3((i-1.5f)*5,.1f,16):new Vector3(i%2==0?-18:18,.1f,5+i%3*5));
                 if(!CrowdFlow.Place(at,i+Wave*11,out var safe,16))continue;
-                var enemy=GangMember.Create(safe,i%3,i);enemy.name=i%3==0?"N-17 기억 회수대 / 돌격병":i%3==1?"N-17 기억 회수대 / 산탄병":"N-17 기억 회수대 / 소총수";enemy.CampaignUnit=true;enemy.CampaignWeapon=i%3==1?1:0;enemy.Body.health=95+expected*18;enemies.Add(enemy.Body);spawned++;
+                var enemy=GangMember.Create(safe,i%3,i);enemy.name=i%3==0?"N-17 기억 회수대 / 돌격병":i%3==1?"N-17 기억 회수대 / 산탄병":"N-17 기억 회수대 / 소총수";enemy.CampaignUnit=true;enemy.CampaignWeapon=Intro?0:i%3==1?1:0;enemy.IntroUnit=Intro;enemy.Body.health=Intro?48:95+expected*18;enemies.Add(enemy.Body);spawned++;
                 if(i==0)NpcSpeech.Say(enemy,"대상을 확보해! 증거를 남기지 마!",3,4);
             }
             if(spawned==0)return false;Wave++;Say(Wave==1?"서하: 들었어. 내가 길을 열게. 다들 내 뒤로 와.":"노아: 추가 병력이 진입한다. 엄폐하면서 양쪽을 확인해!");return true;
@@ -89,7 +97,7 @@ namespace AfterSignal
             int waves=step.battleMode=="boss"?1:Mathf.Max(1,step.waves);
             if(step.battleMode!="boss"&&Remaining==0&&Wave<waves&&age>=nextWave){if(SpawnWave())nextWave=age+8;else nextWave=age+3;}
             bool defeated=Wave>=waves&&Remaining==0;
-            string mode=step.battleMode;
+            string mode=Mode;
             if(mode=="defend")
             {
                 bool inside=Vector3.Distance(game.Player.transform.position,step.position)<22;
@@ -98,7 +106,7 @@ namespace AfterSignal
                 defeated&=held>=step.duration;
             }
             else if(mode=="sabotage")
-            {int left=devices.FindAll(a=>a&&a.Alive).Count;Objective=$"소거 증폭기 파괴 · 남은 장치 {left}/3\n{Wave}/{waves}차 공격 · 적 {Remaining}명";defeated&=left==0;foreach(var device in devices)if(device&&!device.Alive&&device.gameObject.activeSelf){VehicleExplosion.Create(device.transform.position+Vector3.up,1.3f);device.gameObject.SetActive(false);}}
+            {int left=0;foreach(var device in devices)if(device&&device.Alive)left++;Objective=$"소거 증폭기 파괴 · 남은 장치 {left}/3\n{Wave}/{waves}차 공격 · 적 {Remaining}명";defeated&=left==0;foreach(var device in devices)if(device&&!device.Alive&&device.gameObject.activeSelf){VehicleExplosion.Create(device.transform.position+Vector3.up,1.3f);device.gameObject.SetActive(false);}}
             else if(mode=="rescue")
             {
                 Objective=$"주민 구출 · 적 {Remaining}명\n생존자에게 다가간 뒤 청록색 집결점까지 천천히 호위";
@@ -114,6 +122,7 @@ namespace AfterSignal
             else if(mode=="escape"){Objective=$"추격대 격파 후 청록색 탈출 지점으로 이동\n남은 적 {Remaining}명 · 탈출 {Vector3.Distance(game.Player.transform.position,extraction):0} m";defeated&=Vector3.Distance(game.Player.transform.position,extraction)<5;}
             else if(mode=="boss")Objective=$"대형 잠식체 격파 · 발광 기관이 열릴 때 집중 사격\n범위 표시에서 이탈 · 레이저 예고선은 회피";
             else Objective=$"기억 회수대 돌파 · {Wave}/{waves}차 공격\n남은 적 {Remaining}명 · 엄폐물과 측면 통로 활용";
+            if(Intro&&Wave==0)Objective="전투 준비 · "+Mathf.CeilToInt(Mathf.Max(0,nextWave-age))+"초\n빨간 ▼가 적입니다 · 마우스 조준 / 좌클릭 공격 / 숫자키 무기 전환";
             goalLabel.text=chronicle.Tracked.title+"  /  "+(expected+1)+"단계\n"+Objective;
             if(defeated){finishing=true;game.Player.Heal(28);Say(step.outro??"노아: 현장 확보. 잘했어, 서하. 다음 목표로 가자.");}
         }

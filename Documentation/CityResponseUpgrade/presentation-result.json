@@ -1,0 +1,16 @@
+{
+    "completed": true,
+    "passed": [
+        "Twenty separate story portraits are imported",
+        "Story speaker names resolve to their own portraits",
+        "Fire crew has both sexes, hose poses and four directions",
+        "Original Lumen base retains four fighters and four combat helicopters",
+        "New airfield has its own five aircraft",
+        "Expanded naval and air command architecture exists",
+        "Military bases have dedicated naval and air personnel",
+        "Distant incident does not replace a local notice",
+        "Nearby incident still displays its notice",
+        "Dialogue displays Noa's portrait on its live UI image"
+    ],
+    "errors": []
+}

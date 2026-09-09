@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 147.65625
+  spritePixelsToUnits: 142.42789
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
@@ -127,11 +127,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 938
+        y: 940
         width: 313
-        height: 316
+        height: 314
       alignment: 9
-      pivot: {x: 0.58224905, y: 0.003164557}
+      pivot: {x: 0.5818635, y: 0.00955414}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -153,7 +153,7 @@ TextureImporter:
         width: 314
         height: 314
       alignment: 9
-      pivot: {x: 0.5054801, y: 0.0031847134}
+      pivot: {x: 0.5033098, y: 0.00955414}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -171,11 +171,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 627
-        y: 941
-        width: 312
-        height: 313
+        y: 940
+        width: 313
+        height: 314
       alignment: 9
-      pivot: {x: 0.5048597, y: 0.0031948881}
+      pivot: {x: 0.50154686, y: 0.006369427}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -192,12 +192,12 @@ TextureImporter:
       name: AbyssMedic-03
       rect:
         serializedVersion: 2
-        x: 939
+        x: 940
         y: 940
-        width: 315
+        width: 314
         height: 314
       alignment: 9
-      pivot: {x: 0.43823105, y: 0.00955414}
+      pivot: {x: 0.43647826, y: 0.00955414}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -217,9 +217,9 @@ TextureImporter:
         x: 0
         y: 629
         width: 313
-        height: 309
+        height: 311
       alignment: 9
-      pivot: {x: 0.533642, y: 0.029126214}
+      pivot: {x: 0.5311038, y: 0.028938906}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -241,7 +241,7 @@ TextureImporter:
         width: 314
         height: 311
       alignment: 9
-      pivot: {x: 0.49012244, y: 0.019292604}
+      pivot: {x: 0.48718905, y: 0.03215434}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -260,10 +260,10 @@ TextureImporter:
         serializedVersion: 2
         x: 627
         y: 628
-        width: 312
-        height: 313
+        width: 313
+        height: 312
       alignment: 9
-      pivot: {x: 0.49373803, y: 0.0063897762}
+      pivot: {x: 0.4883275, y: 0.035256412}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -280,12 +280,12 @@ TextureImporter:
       name: AbyssMedic-07
       rect:
         serializedVersion: 2
-        x: 939
+        x: 940
         y: 629
-        width: 315
+        width: 314
         height: 311
       alignment: 9
-      pivot: {x: 0.43016425, y: 0.003215434}
+      pivot: {x: 0.43055466, y: 0.003215434}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -303,11 +303,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 331
+        y: 330
         width: 313
-        height: 298
+        height: 299
       alignment: 9
-      pivot: {x: 0.5805057, y: 0.010067114}
+      pivot: {x: 0.58055526, y: 0.030100334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -329,7 +329,7 @@ TextureImporter:
         width: 314
         height: 299
       alignment: 9
-      pivot: {x: 0.50615454, y: 0.020066889}
+      pivot: {x: 0.5060878, y: 0.020066889}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -348,10 +348,10 @@ TextureImporter:
         serializedVersion: 2
         x: 627
         y: 330
-        width: 312
+        width: 313
         height: 298
       alignment: 9
-      pivot: {x: 0.5107932, y: 0.013422819}
+      pivot: {x: 0.5091822, y: 0.020134227}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -368,12 +368,12 @@ TextureImporter:
       name: AbyssMedic-11
       rect:
         serializedVersion: 2
-        x: 939
+        x: 940
         y: 330
-        width: 315
+        width: 314
         height: 299
       alignment: 9
-      pivot: {x: 0.47864792, y: 0.030100334}
+      pivot: {x: 0.47670016, y: 0.030100334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -393,9 +393,9 @@ TextureImporter:
         x: 0
         y: 0
         width: 313
-        height: 331
+        height: 330
       alignment: 9
-      pivot: {x: 0.61348367, y: 0.003021148}
+      pivot: {x: 0.61644715, y: 0.10909091}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -417,7 +417,7 @@ TextureImporter:
         width: 314
         height: 330
       alignment: 9
-      pivot: {x: 0.5107344, y: 0.018181818}
+      pivot: {x: 0.5151558, y: 0.10909091}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -436,10 +436,10 @@ TextureImporter:
         serializedVersion: 2
         x: 627
         y: 0
-        width: 312
+        width: 313
         height: 330
       alignment: 9
-      pivot: {x: 0.50953484, y: 0.003030303}
+      pivot: {x: 0.5130274, y: 0.10909091}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -456,12 +456,12 @@ TextureImporter:
       name: AbyssMedic-15
       rect:
         serializedVersion: 2
-        x: 939
+        x: 940
         y: 0
-        width: 315
+        width: 314
         height: 330
       alignment: 9
-      pivot: {x: 0.45430943, y: 0.054545455}
+      pivot: {x: 0.45483607, y: 0.10909091}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []

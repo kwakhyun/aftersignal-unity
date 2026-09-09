@@ -1,0 +1,879 @@
+fileFormatVersion: 2
+guid: 30bd598ae1bfc2848ae5033050ecda5e
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.05357143}
+  spritePixelsToUnits: 100.72816
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 0
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: 4
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: YuraSerin-00
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1551
+        width: 221
+        height: 223
+      alignment: 9
+      pivot: {x: 0.47559902, y: 0.004484305}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e0018c9a144546df0800000000000000
+      internalID: -187932643444649970
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YuraSerin-01
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 1551
+        width: 222
+        height: 223
+      alignment: 9
+      pivot: {x: 0.46879023, y: 0.004484305}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cbca378f4224f4d50800000000000000
+      internalID: 6723665495242026172
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YuraSerin-02
+      rect:
+        serializedVersion: 2
+        x: 443
+        y: 1551
+        width: 222
+        height: 223
+      alignment: 9
+      pivot: {x: 0.4580485, y: 0.004484305}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 906dd2c6a1fe01800800000000000000
+      internalID: 581227248693925385
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YuraSerin-03
+      rect:
+        serializedVersion: 2
+        x: 665
+        y: 1551
+        width: 222
+        height: 223
+      alignment: 9
+      pivot: {x: 0.4958116, y: 0.004484305}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee948b797e149a520800000000000000
+      internalID: 2713772713406122478
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YuraSerin-04
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1330
+        width: 221
+        height: 221
+      alignment: 9
+      pivot: {x: 0.46753156, y: 0.009049774}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c394a2ba81bc1f20800000000000000
+      internalID: 3394783428391244742
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YuraSerin-05
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 1330
+        width: 222
+        height: 221
+      alignment: 9
+      pivot: {x: 0.44840464, y: 0.009049774}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d6c0b5ac26c897c50800000000000000
+      internalID: 6663511479601007725
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YuraSerin-06
+      rect:
+        serializedVersion: 2
+        x: 443
+        y: 1330
+        width: 222
+        height: 221
+      alignment: 9
+      pivot: {x: 0.45170125, y: 0.009049774}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 492d5c283c9511110800000000000000
+      internalID: 1229862869496353428
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YuraSerin-07
+      rect:
+        serializedVersion: 2
+        x: 665
+        y: 1330
+        width: 222
+        height: 221
+      alignment: 9
+      pivot: {x: 0.4889368, y: 0.009049774}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2eebad423f28edf90800000000000000
+      internalID: -6926955196042264862
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YuraSerin-08
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1108
+        width: 221
+        height: 222
+      alignment: 9
+      pivot: {x: 0.49868116, y: 0.009009009}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da4dde4b76b6dc4a0800000000000000
+      internalID: -6571478188102396755
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YuraSerin-09
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 1108
+        width: 222
+        height: 222
+      alignment: 9
+      pivot: {x: 0.4979454, y: 0.0045045046}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 522243e9303068250800000000000000
+      internalID: 5946443672063320613
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YuraSerin-10
+      rect:
+        serializedVersion: 2
+        x: 443
+        y: 1108
+        width: 222
+        height: 222
+      alignment: 9
+      pivot: {x: 0.48984948, y: 0.0045045046}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 50c27668ec6d1cd00800000000000000
+      internalID: 991309575504735237
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YuraSerin-11
+      rect:
+        serializedVersion: 2
+        x: 665
+        y: 1108
+        width: 222
+        height: 222
+      alignment: 9
+      pivot: {x: 0.5161883, y: 0.009009009}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 179feb63de387cee0800000000000000
+      internalID: -1240878117468309135
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YuraSerin-12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 887
+        width: 221
+        height: 221
+      alignment: 9
+      pivot: {x: 0.53315455, y: 0.004524887}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a1a656eeaec9a5dd0800000000000000
+      internalID: -2496510510587614694
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YuraSerin-13
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 887
+        width: 222
+        height: 221
+      alignment: 9
+      pivot: {x: 0.53410494, y: 0.004524887}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ca05f6c2dbabeba0800000000000000
+      internalID: -6058559951927440703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YuraSerin-14
+      rect:
+        serializedVersion: 2
+        x: 443
+        y: 887
+        width: 222
+        height: 221
+      alignment: 9
+      pivot: {x: 0.5159054, y: 0.004524887}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d46f60a8c34ef3bf0800000000000000
+      internalID: -342304097991985587
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YuraSerin-15
+      rect:
+        serializedVersion: 2
+        x: 665
+        y: 887
+        width: 222
+        height: 221
+      alignment: 9
+      pivot: {x: 0.49197808, y: 0.004524887}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08c7865c5d2a1f710800000000000000
+      internalID: 1725339171283303552
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YuraSerin-16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 664
+        width: 221
+        height: 223
+      alignment: 9
+      pivot: {x: 0.49291146, y: 0.004484305}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: db655bc59f3e84620800000000000000
+      internalID: 2758705431906178749
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YuraSerin-17
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 664
+        width: 222
+        height: 223
+      alignment: 9
+      pivot: {x: 0.4835733, y: 0.004484305}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f50fa2c6873564f0800000000000000
+      internalID: -836201103875963400
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YuraSerin-18
+      rect:
+        serializedVersion: 2
+        x: 443
+        y: 664
+        width: 222
+        height: 223
+      alignment: 9
+      pivot: {x: 0.48854327, y: 0.004484305}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7fda0ef18688e2140800000000000000
+      internalID: 4696841442186800631
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YuraSerin-19
+      rect:
+        serializedVersion: 2
+        x: 665
+        y: 664
+        width: 222
+        height: 223
+      alignment: 9
+      pivot: {x: 0.51548576, y: 0.004484305}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f76c5ba1cf057fb70800000000000000
+      internalID: 8932697429622769279
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YuraSerin-20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 442
+        width: 221
+        height: 222
+      alignment: 9
+      pivot: {x: 0.477987, y: 0.013513514}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 818c55b2ee219b6a0800000000000000
+      internalID: -6433089778583484392
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YuraSerin-21
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 442
+        width: 222
+        height: 222
+      alignment: 9
+      pivot: {x: 0.47049, y: 0.0045045046}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 688f3831befcd9300800000000000000
+      internalID: 260592962009036934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YuraSerin-22
+      rect:
+        serializedVersion: 2
+        x: 443
+        y: 442
+        width: 222
+        height: 222
+      alignment: 9
+      pivot: {x: 0.4786557, y: 0.013513514}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4766f25a15b9f2ad0800000000000000
+      internalID: -2724788474569857420
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YuraSerin-23
+      rect:
+        serializedVersion: 2
+        x: 665
+        y: 442
+        width: 222
+        height: 222
+      alignment: 9
+      pivot: {x: 0.5201794, y: 0.013513514}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: afc83eb12e649d8c0800000000000000
+      internalID: -3974067259233301254
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YuraSerin-24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 221
+        width: 221
+        height: 221
+      alignment: 9
+      pivot: {x: 0.48867196, y: 0.009049774}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e17b3b6ad92a399d0800000000000000
+      internalID: -2768690547912362210
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YuraSerin-25
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 221
+        width: 222
+        height: 221
+      alignment: 9
+      pivot: {x: 0.485474, y: 0.004524887}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c562bb97c279f6fc0800000000000000
+      internalID: -3499412168166922660
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YuraSerin-26
+      rect:
+        serializedVersion: 2
+        x: 443
+        y: 221
+        width: 222
+        height: 221
+      alignment: 9
+      pivot: {x: 0.48149803, y: 0.004524887}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 515a6b0779ae71b70800000000000000
+      internalID: 8869815927281460501
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YuraSerin-27
+      rect:
+        serializedVersion: 2
+        x: 665
+        y: 221
+        width: 222
+        height: 221
+      alignment: 9
+      pivot: {x: 0.5089695, y: 0.009049774}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4a66ae5012e87c00800000000000000
+      internalID: 898716685595732554
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YuraSerin-28
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 221
+        height: 221
+      alignment: 9
+      pivot: {x: 0.4966993, y: 0.013574661}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: db8443f254ebfcda0800000000000000
+      internalID: -5922305780614936387
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YuraSerin-29
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 0
+        width: 222
+        height: 221
+      alignment: 9
+      pivot: {x: 0.50961995, y: 0.013574661}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f676ad39bc70b88c0800000000000000
+      internalID: -3996091673420863633
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YuraSerin-30
+      rect:
+        serializedVersion: 2
+        x: 443
+        y: 0
+        width: 222
+        height: 221
+      alignment: 9
+      pivot: {x: 0.5061472, y: 0.013574661}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b3d1d95c8d5478950800000000000000
+      internalID: 6451201788562185531
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YuraSerin-31
+      rect:
+        serializedVersion: 2
+        x: 665
+        y: 0
+        width: 222
+        height: 221
+      alignment: 9
+      pivot: {x: 0.44821125, y: 0.013574661}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bcb941e2ddbd72ce0800000000000000
+      internalID: -1429932613659485237
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      YuraSerin-00: -187932643444649970
+      YuraSerin-01: 6723665495242026172
+      YuraSerin-02: 581227248693925385
+      YuraSerin-03: 2713772713406122478
+      YuraSerin-04: 3394783428391244742
+      YuraSerin-05: 6663511479601007725
+      YuraSerin-06: 1229862869496353428
+      YuraSerin-07: -6926955196042264862
+      YuraSerin-08: -6571478188102396755
+      YuraSerin-09: 5946443672063320613
+      YuraSerin-10: 991309575504735237
+      YuraSerin-11: -1240878117468309135
+      YuraSerin-12: -2496510510587614694
+      YuraSerin-13: -6058559951927440703
+      YuraSerin-14: -342304097991985587
+      YuraSerin-15: 1725339171283303552
+      YuraSerin-16: 2758705431906178749
+      YuraSerin-17: -836201103875963400
+      YuraSerin-18: 4696841442186800631
+      YuraSerin-19: 8932697429622769279
+      YuraSerin-20: -6433089778583484392
+      YuraSerin-21: 260592962009036934
+      YuraSerin-22: -2724788474569857420
+      YuraSerin-23: -3974067259233301254
+      YuraSerin-24: -2768690547912362210
+      YuraSerin-25: -3499412168166922660
+      YuraSerin-26: 8869815927281460501
+      YuraSerin-27: 898716685595732554
+      YuraSerin-28: -5922305780614936387
+      YuraSerin-29: -3996091673420863633
+      YuraSerin-30: 6451201788562185531
+      YuraSerin-31: -1429932613659485237
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

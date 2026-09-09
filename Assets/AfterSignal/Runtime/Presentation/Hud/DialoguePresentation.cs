@@ -44,9 +44,10 @@ namespace AfterSignal
         {
             if (!conversationPortrait) BuildConversationPresentation();
             bool talk=life.Mode=="talk"||life.Mode=="story";bool story=life.Mode=="story";
+            conversationPortrait.sprite=story?StoryPortraits.Get(life.StorySpeaker):seoPortrait;
             preparationTrack.gameObject.SetActive(life.Mode=="shift");
             PlaceLifeElement(preparationMarker.rectTransform,life.Preparation*960,-4,8,28);
-            conversationPortrait.gameObject.SetActive(talk);
+            conversationPortrait.gameObject.SetActive(talk&&conversationPortrait.sprite);
             conversationLoading.gameObject.SetActive(talk && life.Sending);
             if(talk)
             {

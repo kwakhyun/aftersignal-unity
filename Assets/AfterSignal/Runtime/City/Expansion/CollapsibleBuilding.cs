@@ -21,7 +21,7 @@ namespace AfterSignal
         }
         IEnumerator Fall(Vector3 impact,Vector3 direction)
         {
-            var g=GameDirector.Instance;g?.Audio.Play("urban_explosion",impact,.7f,1);g?.CameraRig.Kick(.18f);
+            var g=GameDirector.Instance;g?.Audio.Play("urban_explosion",impact,.7f,1);if(g&&(g.Player.transform.position-impact).sqrMagnitude<160*160)g.CameraRig.Kick(.18f);
             if(cutBatches)cutToken=DistrictGeometryCut.Remove(worldBounds);
             foreach(var c in GetComponentsInChildren<Collider>())c.enabled=false;
             foreach(var l in GetComponentsInChildren<Light>())l.enabled=false;
@@ -39,7 +39,7 @@ namespace AfterSignal
             foreach(var r in GetComponentsInChildren<Renderer>())r.enabled=false;
             var bottom=new Vector3(worldBounds.center.x,worldBounds.min.y+.3f,worldBounds.center.z);
             VehicleExplosion.Create(bottom,Mathf.Min(14,worldBounds.size.x*.35f));BlastDamage.Create(bottom,Mathf.Min(35,worldBounds.size.x),180,attacker?attacker:TrafficDamageSource.Environment);
-            Rubble(bottom);g?.Toast("건물 붕괴 · 잔해 구역에서 벗어나세요",5);
+            Rubble(bottom);g?.ToastNear("건물 붕괴 · 잔해 구역에서 벗어나세요",bottom,180,5);
             yield return new WaitForSeconds(RestoreDelay);
             while(g&&(worldBounds.Contains(g.Player.transform.position)||IncidentCommand.Monster(worldBounds.center,100)))yield return new WaitForSeconds(10);
             Restore();

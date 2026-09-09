@@ -10,6 +10,8 @@ namespace AfterSignal
             // The Windows player uses D3D11 BitBlt with this measured 60 Hz cap.
             QualitySettings.vSyncCount = 0;
             Application.targetFrameRate = 60;
+            // A slow frame must not trigger a long physics catch-up spiral on the next frame.
+            Time.maximumDeltaTime = .08f;
             if (int.TryParse(QualitySession.Arg("-quality-vsync"), out int requestedSync))
                 QualitySettings.vSyncCount = Mathf.Clamp(requestedSync, 0, 4);
             if (QualitySettings.vSyncCount == 0)

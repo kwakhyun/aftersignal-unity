@@ -29,7 +29,7 @@ namespace AfterSignal
             if(v.kind==VenueKind.Military)return v.city==2?"Swat":"Soldier";
             if(v.kind==VenueKind.School)return staff?(i%2==0?"TeacherMan":"TeacherWoman"):(i%2==0?"StudentBoy":"StudentGirl");
             if(v.kind==VenueKind.Laboratory||v.id=="erebos-institute")return i%4==0?"Swat":i%2==0?"Doctor":"Nurse";
-            if(v.kind==VenueKind.FireStation&&staff)return "Worker";
+            if(v.kind==VenueKind.FireStation&&staff)return "Firefighter";
             return null;
         }
         public static void Apply(VenueActor actor,VenueRuntime venue,bool staff,int i)

@@ -57,7 +57,7 @@ namespace AfterSignal
         public void Tick(float dt)
         {
             if(CivilianImpact.Active(this)||CivilianDefense.Active(this))return;
-            if(GetComponent<MedicalPending>())return;
+            var rescue=GetComponent<MedicalPending>();if(rescue&&rescue.carried||GetComponent<WorldActor>()?.Downed==true)return;
             var social=GetComponent<CityNpc>();if(social&&Time.time<social.SocialUntil&&!social.Fleeing)return;
             age += dt;
             phase += dt * 5;

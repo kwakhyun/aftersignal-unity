@@ -101,7 +101,7 @@ namespace AfterSignal
                 if(windup<=0){vulnerable=3;if(skill==3)TitanBarrage.Fire(this);else if(skill==2)FireLaser();else Shockwave(skill==1?25:17,skill==1?100:80);cooldown=4.5f;}
                 return;
             }
-            if(barrageAt<=0&&d.magnitude<65){skill=3;windup=2.8f;barrageAt=27;SignalEffects.Ring(transform.position+Vector3.up*.2f,new Color(.85f,.1f,1),48,windup);g.Toast("잠식체 전방위 소각 예고 · 48m 밖으로 이탈하거나 건물 뒤로 엄폐!",3);g.Audio.Play("charge",AimCenter,.5f,3);return;}
+            if(barrageAt<=0&&d.magnitude<65){skill=3;windup=2.8f;barrageAt=27;SignalEffects.Ring(transform.position+Vector3.up*.2f,new Color(.85f,.1f,1),48,windup);g.ToastNear("잠식체 전방위 소각 예고 · 48m 밖으로 이탈하거나 건물 뒤로 엄폐!",transform.position,100,3);g.Audio.Play("charge",AimCenter,.5f,3);return;}
             if(laserAt<=0&&(airTarget||target&&target.helicopter||d.magnitude>26&&d.magnitude<180))
             {skill=2;windup=2.2f;laserAt=kind==2?9:14;locked=airTarget?airTarget.transform.position:target?target.Center:g.Player.Shoulder;g.Audio.Play("charge",AimCenter,.5f,3);return;}
             if(cooldown<=0&&d.magnitude<26)

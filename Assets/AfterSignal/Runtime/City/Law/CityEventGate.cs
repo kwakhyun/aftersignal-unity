@@ -13,7 +13,7 @@ namespace AfterSignal
         static readonly Dictionary<WorldActor,float> idle=new();
         static readonly List<WorldActor> actors=new();
         static readonly List<CityVehicle> carriers=new();
-        public static bool Busy { get { Refresh(); return Kind!=CityEventKind.None; } }
+        public static bool Busy { get { Refresh(); return CityChronicle.IntroProtected||Kind!=CityEventKind.None; } }
         public static string Diagnostic=>$"kind={Kind}, actors={actors.Count}, carriers={carriers.Count}, quiet={Time.time-quietSince:0.0}, reserve={reservedUntil-Time.time:0.0}, bombs={CivicBomb.Active}";
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void Boot(){Reset();SceneManager.sceneLoaded-=Loaded;SceneManager.sceneLoaded+=Loaded;}
@@ -21,6 +21,7 @@ namespace AfterSignal
         public static void Reset(){Kind=CityEventKind.None;owner=null;actors.Clear();carriers.Clear();idle.Clear();reservedUntil=quietSince=next=began=0;}
         public static bool Begin(Object requester,CityEventKind kind)
         {
+            if(CityChronicle.IntroProtected)return false;
             Refresh();if(Kind!=CityEventKind.None)return owner==requester&&Kind==kind;
             owner=requester;Kind=kind;began=Time.time;reservedUntil=Time.time+20;quietSince=0;return true;
         }

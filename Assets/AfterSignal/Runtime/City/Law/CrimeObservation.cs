@@ -43,7 +43,7 @@ namespace AfterSignal
             if(existing!=null){existing.severity=Mathf.Min(170,existing.severity+severity);existing.fatalities+=fatalities;return;}
             Instance.calls.Add(new Call{witness=witness,point=point,severity=severity,remaining=5,fatalities=fatalities});
             NpcSpeech.Say(witness,NpcDialogueBank.Line(witness.GetComponent<CityNpc>(),"report"),4);
-            GameDirector.Instance?.Toast("목격자가 신고하고 있습니다",2);
+            GameDirector.Instance?.ToastNear("목격자가 신고하고 있습니다",point,100,2);
         }
         void Confirm(float severity,Vector3 point,int fatalities)
         {

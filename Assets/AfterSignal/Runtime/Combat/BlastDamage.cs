@@ -38,6 +38,7 @@ namespace AfterSignal
             var sim=UrbanSimulation.Instance;
             if(sim)foreach(var car in new List<CityVehicle>(sim.Cars))
             {if(!car||car==excluded||car.Wrecked)continue;var point=WarheadDamage.HullPoint(car,origin);float d=Vector3.Distance(origin,point);if(car==direct||(d<radius&&Exposed(origin,point,car.transform,excluded)))car.Damage(WarheadDamage.Against(car,payload,damage)*(car==direct?1:Mathf.Lerp(.85f,.15f,Mathf.Clamp01(d/radius))),point,source);}
+            CityFireService.IgniteBlast(origin,radius,damage);
             Destroy(gameObject);
         }
     }

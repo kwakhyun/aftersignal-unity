@@ -42,6 +42,8 @@ namespace AfterSignal
             if(incidentAssignment&&(!incidentTarget||!incidentTarget.Alive||incidentTarget.Downed)&&!IncidentCommand.Emergency){remaining=0;car.speed=0;if(elapsed>100&&ResponseDispatch.Hidden(transform.position))Destroy(gameObject);return;}
             var goal=IncidentCommand.Emergency?IncidentCommand.Position:incidentTarget&&incidentTarget.Alive?incidentTarget.transform.position:owner.LastSeen;
             var delta=goal-transform.position;delta.y=0;
+            var getaway=incidentTarget?incidentTarget.GetComponentInParent<GangGetaway>():null;
+            if(!IncidentCommand.Emergency&&getaway&&remaining>0&&Mathf.Abs(getaway.GetComponent<CityVehicle>().speed)>3){route.Drive(car,goal,Mathf.Min(.05f,Time.deltaTime),8);return;}
             if(delta.magnitude>24&&remaining>0)
             {route.Drive(car,goal,Mathf.Min(.05f,Time.deltaTime),24);return;}
             car.speed=0;GetComponent<SecurityVehicleArt>()?.OpenRear();

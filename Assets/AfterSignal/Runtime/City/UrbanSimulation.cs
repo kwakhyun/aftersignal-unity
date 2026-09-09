@@ -61,7 +61,7 @@ namespace AfterSignal
                 if (!Owned || Vector3.Distance(Owned.transform.position, parking) > 8)
                     Spawn(parking, false);
                 for (int i = 0; i < 32; i++)
-                    SpawnTraffic();
+                {SpawnTraffic();yield return null;}
             }
         }
 
@@ -232,7 +232,7 @@ namespace AfterSignal
             saveClock -= dt;
             if (game.stage == StageId.UrbanCity && spawnClock <= 0)
             {
-                spawnClock = 1.25f;
+                spawnClock = .55f;
                 int count = 0;
                 for (int i = Cars.Count - 1; i >= 0; i--)
                 {
@@ -252,8 +252,8 @@ namespace AfterSignal
                         count++;
                 }
 
-                if (count < 48)
-                    for(int spawn=0;spawn<4 && count+spawn<48;spawn++) SpawnTraffic();
+                if (count < (FidelityPresentation.Preset==0?32:48))
+                    SpawnTraffic();
                 int parked = 0;
                 foreach (var car in Cars)
                     if (car && !car.traffic && !car.owned)

@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 141.76683
+  spritePixelsToUnits: 140.92549
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
@@ -131,7 +131,7 @@ TextureImporter:
         width: 313
         height: 314
       alignment: 9
-      pivot: {x: 0.47603956, y: 0.012738854}
+      pivot: {x: 0.47606388, y: 0.012738854}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -153,7 +153,7 @@ TextureImporter:
         width: 314
         height: 315
       alignment: 9
-      pivot: {x: 0.44553086, y: 0.0031746032}
+      pivot: {x: 0.44546595, y: 0.0031746032}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -172,10 +172,10 @@ TextureImporter:
         serializedVersion: 2
         x: 627
         y: 940
-        width: 312
+        width: 313
         height: 314
       alignment: 9
-      pivot: {x: 0.42946553, y: 0.0031847134}
+      pivot: {x: 0.42804167, y: 0.0031847134}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -192,12 +192,12 @@ TextureImporter:
       name: AbyssEngineer-03
       rect:
         serializedVersion: 2
-        x: 939
+        x: 940
         y: 940
-        width: 315
+        width: 314
         height: 314
       alignment: 9
-      pivot: {x: 0.503931, y: 0.012738854}
+      pivot: {x: 0.50232834, y: 0.012738854}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -219,7 +219,7 @@ TextureImporter:
         width: 313
         height: 313
       alignment: 9
-      pivot: {x: 0.46784317, y: 0.03514377}
+      pivot: {x: 0.4667642, y: 0.03514377}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -241,7 +241,7 @@ TextureImporter:
         width: 314
         height: 312
       alignment: 9
-      pivot: {x: 0.42317453, y: 0.022435898}
+      pivot: {x: 0.4230231, y: 0.022435898}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -260,10 +260,10 @@ TextureImporter:
         serializedVersion: 2
         x: 627
         y: 627
-        width: 312
+        width: 313
         height: 313
       alignment: 9
-      pivot: {x: 0.4270461, y: 0.022364218}
+      pivot: {x: 0.42488238, y: 0.022364218}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -280,12 +280,12 @@ TextureImporter:
       name: AbyssEngineer-07
       rect:
         serializedVersion: 2
-        x: 939
+        x: 940
         y: 627
-        width: 315
+        width: 314
         height: 313
       alignment: 9
-      pivot: {x: 0.50208354, y: 0.028753994}
+      pivot: {x: 0.5003867, y: 0.03514377}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -307,7 +307,7 @@ TextureImporter:
         width: 313
         height: 305
       alignment: 9
-      pivot: {x: 0.47807288, y: 0.036065575}
+      pivot: {x: 0.47828063, y: 0.036065575}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -329,7 +329,7 @@ TextureImporter:
         width: 314
         height: 305
       alignment: 9
-      pivot: {x: 0.4286001, y: 0.036065575}
+      pivot: {x: 0.4286904, y: 0.036065575}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -348,10 +348,10 @@ TextureImporter:
         serializedVersion: 2
         x: 627
         y: 322
-        width: 312
+        width: 313
         height: 305
       alignment: 9
-      pivot: {x: 0.43739098, y: 0.036065575}
+      pivot: {x: 0.43617672, y: 0.036065575}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -368,12 +368,12 @@ TextureImporter:
       name: AbyssEngineer-11
       rect:
         serializedVersion: 2
-        x: 939
+        x: 940
         y: 323
-        width: 315
+        width: 314
         height: 304
       alignment: 9
-      pivot: {x: 0.5116839, y: 0.029605264}
+      pivot: {x: 0.5100456, y: 0.029605264}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -395,7 +395,7 @@ TextureImporter:
         width: 313
         height: 322
       alignment: 9
-      pivot: {x: 0.49403003, y: 0.0931677}
+      pivot: {x: 0.49417076, y: 0.0931677}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -417,7 +417,7 @@ TextureImporter:
         width: 314
         height: 322
       alignment: 9
-      pivot: {x: 0.45616752, y: 0.07453416}
+      pivot: {x: 0.45657143, y: 0.08695652}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -436,10 +436,10 @@ TextureImporter:
         serializedVersion: 2
         x: 627
         y: 0
-        width: 312
+        width: 313
         height: 322
       alignment: 9
-      pivot: {x: 0.44194824, y: 0.03416149}
+      pivot: {x: 0.445314, y: 0.08695652}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -456,12 +456,12 @@ TextureImporter:
       name: AbyssEngineer-15
       rect:
         serializedVersion: 2
-        x: 939
+        x: 940
         y: 0
-        width: 315
+        width: 314
         height: 323
       alignment: 9
-      pivot: {x: 0.43364874, y: 0.0371517}
+      pivot: {x: 0.42987654, y: 0.086687304}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []

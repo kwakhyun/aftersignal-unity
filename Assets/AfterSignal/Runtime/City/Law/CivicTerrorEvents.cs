@@ -59,7 +59,7 @@ namespace AfterSignal
         void Update()
         {
             if(GameDirector.Instance&&GameDirector.Instance.Blocked)return;
-            if(!device.Alive){GameDirector.Instance?.Toast("폭발 장치를 파괴했습니다",3);Destroy(gameObject);return;}
+            if(!device.Alive){GameDirector.Instance?.ToastNear("폭발 장치를 파괴했습니다",transform.position,120,3);Destroy(gameObject);return;}
             fuse-=Time.deltaTime;if(light)light.localScale=Vector3.one*(1+Mathf.Sin(Time.time*18)*.3f);
             if(fuse<=0){var at=transform.position;VehicleExplosion.Create(at,4);BlastDamage.Create(at,13,120,Source?Source:TrafficDamageSource.Environment);CitySafety.Shock(at);Destroy(gameObject);}
         }

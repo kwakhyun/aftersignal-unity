@@ -87,7 +87,7 @@ namespace AfterSignal
             notice.text=game.NoticeTimer>0&&!game.Blocked?game.Notice:"";
             notice.rectTransform.anchoredPosition=new Vector2(0,CampaignBattle.Active?-96:-200);
             prompt.text=!game.Blocked&&game.Nearby?$"[ E ]   {game.Nearby.title}":"";
-            anchorHint.text=game.Blocked?"":game.Player.Rope.Attached?"오른쪽 버튼 유지 · W 감기 / S 풀기 · SPACE 도약 · 버튼을 놓아 관성 이동":game.Player.Rope.Candidate?"오른쪽 클릭 유지 · 표시된 앵커에 로프 발사":"";
+            anchorHint.text=game.Blocked?"":game.Player.Rope.Attached?"오른쪽 버튼 유지 · W 감기 / S 풀기 · SPACE 도약 · 버튼을 놓아 관성 이동":game.Player.Rope.Candidate?"오른쪽 클릭 유지 · 조준한 표면에 로프 발사":"";
             Cursor.visible=!game.CameraRig.CanLook;cursor.gameObject.SetActive(game.CameraRig.CanLook);
             PlaceScreen(cursor,new Vector2(Screen.width*.5f,Screen.height*.5f),new Vector2(15,15));
             var anchor=game.Player.Rope.Candidate;candidate.gameObject.SetActive(anchor&&!game.Blocked);
@@ -101,7 +101,7 @@ namespace AfterSignal
             for(int i=numbers.Count-1;i>=0;i--){var n=numbers[i];float age=Time.time-n.born;if(age>.85f){Destroy(n.text.gameObject);numbers.RemoveAt(i);}else{PlaceWorld(n.text.rectTransform,n.world+Vector3.up*age,new Vector2(40,20));}}
             string mode=game.Dead?"dead":game.Paused?"pause":"";
             modal.SetActive(mode!="");if(mode!=modalMode){modalMode=mode;ConfigureModal(mode);}
-            dialogueBox.SetActive(game.Dialogue);if(game.Dialogue){dialogueName.text=game.DialogueTitle;dialogueText.text=game.DialogueText;}
+            dialogueBox.SetActive(game.Dialogue);if(game.Dialogue){dialogueName.text=game.DialogueTitle;dialogueText.text=game.DialogueText;if(storyPortrait){storyPortrait.sprite=StoryPortraits.Get(game.DialogueTitle);storyPortrait.gameObject.SetActive(storyPortrait.sprite);}}
             UpdateUrbanHud();UpdateQuestHud();UpdateLifeHud();UpdateClientExperience();
             fade.gameObject.SetActive(game.Transition);fade.color=new Color(0,0,0,game.Fade);
         }
@@ -117,7 +117,7 @@ namespace AfterSignal
             ButtonText(musicButton,musicLevel<.01f?"배경음악: 꺼짐  ·  클릭하여 변경":$"배경음악: {musicLevel*100:0}%  ·  클릭하여 변경");
             settingsRow.SetActive(mode=="pause");ButtonText(motionButton,PresentationSettings.Motion>0?"화면 충격: 켜짐":"화면 충격: 꺼짐");ButtonText(effectButton,PresentationSettings.Effects>0?"전투 효과: 켜짐":"전투 효과: 꺼짐");ButtonText(postButton,PresentationSettings.Post?"후처리: 켜짐":"후처리: 꺼짐");
             if(mode=="dead"){
-                modalTitle.text="SIGNAL LOST";modalBody.text="기억은 아직 사라지지 않았습니다.\n등록된 회복 지점에서 다시 시작합니다.";ButtonText(primary,RespawnNetwork.Destination+"에서 리스폰   →");ButtonText(secondary,"타이틀로 돌아가기");ButtonText(third,"게임 종료");secondary.interactable=true;
+                modalTitle.text="SIGNAL LOST";modalBody.text="기억은 아직 사라지지 않았습니다.\n서하의 집에서 다시 시작합니다.";ButtonText(primary,RespawnNetwork.Destination+"에서 리스폰   →");ButtonText(secondary,"타이틀로 돌아가기");ButtonText(third,"게임 종료");secondary.interactable=true;
             }else{
                 modalTitle.text="잠시 멈춘 밤";modalBody.text="WASD 달리기 · 마우스 왼쪽 공격 / 오른쪽 로프\n휠 확대·축소 / 1–3 무기 · R 장전 · Q 기술 · CTRL 방어\nSPACE 두 번 더블 점프 · 벽으로 W 등반 · SHIFT 대시\n마우스 시점 · J 사건 일지 · F6 구조 신고 · HOME 시점 초기화";ButtonText(primary,"계속하기   →");ButtonText(secondary,game.Audio.Volume>.01f?"소리 끄기":"소리 켜기");ButtonText(third,"저장하고 타이틀로");secondary.interactable=true;
             }

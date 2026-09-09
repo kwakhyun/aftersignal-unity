@@ -18,13 +18,14 @@ namespace AfterSignal
 
         public static WorldActor NearestOpponent(WorldActor self, float range)
         {
-            if(self.police||self.military){var titan=IncidentCommand.Monster(self.Center,Mathf.Max(range,350));if(titan)return titan;}
+            if(!TacticalJudgment.Active(self)||self.Downed)return null;
+            if(self.police||self.military){var titan=IncidentCommand.Monster(self.Center,Mathf.Max(range,350));if(TacticalJudgment.Opponent(self,titan))return titan;}
             WorldActor result = null;
             float closest = range * range;
             ActorSpatialIndex.Nearby(self.transform.position,range+4,neighbors);
             foreach (var other in neighbors)
             {
-                if (!other || other==self || !other.Alive || other.Downed || other.helicopter || self.military&&other.terrorist || !(self.monster ? !other.monster : self.police||self.military ? other.gang||other.monster||other.terrorist : other.police||other.military||other.monster)) continue;
+                if (!TacticalJudgment.Opponent(self,other)||other.helicopter||self.gang&&!other.police&&!other.military&&!other.monster) continue;
                 float distance = (other.Center - self.Center).sqrMagnitude;
                 if (distance >= closest || !Visible(self.Center, other.Center, range)) continue;
                 closest = distance;
@@ -40,7 +41,7 @@ namespace AfterSignal
 
         public static void Fire(WorldActor source, Vector3 muzzle, Vector3 target, float range, float damage, Color color, bool hostilePlayer, Transform firingMount=null)
         {
-            if(!source||!source.Alive)return;
+            if(!TacticalJudgment.Active(source)||source.Downed)return;
             var mounted=firingMount?firingMount.GetComponentInParent<CityVehicle>():source.GetComponentInParent<CityVehicle>();
             if(mounted&&!mounted.occupied&&!(UrbanSimulation.Instance&&UrbanSimulation.Instance.Current==mounted))return;
             var direction = (target - muzzle).normalized;
@@ -61,7 +62,7 @@ namespace AfterSignal
             float distance = range;
             for (int i = 0; i < count; i++)
             {
-                if (contacts[i].collider.transform.IsChildOf(source.transform) || firingMount && contacts[i].collider.transform.IsChildOf(firingMount) || contacts[i].distance >= distance) continue;
+                if (Ballistics.Ignore(contacts[i],source.transform,firingMount) || contacts[i].distance >= distance) continue;
                 nearest = i;
                 distance = contacts[i].distance;
             }

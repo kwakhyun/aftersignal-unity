@@ -7,24 +7,25 @@ namespace AfterSignal.Editor
     // Sheet gutters are detected from pixels; generated sheets rarely have perfectly equal cells.
     public sealed class DirectionalSheetImporter : AssetPostprocessor
     {
-        bool Match => assetPath.Contains("/Resources/Art/SeoMotion/") || assetPath.Contains("/Resources/Art/NpcDirections/");
-        public override uint GetVersion() => 5;
+        bool Polished=>assetPath.Contains("/Resources/Art/NpcPolished/");
+        bool Match => Polished || assetPath.Contains("/Resources/Art/SeoMotion/") || assetPath.Contains("/Resources/Art/NpcDirections/");
+        public override uint GetVersion() => 7;
         bool checker;
         bool Background(Color32 c) => c.a < 32 || Mathf.Min(c.r, Mathf.Min(c.g,c.b)) > (checker?118:235) && Mathf.Max(c.r,Mathf.Max(c.g,c.b))-Mathf.Min(c.r,Mathf.Min(c.g,c.b)) < (checker?8:14);
         void OnPreprocessTexture()
         {
             if (!Match) return;
-            checker=assetPath.EndsWith("/Worker.png")||assetPath.EndsWith("/Soldier.png")||assetPath.EndsWith("Player.png")||assetPath.Contains("/Abyss")||assetPath.EndsWith("/CorruptedCitizen.png")||assetPath.EndsWith("/RacingDriver.png");
+            checker=Polished||assetPath.EndsWith("/Worker.png")||assetPath.EndsWith("/Soldier.png")||assetPath.EndsWith("Player.png")||assetPath.Contains("/Abyss")||assetPath.EndsWith("/CorruptedCitizen.png")||assetPath.EndsWith("/RacingDriver.png");
             var importer = (TextureImporter)assetImporter;
             importer.textureType=TextureImporterType.Sprite; importer.spriteImportMode=SpriteImportMode.Multiple;
             importer.mipmapEnabled=false; importer.filterMode=FilterMode.Point; importer.alphaIsTransparency=true;
             importer.textureCompression=TextureImporterCompression.Uncompressed; importer.maxTextureSize=4096; importer.npotScale=TextureImporterNPOTScale.None;
             var platform=importer.GetDefaultPlatformTextureSettings(); platform.format=TextureImporterFormat.RGBA32; importer.SetPlatformTextureSettings(platform);
             var tex=new Texture2D(2,2,TextureFormat.RGBA32,false); tex.LoadImage(System.IO.File.ReadAllBytes(assetPath));
-            var pixels=tex.GetPixels32(); int columns=Columns(tex,pixels);
+            OnPostprocessTexture(tex);var pixels=tex.GetPixels32(); int columns=Polished?6:Columns(tex,pixels);
             int[] xs=Cuts(tex,pixels,true,columns,0,tex.height);
-            var data=new SpriteMetaData[16]; float height=0;
-            for(int n=0;n<16;n++)
+            var data=new SpriteMetaData[Polished?24:16]; float height=0;
+            for(int n=0;n<data.Length;n++)
             {
                 int source=columns==5?(n<8?0:10)+Mathf.FloorToInt(n%8*10/8f):n;
                 int col=source%columns,row=3-source/columns;
@@ -38,7 +39,7 @@ namespace AfterSignal.Editor
                 }
                 for(int y=lo+(hi-lo)*55/100;y<lo+(hi-lo)*85/100;y++) for(int x=left;x<=right;x++)
                 {if(!Background(pixels[(oy+y)*tex.width+ox+x])){torso+=x;count++;}}
-                if(n<8)height+=Mathf.Max(1,hi-lo)/8f;
+                if(Polished){if(n%6==0)height+=Mathf.Max(1,hi-lo)/4f;}else if(n<8)height+=Mathf.Max(1,hi-lo)/8f;
                 data[n]=new SpriteMetaData{name=System.IO.Path.GetFileNameWithoutExtension(assetPath)+"-"+n.ToString("00"),rect=new Rect(ox,oy,w,h),alignment=(int)SpriteAlignment.Custom,pivot=new Vector2(count>0?torso/count/w:.5f,(float)Mathf.Max(1,lo)/h)};
             }
             var settings=new TextureImporterSettings();importer.ReadTextureSettings(settings);
@@ -81,7 +82,7 @@ namespace AfterSignal.Editor
         void OnPostprocessTexture(Texture2D tex)
         {
             if(!Match)return;
-            checker=assetPath.EndsWith("/Worker.png")||assetPath.EndsWith("/Soldier.png")||assetPath.EndsWith("Player.png")||assetPath.Contains("/Abyss")||assetPath.EndsWith("/CorruptedCitizen.png")||assetPath.EndsWith("/RacingDriver.png");
+            checker=Polished||assetPath.EndsWith("/Worker.png")||assetPath.EndsWith("/Soldier.png")||assetPath.EndsWith("Player.png")||assetPath.Contains("/Abyss")||assetPath.EndsWith("/CorruptedCitizen.png")||assetPath.EndsWith("/RacingDriver.png");
             var p=tex.GetPixels32();var queue=new int[p.Length];var visited=new bool[p.Length];int head=0,tail=0;
             // Seed only the outer boundary. A grid line can cross white clothing or pale hair.
             for(int n=0;n<p.Length;n++)if((p[n].a==0||n%tex.width==0||n%tex.width==tex.width-1||n<tex.width||n>=p.Length-tex.width)&&Background(p[n]))
@@ -97,6 +98,7 @@ namespace AfterSignal.Editor
                     visited[k]=true;queue[tail++]=k;
                 }
             }
+            SpriteSilhouetteFinish.Apply(p,tex.width,tex.height);
             tex.SetPixels32(p);tex.Apply(false,false);
         }
     }

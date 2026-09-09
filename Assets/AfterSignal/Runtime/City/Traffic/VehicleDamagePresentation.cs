@@ -13,8 +13,10 @@ namespace AfterSignal
             bool near=(transform.position-g.Player.transform.position).sqrMagnitude<650*650;
             if(Stage>=2&&near&&!smoke)Build();
             Set(smoke,near&&Stage>=2,Stage>=3?16:7);
-            Set(fire,near&&Stage>=3,Stage>=4?20:12);
-            if(glow){glow.enabled=near&&Stage>=3;glow.intensity=1.5f+Mathf.PerlinNoise(Time.time*8,0);}
+            bool quenched=GetComponent<ExtinguishedObject>();
+            Set(fire,near&&Stage>=3&&!quenched,Stage>=4?20:12);
+            if(Stage==3&&!quenched&&!GetComponent<BurningObject>())CityFireService.Ignite(gameObject,transform.position+Vector3.up*1.4f,car.IsHeavy?2:1);
+            if(glow){glow.enabled=near&&Stage>=3&&!quenched;glow.intensity=1.5f+Mathf.PerlinNoise(Time.time*8,0);}
         }
         static void Set(ParticleSystem p,bool enabled,float rate){if(!p)return;var e=p.emission;e.enabled=enabled;e.rateOverTime=rate;}
         void Build()

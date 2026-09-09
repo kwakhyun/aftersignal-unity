@@ -1,0 +1,24 @@
+{
+    "completed": true,
+    "passed": [
+        "Only two actual tutorial combatants receive enemy markers",
+        "Tutorial creates no barricades or enemy-labelled devices outside home",
+        "Pursuing police and unrelated gang members never receive tutorial markers",
+        "Tutorial overlay closes when the tutorial operation ends",
+        "Second tutorial step remains completable without removed devices",
+        "Crosshair selects an ordinary building wall without a pre-placed anchor",
+        "Rope attaches to the selected masonry surface",
+        "Player reels upward and flies along the surface rope",
+        "Releasing the rope preserves flight momentum",
+        "Crosshair selects a vehicle hull",
+        "Rope endpoint follows the moving vehicle's local attachment point",
+        "Rope releases when the attached vehicle disappears",
+        "Aiming into empty sky cannot attach to a phantom anchor",
+        "Existing authored campaign anchors still attach",
+        "Budgeted NPC support still recovers below-floor actors",
+        "Car contact recovery resolves overlap without repeated world synchronizations",
+        "Atomic three-person families still fit the staggered spawn budget",
+        "Performance default disables recurring local six-face reflection captures"
+    ],
+    "errors": []
+}

@@ -1,0 +1,879 @@
+fileFormatVersion: 2
+guid: 516bf6826e50acb4ea61f972c503bd2f
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.05357143}
+  spritePixelsToUnits: 99.635925
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 0
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: 4
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: SuyeonJihun-00
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1543
+        width: 221
+        height: 231
+      alignment: 9
+      pivot: {x: 0.49461153, y: 0.0043290043}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a9d6a38c90added00800000000000000
+      internalID: 1003698027522321818
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SuyeonJihun-01
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 1543
+        width: 222
+        height: 231
+      alignment: 9
+      pivot: {x: 0.4807787, y: 0.0043290043}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ca94e214c543cf380800000000000000
+      internalID: -8936209989774718548
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SuyeonJihun-02
+      rect:
+        serializedVersion: 2
+        x: 443
+        y: 1543
+        width: 222
+        height: 231
+      alignment: 9
+      pivot: {x: 0.47673574, y: 0.0043290043}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7743aa4551067f4d0800000000000000
+      internalID: -3100904173690276745
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SuyeonJihun-03
+      rect:
+        serializedVersion: 2
+        x: 665
+        y: 1543
+        width: 222
+        height: 231
+      alignment: 9
+      pivot: {x: 0.48704538, y: 0.0043290043}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df112b495bffca6b0800000000000000
+      internalID: -5283567107463572995
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SuyeonJihun-04
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1321
+        width: 221
+        height: 222
+      alignment: 9
+      pivot: {x: 0.48264986, y: 0.013513514}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5fe59cca94a09ca60800000000000000
+      internalID: 7694692749886971637
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SuyeonJihun-05
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 1321
+        width: 222
+        height: 222
+      alignment: 9
+      pivot: {x: 0.48656794, y: 0.009009009}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 966e6bc56e7c54e40800000000000000
+      internalID: 5640133900563310185
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SuyeonJihun-06
+      rect:
+        serializedVersion: 2
+        x: 443
+        y: 1321
+        width: 222
+        height: 222
+      alignment: 9
+      pivot: {x: 0.47717735, y: 0.009009009}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b3592c393ee24d4f0800000000000000
+      internalID: -804966878421019333
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SuyeonJihun-07
+      rect:
+        serializedVersion: 2
+        x: 665
+        y: 1321
+        width: 222
+        height: 222
+      alignment: 9
+      pivot: {x: 0.4803571, y: 0.0045045046}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 56dba5a36718e3d90800000000000000
+      internalID: -7116108016413655707
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SuyeonJihun-08
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1099
+        width: 221
+        height: 222
+      alignment: 9
+      pivot: {x: 0.49063712, y: 0.0045045046}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a778428a25cadfe70800000000000000
+      internalID: 9150659488894977914
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SuyeonJihun-09
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 1099
+        width: 222
+        height: 222
+      alignment: 9
+      pivot: {x: 0.477463, y: 0.0045045046}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 11c49a09033982dc0800000000000000
+      internalID: -3663516460071171055
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SuyeonJihun-10
+      rect:
+        serializedVersion: 2
+        x: 443
+        y: 1099
+        width: 222
+        height: 222
+      alignment: 9
+      pivot: {x: 0.47907183, y: 0.0045045046}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3830fe11630697750800000000000000
+      internalID: 6303174938827096963
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SuyeonJihun-11
+      rect:
+        serializedVersion: 2
+        x: 665
+        y: 1099
+        width: 222
+        height: 222
+      alignment: 9
+      pivot: {x: 0.5064421, y: 0.0045045046}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75ec61f484c0516a0800000000000000
+      internalID: -6479258984198517161
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SuyeonJihun-12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 878
+        width: 221
+        height: 221
+      alignment: 9
+      pivot: {x: 0.5002128, y: 0.009049774}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 221345db0d2687a50800000000000000
+      internalID: 6519069109287924002
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SuyeonJihun-13
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 878
+        width: 222
+        height: 221
+      alignment: 9
+      pivot: {x: 0.4771813, y: 0.004524887}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e4efdbf51b0e47b20800000000000000
+      internalID: 3131374693349457486
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SuyeonJihun-14
+      rect:
+        serializedVersion: 2
+        x: 443
+        y: 878
+        width: 222
+        height: 221
+      alignment: 9
+      pivot: {x: 0.4808466, y: 0.004524887}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00f68fe74a183baf0800000000000000
+      internalID: -381818999891529984
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SuyeonJihun-15
+      rect:
+        serializedVersion: 2
+        x: 665
+        y: 878
+        width: 222
+        height: 221
+      alignment: 9
+      pivot: {x: 0.46091977, y: 0.004524887}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fea8932f0e50e1f50800000000000000
+      internalID: 6853922146599144175
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SuyeonJihun-16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 655
+        width: 221
+        height: 223
+      alignment: 9
+      pivot: {x: 0.49027136, y: 0.01793722}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a59164186a26d8e0800000000000000
+      internalID: -1669099985387285086
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SuyeonJihun-17
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 655
+        width: 222
+        height: 223
+      alignment: 9
+      pivot: {x: 0.46775302, y: 0.004484305}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8cdf30d40b8c94780800000000000000
+      internalID: -8698200545757495864
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SuyeonJihun-18
+      rect:
+        serializedVersion: 2
+        x: 443
+        y: 655
+        width: 222
+        height: 223
+      alignment: 9
+      pivot: {x: 0.47309905, y: 0.004484305}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3fe957b7be8eaae50800000000000000
+      internalID: 6821520683692302067
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SuyeonJihun-19
+      rect:
+        serializedVersion: 2
+        x: 665
+        y: 655
+        width: 222
+        height: 223
+      alignment: 9
+      pivot: {x: 0.50119686, y: 0.01793722}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf63d7a8ca38d7200800000000000000
+      internalID: 179444337245763323
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SuyeonJihun-20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 437
+        width: 221
+        height: 218
+      alignment: 9
+      pivot: {x: 0.48499802, y: 0.02293578}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0d46e8677375aea0800000000000000
+      internalID: -5862152383254606581
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SuyeonJihun-21
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 437
+        width: 222
+        height: 218
+      alignment: 9
+      pivot: {x: 0.47275454, y: 0.0045871558}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eeaec81d16d49e110800000000000000
+      internalID: 1290647850741197550
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SuyeonJihun-22
+      rect:
+        serializedVersion: 2
+        x: 443
+        y: 437
+        width: 222
+        height: 218
+      alignment: 9
+      pivot: {x: 0.4653522, y: 0.0045871558}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 520f2f87a1fb5b7a0800000000000000
+      internalID: -6361968778171715547
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SuyeonJihun-23
+      rect:
+        serializedVersion: 2
+        x: 665
+        y: 437
+        width: 222
+        height: 218
+      alignment: 9
+      pivot: {x: 0.49506, y: 0.013761468}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 987e2c9a193bff8b0800000000000000
+      internalID: -5116173213469841527
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SuyeonJihun-24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 220
+        width: 221
+        height: 217
+      alignment: 9
+      pivot: {x: 0.49736214, y: 0.00921659}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 564ecb3b3900af9d0800000000000000
+      internalID: -2739876788925832091
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SuyeonJihun-25
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 220
+        width: 222
+        height: 217
+      alignment: 9
+      pivot: {x: 0.47721756, y: 0.004608295}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aaa7a9beb0a4d2fd0800000000000000
+      internalID: -2365152814241776982
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SuyeonJihun-26
+      rect:
+        serializedVersion: 2
+        x: 443
+        y: 220
+        width: 222
+        height: 217
+      alignment: 9
+      pivot: {x: 0.48034063, y: 0.004608295}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42f7195f2a586fc10800000000000000
+      internalID: 2087002412283952932
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SuyeonJihun-27
+      rect:
+        serializedVersion: 2
+        x: 665
+        y: 220
+        width: 222
+        height: 217
+      alignment: 9
+      pivot: {x: 0.49724472, y: 0.013824885}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 700be44783df28cc0800000000000000
+      internalID: -3710124724088557561
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SuyeonJihun-28
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 221
+        height: 220
+      alignment: 9
+      pivot: {x: 0.4998791, y: 0.04090909}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d11e8e843e045d1a0800000000000000
+      internalID: -6785445918638808803
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SuyeonJihun-29
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 0
+        width: 222
+        height: 220
+      alignment: 9
+      pivot: {x: 0.47140518, y: 0.022727273}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3d6821ebee3be3d60800000000000000
+      internalID: 7871927036662679251
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SuyeonJihun-30
+      rect:
+        serializedVersion: 2
+        x: 443
+        y: 0
+        width: 222
+        height: 220
+      alignment: 9
+      pivot: {x: 0.4700958, y: 0.022727273}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1cb3593042f4e7210800000000000000
+      internalID: 1332589555845774273
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SuyeonJihun-31
+      rect:
+        serializedVersion: 2
+        x: 665
+        y: 0
+        width: 222
+        height: 220
+      alignment: 9
+      pivot: {x: 0.4510861, y: 0.036363635}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1fd216336c00dc480800000000000000
+      internalID: -8877438439211848207
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      SuyeonJihun-00: 1003698027522321818
+      SuyeonJihun-01: -8936209989774718548
+      SuyeonJihun-02: -3100904173690276745
+      SuyeonJihun-03: -5283567107463572995
+      SuyeonJihun-04: 7694692749886971637
+      SuyeonJihun-05: 5640133900563310185
+      SuyeonJihun-06: -804966878421019333
+      SuyeonJihun-07: -7116108016413655707
+      SuyeonJihun-08: 9150659488894977914
+      SuyeonJihun-09: -3663516460071171055
+      SuyeonJihun-10: 6303174938827096963
+      SuyeonJihun-11: -6479258984198517161
+      SuyeonJihun-12: 6519069109287924002
+      SuyeonJihun-13: 3131374693349457486
+      SuyeonJihun-14: -381818999891529984
+      SuyeonJihun-15: 6853922146599144175
+      SuyeonJihun-16: -1669099985387285086
+      SuyeonJihun-17: -8698200545757495864
+      SuyeonJihun-18: 6821520683692302067
+      SuyeonJihun-19: 179444337245763323
+      SuyeonJihun-20: -5862152383254606581
+      SuyeonJihun-21: 1290647850741197550
+      SuyeonJihun-22: -6361968778171715547
+      SuyeonJihun-23: -5116173213469841527
+      SuyeonJihun-24: -2739876788925832091
+      SuyeonJihun-25: -2365152814241776982
+      SuyeonJihun-26: 2087002412283952932
+      SuyeonJihun-27: -3710124724088557561
+      SuyeonJihun-28: -6785445918638808803
+      SuyeonJihun-29: 7871927036662679251
+      SuyeonJihun-30: 1332589555845774273
+      SuyeonJihun-31: -8877438439211848207
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

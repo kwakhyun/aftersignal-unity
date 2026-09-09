@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 149.27885
+  spritePixelsToUnits: 145.67308
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
@@ -128,10 +128,10 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 940
-        width: 327
+        width: 313
         height: 314
       alignment: 9
-      pivot: {x: 0.4473051, y: 0.0031847134}
+      pivot: {x: 0.46820113, y: 0.0031847134}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -148,12 +148,12 @@ TextureImporter:
       name: CorruptedCitizen-01
       rect:
         serializedVersion: 2
-        x: 327
-        y: 932
-        width: 276
-        height: 322
+        x: 313
+        y: 935
+        width: 314
+        height: 319
       alignment: 9
-      pivot: {x: 0.43859208, y: 0.0031055901}
+      pivot: {x: 0.4266445, y: 0.0031347962}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -170,12 +170,12 @@ TextureImporter:
       name: CorruptedCitizen-02
       rect:
         serializedVersion: 2
-        x: 603
-        y: 932
-        width: 351
-        height: 322
+        x: 627
+        y: 938
+        width: 313
+        height: 316
       alignment: 9
-      pivot: {x: 0.44200814, y: 0.0031055901}
+      pivot: {x: 0.4155533, y: 0.003164557}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -192,12 +192,12 @@ TextureImporter:
       name: CorruptedCitizen-03
       rect:
         serializedVersion: 2
-        x: 954
+        x: 940
         y: 940
-        width: 300
+        width: 314
         height: 314
       alignment: 9
-      pivot: {x: 0.46233708, y: 0.0031847134}
+      pivot: {x: 0.48759717, y: 0.006369427}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -215,11 +215,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 630
-        width: 327
-        height: 310
+        y: 627
+        width: 313
+        height: 313
       alignment: 9
-      pivot: {x: 0.43962348, y: 0.0032258064}
+      pivot: {x: 0.45590457, y: 0.0127795525}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -236,12 +236,12 @@ TextureImporter:
       name: CorruptedCitizen-05
       rect:
         serializedVersion: 2
-        x: 327
-        y: 634
-        width: 276
-        height: 298
+        x: 313
+        y: 627
+        width: 314
+        height: 308
       alignment: 9
-      pivot: {x: 0.43472847, y: 0.0033557047}
+      pivot: {x: 0.4209084, y: 0.032467533}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -258,12 +258,12 @@ TextureImporter:
       name: CorruptedCitizen-06
       rect:
         serializedVersion: 2
-        x: 603
-        y: 626
-        width: 351
-        height: 306
+        x: 627
+        y: 627
+        width: 313
+        height: 311
       alignment: 9
-      pivot: {x: 0.4411359, y: 0.003267974}
+      pivot: {x: 0.41249356, y: 0.025723472}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -280,12 +280,12 @@ TextureImporter:
       name: CorruptedCitizen-07
       rect:
         serializedVersion: 2
-        x: 954
-        y: 629
-        width: 300
-        height: 311
+        x: 940
+        y: 627
+        width: 314
+        height: 313
       alignment: 9
-      pivot: {x: 0.468731, y: 0.003215434}
+      pivot: {x: 0.49184898, y: 0.022364218}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -303,11 +303,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 330
-        width: 327
-        height: 300
+        y: 329
+        width: 313
+        height: 298
       alignment: 9
-      pivot: {x: 0.44684738, y: 0.0033333334}
+      pivot: {x: 0.46641958, y: 0.020134227}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -324,12 +324,12 @@ TextureImporter:
       name: CorruptedCitizen-09
       rect:
         serializedVersion: 2
-        x: 327
-        y: 329
-        width: 276
-        height: 305
+        x: 313
+        y: 330
+        width: 314
+        height: 297
       alignment: 9
-      pivot: {x: 0.44245622, y: 0.0032786885}
+      pivot: {x: 0.4303156, y: 0.013468013}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -346,12 +346,12 @@ TextureImporter:
       name: CorruptedCitizen-10
       rect:
         serializedVersion: 2
-        x: 603
-        y: 328
-        width: 351
+        x: 627
+        y: 329
+        width: 313
         height: 298
       alignment: 9
-      pivot: {x: 0.44453377, y: 0.0033557047}
+      pivot: {x: 0.42224795, y: 0.020134227}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -368,12 +368,12 @@ TextureImporter:
       name: CorruptedCitizen-11
       rect:
         serializedVersion: 2
-        x: 954
+        x: 940
         y: 326
-        width: 300
-        height: 303
+        width: 314
+        height: 301
       alignment: 9
-      pivot: {x: 0.460602, y: 0.0033003301}
+      pivot: {x: 0.48668885, y: 0.036544852}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -392,10 +392,10 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 327
-        height: 330
+        width: 313
+        height: 329
       alignment: 9
-      pivot: {x: 0.46430793, y: 0.003030303}
+      pivot: {x: 0.48032916, y: 0.10030395}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -412,12 +412,12 @@ TextureImporter:
       name: CorruptedCitizen-13
       rect:
         serializedVersion: 2
-        x: 327
+        x: 313
         y: 0
-        width: 276
-        height: 329
+        width: 314
+        height: 330
       alignment: 9
-      pivot: {x: 0.45113364, y: 0.0030395137}
+      pivot: {x: 0.44217744, y: 0.10909091}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -434,12 +434,12 @@ TextureImporter:
       name: CorruptedCitizen-14
       rect:
         serializedVersion: 2
-        x: 603
+        x: 627
         y: 0
-        width: 351
-        height: 328
+        width: 313
+        height: 329
       alignment: 9
-      pivot: {x: 0.46157125, y: 0.0030487804}
+      pivot: {x: 0.43746442, y: 0.09118541}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -456,12 +456,12 @@ TextureImporter:
       name: CorruptedCitizen-15
       rect:
         serializedVersion: 2
-        x: 954
+        x: 940
         y: 0
-        width: 300
+        width: 314
         height: 326
       alignment: 9
-      pivot: {x: 0.380831, y: 0.0030674846}
+      pivot: {x: 0.3936791, y: 0.09509202}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []

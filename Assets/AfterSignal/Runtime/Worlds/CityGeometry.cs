@@ -24,6 +24,8 @@ namespace AfterSignal
             }
             mat=Resources.Load<Material>("WorldAssets/Generated/"+key);
             if(!mat)mat=Resources.Load<Material>("Materials/"+key);
+            if(!mat&&key=="DefenseDeck")
+            {mat=new Material(Shader.Find("Universal Render Pipeline/Lit")){name=key};mat.SetColor("_BaseColor",new Color(.38f,.42f,.44f));mat.SetFloat("_Smoothness",.16f);mat.enableInstancing=true;materials[key]=mat;return mat;}
             if(!mat&&key=="DeepDeck")
             {
                 var template=Resources.Load<Material>("WorldAssets/Generated/Pavement");

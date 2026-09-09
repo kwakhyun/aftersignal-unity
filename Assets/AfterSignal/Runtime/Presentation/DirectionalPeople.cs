@@ -11,14 +11,17 @@ namespace AfterSignal
         public static Camera ViewCamera{get{if(cameraFrame!=Time.frameCount||!camera){cameraFrame=Time.frameCount;camera=Camera.main;}return camera;}}
         public static Sprite[] Sheet(string key,bool seo=false)
         {
+            if(key.StartsWith("Story/"))return StorySprites.Frames(key);
             bool legacy=key.StartsWith("Legacy");if(legacy)key=key.Substring(6);
             if(!seo&&!legacy&&(key=="Police"||key=="PoliceShotgun"||key=="Swat"))key="CyberPolice";
             if(!seo&&key.StartsWith("Gang"))key="CyberGang";
-            string path=(seo?"SeoMotion/":key is "CoastGuard" or "NavyCrew" or "AirForceCrew" or "SeaRaider" or "NullCell"?"CivicForces/":key.StartsWith("Cyber")?"CyberSecurity/":"NpcDirections/")+key;
+            string path=(seo?"SeoMotion/":key is "CivilianMan" or "CivilianWoman" or "Doctor" or "Nurse"?"NpcPolished/":key is "CoastGuard" or "NavyCrew" or "AirForceCrew" or "SeaRaider" or "NullCell"?"CivicForces/":key.StartsWith("Cyber")?"CyberSecurity/":"NpcDirections/")+key;
             if(!cache.TryGetValue(path,out var frames)){frames=Resources.LoadAll<Sprite>("Art/"+path);Array.Sort(frames,(a,b)=>string.CompareOrdinal(a.name,b.name));cache[path]=frames;}
             return frames;
         }
-        public static Sprite Get(string key,int facing,int phase=0){if(key.StartsWith("Facility"))key=FacilityPeople.UniformArt(key);var s=Sheet(key);return s.Length>=16?s[Mathf.Clamp(facing,0,3)*4+Mathf.Clamp(phase,0,3)]:null;}
+        static readonly int[] Pose24={0,1,3,5},Walk16={1,0,2,0};
+        public static Sprite Get(string key,int facing,int phase=0){if(key=="Firefighter"){var crew=FireCrewArt.Frames;return crew.Length>=16?crew[Mathf.Clamp(facing,0,3)]:null;}if(key.StartsWith("Facility"))key=FacilityPeople.UniformArt(key);var s=Sheet(key);return s.Length==24?s[Mathf.Clamp(facing,0,3)*6+Pose24[Mathf.Clamp(phase,0,3)]]:s.Length>=16?s[Mathf.Clamp(facing,0,3)*4+Mathf.Clamp(phase,0,3)]:null;}
+        public static Sprite Walk(string key,int facing,int phase){if(key.StartsWith("Facility"))key=FacilityPeople.UniformArt(key);var s=Sheet(key);return s.Length==24?s[Mathf.Clamp(facing,0,3)*6+1+phase%4]:Get(key,facing,Walk16[phase%4]);}
         public static int Direction(Vector3 world)
         {
             var camera=ViewCamera;var right=camera?Vector3.ProjectOnPlane(camera.transform.right,Vector3.up).normalized:Vector3.right;
@@ -65,14 +68,16 @@ namespace AfterSignal
                     visual.transform.rotation=Quaternion.Euler(90,Camera.main.transform.eulerAngles.y,85);
                 return;
             }
-            if(regionalUniform)art=regionalUniform.art;
+            var storyArt=StorySprites.For(npc);
+            if(storyArt!=null)art=storyArt;
+            else if(regionalUniform)art=regionalUniform.art;
             else if(routine&&routine.prisoner)art="Prisoner";
             else if(body&&body.military&&art!="NavyCrew"&&art!="AirForceCrew")art="Soldier";
             else if(art=="Prisoner")art="Worker";
             var game=GameDirector.Instance;if(!game)return;
             bool talking=CityLife.Instance&&CityLife.Instance.Speaker==npc&&game.Dialogue;
             bool attack=false;Vector3 direction=movement;
-            if(officer&&officer.GangTarget){direction=officer.GangTarget.transform.position-transform.position;attack=true;}
+            if(officer&&TacticalJudgment.Opponent(body,officer.GangTarget)){direction=officer.GangTarget.transform.position-transform.position;attack=officer.Decision=="목표 식별 / 교전";}
             else if(officer&&WantedSystem.Level>0&&!IncidentCommand.Emergency){direction=game.Player.transform.position-transform.position;attack=true;}
             if(gang&&gang.Target){direction=gang.Target.transform.position-transform.position;attack=true;}
             if(gang&&gang.AttackingPlayer){direction=game.Player.transform.position-transform.position;attack=true;}
@@ -82,7 +87,8 @@ namespace AfterSignal
             if(direction.sqrMagnitude>.0001f)facing=PeopleArt.Direction(direction);
             if(!game.Blocked)phase+=movement.magnitude/1.65f;
             int frame=attack&&movement.magnitude<.01f||talking||Time.time<LookUntil?3:movement.magnitude>.002f?WalkCycle[(int)(phase*4)%4]:0;
-            var sprite=PeopleArt.Get(art,facing,frame);
+            bool gesture=attack&&movement.magnitude<.01f||talking||Time.time<LookUntil;
+            var sprite=!gesture&&movement.magnitude>.002f?PeopleArt.Walk(art,facing,(int)(phase*4)):PeopleArt.Get(art,facing,frame);
             if(sprite){visual.sprite=sprite;visual.flipX=false;visual.color=Color.white;lastLivingSprite=sprite;lastLivingFlip=false;}
             bool down=walker&&walker.struck;
             if(Camera.main)visual.transform.rotation=Quaternion.Euler(Camera.main.transform.eulerAngles.x,Camera.main.transform.eulerAngles.y,Lying||down?85:0);

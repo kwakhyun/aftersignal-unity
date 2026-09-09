@@ -108,7 +108,7 @@ namespace AfterSignal
             if (!fixedQuest)
                 point.title = displayName + " · 대화";
             point.radius = 3.1f;
-            PeopleArt.Attach(gameObject,PeopleArt.Role(this));
+            PeopleArt.Attach(gameObject,StorySprites.For(this)??PeopleArt.Role(this));
             var look = GetComponent<ActorWardrobe>();
             if (!look)
                 look = gameObject.AddComponent<ActorWardrobe>();

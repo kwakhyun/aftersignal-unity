@@ -35,8 +35,15 @@ namespace AfterSignal
         void Awake(){Instance=this;Step=Mathf.Clamp(PlayerPrefs.GetInt("AFTERSIGNAL.Unity.FourCities.Chapter",0),0,Chapters.Length);Choice=PlayerPrefs.GetInt("AFTERSIGNAL.Unity.FourCities.Choice",0);}
         public void BuildObjectives()
         {
+            var witnesses=new HashSet<string>();
             for(int i=0;i<Chapters.Length;i++)
             {var chapter=Chapters[i];var v=FourCityWorld.Instance.Find(FourCityCatalog.Venues[chapter.facility].id);if(!v)continue;var at=new Vector3(3,chapter.floor*v.floorHeight+.1f,7);
+                var key=StorySprites.Key(chapter.speaker);
+                if(key!=null&&!chapter.speaker.Contains("무전")&&witnesses.Add(chapter.facility+":"+key))
+                {
+                    var witness=new GameObject("Campaign witness / "+chapter.speaker,typeof(SpriteRenderer),typeof(CityNpc));witness.transform.SetParent(v.transform,false);witness.transform.localPosition=new Vector3(-3,chapter.floor*v.floorHeight+.05f,5);
+                    witness.GetComponent<SpriteRenderer>().sharedMaterial=Resources.Load<Material>("Materials/PixelActor");var npc=witness.GetComponent<CityNpc>();npc.fixedQuest=true;npc.Configure(97500+i,"기록 협력자",chapter.speaker,"이 시설에서 도시 기억 복원 작전을 돕는 관계자.");npc.point.title=chapter.speaker;npc.point.dialogue="반가워요, 서하. 이 층의 기록 단말에서 현재 작전 자료를 확인할 수 있어요.\n"+chapter.objective;PeopleArt.Attach(witness,key);
+                }
                 var g=new CityGeometry(v.transform);g.Box("Campaign archive console",at+Vector3.up*.7f,new(2,1.4f,1.2f),"FutureCarbon",true);g.Box("Archive holographic panel",at+new Vector3(0,1.5f,0),new(1.7f,1.1f,.05f),"NeonCyan");g.Sign("기록 조사  E",at+new Vector3(0,2.5f,-.7f),.16f);g.Finish();
                 var objective=VenueService.Add(v.transform,at+new Vector3(0,1,-2),chapter.facility,chapter.objective,"campaign");objectives.Add(objective);}
             var vault=FourCityWorld.Instance.Find("erebos-vault");

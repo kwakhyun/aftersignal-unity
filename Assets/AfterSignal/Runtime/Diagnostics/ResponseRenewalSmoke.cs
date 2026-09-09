@@ -31,12 +31,12 @@ namespace AfterSignal
             yield return SceneManager.LoadSceneAsync(CampaignRules.Scene(StageId.UrbanCity));while(!GameDirector.Instance||!GameDirector.Instance.Ready||!MaritimeWorld.Instance||!MaritimeWorld.Instance.Built)yield return null;
             game=GameDirector.Instance;game.Input.ExternalControl=true;game.Input.ExternalFrame=ControlFrame.Empty;game.CloseDialogue();game.SetPaused(false);game.enabled=false;game.CameraRig.enabled=false;WantedSystem.Clear("");WantedSystem.Instance.enabled=false;CityChronicle.Instance.enabled=false;RiftIncursion.Instance.enabled=false;CivicTerrorEvents.Instance.enabled=false;CitySafety.Instance.enabled=false;
             foreach(var b in FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None))if(b is GangStrongholds||b is CityGangWar||b is GangConvoy||b is CityActivityDirector||b is SeaCombat||b is GangCrime||b is GangMember||b is CitySocial)b.enabled=false;
-            CityEventGate.Reset();LifeState.Hours=13;
+            CityChronicle.Instance.Entry(CityChronicle.Instance.Quests[0]).step=CityChronicle.Instance.Quests[0].steps.Length;CityEventGate.Reset();LifeState.Hours=13;
             var floor=GameObject.CreatePrimitive(PrimitiveType.Cube);floor.name="Response verification ground";floor.transform.position=Site-Vector3.up*.5f;floor.transform.localScale=new Vector3(200,1,160);floor.GetComponent<Renderer>().sharedMaterial=CityGeometry.Material("Concrete");fixtures.Add(floor);game.Player.Respawn(Site+Vector3.right*65);Set(game.Player,"invincible",0f);yield return null;
             if(Environment.GetCommandLineArgs().Contains("-response-renewal-followup")){yield return Followup();finished=true;report.completed=true;Save();Application.Quit(report.errors.Count==0?0:1);yield break;}
             RespawnNetwork.ResetHome();Check(RespawnNetwork.Selected==-1,"Default respawn destination is Seoha's home");RespawnNetwork.Resolve();
             Check(FindObjectsByType<RespawnTerminal>(FindObjectsSortMode.None).Select(x=>x.City).Distinct().Count()==4,"Each of four cities has an interactive respawn facility");
-            for(int i=0;i<4;i++){RespawnNetwork.Register(i);Check(RespawnNetwork.Selected==i&&RespawnNetwork.Points[i]!=Vector3.zero,"Respawn registration / city "+i);}RespawnNetwork.ResetHome();
+            for(int i=0;i<4;i++){RespawnNetwork.Register(i);Check(RespawnNetwork.Selected==-1&&RespawnNetwork.Points[i]!=Vector3.zero,"Recovery centre keeps home respawn / city "+i);}RespawnNetwork.ResetHome();
             var minor=Person(Site);var critical=Person(Site+Vector3.right*4);var fatal=Person(Site+Vector3.right*8);yield return null;
             minor.Damage(28,Vector3.zero,TrafficDamageSource.Environment);critical.Damage(85,Vector3.zero,TrafficDamageSource.Environment);fatal.Damage(260,Vector3.zero,TrafficDamageSource.Environment);yield return null;
             Check(minor.Alive&&!minor.Downed&&minor.GetComponent<MedicalState>().Grade==InjuryGrade.Wounded,"Moderate damage causes a treatable wound");Check(critical.Alive&&critical.Downed,"Severe survivable damage causes incapacitation");Check(!fatal.Alive,"Overwhelming damage causes immediate death");
@@ -102,8 +102,8 @@ namespace AfterSignal
         IEnumerator Rescue()
         {
             var safety=CitySafety.Instance;var witness=Person(Site+new Vector3(0,0,28));var patients=new List<WorldActor>();for(int i=0;i<7;i++)patients.Add(Person(Site+new Vector3(i*3,0,30)));yield return null;
-            foreach(var p in patients)p.Damage(85,Vector3.zero,TrafficDamageSource.Environment);safety.enabled=true;yield return new WaitForSeconds(2.7f);
-            Check(patients.All(p=>p.GetComponent<MedicalState>().Reported)&&safety.ActiveAmbulances>=5,"Witness reports dispatch more than four ambulances for multiple casualties");
+            foreach(var p in patients)p.Damage(85,Vector3.zero,TrafficDamageSource.Environment);safety.enabled=true;yield return new WaitForSeconds(6.5f);
+            Check(patients.All(p=>p.GetComponent<MedicalState>().Reported)&&safety.ActiveAmbulances==5,"Witness reports queue casualties behind the five-ambulance dispatch cap");
             Check(CitySafety.PlayerReport()>0,"Player can request medical rescue");safety.enabled=false;
             foreach(var ambulance in FindObjectsByType<EmergencyAmbulance>(FindObjectsSortMode.None))Destroy(ambulance.gameObject);yield return null;
             var patient=patients[0];var a=EmergencyAmbulance.Create(patient,null);Check(a,"Ambulance assigns a live critical patient");if(!a)yield break;

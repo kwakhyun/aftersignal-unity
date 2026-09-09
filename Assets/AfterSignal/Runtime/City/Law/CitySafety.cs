@@ -82,14 +82,15 @@ namespace AfterSignal
             if(Time.time<next)return;next=Time.time+1;
             if(game.stage!=StageId.UrbanCity||!UrbanSimulation.Instance)return;
             int waiting=0;foreach(var a in WorldActor.All){var m=a?a.GetComponent<MedicalState>():null;if(m&&m.NeedsRescue&&!a.GetComponent<MedicalPending>())waiting++;}
-            int capacity=Mathf.Clamp(waiting+ambulances,2,24);int launched=0;
-            foreach(var body in WorldActor.All)
+            const int capacity=5;int launched=0;
+            var patients=new List<WorldActor>(WorldActor.All);patients.Sort((a,b)=>(b&&b.Downed?1:0).CompareTo(a&&a.Downed?1:0));
+            foreach(var body in patients)
             {
                 if(!body||!body.Alive||body.robot||body.monster||body.helicopter||body.GetComponent<MedicalPending>())continue;
                 var injury=body.GetComponent<MedicalState>();if(!injury||!injury.NeedsRescue)continue;
                 if(Vector3.Distance(body.transform.position,game.Player.transform.position)>650)continue;
                 if(!injury.Reported)foreach(var witness in WorldActor.All){if(!witness||witness==body||!witness.Alive||witness.Downed||witness.gang||witness.monster||witness.environmental||witness.helicopter||witness.terrorist)continue;if((witness.Center-body.Center).sqrMagnitude<48*48&&FactionCombat.Visible(witness.Center,body.Center,48)){NpcSpeech.Say(witness,"119죠? 여기 사람이 다쳤어요! 구조대를 보내주세요!",5,9);injury.Report();break;}}
-                if(!injury.Reported||ambulances>=capacity||launched>=4)continue;
+                if(!injury.Reported||ambulances>=capacity||launched>=1)continue;
                 body.gameObject.AddComponent<MedicalPending>();ambulances++;launched++;
                 EmergencyAmbulance.Create(body,()=>ambulances=Mathf.Max(0,ambulances-1));
             }

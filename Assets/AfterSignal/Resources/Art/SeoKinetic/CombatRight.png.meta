@@ -131,7 +131,7 @@ TextureImporter:
         width: 330
         height: 418
       alignment: 9
-      pivot: {x: 0.41252562, y: 0.08133971}
+      pivot: {x: 0.41255683, y: 0.08133971}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -172,10 +172,10 @@ TextureImporter:
         serializedVersion: 2
         x: 603
         y: 836
-        width: 356
+        width: 352
         height: 418
       alignment: 9
-      pivot: {x: 0.37454587, y: 0.08373206}
+      pivot: {x: 0.3730087, y: 0.08373206}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -192,12 +192,12 @@ TextureImporter:
       name: CombatRight-03
       rect:
         serializedVersion: 2
-        x: 959
+        x: 955
         y: 836
-        width: 295
+        width: 299
         height: 418
       alignment: 9
-      pivot: {x: 0.35335398, y: 0.08133971}
+      pivot: {x: 0.35583895, y: 0.08133971}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -260,10 +260,10 @@ TextureImporter:
         serializedVersion: 2
         x: 603
         y: 418
-        width: 356
+        width: 352
         height: 418
       alignment: 9
-      pivot: {x: 0.42334157, y: 0.16267942}
+      pivot: {x: 0.42685747, y: 0.16267942}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -280,12 +280,12 @@ TextureImporter:
       name: CombatRight-07
       rect:
         serializedVersion: 2
-        x: 959
+        x: 955
         y: 418
-        width: 295
+        width: 299
         height: 418
       alignment: 9
-      pivot: {x: 0.3903191, y: 0.16267942}
+      pivot: {x: 0.3933168, y: 0.16267942}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -348,10 +348,10 @@ TextureImporter:
         serializedVersion: 2
         x: 603
         y: 0
-        width: 356
+        width: 352
         height: 418
       alignment: 9
-      pivot: {x: 0.3478638, y: 0.20095694}
+      pivot: {x: 0.3503333, y: 0.20095694}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -368,12 +368,12 @@ TextureImporter:
       name: CombatRight-11
       rect:
         serializedVersion: 2
-        x: 959
+        x: 955
         y: 0
-        width: 295
+        width: 299
         height: 418
       alignment: 9
-      pivot: {x: 0.3283293, y: 0.20095694}
+      pivot: {x: 0.33262742, y: 0.20095694}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []

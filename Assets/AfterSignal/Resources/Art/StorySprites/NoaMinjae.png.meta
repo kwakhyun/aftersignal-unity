@@ -1,0 +1,879 @@
+fileFormatVersion: 2
+guid: aa126a0d7b017434c90f695158f1d651
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.05357143}
+  spritePixelsToUnits: 101.031555
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 0
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: 4
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: NoaMinjae-00
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1552
+        width: 221
+        height: 222
+      alignment: 9
+      pivot: {x: 0.49135235, y: 0.009009009}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1935ecac39c512ab0800000000000000
+      internalID: -5034641118591036527
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NoaMinjae-01
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 1552
+        width: 222
+        height: 222
+      alignment: 9
+      pivot: {x: 0.48304108, y: 0.0045045046}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d6bed217c1b9d3b70800000000000000
+      internalID: 8880424586704710509
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NoaMinjae-02
+      rect:
+        serializedVersion: 2
+        x: 443
+        y: 1552
+        width: 222
+        height: 222
+      alignment: 9
+      pivot: {x: 0.48157087, y: 0.0045045046}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b0a00b10d0c4f110800000000000000
+      internalID: 1293870993000931507
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NoaMinjae-03
+      rect:
+        serializedVersion: 2
+        x: 665
+        y: 1552
+        width: 222
+        height: 222
+      alignment: 9
+      pivot: {x: 0.495979, y: 0.009009009}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 82299b9ded5d65260800000000000000
+      internalID: 7086086216826327592
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NoaMinjae-04
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1330
+        width: 221
+        height: 222
+      alignment: 9
+      pivot: {x: 0.48030666, y: 0.022522522}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 54ae753907ed723c0800000000000000
+      internalID: -4384291137132172731
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NoaMinjae-05
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 1330
+        width: 222
+        height: 222
+      alignment: 9
+      pivot: {x: 0.4624328, y: 0.013513514}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3604a2441dbad5b50800000000000000
+      internalID: 6583607145565667427
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NoaMinjae-06
+      rect:
+        serializedVersion: 2
+        x: 443
+        y: 1330
+        width: 222
+        height: 222
+      alignment: 9
+      pivot: {x: 0.491, y: 0.013513514}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 12c1c07bc12289460800000000000000
+      internalID: 7248581106978266145
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NoaMinjae-07
+      rect:
+        serializedVersion: 2
+        x: 665
+        y: 1330
+        width: 222
+        height: 222
+      alignment: 9
+      pivot: {x: 0.5115822, y: 0.022522522}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 88c4a856632fc6390800000000000000
+      internalID: -7823612137203676024
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NoaMinjae-08
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1108
+        width: 221
+        height: 222
+      alignment: 9
+      pivot: {x: 0.4950235, y: 0.022522522}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8fb8d12b0ec09eb30800000000000000
+      internalID: 4316995877011819512
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NoaMinjae-09
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 1108
+        width: 222
+        height: 222
+      alignment: 9
+      pivot: {x: 0.4836251, y: 0.018018018}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9268b34933af0da60800000000000000
+      internalID: 7696926862613382697
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NoaMinjae-10
+      rect:
+        serializedVersion: 2
+        x: 443
+        y: 1108
+        width: 222
+        height: 222
+      alignment: 9
+      pivot: {x: 0.4896528, y: 0.022522522}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d9195817975604d40800000000000000
+      internalID: 5566560711699960221
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NoaMinjae-11
+      rect:
+        serializedVersion: 2
+        x: 665
+        y: 1108
+        width: 222
+        height: 222
+      alignment: 9
+      pivot: {x: 0.506534, y: 0.022522522}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 48605bd4e0d9d3250800000000000000
+      internalID: 5926065369448253060
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NoaMinjae-12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 887
+        width: 221
+        height: 221
+      alignment: 9
+      pivot: {x: 0.5080177, y: 0.027149322}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d0b84e8c448d4120800000000000000
+      internalID: 2399719640797851865
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NoaMinjae-13
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 887
+        width: 222
+        height: 221
+      alignment: 9
+      pivot: {x: 0.50381684, y: 0.022624435}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 40bdec9906af1c6e0800000000000000
+      internalID: -1818897481676694780
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NoaMinjae-14
+      rect:
+        serializedVersion: 2
+        x: 443
+        y: 887
+        width: 222
+        height: 221
+      alignment: 9
+      pivot: {x: 0.5109122, y: 0.022624435}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b377039764060b550800000000000000
+      internalID: 6174540944922146619
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NoaMinjae-15
+      rect:
+        serializedVersion: 2
+        x: 665
+        y: 887
+        width: 222
+        height: 221
+      alignment: 9
+      pivot: {x: 0.47078207, y: 0.027149322}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de7641bbd62f3bdc0800000000000000
+      internalID: -3624286721999083539
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NoaMinjae-16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 665
+        width: 221
+        height: 222
+      alignment: 9
+      pivot: {x: 0.49774408, y: 0.018018018}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b36d2b7e8b12bc70800000000000000
+      internalID: 8985274505323439025
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NoaMinjae-17
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 665
+        width: 222
+        height: 222
+      alignment: 9
+      pivot: {x: 0.44853932, y: 0.018018018}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e9c933d6117f2bf0800000000000000
+      internalID: -346934303437239834
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NoaMinjae-18
+      rect:
+        serializedVersion: 2
+        x: 443
+        y: 665
+        width: 222
+        height: 222
+      alignment: 9
+      pivot: {x: 0.45706716, y: 0.018018018}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d1bd689c2af99b60800000000000000
+      internalID: 7753503302937850325
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NoaMinjae-19
+      rect:
+        serializedVersion: 2
+        x: 665
+        y: 665
+        width: 222
+        height: 222
+      alignment: 9
+      pivot: {x: 0.5009934, y: 0.018018018}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 207dad0cc6c0d24f0800000000000000
+      internalID: -852011093271587070
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NoaMinjae-20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 443
+        width: 221
+        height: 222
+      alignment: 9
+      pivot: {x: 0.4617879, y: 0.03153153}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3d82934bda3f5a420800000000000000
+      internalID: 2640784683901200595
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NoaMinjae-21
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 443
+        width: 222
+        height: 222
+      alignment: 9
+      pivot: {x: 0.431598, y: 0.027027028}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a735d70488cc2f70800000000000000
+      internalID: 9163919811184768934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NoaMinjae-22
+      rect:
+        serializedVersion: 2
+        x: 443
+        y: 443
+        width: 222
+        height: 222
+      alignment: 9
+      pivot: {x: 0.4630356, y: 0.027027028}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4efb21b1aeb9bc460800000000000000
+      internalID: 7263070253843922916
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NoaMinjae-23
+      rect:
+        serializedVersion: 2
+        x: 665
+        y: 443
+        width: 222
+        height: 222
+      alignment: 9
+      pivot: {x: 0.4919733, y: 0.03153153}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0d9ff7f89faee2840800000000000000
+      internalID: 5201352977234786768
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NoaMinjae-24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 221
+        width: 221
+        height: 222
+      alignment: 9
+      pivot: {x: 0.5061824, y: 0.03153153}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 30cd88419a0ede940800000000000000
+      internalID: 5327160951047773187
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NoaMinjae-25
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 221
+        width: 222
+        height: 222
+      alignment: 9
+      pivot: {x: 0.46610785, y: 0.03153153}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4cff17cd9dbe216d0800000000000000
+      internalID: -3021093079073292348
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NoaMinjae-26
+      rect:
+        serializedVersion: 2
+        x: 443
+        y: 221
+        width: 222
+        height: 222
+      alignment: 9
+      pivot: {x: 0.5098315, y: 0.03153153}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 38febb13b607d6830800000000000000
+      internalID: 4066029644283637635
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NoaMinjae-27
+      rect:
+        serializedVersion: 2
+        x: 665
+        y: 221
+        width: 222
+        height: 222
+      alignment: 9
+      pivot: {x: 0.5141647, y: 0.03153153}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d819ebccb0f6a80b0800000000000000
+      internalID: -5725641879777799795
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NoaMinjae-28
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 221
+        height: 221
+      alignment: 9
+      pivot: {x: 0.5254139, y: 0.040723983}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8aa5c4da8e8af9a10800000000000000
+      internalID: 1918437683576461992
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NoaMinjae-29
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 0
+        width: 222
+        height: 221
+      alignment: 9
+      pivot: {x: 0.48470563, y: 0.040723983}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a09f1b219b165600800000000000000
+      internalID: 456582722532380838
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NoaMinjae-30
+      rect:
+        serializedVersion: 2
+        x: 443
+        y: 0
+        width: 222
+        height: 221
+      alignment: 9
+      pivot: {x: 0.52896404, y: 0.040723983}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 845f8d04e40445d10800000000000000
+      internalID: 2113384829983192392
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NoaMinjae-31
+      rect:
+        serializedVersion: 2
+        x: 665
+        y: 0
+        width: 222
+        height: 221
+      alignment: 9
+      pivot: {x: 0.48872352, y: 0.040723983}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 580362c81294c87d0800000000000000
+      internalID: -2914874450381492091
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      NoaMinjae-00: -5034641118591036527
+      NoaMinjae-01: 8880424586704710509
+      NoaMinjae-02: 1293870993000931507
+      NoaMinjae-03: 7086086216826327592
+      NoaMinjae-04: -4384291137132172731
+      NoaMinjae-05: 6583607145565667427
+      NoaMinjae-06: 7248581106978266145
+      NoaMinjae-07: -7823612137203676024
+      NoaMinjae-08: 4316995877011819512
+      NoaMinjae-09: 7696926862613382697
+      NoaMinjae-10: 5566560711699960221
+      NoaMinjae-11: 5926065369448253060
+      NoaMinjae-12: 2399719640797851865
+      NoaMinjae-13: -1818897481676694780
+      NoaMinjae-14: 6174540944922146619
+      NoaMinjae-15: -3624286721999083539
+      NoaMinjae-16: 8985274505323439025
+      NoaMinjae-17: -346934303437239834
+      NoaMinjae-18: 7753503302937850325
+      NoaMinjae-19: -852011093271587070
+      NoaMinjae-20: 2640784683901200595
+      NoaMinjae-21: 9163919811184768934
+      NoaMinjae-22: 7263070253843922916
+      NoaMinjae-23: 5201352977234786768
+      NoaMinjae-24: 5327160951047773187
+      NoaMinjae-25: -3021093079073292348
+      NoaMinjae-26: 4066029644283637635
+      NoaMinjae-27: -5725641879777799795
+      NoaMinjae-28: 1918437683576461992
+      NoaMinjae-29: 456582722532380838
+      NoaMinjae-30: 2113384829983192392
+      NoaMinjae-31: -2914874450381492091
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

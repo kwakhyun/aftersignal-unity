@@ -31,7 +31,7 @@ namespace AfterSignal
                     {suspended.Add(component);component.enabled=false;}
                 }
                 foreach(var c in GetComponents<Collider>())if(c.enabled){colliders.Add(c);c.enabled=false;}
-                var hit=gameObject.AddComponent<BoxCollider>();hit.center=new Vector3(0,.3f,0);hit.size=new Vector3(1.9f,.6f,.72f);prone=hit;
+                prone=ProneHitVolume.Create(body);
                 var art=GetComponent<DirectionalPerson>();if(art)art.Lying=true;
             }
             else if(damage>=body.MaxHealth*.08f||body.health<body.MaxHealth*.7f)Grade=InjuryGrade.Wounded;
@@ -53,7 +53,7 @@ namespace AfterSignal
         void Retire(){if(GetComponent<CityPedestrian>())gameObject.SetActive(false);else Destroy(gameObject);}
         void RestoreComponents()
         {
-            if(prone){prone.enabled=false;Destroy(prone);prone=null;}
+            if(prone){prone.enabled=false;Destroy(prone.gameObject);prone=null;}
             foreach(var c in colliders)if(c)c.enabled=true;colliders.Clear();
             foreach(var b in suspended)if(b)b.enabled=true;suspended.Clear();
             var art=GetComponent<DirectionalPerson>();if(art)art.Lying=false;

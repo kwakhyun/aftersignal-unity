@@ -16,14 +16,16 @@ namespace AfterSignal
         {
             miniAtlasTitle=Label(parent, "AFTERLIGHT / N ↑    M 지도 탐색",12,8,296,20,12,mint,FontStyle.Bold);
             miniAtlas=CreateAtlas(parent,20,32,272,116,true);
+            Label(parent,"N ↑",265,127,32,20,12,mint,FontStyle.Bold);
         }
         AtlasViewport CreateAtlas(Transform parent,float x,float y,float w,float h,bool mini)
         {
             var go=new GameObject("Local street atlas",typeof(RectTransform),typeof(AtlasViewport));go.transform.SetParent(parent,false);
             var map=go.GetComponent<AtlasViewport>();Rect(map.rectTransform,x,y,w,h);map.mini=mini;map.raycastTarget=!mini;map.Focus(game.Player.transform.position,mini?360:820);
-            map.Select=(id,expanded)=>{FourCityAtlasSelection.Clear();selectedSite=expanded?-1:id;ExpansionWorld.Selected=expanded?id:-1;map.follow=false;map.Focus(expanded?ExpansionWorld.Places[id]:UrbanCatalog.Center(id));customMapGoal=false;};
+            map.Select=(id,expanded)=>{FourCityAtlasSelection.Clear();selectedSite=expanded?-1:id;ExpansionWorld.Selected=expanded?id:-1;map.follow=false;map.Focus(expanded?ExpansionWorld.Places[id]:UrbanCatalog.Center(id));customMapGoal=false;StartNavigation();};
             map.SelectVenue=v=>{SelectAtlasVenue(v);};if(!mini)map.gameObject.AddComponent<AtlasLabels>().Initialize(map);
-            map.Waypoint=p=>{FourCityAtlasSelection.Clear();mapGoal=p;customMapGoal=true;selectedSite=-1;ExpansionWorld.Selected=-1;game.Toast("지도 경유지를 지정했습니다");};return map;
+            map.ClearWaypoint=ClearNavigation;
+            map.Waypoint=p=>{FourCityAtlasSelection.Clear();p.y=FourCityCatalog.Centers[FourCityCatalog.CityAt(p)].y;if(NpcGroundSupport.Floor(p,p.y+2,4,out float floor))p.y=floor+.05f;mapGoal=p;customMapGoal=true;selectedSite=-1;ExpansionWorld.Selected=-1;StartNavigation();game.Toast("목적지 지정 · 이동하면 방향과 다음 회전을 안내합니다");};return map;
         }
         void EnsureCityHud()
         {
@@ -34,12 +36,14 @@ namespace AfterSignal
             var mapCanvas=cityMapOverlay.AddComponent<Canvas>();mapCanvas.overrideSorting=true;mapCanvas.sortingOrder=100;
             cityMapOverlay.AddComponent<GraphicRaycaster>();
             Label(cityMapOverlay.transform,"CITY ATLAS / 네 도시를 탐색하세요",30,22,1080,42,29,white,FontStyle.Bold);
-            Label(cityMapOverlay.transform,"휠 확대·축소 · 드래그 탐색 · 시설 / 빈 곳 클릭으로 목적지 지정",30,752,1030,20,14,mint);
+            Label(cityMapOverlay.transform,"휠 확대·축소 · 드래그 탐색 · 클릭 목적지 지정 · 우클릭 길 안내 해제",30,752,1030,20,14,mint);
             MakeButton(cityMapOverlay.transform,"닫기 ESC",1290,28,126,36,()=>UrbanSimulation.Instance?.CloseMap());
             atlas=CreateAtlas(cityMapOverlay.transform,30,120,1000,630,false);
             MakeButton(cityMapOverlay.transform,"+",40,132,40,40,()=>atlas.Zoom(.7f,atlas.rectTransform.rect.center));
             MakeButton(cityMapOverlay.transform,"−",40,178,40,40,()=>atlas.Zoom(1.4f,atlas.rectTransform.rect.center));
             MakeButton(cityMapOverlay.transform,"내 위치",886,132,130,40,()=>atlas.Recenter());
+            MakeButton(cityMapOverlay.transform,"목적지 보기",732,132,144,40,()=>{if(hasGoal){atlas.follow=false;atlas.Focus(mainGoal,650);}});
+            MakeButton(cityMapOverlay.transform,"길 안내 해제",886,180,130,34,ClearNavigation);
             atlasScale=Label(cityMapOverlay.transform,"",45,710,950,28,15,mint);
             BuildAtlasExplorer();
             cityDestination=Label(cityMapOverlay.transform,"",32,773,1370,28,17,mint);cityMapOverlay.SetActive(false);
@@ -47,7 +51,7 @@ namespace AfterSignal
 
         void UpdateUrbanHud()
         {
-            if(miniAtlasTitle&&game&&game.Ready)miniAtlasTitle.text=new[]{"애프터라이트","노바 시티","에레보스","네레이드"}[FourCityCatalog.CityAt(game.Player.transform.position)]+" / N ↑    M 지도 탐색";
+            if(miniAtlasTitle&&game&&game.Ready)miniAtlasTitle.text=new[]{"애프터라이트","노바 시티","에레보스","네레이드"}[FourCityCatalog.CityAt(game.Player.transform.position)]+" / "+NavigationGuide.Bearing(game.CameraRig.LookForward);
             var sim = UrbanSimulation.Instance;
             if (!sim)
                 return;
@@ -71,7 +75,7 @@ namespace AfterSignal
                 if(open)
                 {
                     if(!wasMapOpen){atlas.Recenter();if(FourCityAtlasSelection.Venue!=null)atlas.Focus(FourCityAtlasSelection.Venue.position,700);}UpdateAtlasExplorer();Cursor.visible=true;cursor.gameObject.SetActive(false);
-                    atlasScale.text="N ↑     표시 폭 "+atlas.Span.ToString("0")+" m     ◆ 서하    ■ 시설    ■ 교통편";
+                    atlasScale.text="N ↑ 북쪽 고정  ·  시선 "+NavigationGuide.Bearing(game.CameraRig.LookForward)+"    |    표시 폭 "+atlas.Span.ToString("0")+" m    ◆ 목적지  ▲ 현재 방향";
                     cityDestination.text=FourCityAtlasSelection.Venue!=null?FourCityAtlasSelection.Label+" · "+Vector3.Distance(game.Player.transform.position,FourCityAtlasSelection.Goal).ToString("0")+" m · "+(FourCityAtlasSelection.Venue.city==3?"기밀 해저 도로 이용":"도로 안내 중"):customMapGoal?"경유지 · "+Vector3.Distance(game.Player.transform.position,mapGoal).ToString("0")+" m":ExpansionWorld.Selected>=0?ExpansionWorld.Names[ExpansionWorld.Selected]+" · "+Vector3.Distance(game.Player.transform.position,ExpansionWorld.Places[ExpansionWorld.Selected]).ToString("0")+" m":selectedSite>=0?UrbanCatalog.Name(selectedSite)+" · "+UrbanCatalog.Descriptions[UrbanCatalog.Kind(selectedSite)]:"시설이나 지점을 선택하면 길 안내를 시작합니다.";
                 }
                 wasMapOpen=open;

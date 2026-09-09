@@ -114,6 +114,7 @@ namespace AfterSignal
                 mainRoutePin.gameObject.SetActive(false);
                 if (questLine)
                     questLine.enabled = false;
+                routeRibbon?.Show(false);if(navigationCard)navigationCard.SetActive(false);
                 prompt.text = "";
             }
             else

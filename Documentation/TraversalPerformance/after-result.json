@@ -1,0 +1,25 @@
+{
+    "completed": true,
+    "device": "NVIDIA GeForce RTX 4060 Ti",
+    "samples": [
+        {
+            "view": "city",
+            "meanMs": 20.777952194213868,
+            "p95Ms": 23.807525634765626,
+            "mainThreadAllocatedBytes": 0.0,
+            "actors": 241,
+            "within40m": 5,
+            "closePairs": 3
+        },
+        {
+            "view": "stadium",
+            "meanMs": 19.860164642333986,
+            "p95Ms": 28.35845947265625,
+            "mainThreadAllocatedBytes": 0.0,
+            "actors": 457,
+            "within40m": 24,
+            "closePairs": 3
+        }
+    ],
+    "errors": []
+}

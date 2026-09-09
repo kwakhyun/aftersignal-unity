@@ -69,7 +69,7 @@ namespace AfterSignal
             foreach(var enemy in FindObjectsByType<EnemyBrain>()){Enemies.Add(enemy);enemy.Initialize(this);if(enemy.boss)Boss=enemy;}
             Glass.AddRange(FindObjectsByType<BreakableGlass>());
             gameObject.AddComponent<CityLife>().Initialize(this);
-            gameObject.AddComponent<CityChronicle>();gameObject.AddComponent<CitySocial>();gameObject.AddComponent<RespawnNetwork>();
+            gameObject.AddComponent<CityChronicle>();gameObject.AddComponent<CitySocial>();gameObject.AddComponent<RespawnNetwork>();gameObject.AddComponent<ThreatOverlay>();gameObject.AddComponent<CityFireService>();
             interactions=FindObjectsByType<InteractionPoint>();
             Hud=gameObject.AddComponent<SignalHud>();Hud.Initialize(this);
             bool pacingProbe=System.Array.IndexOf(System.Environment.GetCommandLineArgs(),"-quality-probe")>=0;
@@ -142,6 +142,7 @@ namespace AfterSignal
         public void ShowDialogue(string title,string text){DialogueTitle=title;DialogueText=text;Player.Rope.Release();}
         public void CloseDialogue(){CityLife.Instance?.Close();DialogueText=null;inputSuppress=.18f;if(Audio)Audio.Play("ui_cancel",Player.Shoulder,.12f,1);}
         public void Toast(string text,float duration=3.2f){Notice=text;NoticeTimer=duration;}
+        public void ToastNear(string text,Vector3 location,float radius=180,float duration=4){if(Player&&(Player.transform.position-location).sqrMagnitude<=radius*radius)Toast(text,duration);}
         public void DamageNumber(Vector3 position,int amount,bool critical){if(Hud)Hud.AddDamage(position,amount,critical);}
         public void EnemyDied(EnemyBrain enemy){Kills++;LifeState.Earn(enemy.boss?350:25);Player.Heal(enemy.boss?30:3);if(enemy.boss){Toast("컨덕터 정지 · 기억 코어를 회수하세요",6);ExposeTimer=WaveWarning=0;}else if(Cleared)Toast("구역 확보 · 다음 목표로 이동하세요");}
         public void GlassBroken(){BrokenGlass=true;Toast("유리 격벽 파괴 · 다음 객실로 진입하세요");}

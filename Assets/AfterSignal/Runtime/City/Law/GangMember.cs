@@ -9,7 +9,9 @@ namespace AfterSignal
         public bool AttackingPlayer=>playerTarget;
         public bool CampaignUnit;
         public int CampaignWeapon;
+        public bool IntroUnit;public GangTactics Tactics {get;private set;}
         public WorldActor Target { get; private set; }
+        public string Decision {get;private set;}="거리 경계";
         public void GoTo(Vector3 point){home=point;}
         GameDirector game;
         CharacterController motor;
@@ -44,6 +46,7 @@ namespace AfterSignal
             var aimSprite = System.Array.Find(Resources.LoadAll<Sprite>("Art/" + member.actor.art), s => s.name.EndsWith("-03"));
             member.weaponBounds = aimSprite ? aimSprite.bounds : member.visual.sprite.bounds;
             member.cooldown = 1.1f + index * .25f;
+            member.Tactics=new GangTactics(member,index);
             PeopleArt.Attach(go,new[]{"GangCrimson","GangViolet","GangChrome"}[crew%3]);
             NpcPersona.Ensure(member.Body,"GangCrimson",CrewName(crew)+" 무장 조직원");
             return member;
@@ -64,18 +67,20 @@ namespace AfterSignal
                 if (death > 12) Destroy(gameObject);
                 return;
             }
-            if(!motor.enabled)return;
+            if(!motor.enabled||Body.Downed)return;
+            if(!CampaignUnit&&Tactics.TickEscape(motor,dt))return;
             cooldown -= dt;
             search -= dt;
             hurt = Mathf.Max(0, hurt - dt);
             recoil = Mathf.Max(0, recoil - dt);
             provoked = Mathf.Max(0, provoked - dt);
-            if (search <= 0 || Target && !Target.Alive)
+            if (search <= 0 || Target && !TacticalJudgment.Opponent(Body,Target,true))
             {
                 search = .4f;
                 bool eventAllowed=CampaignUnit||CityEventGate.Enrolled(Body)||!CityEventGate.Busy;
                 var next = eventAllowed?FactionCombat.NearestOpponent(Body, 65):null;
                 if(!next&&eventAllowed&&!CampaignUnit)next=FactionCombat.WoundedVictim(Body,30);
+                if(eventAllowed&&!CampaignUnit&&(!next||Random.value<.3f)){var civilian=Tactics.Civilian();if(civilian)next=civilian;}
                 if(next&&!CampaignUnit&&!CityEventGate.JoinGang(Body))next=null;
                 bool attackPlayer = CampaignUnit || provoked > 0 && FactionCombat.Visible(Body.Center, game.Player.Shoulder, 32)
                     && (!next || (game.Player.Shoulder - Body.Center).sqrMagnitude < (next.Center - Body.Center).sqrMagnitude);
@@ -83,7 +88,9 @@ namespace AfterSignal
                 Target = next;
                 playerTarget = attackPlayer;
             }
-            bool hasTarget = playerTarget || Target && Target.Alive;
+            playerTarget&=game.Player.Health>0;
+            bool hasTarget = playerTarget || TacticalJudgment.Opponent(Body,Target,true);
+            if(!hasTarget){Target=null;aim=0;Decision="이동 / 경계";}
             var destination = hasTarget ? playerTarget ? game.Player.transform.position : Target.transform.position : home;
             var delta = destination - transform.position;
             float screenDirection = Vector3.Dot(delta, Camera.main ? Camera.main.transform.right : Vector3.right);
@@ -92,7 +99,9 @@ namespace AfterSignal
             if (hasTarget && hurt <= 0)
             {
                 Vector3 center = playerTarget ? game.Player.Shoulder : Target.Center;
-                bool visible = FactionCombat.Visible(Body.Center, center, 48);
+                bool visible = TacticalJudgment.ClearShot(Body,Target,center,playerTarget,65);
+                Decision=visible?"목표 공격": "장애물 우회 / 사선 확보";
+                if(!visible)aim=0;
                 if (aim > 0)
                 {
                     aim -= dt;
@@ -101,16 +110,17 @@ namespace AfterSignal
                     {
                         actor.Pose(3, facing);
                         Vector3 muzzle = Body.Center+Vector3.up*.35f+(shotTarget-Body.Center).normalized*.65f;
-                        FactionCombat.Fire(Body, muzzle, center, 65, Target&&Target.Downed?Mathf.Max(45,Target.health+5):CampaignUnit?CampaignWeapon==1?15:8:10, SignalEffects.Red, playerTarget);
-                        game.Audio.PlayGun(CampaignUnit?CampaignWeapon==1?GunshotKind.Shotgun:GunshotKind.Rifle:GunshotKind.Rifle, muzzle);
+                        bool heavyShot=!CampaignUnit&&Tactics.SpecialAttack(muzzle,center);
+                        if(!heavyShot){FactionCombat.Fire(Body, muzzle, center, 65, Target&&Target.Downed?Mathf.Max(45,Target.health+5):IntroUnit?3:CampaignUnit?CampaignWeapon==1?15:8:10, SignalEffects.Red, playerTarget);game.Audio.PlayGun(CampaignUnit&&CampaignWeapon==1?GunshotKind.Shotgun:GunshotKind.Rifle,muzzle);}
+                        else game.Audio.Play("dash",muzzle,.65f,1);
                         ShotsFired++;
                         recoil = .2f;
-                        cooldown = CampaignUnit?CampaignWeapon==1?1.5f:.48f:.5f;
+                        cooldown = IntroUnit?1.65f:!CampaignUnit&&Tactics.Heavy?6.5f:CampaignUnit?CampaignWeapon==1?1.5f:.48f:.5f;
                     }
                 }
                 else if (visible && delta.magnitude < 23 && cooldown <= 0)
                 {
-                    aim = .34f;
+                    aim = IntroUnit?.9f:!CampaignUnit&&Tactics.Heavy?1.5f:.34f;
                     shotTarget = center;
                     frame = 3;
                 }

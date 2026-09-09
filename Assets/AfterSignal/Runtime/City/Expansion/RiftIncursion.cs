@@ -19,14 +19,14 @@ namespace AfterSignal
                 if(Time.time<next||CityEventGate.Busy)return;next=Time.time+18;
                 if(OceanLife.Swimming||PrisonSystem.Instance&&PrisonSystem.Instance.Jailed||CampaignBattle.Active)return;
                 if(!ResponseDispatch.TryOrigin(g.Player.transform.position,true,false,0,out pending))return;
-                if(!CityEventGate.Begin(this,CityEventKind.Monster))return;warning=7;g.Toast("긴급 재난 경보 · 인근에 대형 잠식 반응! 건물에서 떨어져 대피하세요.",7);return;
+                if(!CityEventGate.Begin(this,CityEventKind.Monster))return;warning=7;g.ToastNear("긴급 재난 경보 · 인근에 대형 잠식 반응! 건물에서 떨어져 대피하세요.",pending,180,7);return;
             }
             if(Time.time>pulse){pulse=Time.time+6;SignalEffects.Ring(Position+Vector3.up*.12f,new Color(.7f,.2f,1),24,1.4f);}
             bool alive=creatures.Exists(c=>c&&c.Body.Alive);
             if(!alive)
             {
                 bool assisted=creatures.Exists(c=>c&&c.Body.LastPlayerHit>started);
-                if(assisted){LifeState.Earn(1200);g.Toast("거대 잠식체 진압 · 전투 지원금 +1,200 C",6);}else g.Toast("대형 잠식체 격파 · 현장 통제 및 구조 작업 시작",5);
+                if(assisted){LifeState.Earn(1200);g.Toast("거대 잠식체 진압 · 전투 지원금 +1,200 C",6);}else g.ToastNear("대형 잠식체 격파 · 현장 통제 및 구조 작업 시작",Position,180,5);
                 End();
             }
             // Distant incidents may be retired to bound simulation cost. Visible living titans never time out.
@@ -41,7 +41,7 @@ namespace AfterSignal
             foreach(var c in creatures)CityEventGate.Enroll(c.Body);
             response=MilitaryResponse.ForIncident(this);SecurityResponse.Request(creatures[0].Body,true);
             foreach(var c in WorldActor.All)if(c&&!c.monster&&!c.helicopter&&(c.Center-at).sqrMagnitude<140*140){c.GetComponent<CityNpc>()?.Panic(at,35);NpcSpeech.Say(c,NpcDialogueBank.Line(c.GetComponent<CityNpc>(),"monster"),5,6);}
-            GameDirector.Instance.Toast("대형 잠식체 출현 · 군 지원 도착까지 시민 대피 / 발광 기관이 열릴 때 공격",8);return true;
+            GameDirector.Instance.ToastNear("대형 잠식체 출현 · 군 지원 도착까지 시민 대피 / 발광 기관이 열릴 때 공격",at,180,8);return true;
         }
         void End(){CityEventGate.Cancel(this);Active=false;next=Time.time+Random.Range(65,115);if(response)response.Withdraw();foreach(var c in creatures)if(c)Destroy(c.gameObject,12);}
         void OnDestroy(){CityEventGate.Cancel(this);if(response)response.Withdraw();if(Instance==this)Instance=null;}

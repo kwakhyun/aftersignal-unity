@@ -22,10 +22,10 @@ namespace AfterSignal
         {
             var g=GameDirector.Instance;if(!g||g.Blocked)return;float dt=Mathf.Min(.06f,Time.deltaTime);clock+=dt;shot-=dt;scan-=dt;
             if(!Body.Alive){motor.enabled=false;dead+=dt;form.localRotation=Quaternion.Slerp(form.localRotation,Quaternion.Euler(80,0,0),dt*2);if(dead>2){VehicleExplosion.Create(transform.position+Vector3.up,3);BlastDamage.Create(transform.position+Vector3.up,7,110,Body);WreckFragments.Shatter(gameObject,7);Destroy(gameObject);}return;}
-            if(scan<=0){scan=.45f;target=attacker&&attacker.Alive&&Time.time<retaliate?attacker:FactionCombat.NearestOpponent(Body,180);}
-            bool player=!target&&(Time.time<retaliate&&!attacker||!IncidentCommand.Emergency&&WantedSystem.Level>=3);
+            if(scan<=0||target&&!TacticalJudgment.Opponent(Body,target)){scan=.45f;target=TacticalJudgment.Opponent(Body,attacker)&&Time.time<retaliate?attacker:FactionCombat.NearestOpponent(Body,180);}
+            bool player=!target&&!IncidentCommand.Emergency&&WantedSystem.Level>0&&g.Player.Health>0&&(Time.time<retaliate&&!attacker||WantedSystem.Level>=3);
             Vector3 goal=target?target.Center:player?g.Player.Shoulder:IncidentCommand.Emergency?IncidentCommand.Position:home;
-            var d=Vector3.ProjectOnPlane(goal-transform.position,Vector3.up);bool visible=(target||player)&&FactionCombat.Visible(Body.Center,goal,150);bool move=d.magnitude>(visible?army?34:24:3);
+            var d=Vector3.ProjectOnPlane(goal-transform.position,Vector3.up);bool visible=(target||player)&&TacticalJudgment.ClearShot(Body,target,goal,player,150);bool move=d.magnitude>(visible?army?34:24:3);
             gravity=motor.isGrounded?-2:Mathf.Max(-35,gravity-dt*24);motor.Move((move?path.Direction(transform.position,goal)*(army?3.6f:4.2f):Vector3.zero)*dt+Vector3.up*gravity*dt);
             if(d.sqrMagnitude>1)form.rotation=Quaternion.Slerp(form.rotation,Quaternion.LookRotation(d),dt*5);
             for(int i=0;i<joints.Count;i++){var t=joints[i];float side=t.name.EndsWith("-1")?-1:1;float swing=move?Mathf.Sin(clock*7)*side*25:0;t.localRotation=rests[i]*Quaternion.Euler(t.name.StartsWith("Thigh")?swing:t.name.StartsWith("Shin")?Mathf.Max(0,-swing):t.name.StartsWith("Arm")&&visible?-25:0,0,0);}

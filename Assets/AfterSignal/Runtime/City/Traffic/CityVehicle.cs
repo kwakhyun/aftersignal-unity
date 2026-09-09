@@ -38,8 +38,11 @@ namespace AfterSignal
         public bool IsSpecial => IsAircraft || IsWatercraft;
         public float Steering { get; private set; }
         public float TopSpeed => type == CityVehicleType.Motorcycle ? 45 : type == CityVehicleType.SportsCar ? 49 : type == CityVehicleType.Tank ? 18 : type == CityVehicleType.Bus ? 21 : type == CityVehicleType.Truck ? 23 : 27;
-        public float HalfLength => GetComponent<MaritimeHull>() ? GetComponent<MaritimeHull>().Length*.5f : GetComponent<AuthoredCraft>() ? 235 : type == CityVehicleType.Bus ? 4.6f : type == CityVehicleType.Truck ? 3.9f : type == CityVehicleType.Motorcycle ? 1.25f : type == CityVehicleType.Airliner ? 15 : type == CityVehicleType.Boat ? 8 : type == CityVehicleType.CombatHelicopter ? 5.5f : type == CityVehicleType.Fighter ? 7.5f : type == CityVehicleType.Tank ? 4 : 2.55f;
-        public float HalfWidth => GetComponent<MaritimeHull>() ? GetComponent<MaritimeHull>().Beam*.5f : GetComponent<AuthoredCraft>() ? 19 : type == CityVehicleType.Motorcycle ? .42f : type == CityVehicleType.Airliner ? 2 : type == CityVehicleType.Boat ? 2.5f : type == CityVehicleType.Tank ? 1.9f : IsHeavy ? 1.25f : 1.05f;
+        public float HalfLength => IsWatercraft?WaterLength:type == CityVehicleType.Bus ? 4.6f : type == CityVehicleType.Truck ? 3.9f : type == CityVehicleType.Motorcycle ? 1.25f : type == CityVehicleType.Airliner ? 15 : type == CityVehicleType.CombatHelicopter ? 5.5f : type == CityVehicleType.Fighter ? 7.5f : type == CityVehicleType.Tank ? 4 : 2.55f;
+        public float HalfWidth => IsWatercraft?WaterWidth:type == CityVehicleType.Motorcycle ? .42f : type == CityVehicleType.Airliner ? 2 : type == CityVehicleType.Tank ? 1.9f : IsHeavy ? 1.25f : 1.05f;
+        float WaterLength{get{var hull=GetComponent<MaritimeHull>();return hull?hull.Length*.5f:GetComponent<AuthoredCraft>()?235:8;}}
+        float WaterWidth{get{var hull=GetComponent<MaritimeHull>();return hull?hull.Beam*.5f:GetComponent<AuthoredCraft>()?19:2.5f;}}
+        readonly System.Collections.Generic.List<CityVehicle> nearbyTraffic=new();
 
         readonly System.Collections.Generic.List<Transform> wheels = new System.Collections.Generic.List<Transform>();
         Light[] lamps;
@@ -157,8 +160,9 @@ namespace AfterSignal
             WaitingAtSignal = stop < 22;
             target = Mathf.Min(target, Mathf.Sqrt(Mathf.Max(0, stop) * 7));
             var sim = UrbanSimulation.Instance;
+            TrafficSpatialIndex.Nearby(transform.position,nearbyTraffic);
             if (sim)
-                foreach (var other in sim.Cars)
+                foreach (var other in nearbyTraffic)
                     if (other && other != this)
                     {
                         var gap = other.transform.position - transform.position;

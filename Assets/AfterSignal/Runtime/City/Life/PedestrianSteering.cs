@@ -5,7 +5,7 @@ namespace AfterSignal
     // floor selection; it is not a substitute for a full multi-floor navigation mesh.
     public sealed class PedestrianSteering:MonoBehaviour
     {
-        readonly RaycastHit[] hits=new RaycastHit[12];readonly Collider[] neighbors=new Collider[12];
+        readonly Collider[] neighbors=new Collider[12];
         float sideUntil,nextNeighbors;Vector3 separation,avoidanceTarget;int side;bool avoiding;
         public Vector3 Move(Vector3 target,float distance)
         {
@@ -40,15 +40,11 @@ namespace AfterSignal
             // Avoid snapping across corners or taking shortcuts across stair wells.
             Vector3 step=direction*distance,point=at+step;
             if(!PedestrianGround.Step(at,point,out var supported,.85f))return Vector3.zero;
-            if(!Clear(at,direction,distance+.04f))return Vector3.zero;
             point=supported;transform.position=point;return point-at;
         }
         bool Clear(Vector3 at,Vector3 direction,float distance)
         {
-            if(PedestrianGround.Step(at,at+direction*distance,out var step,.85f))return true;
-            int count=Physics.CapsuleCastNonAlloc(at+Vector3.up*.42f,at+Vector3.up*1.38f,.25f,direction,hits,distance,1,QueryTriggerInteraction.Ignore);
-            for(int i=0;i<count;i++){var c=hits[i].collider;if(!c||c.transform==transform||c.transform.IsChildOf(transform)||c.GetComponentInParent<WorldActor>())continue;if(hits[i].normal.y>.65f)continue;return false;}
-            return true;
+            return PedestrianGround.Step(at,at+direction*distance,out _,.85f);
         }
         public static PedestrianSteering For(Component actor){var steering=actor.GetComponent<PedestrianSteering>();return steering?steering:actor.gameObject.AddComponent<PedestrianSteering>();}
     }

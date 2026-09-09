@@ -1,0 +1,511 @@
+fileFormatVersion: 2
+guid: a1c8b034ea63dc34aaf3eddeb89ff395
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 136.08696
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 0
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: 4
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: FireCrew-00
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 942
+        width: 307
+        height: 307
+      alignment: 9
+      pivot: {x: 0.5, y: 0.045}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9192dd80016501e30800000000000000
+      internalID: 4472169056847079705
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireCrew-01
+      rect:
+        serializedVersion: 2
+        x: 316
+        y: 942
+        width: 307
+        height: 307
+      alignment: 9
+      pivot: {x: 0.5, y: 0.045}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 295882dea922ca980800000000000000
+      internalID: -8526401945720027758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireCrew-02
+      rect:
+        serializedVersion: 2
+        x: 629
+        y: 942
+        width: 307
+        height: 307
+      alignment: 9
+      pivot: {x: 0.5, y: 0.045}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ab886a70010ceaf0800000000000000
+      internalID: -365916368158553178
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireCrew-03
+      rect:
+        serializedVersion: 2
+        x: 942
+        y: 942
+        width: 307
+        height: 307
+      alignment: 9
+      pivot: {x: 0.5, y: 0.045}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 76485435a27f5c910800000000000000
+      internalID: 1857162182517949543
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireCrew-04
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 629
+        width: 307
+        height: 307
+      alignment: 9
+      pivot: {x: 0.5, y: 0.045}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9147987c3c3d8db20800000000000000
+      internalID: 3159507976420160537
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireCrew-05
+      rect:
+        serializedVersion: 2
+        x: 316
+        y: 629
+        width: 307
+        height: 307
+      alignment: 9
+      pivot: {x: 0.5, y: 0.045}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 01160489ca1be8210800000000000000
+      internalID: 1337201494222463248
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireCrew-06
+      rect:
+        serializedVersion: 2
+        x: 629
+        y: 629
+        width: 307
+        height: 307
+      alignment: 9
+      pivot: {x: 0.5, y: 0.045}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14da76d1b20365600800000000000000
+      internalID: 456605373959744833
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireCrew-07
+      rect:
+        serializedVersion: 2
+        x: 942
+        y: 629
+        width: 307
+        height: 307
+      alignment: 9
+      pivot: {x: 0.5, y: 0.045}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6b736362a42fec9c0800000000000000
+      internalID: -3904917426601052234
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireCrew-08
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 316
+        width: 307
+        height: 307
+      alignment: 9
+      pivot: {x: 0.5, y: 0.045}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e035340fe9c013190800000000000000
+      internalID: -7984586787575868658
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireCrew-09
+      rect:
+        serializedVersion: 2
+        x: 316
+        y: 316
+        width: 307
+        height: 307
+      alignment: 9
+      pivot: {x: 0.5, y: 0.045}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dfbe13d69dbb9a570800000000000000
+      internalID: 8478514316015954941
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireCrew-10
+      rect:
+        serializedVersion: 2
+        x: 629
+        y: 316
+        width: 307
+        height: 307
+      alignment: 9
+      pivot: {x: 0.5, y: 0.045}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ffea1324c60fa4f20800000000000000
+      internalID: 3407800415816888063
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireCrew-11
+      rect:
+        serializedVersion: 2
+        x: 942
+        y: 316
+        width: 307
+        height: 307
+      alignment: 9
+      pivot: {x: 0.5, y: 0.045}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 634bef1d5b5bb1290800000000000000
+      internalID: -7918535727284046794
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireCrew-12
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 3
+        width: 307
+        height: 307
+      alignment: 9
+      pivot: {x: 0.5, y: 0.045}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f51c8932922468d30800000000000000
+      internalID: 4433303627651137887
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireCrew-13
+      rect:
+        serializedVersion: 2
+        x: 316
+        y: 3
+        width: 307
+        height: 307
+      alignment: 9
+      pivot: {x: 0.5, y: 0.045}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd56fcc700f2509e0800000000000000
+      internalID: -1655865608848316961
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireCrew-14
+      rect:
+        serializedVersion: 2
+        x: 629
+        y: 3
+        width: 307
+        height: 307
+      alignment: 9
+      pivot: {x: 0.5, y: 0.045}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec1e39f38f7554430800000000000000
+      internalID: 3766513387095450062
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireCrew-15
+      rect:
+        serializedVersion: 2
+        x: 942
+        y: 3
+        width: 307
+        height: 307
+      alignment: 9
+      pivot: {x: 0.5, y: 0.045}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d497ec11bca991060800000000000000
+      internalID: 6924736099026630989
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      FireCrew-00: 4472169056847079705
+      FireCrew-01: -8526401945720027758
+      FireCrew-02: -365916368158553178
+      FireCrew-03: 1857162182517949543
+      FireCrew-04: 3159507976420160537
+      FireCrew-05: 1337201494222463248
+      FireCrew-06: 456605373959744833
+      FireCrew-07: -3904917426601052234
+      FireCrew-08: -7984586787575868658
+      FireCrew-09: 8478514316015954941
+      FireCrew-10: 3407800415816888063
+      FireCrew-11: -7918535727284046794
+      FireCrew-12: 4433303627651137887
+      FireCrew-13: -1655865608848316961
+      FireCrew-14: 3766513387095450062
+      FireCrew-15: 6924736099026630989
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

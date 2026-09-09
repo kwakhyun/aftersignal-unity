@@ -46,8 +46,8 @@ namespace AfterSignal
             string art=seed.arts!=null&&seed.arts.Length>0?seed.arts[i%seed.arts.Length]:FacilityPeople.Key(role);
             string job=seed.jobs!=null&&seed.jobs.Length>0?seed.jobs[i%seed.jobs.Length]:FacilityPeople.Jobs[role];
             bool prisoner=job.Contains("수감자")&&seed.title.Contains("수감자");
-            bool soldier=job.Contains("기지")||job.Contains("정비병")||job.Contains("작전 장교");
-            if(prisoner)art="Prisoner";else if(soldier)art="Soldier";else if(art=="Prisoner")art="Worker";
+            bool soldier=seed.title.Contains("기지")||seed.title.Contains("방위")||seed.title.Contains("비행단")||job.Contains("기지")||job.Contains("정비병")||job.Contains("작전 장교");
+            if(prisoner)art="Prisoner";else if(soldier){art=seed.title.Contains("해군")?"NavyCrew":seed.title.Contains("공군")?"AirForceCrew":"Soldier";job=new[]{"작전 장교","기지 정비병","경계 대원","통신병"}[i%4];}else if(art=="Prisoner")art="Worker";
             go.transform.position=spawn;var sr=go.GetComponent<SpriteRenderer>();sr.sharedMaterial=actorMaterial;sr.sprite=PeopleArt.Get(art,0);
             var npc=go.GetComponent<CityNpc>();npc.Configure(6000+district.first+i,job,null,seed.title+"에서 생활한다. 주변 시설과 교통편을 잘 안다. 실제 위치와 직업에 맞게 대화한다.");
             PeopleArt.Attach(go,art);var c=go.GetComponent<FacilityCitizen>();c.origin=go.transform.position;c.radius=seed.radius;c.district=seed.title;c.serial=district.first+i;
@@ -59,7 +59,7 @@ namespace AfterSignal
         }
         public static bool TrySpawnPosition(FacilityCrowd seed,int index,out Vector3 point)
         {
-            for(int attempt=0;attempt<20;attempt++)
+            for(int attempt=0;attempt<5;attempt++)
             {
                 float angle=(index+attempt*7)*2.399963f;
                 float spread=Mathf.Sqrt(((index+attempt*13)%seed.count+.5f)/seed.count)*seed.radius*.82f;

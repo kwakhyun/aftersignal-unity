@@ -8,7 +8,8 @@ namespace AfterSignal
         public WorldActor Patient{get;private set;}
         public int Phase{get;private set;}
         public Transform Stretcher{get;private set;}
-        Action finished;Vector3 hospital;float hold,life;bool loaded;Transform[] medics;MedicalState injury;
+        Action finished;Vector3 hospital;float hold,life,safetyScan,safeAfter,radio;bool loaded;Transform[] medics;MedicalState injury;WorldActor hazard;
+        public string Decision {get;private set;}="부상자에게 출동";
         readonly ResponseDrive drive=new();readonly PursuitPath walk=new();
         public static Vector3 Hospital(Vector3 at)
         {
@@ -45,6 +46,18 @@ namespace AfterSignal
             var g=GameDirector.Instance;if(!g||g.Blocked)return;float dt=Mathf.Min(.06f,Time.deltaTime);life+=dt;
             if(!Car||Car.Wrecked||!Patient||!Patient.Alive||life>420){Finish();return;}
             if(medics!=null)foreach(var m in medics)if(m&&(!m.GetComponent<WorldActor>().Alive||m.GetComponent<WorldActor>().Downed)){Finish();return;}
+            if(Phase is 1 or 2 && Stretcher)
+            {
+                if(Time.time>safetyScan){safetyScan=Time.time+.75f;hazard=TacticalJudgment.Hazard(Stretcher.position,22);if(!hazard)hazard=TacticalJudgment.Hazard(Patient.transform.position,15);if(hazard)safeAfter=Time.time+2;}
+                if(TacticalJudgment.Active(hazard)||Time.time<safeAfter)
+                {
+                    Decision="위험 구역 / 경찰 엄호 요청";
+                    if(Time.time>radio&&medics[0]){radio=Time.time+12;NpcSpeech.Say(medics[0],"사격이 계속됩니다! 엄호 요청. 안전 구역에서 접근 경로를 확보합니다.",5,5);TacticalJudgment.RequestProtection(this,hazard);}
+                    var away=hazard?Vector3.ProjectOnPlane(Stretcher.position-hazard.transform.position,Vector3.up).normalized:Vector3.zero;
+                    MoveTeam(Stretcher.position+away*4,2.4f,dt);return;
+                }
+            }
+            Decision=Phase==0?"현장 출동":Phase==1?"안전 경로로 환자 접근":Phase==2?"부상 정도 확인 / 응급처치":Phase==3?"중상자 들것 이송":"병원 복귀";
             if(Phase==0)
             {
                 drive.Drive(Car,Patient.transform.position,dt,19);
@@ -57,7 +70,7 @@ namespace AfterSignal
             }
             else if(Phase==2)
             {
-                hold-=dt;if(hold<=0){if(injury&&injury.FirstAid()){if(CitySafety.Instance)CitySafety.Instance.FieldTreatments++;Destroy(Patient.GetComponent<MedicalPending>());Phase=5;hold=5;NpcSpeech.Say(medics[0],"응급처치 완료. 움직일 수 있습니다. 안전한 곳으로 이동하세요.",5);DestroyTeam();return;}injury?.Stabilize();loaded=true;var pending=Patient.GetComponent<MedicalPending>();if(pending)pending.carried=true;foreach(var c in Patient.GetComponents<Collider>())c.enabled=false;var impact=Patient.GetComponent<CivilianImpact>();if(impact)Destroy(impact);Phase=3;NpcSpeech.Say(medics[1],"하나, 둘, 셋! 들어 올립니다. 병원으로 이송!",4);}
+                hold-=dt;if(hold<=0){if(injury&&injury.FirstAid()){if(CitySafety.Instance)CitySafety.Instance.FieldTreatments++;Destroy(Patient.GetComponent<MedicalPending>());Phase=6;hold=5;NpcSpeech.Say(medics[0],"응급처치 완료. 움직일 수 있습니다. 안전한 곳으로 이동하세요.",5);DestroyTeam();return;}injury?.Stabilize();loaded=true;var pending=Patient.GetComponent<MedicalPending>();if(pending)pending.carried=true;foreach(var c in Patient.GetComponents<Collider>())c.enabled=false;var impact=Patient.GetComponent<CivilianImpact>();if(impact)Destroy(impact);PlacePatientOnStretcher();Phase=3;NpcSpeech.Say(medics[1],"하나, 둘, 셋! 들어 올립니다. 병원으로 이송!",4);}
             }
             else if(Phase==3)
             {
@@ -74,13 +87,21 @@ namespace AfterSignal
                     NpcSpeech.Say(Patient,Patient.police||Patient.military?"치료 완료. 복귀 명령을 기다리겠습니다.":"구해 주셔서 고마워요. 정말 큰일 날 뻔했어요.",4);
                 }
             }
+            else if(Phase==6){drive.Drive(Car,hospital,dt,17);if(Vector3.ProjectOnPlane(transform.position-hospital,Vector3.up).magnitude<20){Phase=5;hold=5;}}
             else if(Phase==5){hold-=dt;if(hold<=0)Finish();}
+        }
+        void PlacePatientOnStretcher()
+        {
+            var original=Patient.GetComponent<SpriteRenderer>();if(!original)original=Patient.GetComponentInChildren<SpriteRenderer>();if(!original||!original.sprite)return;
+            var go=new GameObject("Patient lying on stretcher",typeof(SpriteRenderer));go.transform.SetParent(Stretcher,false);var view=go.GetComponent<SpriteRenderer>();view.sprite=original.sprite;view.sharedMaterial=original.sharedMaterial;view.color=Color.white;
+            float size=1.8f/Mathf.Max(.1f,view.sprite.bounds.size.y);go.transform.localScale=Vector3.one*size;go.transform.localRotation=Quaternion.Euler(90,0,0);go.transform.localPosition=Vector3.up*.92f-go.transform.localRotation*(view.sprite.bounds.center*size);
+            foreach(var renderer in Patient.GetComponentsInChildren<SpriteRenderer>())renderer.enabled=false;
         }
         void MoveTeam(Vector3 goal,float speed,float dt)
         {
-            var d=walk.Direction(Stretcher.position,goal);Stretcher.position+=d*speed*dt;if(CityGangWar.FindGround(Stretcher.position,out var at))Stretcher.position=at;
+            var d=walk.Direction(Stretcher.position,goal);PedestrianSteering.For(Stretcher).Move(Stretcher.position+d*3,speed*dt);
             if(d.sqrMagnitude>.01f)Stretcher.rotation=Quaternion.Slerp(Stretcher.rotation,Quaternion.LookRotation(d),dt*7);
-            for(int i=0;i<2;i++)medics[i].position=Stretcher.position+Stretcher.forward*(i==0?1.65f:-1.65f);
+            for(int i=0;i<2;i++){var desired=Stretcher.position+Stretcher.forward*(i==0?1.65f:-1.65f);PedestrianSteering.For(medics[i]).Move(desired,speed*dt*1.5f);}
         }
         void DestroyTeam(){if(Stretcher)Destroy(Stretcher.gameObject);if(medics!=null)foreach(var m in medics)if(m){Destroy(m.GetComponent<RescueMedic>());if(m.GetComponent<WorldActor>().Alive&&!m.GetComponent<WorldActor>().Downed)Destroy(m.gameObject);}medics=null;}
         void Finish()

@@ -45,17 +45,17 @@ namespace AfterSignal
         public static bool Tick(Component actor,ref float next,ref float last,out float dt,bool urgent=false)
         {
             float now=Time.time;if(now<next&&!urgent){MotionSkipped++;dt=0;return false;}
-            float d=DistanceSquared(actor);float interval=urgent||d<45*45?0:d<100*100?.055f:d<180*180?.14f:.3f;
+            float d=DistanceSquared(actor);float interval=urgent?0:d<30*30?.025f:d<75*75?.075f:d<140*140?.18f:.4f;
             dt=last==0?Mathf.Min(.06f,Time.deltaTime):Mathf.Min(.32f,now-last);last=now;next=now+interval;MotionUpdates++;return true;
         }
         public static float VisualInterval(Component a){float d=DistanceSquared(a);return d<40*40?0:d<100*100?.06f:d<180*180?.14f:.35f;}
     }
     public static class PopulationBudget
     {
-        static int frame=-1,used;static readonly List<WorldActor> nearby=new(),walkers=new();
-        public const int PerFrame=4;
+        static int frame=-1,used;static double started;static readonly List<WorldActor> nearby=new(),walkers=new();
+        public const int PerFrame=2;
         public static int Deferred{get;private set;}
-        public static bool ClaimFrame(int count=1){if(frame!=Time.frameCount){frame=Time.frameCount;used=0;}if(count<1||used+count>PerFrame){Deferred++;return false;}used+=count;return true;}
+        public static bool ClaimFrame(int count=1){if(frame!=Time.frameCount){frame=Time.frameCount;used=0;started=Time.realtimeSinceStartupAsDouble;}int limit=count==3&&used==0?3:PerFrame;if(count<1||used+count>limit||used>0&&Time.realtimeSinceStartupAsDouble-started>.0015){Deferred++;return false;}used+=count;return true;}
         public static bool Room(Vector3 p,bool seated=false)
         {
             ActorSpatialIndex.Nearby(p,seated?1.05f:24,nearby);int mobile=0;walkers.Clear();
@@ -74,8 +74,20 @@ namespace AfterSignal
                 foreach(var b in walkers)if((a.transform.position-b.transform.position).sqrMagnitude<144&&++count>=18)return false;
             }
             ActorSpatialIndex.Nearby(p,180,nearby);int population=0;
-            foreach(var a in nearby){if(!a.Alive||a.police||a.military||a.gang||a.monster||a.helicopter||a.robot||a.terrorist)continue;var v=a.GetComponent<VenueActor>();if(v&&(v.spectator||v.athlete))continue;if(++population>=220)return false;}
+            int cap=FidelityPresentation.Preset==0?150:220;
+            foreach(var a in nearby){if(!a.Alive||a.police||a.military||a.gang||a.monster||a.helicopter||a.robot||a.terrorist)continue;var v=a.GetComponent<VenueActor>();if(v&&(v.spectator||v.athlete))continue;if(++population>=cap)return false;}
             return true;
+        }
+    }
+    public static class AmbientWorkBudget
+    {
+        static int frame=-1,ground;static double began;
+        public static int DeferredGround {get;private set;}
+        public static bool ClaimGround()
+        {
+            if(frame!=Time.frameCount){frame=Time.frameCount;ground=0;began=Time.realtimeSinceStartupAsDouble;}
+            if(ground>=18||ground>0&&Time.realtimeSinceStartupAsDouble-began>.0012){DeferredGround++;return false;}
+            ground++;return true;
         }
     }
 }

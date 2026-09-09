@@ -4,7 +4,7 @@ namespace AfterSignal
     [DefaultExecutionOrder(1000)]
     public sealed class NpcBody:MonoBehaviour
     {
-        WorldActor actor;Collider solid;Transform shell;float next,vehicleCheck;static float nextAudible;
+        WorldActor actor;Collider solid,restingHit;Transform shell;float next,vehicleCheck;static float nextAudible;
         public int Bumps {get;private set;}
 
         void Start()
@@ -29,7 +29,12 @@ namespace AfterSignal
         void LateUpdate()
         {
             if(!actor||!solid)return;
-            solid.enabled=actor.Alive&&!actor.Downed&&!(actor.GetComponent<MedicalPending>()&&actor.GetComponent<MedicalPending>().carried);
+            var pose=GetComponent<DirectionalPerson>();var walker=GetComponent<CityPedestrian>();bool lying=pose&&pose.Lying||walker&&walker.struck;
+            solid.enabled=actor.Alive&&!actor.Downed&&!lying&&!GetComponentInParent<CityVehicle>()&&!(actor.GetComponent<MedicalPending>()&&actor.GetComponent<MedicalPending>().carried);
+            if(lying&&!actor.Downed&&!restingHit&&!GetComponentInChildren<ProneHitVolume>())restingHit=ProneHitVolume.Create(actor);
+            if(!lying&&restingHit){Destroy(restingHit.gameObject);restingHit=null;}
+            // Root billboard rotation must not rotate a second upright trigger across the street.
+            if(shell&&GetComponent<SpriteRenderer>()){var trigger=GetComponent<CapsuleCollider>();if(trigger&&trigger.isTrigger)trigger.enabled=false;}
             if(shell){shell.rotation=Quaternion.identity;var s=transform.lossyScale;shell.localScale=new Vector3(1/Mathf.Max(.01f,Mathf.Abs(s.x)),1/Mathf.Max(.01f,Mathf.Abs(s.y)),1/Mathf.Max(.01f,Mathf.Abs(s.z)));}
             var g=GameDirector.Instance;if(actor.Downed)return;
             if(actor.Alive&&Time.time>vehicleCheck){vehicleCheck=Time.time+.24f;if(ActorWorkBudget.DistanceSquared(this)<100*100)PushFromVehicles();}

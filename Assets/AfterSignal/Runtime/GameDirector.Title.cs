@@ -22,7 +22,11 @@ namespace AfterSignal
             if(Paused){Paused=false;prePauseScale=1;}
             Dead=false;CloseDialogue();Audio.SetPaused(false);
             StageId destination;
-            if(resume) destination=(StageId)PlayerPrefs.GetInt(StageKey);
+            if(resume)
+            {
+                destination=StageId.Residence;
+                CivicWorld.ClearArrival();ResidentialWorld.VisitHome=-1;RespawnNetwork.ResetHome();
+            }
             else
             {
                 LifeState.Reset();RespawnNetwork.ResetHome();Memories=0;

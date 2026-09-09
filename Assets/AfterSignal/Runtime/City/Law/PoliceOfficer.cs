@@ -16,6 +16,7 @@ namespace AfterSignal
         public bool Ambient { get; set; }
         public int ShotsFired { get; private set; }
         public WorldActor GangTarget { get; private set; }
+        public string Decision {get;private set;}="순찰";
 
         WantedSystem system;
         GameDirector game;
@@ -26,11 +27,11 @@ namespace AfterSignal
         readonly PursuitPath path = new PursuitPath();
         float clock, cooldown, aimTime, recoil, gravity, death, hurt, search, facing = 1;
         int burst;
-        float restraint;
-        Vector3 shotTarget, knockback, patrolHome;
+        float restraint,unseen,reposition;
+        Vector3 shotTarget, knockback, patrolHome,flankPoint;
         bool retreat, playerTarget;
         WorldActor dispatchTarget;
-        public void Dispatch(WorldActor target){dispatchTarget=target;search=0;patrolHome=target.transform.position;}
+        public void Dispatch(WorldActor target){dispatchTarget=TacticalJudgment.Opponent(Body,target)?target:null;search=0;unseen=0;if(dispatchTarget)patrolHome=target.transform.position;}
         public static PoliceOfficer Create(WantedSystem owner, Vector3 at, int level, int index)
         {
             var go = new GameObject("도시 경찰", typeof(CharacterController), typeof(PixelActor), typeof(WorldActor), typeof(PoliceOfficer));
@@ -92,7 +93,7 @@ namespace AfterSignal
 
             if (retreat)
             {
-                transform.position += Vector3.right * dt * 2;
+                PedestrianSteering.For(this).Move(transform.position+Vector3.right*3,dt*2);
                 if (clock > 4)
                     Destroy(gameObject);
                 return;
@@ -102,20 +103,23 @@ namespace AfterSignal
             cooldown -= dt;
             recoil = Mathf.Max(0, recoil - dt);
             search -= dt;
-            if (search <= 0 || GangTarget && !GangTarget.Alive || playerTarget && WantedSystem.Level == 0)
+            if(Body.Downed||!motor.enabled)return;
+            if (search <= 0 || GangTarget && !TacticalJudgment.Opponent(Body,GangTarget) || playerTarget && (WantedSystem.Level == 0||game.Player.Health<=0||IncidentCommand.Emergency))
             {
                 search = .4f;
                 var next = IncidentCommand.Monster(Body.Center,450);
                 if(!next)next=FactionCombat.NearestOpponent(Body,90);
-                if(!next&&dispatchTarget&&dispatchTarget.Alive&&!dispatchTarget.Downed)next=dispatchTarget;
-                bool pursuePlayer = !IncidentCommand.Emergency && WantedSystem.Level > 0 && (!next || CanSee()
+                if(!TacticalJudgment.Opponent(Body,next))next=null;
+                if(!next&&TacticalJudgment.Opponent(Body,dispatchTarget)&&unseen<12)next=dispatchTarget;
+                bool pursuePlayer = !IncidentCommand.Emergency && WantedSystem.Level > 0 && game.Player.Health>0 && (!next || CanSee()
                     && (game.Player.Shoulder - Body.Center).sqrMagnitude < (next.Center - Body.Center).sqrMagnitude);
                 if (next != GangTarget || pursuePlayer != playerTarget) { aimTime = 0; burst = 0; }
                 GangTarget = next;
                 playerTarget = pursuePlayer;
             }
-            if (!playerTarget && (!GangTarget || !GangTarget.Alive))
+            if (!playerTarget && !TacticalJudgment.Opponent(Body,GangTarget))
             {
+                GangTarget=null;Decision="순찰 / 현장 확보";unseen=0;
                 aimTime = 0;
                 burst = 0;
                 int idleFrame = 0;
@@ -134,6 +138,11 @@ namespace AfterSignal
             Vector3 delta = targetPosition - transform.position;
             facing = Vector3.Dot(delta, Camera.main ? Camera.main.transform.right : Vector3.right) >= 0 ? 1 : -1;
             bool visible = playerTarget ? CanSee() : FactionCombat.Visible(Body.Center+Vector3.up*.35f, targetCenter,90);
+            unseen=visible?0:unseen+dt;
+            if(!playerTarget&&unseen>12){dispatchTarget=null;GangTarget=null;aimTime=0;burst=0;search=0;Decision="수색 종료";Ground(dt);return;}
+            bool safeShot=visible&&TacticalJudgment.ClearShot(Body,GangTarget,targetCenter,playerTarget,100);
+            Decision=!visible?"마지막 목격 지점 수색":!safeShot?"사선 확보 / 발사 보류":Body.health<Body.MaxHealth*.35f?"엄폐하며 지원 사격":"목표 식별 / 교전";
+            if(!safeShot){aimTime=0;burst=0;}
             bool close=playerTarget&&visible&&delta.magnitude<2.2f&&hurt<=0&&!(UrbanSimulation.Instance&&UrbanSimulation.Instance.Current)&&game.Player.Health>0;
             if(close)
             {
@@ -157,16 +166,22 @@ namespace AfterSignal
             }
             else if (burst > 0 && cooldown <= 0)
             {
-                if (visible){shotTarget=targetCenter;Fire();}
+                if (safeShot){shotTarget=targetCenter;Fire();}
                 burst--;
                 recoil = .18f;
                 cooldown = burst > 0 ? .15f : Weapon == PoliceWeapon.Shotgun ? 2.3f : Weapon == PoliceWeapon.Rifle ? 1.7f : 1.35f;
             }
-            else if (visible && delta.magnitude < range && cooldown <= 0 && hurt <= 0)
+            else if (safeShot && delta.magnitude < range && cooldown <= 0 && hurt <= 0)
             {
                 aimTime = Weapon == PoliceWeapon.Shotgun ? .85f : .65f;
                 shotTarget = targetCenter;
                 frame = 3;
+            }
+
+            if(visible&&(!safeShot||Body.health<Body.MaxHealth*.35f)&&hurt<=0)
+            {
+                reposition-=dt;if(reposition<=0){reposition=3;flankPoint=TacticalJudgment.Flank(Body,targetCenter,4);}
+                motor.Move(path.Direction(transform.position,flankPoint)*dt*2.1f);
             }
             else if ((!visible || delta.magnitude > range * .78f || playerTarget&&game.Player.Health<45&&delta.magnitude>1.8f) && hurt <= 0)
             {
@@ -191,6 +206,9 @@ namespace AfterSignal
 
         void Fire()
         {
+            var center=playerTarget?game.Player.Shoulder:GangTarget?GangTarget.Center:Vector3.zero;
+            if(!TacticalJudgment.ClearShot(Body,GangTarget,center,playerTarget,100)){aimTime=0;burst=0;return;}
+            shotTarget=center;
             // Weapons and hands are authored together in the sprite, avoiding a second floating gun.
             // Keep burst tracers at the aiming muzzle even while the recoil/flash frame is displayed.
             float muzzleHeight = Weapon == PoliceWeapon.Rifle ? .78f : .81f;

@@ -17,6 +17,7 @@ namespace AfterSignal
         public Action<CityVenue> SelectVenue;
         public Action<int, bool> Select;
         public Action<Vector3> Waypoint;
+        public Action ClearWaypoint;
         List<Vector3> route;
         float next;
         Vector2 dragStart;
@@ -35,6 +36,7 @@ namespace AfterSignal
         bool VisibleLandmark(int i)=>filter!=2||i==1||i==2||i==4||i==12||i==14||i==20;
         public void OnPointerClick(PointerEventData e)
         {
+            if(!mini&&e.button==PointerEventData.InputButton.Right){ClearWaypoint?.Invoke();return;}
             if(mini||dragged)return;RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform,e.position,e.pressEventCamera,out var p);
             float best=24;int id=-1;bool expanded=false;
             foreach(var incident in CityIncidentBoard.Active)if(Vector2.Distance(p,Project(incident.position))<18){Waypoint?.Invoke(incident.position);GameDirector.Instance?.Toast(incident.title+" · 현장 지원 시 기여 보상",5);return;}
@@ -66,14 +68,21 @@ namespace AfterSignal
             for(int x=0;x<6;x++)Line(vh,CityRoadNetwork.Junction(x,0),CityRoadNetwork.Junction(x,4),roadColor,mini?1:1.7f);
             for(int z=0;z<5;z++)Line(vh,CityRoadNetwork.Junction(0,z),CityRoadNetwork.Junction(5,z),roadColor,mini?1:1.7f);
             if(filter!=1){Line(vh,NeonHarbor.OldDock,NeonHarbor.NewDock,new Color(.25f,.54f,.84f),.8f);Line(vh,new(1400,0,800),new(1860,0,-3990),new Color(.5f,.43f,.73f),.8f);}
-            if(route!=null)for(int i=1;i<route.Count;i++)Line(vh,route[i-1],route[i],new Color(1,.72f,.28f),mini?1.4f:2.4f);
+            if(route!=null)
+            {
+                for(int i=1;i<route.Count;i++){Line(vh,route[i-1],route[i],new Color(.02f,.09f,.11f),mini?3.2f:5);Line(vh,route[i-1],route[i],new Color(.29f,.88f,.77f),mini?1.7f:2.8f);}
+                if(route.Count>0){var p=route[^1];var xy=Project(p);if(rectTransform.rect.Contains(xy)){Disc(vh,p,Span*.012f,Span*.012f,new Color(1,.76f,.3f,.25f),20);Diamond(vh,xy,mini?6:11,new Color(1,.81f,.34f));Diamond(vh,xy,mini?2:4,new Color(.04f,.09f,.12f));}}
+                if(!mini)for(int i=1;i<route.Count;i++){var a=Project(route[i-1]);var b=Project(route[i]);float length=(b-a).magnitude;for(float n=34;n<length;n+=60){var p=Vector2.Lerp(a,b,n/length);if(rectTransform.rect.Contains(p))Arrow(vh,p,(b-a).normalized,5,new Color(.88f,1,.96f));}}
+            }
             if(filter!=2)for(int i=0;i<UrbanCatalog.SiteCount;i++)Pin(vh,UrbanCatalog.Center(i),mini?2:4,new Color(.55f,.77f,.78f));
             for(int i=0;i<ExpansionWorld.Places.Length;i++)if(VisibleLandmark(i))Pin(vh,ExpansionWorld.Places[i],mini?3:6,new Color(.34f,.77f,.96f));
             foreach(var venue in FourCityCatalog.Venues)if(Visible(venue)){Pin(vh,venue.position,mini?4:9,FourCityAtlasSelection.Color(venue.kind));if(FourCityAtlasSelection.Venue==venue)Disc(vh,venue.position,Span*.014f,Span*.014f,new Color(1,.87f,.42f,.35f),24);}
             var sim=UrbanSimulation.Instance;if(!mini&&sim)foreach(var c in sim.Cars)if(c&&c.GetComponent<IntercityService>())Pin(vh,c.transform.position,5,new Color(.83f,.55f,1));
             foreach(var incident in CityIncidentBoard.Active){var tint=incident.color;tint.a=.18f;Disc(vh,incident.position,incident.radius,incident.radius,tint,20);Pin(vh,incident.position,mini?5:9,incident.color);}
-            var g=GameDirector.Instance;if(g&&g.Ready){var p=Project(g.Player.transform.position);if(rectTransform.rect.Contains(p)){Pin(vh,g.Player.transform.position,mini?5:9,new Color(1,.86f,.36f));var f=g.CameraRig.ViewRight;Line(vh,g.Player.transform.position,g.Player.transform.position+Vector3.Cross(f,Vector3.up)*Span*.035f,new Color(1,.86f,.36f),1.5f);}}
+            var g=GameDirector.Instance;if(g&&g.Ready){var p=Project(g.Player.transform.position);if(rectTransform.rect.Contains(p)){var f=g.CameraRig.LookForward;var d=new Vector2(f.x,f.z);Arrow(vh,p,d,mini?10:16,new Color(.015f,.045f,.06f));Arrow(vh,p,d,mini?7:12,new Color(1,.9f,.55f));}}
         }
+        void Diamond(VertexHelper vh,Vector2 p,float size,Color color){int k=vh.currentVertCount;vh.AddVert(p+Vector2.up*size,color,Vector2.zero);vh.AddVert(p+Vector2.right*size,color,Vector2.zero);vh.AddVert(p+Vector2.down*size,color,Vector2.zero);vh.AddVert(p+Vector2.left*size,color,Vector2.zero);vh.AddTriangle(k,k+1,k+2);vh.AddTriangle(k,k+2,k+3);}
+        void Arrow(VertexHelper vh,Vector2 p,Vector2 d,float size,Color color){d.Normalize();var r=new Vector2(-d.y,d.x);int k=vh.currentVertCount;vh.AddVert(p+d*size,color,Vector2.zero);vh.AddVert(p-d*size*.7f+r*size*.6f,color,Vector2.zero);vh.AddVert(p-d*size*.35f,color,Vector2.zero);vh.AddVert(p-d*size*.7f-r*size*.6f,color,Vector2.zero);vh.AddTriangle(k,k+1,k+2);vh.AddTriangle(k,k+2,k+3);}
         void Land(VertexHelper vh,Rect r,Color c) {var a=Project(new(r.xMin,0,r.yMin));var b=Project(new(r.xMax,0,r.yMax));Quad(vh,Rect.MinMaxRect(a.x,a.y,b.x,b.y),c);}
         void Disc(VertexHelper vh,Vector3 center,float rx,float rz,Color color,int segments)
         {

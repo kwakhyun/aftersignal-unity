@@ -14,13 +14,17 @@ namespace AfterSignal
         {
             while(!FourCityWorld.Instance||!FourCityWorld.Instance.Built||!UrbanSimulation.Instance)yield return null;yield return new WaitForSeconds(3);
             Base(NavalBase,"해군 · 해협 방위사령부",true);Base(AirBase,"공군 · 루멘 비행단",false);Base(CoastBase,"해양경찰 · 구조 경비대",true,true);
-            int n=0;foreach(var c in UrbanSimulation.Instance.Cars)if(c&&!c.owned&&c.IsAircraft&&c.transform.position.x<550&&c.transform.position.z>700&&c.transform.position.z<1000){c.transform.position=AirBase+new Vector3((n%5-2)*27,.1f,18+n/5*30);n++;}
+            // The original Lumen air detachment stays in place; the new airfield has its own fleet.
+            for(int i=0;i<3;i++)ParkAircraft(AirBase+new Vector3(-28+i*44,.15f,46),CityVehicleType.Fighter);
+            for(int i=0;i<2;i++)ParkAircraft(AirBase+new Vector3(12+i*52,.15f,-22),CityVehicleType.CombatHelicopter);
+            for(int i=0;i<2;i++){var ship=UrbanSimulation.Instance.Spawn(new Vector3(NavalBase.x+31+i*49,OceanLife.Surface,NavalBase.z-95),false,(int)CityVehicleType.Boat);ship.transform.rotation=Quaternion.Euler(0,90,0);ship.gameObject.AddComponent<MaritimeHull>().Faction=i==0?SeaFaction.Navy:SeaFaction.CoastGuard;ship.gameObject.AddComponent<RegionalParked>();ship.name="해군 기지 정박 / "+(i==0?"방위 함정":"구조 지원함");}
             for(int i=0;i<4;i++)Spawn(new Vector3(1980+i*65,OceanLife.Surface,-780-i*40),i%2==0?SeaFaction.Navy:SeaFaction.CoastGuard);
             for(int i=0;i<3;i++)Spawn(new Vector3(1860+i*60,OceanLife.Surface,-1070-i*45),SeaFaction.Pirates);
             HarborParcelRepair.Apply();Built=true;next=Time.time+60;
         }
         void Base(Vector3 at,string title,bool dock,bool coast=false)
         {
+            if(!coast){DefenseBaseArchitecture.Build(transform,at,dock);DutyCrew(at,dock);return;}
             var root=new GameObject(title).transform;root.SetParent(transform,false);root.position=at;var b=new CityGeometry(root);float width=coast?28:72,depth=coast?30:56;
             b.Box("Service platform",new(0,-.22f,0),new(width,.4f,depth),"Metal",true);
             b.Box("Operations block",new(-width*.24f,3,6),new(width*.35f,6,depth*.55f),"DarkMetal",true);
@@ -35,6 +39,19 @@ namespace AfterSignal
                 var p=at+new Vector3((i%4-1.5f)*4,0,-8-i/4*4);if(!CrowdFlow.Place(p,i,out p,5))continue;
                 var guard=PoliceOfficer.Create(WantedSystem.Instance,p,coast?2:4,i);guard.Ambient=true;guard.Body.military=!coast;guard.Body.police=coast;string art=coast?"CoastGuard":dock?"NavyCrew":"AirForceCrew";
                 PeopleArt.Attach(guard.gameObject,art);guard.gameObject.AddComponent<RegionalUniform>().art=art;var npc=guard.GetComponent<CityNpc>();npc.occupation=coast?"해양경찰":dock?"해군 경계병":"공군 기지 경계병";guard.name=npc.occupation;
+            }
+        }
+        void ParkAircraft(Vector3 at,CityVehicleType kind)
+        {var car=UrbanSimulation.Instance.Spawn(at,false,(int)kind);car.gameObject.AddComponent<RegionalParked>();car.name="공군 비행단 / 대기 "+VehicleSeats.Title(kind);}
+        void DutyCrew(Vector3 at,bool navy)
+        {
+            string art=navy?"NavyCrew":"AirForceCrew";float x=navy?-45:-60;
+            for(int i=0;i<16;i++)
+            {
+                var p=i<6?at+new Vector3(x-12+i%5*6,.1f,i<5?22:5):at+new Vector3(-22+(i-6)%5*22,.1f,(i-6)/5*18-22);
+                if(!CrowdFlow.Place(p,i,out p,4))continue;var guard=PoliceOfficer.Create(WantedSystem.Instance,p,4,i);guard.Ambient=true;guard.Body.military=true;guard.Body.police=false;
+                PeopleArt.Attach(guard.gameObject,art);guard.gameObject.AddComponent<RegionalUniform>().art=art;
+                var npc=guard.GetComponent<CityNpc>();string role=(navy?"해군 ":"공군 ")+(i<5?"관제 대원":i%3==0?"정비 대원":i%3==1?(navy?"함정 승조원":"조종사"):"기지 경계병");npc.Configure(96000+(navy?0:100)+i,role,null,"군사 통제 구역에서 근무한다. 정비, 관제, 경계 임무를 담당하며 민간인은 위병소로 안내한다.");guard.name=role;
             }
         }
         public SeaCombat Spawn(Vector3 at,SeaFaction faction){var c=UrbanSimulation.Instance.Spawn(at,false,(int)CityVehicleType.Boat);var sea=c.gameObject.AddComponent<SeaCombat>();sea.Initialize(c,faction);Fleet.Add(sea);return sea;}

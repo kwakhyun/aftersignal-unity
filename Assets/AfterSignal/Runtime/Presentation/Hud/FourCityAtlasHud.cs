@@ -35,7 +35,7 @@ namespace AfterSignal
             Rect(atlasContent,0,0,345,Mathf.Max(312,visible*46));atlasScroll.verticalNormalizedPosition=1;atlasResults.text=(atlasCity<0?"모든 도시":FourCityCatalog.CityNames[atlasCity])+" · "+visible+"개 시설"+(visible==0?" / 검색어를 바꿔 보세요":"");
         }
         void SelectAtlasVenue(CityVenue v)
-        {FourCityAtlasSelection.Select(v);selectedSite=-1;customMapGoal=false;atlas.follow=false;atlas.Focus(v.position,Mathf.Clamp(Mathf.Max(v.size.x,v.size.y)*2.8f,480,1300));UpdateAtlasExplorer();}
+        {FourCityAtlasSelection.Select(v);selectedSite=-1;customMapGoal=false;atlas.follow=false;atlas.Focus(v.position,Mathf.Clamp(Mathf.Max(v.size.x,v.size.y)*2.8f,480,1300));StartNavigation();UpdateAtlasExplorer();}
         void UpdateAtlasExplorer()
         {
             if(!atlasDetail||Time.unscaledTime<nextAtlasInfo)return;nextAtlasInfo=Time.unscaledTime+.5f;

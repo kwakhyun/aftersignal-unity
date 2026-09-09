@@ -1,0 +1,29 @@
+{
+    "completed": true,
+    "passed": [
+        "Twenty separate story portraits are imported",
+        "Story speaker names resolve to their own portraits",
+        "Fire crew has both sexes, hose poses and four directions",
+        "Original Lumen base retains four fighters and four combat helicopters",
+        "New airfield has its own five aircraft",
+        "Expanded naval and air command architecture exists",
+        "Military bases have dedicated naval and air personnel",
+        "Distant incident does not replace a local notice",
+        "Nearby incident still displays its notice",
+        "First campaign offers preparation time and blocks random incidents",
+        "Opening wave contains two low-health rifle enemies",
+        "Campaign enemies are eligible for visible hostile markers",
+        "Wounded civilian walks while waiting for assigned ambulance",
+        "Only critically injured civilian is incapacitated",
+        "Seven casualties are queued behind a five-ambulance cap",
+        "Critical patient has an actual horizontal sprite on stretcher",
+        "On-site first aid is followed by hospital return before releasing ambulance",
+        "Fire service limits five engines and queues remaining fires",
+        "Five engines deploy ten dedicated firefighters",
+        "Hoses and truck cannon extinguish active fires",
+        "Gang tactics can target nearby unarmed civilians",
+        "Gang RPG attack launches its dedicated projectile",
+        "Cornered gang member can occupy a getaway car"
+    ],
+    "errors": []
+}

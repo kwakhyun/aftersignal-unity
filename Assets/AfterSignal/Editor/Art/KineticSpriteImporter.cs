@@ -6,7 +6,7 @@ namespace AfterSignal.Editor
     public sealed class KineticSpriteImporter:AssetPostprocessor
     {
         bool Match=>assetPath.Contains("/Resources/Art/SeoKinetic/")||assetPath.Contains("/Resources/Art/SeoRefined/")||assetPath.Contains("/Resources/Art/VehiclePortraits/");
-        public override uint GetVersion()=>3;
+        public override uint GetVersion()=>6;
         static bool Background(Color32 c)=>c.a<24||Mathf.Min(c.r,Mathf.Min(c.g,c.b))>218&&Mathf.Max(c.r,Mathf.Max(c.g,c.b))-Mathf.Min(c.r,Mathf.Min(c.g,c.b))<18;
         void OnPreprocessTexture()
         {
@@ -17,7 +17,7 @@ namespace AfterSignal.Editor
             importer.textureCompression=TextureImporterCompression.Uncompressed;importer.maxTextureSize=4096;importer.npotScale=TextureImporterNPOTScale.None;
             var platform=importer.GetDefaultPlatformTextureSettings();platform.format=TextureImporterFormat.RGBA32;importer.SetPlatformTextureSettings(platform);
             var tex=new Texture2D(2,2,TextureFormat.RGBA32,false);tex.LoadImage(System.IO.File.ReadAllBytes(assetPath));
-            var px=tex.GetPixels32();string name=System.IO.Path.GetFileNameWithoutExtension(assetPath);
+            OnPostprocessTexture(tex);var px=tex.GetPixels32();string name=System.IO.Path.GetFileNameWithoutExtension(assetPath);
             bool cabin=assetPath.Contains("/VehiclePortraits/");
             int rows=cabin?4:name.StartsWith("Combat")?3:name=="Traversal"?4:2,cols=4;
             var xs=Cuts(tex,px,true,cols,0,tex.height);
@@ -87,6 +87,8 @@ namespace AfterSignal.Editor
                     int k=ny*tex.width+nx;if(seen[k]||!Background(p[k]))continue;seen[k]=true;queue[tail++]=k;
                 }
             }
+            SpriteSilhouetteFinish.Apply(p,tex.width,tex.height,!assetPath.Contains("/VehiclePortraits/")&&!System.IO.Path.GetFileName(assetPath).StartsWith("Combat"));
+            for(int n=0;n<p.Length;n++)if(p[n].a==0)seen[n]=true;
             SeoEdgeFinish.Apply(p,seen,tex.width,tex.height);
             tex.SetPixels32(p);tex.Apply(false,false);
         }

@@ -1,0 +1,22 @@
+{
+    "completed": true,
+    "passed": [
+        "All 22 named characters have 16 imported frames (four directions)",
+        "Every named story character resolves to an independent sprite region",
+        "New Seoha portrait and ensemble title resolve through shipping resource paths",
+        "Transform-driven NPC is stopped before entering masonry",
+        "NPC that falls below support is recovered to a valid floor",
+        "Police identify and fire on a live visible hostile",
+        "Police cancel burst and dispatch target immediately after threat dies",
+        "Inactive hostile cannot become a dispatch target",
+        "Prone critical patient is hit by player ballistics with rotated billboard",
+        "Faction fire reaches and can kill a critically wounded prone target",
+        "Paramedics detect an active nearby shooter and request protection before treatment",
+        "Rescue work resumes after the nearby threat is neutralized",
+        "Navigation resolves the city road graph and remaining route distance",
+        "Destination arrival is detected",
+        "Compass bearing follows east as 090 degrees",
+        "Atlas exposes destination controls and navigation cancellation"
+    ],
+    "errors": []
+}

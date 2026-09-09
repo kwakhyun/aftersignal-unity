@@ -38,9 +38,9 @@ namespace AfterSignal
         {
             var game=GameDirector.Instance;if(!game||!game.Ready||Time.unscaledTime<next)return;next=Time.unscaledTime+.35f;var eye=game.Player.transform.position;
             remove.Clear();foreach(var pair in live)if(!pair.Value||(sites[pair.Key].p-eye).sqrMagnitude>230*230)remove.Add(pair.Key);
-            foreach(int id in remove){if(live[id])Destroy(live[id]);live.Remove(id);}
+            for(int n=0;n<Mathf.Min(2,remove.Count);n++){int id=remove[n];if(live[id])Destroy(live[id]);live.Remove(id);}
             int made=0;
-            for(int i=0;i<sites.Count&&live.Count<48&&made<3;i++)
+            for(int i=0;i<sites.Count&&live.Count<(FidelityPresentation.Preset==0?28:48)&&made<1;i++)
             {
                 var site=sites[i];if(live.ContainsKey(i)||(site.p-eye).sqrMagnitude>170*170)continue;
                 if(!NpcGroundSupport.Floor(site.p,site.p.y+1.2f,3,out float floor)||Mathf.Abs(floor-site.p.y)>.6f)continue;
