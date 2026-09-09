@@ -91,6 +91,7 @@ namespace AfterSignal
                 return;
             }
 
+            if(CivilianImpact.Active(this)){knockback=Vector3.zero;return;}
             if (retreat)
             {
                 PedestrianSteering.For(this).Move(transform.position+Vector3.right*3,dt*2);
@@ -99,6 +100,7 @@ namespace AfterSignal
                 return;
             }
 
+            if(!LocalSimulation.Combat(transform.position)){GangTarget=null;playerTarget=false;burst=0;aimTime=0;return;}
             hurt = Mathf.Max(0, hurt - dt);
             cooldown -= dt;
             recoil = Mathf.Max(0, recoil - dt);
@@ -235,7 +237,7 @@ namespace AfterSignal
             aimTime = 0;
             burst = 0;
             cooldown = Mathf.Max(.45f, cooldown);
-            knockback = force;
+            knockback = Vector3.ClampMagnitude(force,8);
             if (!Body.Alive)
             {
                 motor.enabled = false;

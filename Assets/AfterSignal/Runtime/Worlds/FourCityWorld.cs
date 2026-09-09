@@ -117,5 +117,5 @@ namespace AfterSignal
         void OnDestroy(){if(Instance==this)Instance=null;}
     }
     public sealed class FloatingRemnant:MonoBehaviour
-    {public float phase;Vector3 origin;void Start()=>origin=transform.position;void Update(){if(GameDirector.Instance&&GameDirector.Instance.Paused)return;transform.position=origin+Vector3.up*Mathf.Sin(Time.time*.24f+phase)*2.3f;transform.rotation=Quaternion.Euler(6*Mathf.Sin(Time.time*.1f+phase),phase*13+Time.time*.4f,phase%5*7);}}
+    {public float phase;Vector3 origin;void Start()=>origin=transform.position;void Update(){if(!LocalSimulation.Within(origin,900)||GameDirector.Instance&&GameDirector.Instance.Paused)return;transform.position=origin+Vector3.up*Mathf.Sin(Time.time*.24f+phase)*2.3f;transform.rotation=Quaternion.Euler(6*Mathf.Sin(Time.time*.1f+phase),phase*13+Time.time*.4f,phase%5*7);}}
 }

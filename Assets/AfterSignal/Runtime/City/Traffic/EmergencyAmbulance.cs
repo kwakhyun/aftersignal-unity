@@ -45,6 +45,7 @@ namespace AfterSignal
         {
             var g=GameDirector.Instance;if(!g||g.Blocked)return;float dt=Mathf.Min(.06f,Time.deltaTime);life+=dt;
             if(!Car||Car.Wrecked||!Patient||!Patient.Alive||life>420){Finish();return;}
+            if(Phase<3&&Patient.GetComponent<FireRescueClaim>()){Car.speed=0;Decision="소방대 위험구역 구조 대기 / 안전지대 인계";return;}
             if(medics!=null)foreach(var m in medics)if(m&&(!m.GetComponent<WorldActor>().Alive||m.GetComponent<WorldActor>().Downed)){Finish();return;}
             if(Phase is 1 or 2 && Stretcher)
             {

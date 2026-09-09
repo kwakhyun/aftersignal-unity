@@ -50,6 +50,7 @@ namespace AfterSignal
         }
         void TickCollisionDrift(float dt)
         {
+            if(Tumbling){collisionDrift=Vector3.zero;return;}
             if(IsSpecial||collisionDrift.sqrMagnitude<.002f)return;
             RecoverContact();
             var step=collisionDrift*dt;

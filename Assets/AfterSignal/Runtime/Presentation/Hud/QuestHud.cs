@@ -75,13 +75,7 @@ namespace AfterSignal
             string heading = Mathf.Abs(delta.y) > 6 && distance < 18 ? delta.y > 0 ? "위층 ↑" : "아래층 ↓" : Mathf.Abs(delta.x) > Mathf.Abs(delta.z) ? delta.x > 0 ? "동쪽" : "서쪽" : delta.z > 0 ? "북쪽" : "남쪽";
             mainRouteText.text = mainLabel + "\n" + heading + "  ·  " + distance.ToString("0") + " m";
             Vector3 next = mainGoal;
-            if (roadRoute != null)
-                for (int i = 1; i < roadRoute.Count; i++)
-                    if (Vector3.Distance(game.Player.transform.position, roadRoute[i]) > 7)
-                    {
-                        next = roadRoute[i] + Vector3.up * .8f;
-                        break;
-                    }
+            if (roadRoute != null && !navigation.Arrived)next=navigation.Next+Vector3.up*.8f;
 
             var screen = Camera.main.WorldToScreenPoint(next);
             if (screen.z < 0)

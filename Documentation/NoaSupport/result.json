@@ -1,0 +1,18 @@
+{
+    "completed": true,
+    "secondsUntilClear": 4.619566917419434,
+    "passed": [
+        "Wanted status starts Noa radio without blocking player control",
+        "Pause preserves the deletion countdown",
+        "Escalation to five stars does not restart Noa's countdown",
+        "Noa clears even five-star pursuit within about four active seconds",
+        "Pending witness reports are removed with pursuit records",
+        "Noa confirms completion after the pursuit ends",
+        "A later pursuit gets a different random line",
+        "External clear/death/arrest cancels the pending support message",
+        "Enlarged busts retain source detail and reuse the cached sprite",
+        "Story dialogue shows Noa in a large upper-body portrait",
+        "Ordinary conversation enlarges Seoha while keeping the input and send button visible"
+    ],
+    "errors": []
+}

@@ -14,7 +14,7 @@ namespace AfterSignal
         public int Recalculations {get;private set;}
         public Vector3 Next {get;private set;}
         Vector3 lastGoal,calculatedAt;float nextRepath;int segment;
-        public void Reset(){Route=null;Arrived=false;nextRepath=0;}
+        public void Reset(){Route=null;Arrived=Connected=false;Remaining=TurnDistance=0;segment=0;nextRepath=0;}
         public bool Update(Vector3 at,Vector3 goal,Vector3 forward)
         {
             float deviation=Route==null?float.MaxValue:Nearest(at,out _);bool changed=false;

@@ -7,6 +7,8 @@ namespace AfterSignal
         public CityVehicle Vehicle { get; private set; }
 
         WantedSystem system;
+        TrafficOffense trafficSuspect;
+        public void AssignTraffic(TrafficOffense offense){trafficSuspect=offense;Vehicle.InitializeDurability();Vehicle.health=Vehicle.MaxHealth;}
         Renderer red, blue;
         AudioSource siren;
         float clock, pathClock;
@@ -96,7 +98,7 @@ namespace AfterSignal
                 return;
             }
 
-            if(Vehicle.occupied)emergencyRoute.Drive(Vehicle,IncidentCommand.Emergency?IncidentCommand.Position:system.LastSeen,dt,22);
+            if(Vehicle.occupied)emergencyRoute.Drive(Vehicle,IncidentCommand.Emergency?IncidentCommand.Position:trafficSuspect&&!trafficSuspect.Resolved?trafficSuspect.transform.position:system.LastSeen,dt,trafficSuspect?10:22);
         }
 
         public void Withdraw()

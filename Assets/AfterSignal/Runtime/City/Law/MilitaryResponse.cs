@@ -12,24 +12,30 @@ namespace AfterSignal
         public Vector3 Target=>IncidentCommand.Emergency?IncidentCommand.Position:Incident?Incident.Position:WantedSystem.Instance.LastSeen;
         public bool Active=>!withdrawn&&(Incident?Incident.Active:WantedSystem.Level>0);
         bool withdrawn,fullyDeployed;
+        public static CityVehicleType[] Deployment(bool incident,bool underwater,bool riftCity=false)
+        {
+            var kinds=incident?new[]{CityVehicleType.Truck,CityVehicleType.Tank,CityVehicleType.CombatHelicopter,CityVehicleType.Truck,CityVehicleType.Tank,CityVehicleType.CombatHelicopter,CityVehicleType.Tank,CityVehicleType.Fighter,CityVehicleType.CombatHelicopter,CityVehicleType.Tank}:new[]{CityVehicleType.Truck,CityVehicleType.Truck,CityVehicleType.Tank,CityVehicleType.Tank,CityVehicleType.CombatHelicopter,CityVehicleType.Fighter};
+            if(incident&&riftCity)kinds=new[]{CityVehicleType.Truck,CityVehicleType.Tank,CityVehicleType.CombatHelicopter,CityVehicleType.Bomber,CityVehicleType.Truck,CityVehicleType.Tank,CityVehicleType.Fighter,CityVehicleType.CombatHelicopter,CityVehicleType.Truck,CityVehicleType.Tank,CityVehicleType.CombatHelicopter,CityVehicleType.Bomber,CityVehicleType.Tank,CityVehicleType.Fighter,CityVehicleType.Truck,CityVehicleType.Tank,CityVehicleType.CombatHelicopter,CityVehicleType.Tank,CityVehicleType.Fighter,CityVehicleType.CombatHelicopter,CityVehicleType.Tank};
+            if(underwater)for(int i=0;i<kinds.Length;i++)if(kinds[i]==CityVehicleType.Bomber||kinds[i]==CityVehicleType.Fighter||kinds[i]==CityVehicleType.CombatHelicopter)kinds[i]=CityVehicleType.Tank;
+            return kinds;
+        }
         public static MilitaryResponse ForIncident(RiftIncursion incident)
         {var r=new GameObject("국방 출동 지휘 / 잠식체").AddComponent<MilitaryResponse>();r.Incident=incident;return r;}
         IEnumerator Start()
         {
             GameDirector.Instance.ToastNear(Incident?"방위기지에 긴급 지원 요청 · 중장비 출동 준비":"민간인 대규모 희생 확인 · 방위기지 출동 준비",Target,180,6);
-            float wait=Incident?44:55;
+            float wait=Incident?Incident.RiftCity?30:44:55;
             while(wait>0&&Active){if(!GameDirector.Instance.Blocked)wait-=Time.deltaTime;yield return null;}
-            var kinds=new[]{CityVehicleType.Truck,CityVehicleType.Truck,CityVehicleType.Tank,CityVehicleType.Tank,CityVehicleType.CombatHelicopter,CityVehicleType.Fighter};
-            if(Target.y< -30){kinds[4]=CityVehicleType.Tank;kinds[5]=CityVehicleType.Truck;}
+            var kinds=Deployment(Incident,Target.y< -30,Incident&&Incident.RiftCity);
             for(int i=0;i<kinds.Length&&Active;i++)
             {
-                bool aircraft=kinds[i]==CityVehicleType.CombatHelicopter||kinds[i]==CityVehicleType.Fighter;Vector3 at;
+                bool aircraft=kinds[i]==CityVehicleType.CombatHelicopter||kinds[i]==CityVehicleType.Fighter||kinds[i]==CityVehicleType.Bomber;Vector3 at;
                 while(Active&&!ResponseDispatch.TryOrigin(Target,true,aircraft,i,out _))yield return new WaitForSeconds(3);
                 if(!Active||!ResponseDispatch.TryOrigin(Target,true,aircraft,i,out at))yield break;
                 var car=UrbanSimulation.Instance.Spawn(at,false,(int)kinds[i]);car.name="방위기지 출동 / "+VehicleSeats.Title(kinds[i]);car.occupied=true;car.InitializeDurability();car.health=car.MaxHealth;
                 car.transform.rotation=Quaternion.Euler(0,Vector3.SignedAngle(Vector3.right,Vector3.ProjectOnPlane(Target-at,Vector3.up),Vector3.up),0);
                 car.gameObject.AddComponent<MilitaryVehicleAI>().Initialize(car,this);vehicles.Add(car);
-                yield return new WaitForSeconds(i<2?7:14);
+                yield return new WaitForSeconds(Incident&&Incident.RiftCity?7:i<2?7:14);
             }
             fullyDeployed=true;
         }

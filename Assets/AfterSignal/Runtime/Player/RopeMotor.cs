@@ -9,8 +9,9 @@ namespace AfterSignal
         public bool Attached=>Target&&Target.Valid;
         public float Length {get;private set;}
         public int AttachCount {get;private set;}
-        public float Range=>player&&CivicWorld.Exploration(player.Director.stage)?110:player?player.Tuning.ropeRange:24;
-        PlayerMotor player;LineRenderer line;bool previousHeld;int selectionFrame=-1;
+        public float Range=>player&&CivicWorld.Exploration(player.Director.stage)?160:player?player.Tuning.ropeRange:24;
+        public bool AimAssisted {get;private set;}
+        PlayerMotor player;LineRenderer line;bool previousHeld;int selectionFrame=-1;float nextSelection,pressBuffer,blockedFor;
         GrappleAnchor surfacePreview,surfaceLatch;
         readonly RaycastHit[] hits=new RaycastHit[64];
 
@@ -46,6 +47,7 @@ namespace AfterSignal
         }
         public GrappleAnchor Select(Vector2 pointer)
         {
+            AimAssisted=false;
             var cam=Camera.main;if(!cam||!player)return null;
             // Preserve authored capacitor puzzles. Exploration uses the crosshair surface.
             GrappleAnchor best=null;float score=float.MaxValue;
@@ -57,24 +59,41 @@ namespace AfterSignal
                 float rank=pixels+dist*.8f;if(rank<score){score=rank;best=anchor;}
             }
             if(best)return best;
-            if(FirstSurface(cam.ScreenPointToRay(pointer),Range+Vector3.Distance(cam.transform.position,player.Shoulder),out var hit))
+            var direct=SurfaceAt(cam,pointer);if(direct)return direct;
+            // A small screen-space fan catches edges and slender structures without attaching through walls.
+            float radius=Screen.height*.035f;
+            for(int i=0;i<8;i++)
             {
-                float distance=Vector3.Distance(player.Shoulder,hit.point);if(distance<1.8f||distance>Range)return null;
-                var preview=SurfaceAnchor(ref surfacePreview);preview.SetSurface(hit.collider,hit.point+hit.normal*.065f);
-                return ClearTo(preview)?preview:null;
+                float angle=i*Mathf.PI*.25f;
+                var assisted=SurfaceAt(cam,pointer+new Vector2(Mathf.Cos(angle),Mathf.Sin(angle))*radius);
+                if(assisted){AimAssisted=true;return assisted;}
             }
             return null;
         }
+        GrappleAnchor SurfaceAt(Camera camera,Vector2 pointer)
+        {
+            if(!FirstSurface(camera.ScreenPointToRay(pointer),Range+Vector3.Distance(camera.transform.position,player.Shoulder),out var hit))return null;
+            float distance=Vector3.Distance(player.Shoulder,hit.point);if(distance<2.2f||distance>Range)return null;
+            var preview=SurfaceAnchor(ref surfacePreview);preview.SetSurface(hit.collider,hit.point+hit.normal*.065f);
+            return ClearTo(preview)?preview:null;
+        }
         public void Tick(ControlFrame input,float dt)
         {
-            // Physics substeps share one aim query per rendered frame.
-            if(selectionFrame!=Time.frameCount){selectionFrame=Time.frameCount;Candidate=Select(input.pointer);}
-            if(input.grapple&&!previousHeld&&!Attached&&Candidate)Attach(Candidate);
-            if(!input.grapple&&previousHeld)Release();previousHeld=input.grapple;
+            bool pressed=input.grapple&&!previousHeld;previousHeld=input.grapple;
+            if(pressed&&Attached){Release();return;}
+            if(pressed)pressBuffer=.3f;
+            // Preview is bounded to 12 Hz; a fresh click still gets an immediate query.
+            if(selectionFrame!=Time.frameCount&&(pressed||Time.time>=nextSelection))
+            {selectionFrame=Time.frameCount;nextSelection=Time.time+.08f;Candidate=Select(input.pointer);}
+            if(Candidate)Candidate.FollowSurface();
+            if(pressBuffer>0&&!Attached&&Candidate){Attach(Candidate);pressBuffer=0;}
+            pressBuffer=Mathf.Max(0,pressBuffer-dt);
             if(Target&&!Target.Valid){Release();return;}if(!Attached)return;
             Target.FollowSurface();
-            if(!ClearTo(Target)||Vector3.Distance(player.Shoulder,Target.transform.position)>Range*1.35f){Release();return;}
-            Length=Mathf.Clamp(Length-(input.move.y*(Target.cityAnchor?23:player.Tuning.ropeReelSpeed)+1.6f)*dt,1.6f,Range);
+            blockedFor=ClearTo(Target)?0:blockedFor+dt;
+            if(blockedFor>.12f||Vector3.Distance(player.Shoulder,Target.transform.position)>Range*1.35f){Release();return;}
+            float reel=input.move.y<-.1f?-16:input.move.y>.1f?28:14;
+            Length=Mathf.Clamp(Length-(Target.cityAnchor?reel:input.move.y*player.Tuning.ropeReelSpeed+1.6f)*dt,2.5f,Range);
             Vector3 delta=Target.transform.position-player.Shoulder;var v=player.Velocity;
             v+=delta.normalized*(Mathf.Max(0,delta.magnitude-Length)*48+5)*dt;
             v+=player.Director.CameraRig.ViewRight*(input.move.x*22*dt);player.Velocity=Vector3.ClampMagnitude(v,Target.cityAnchor?40:24);
@@ -90,7 +109,7 @@ namespace AfterSignal
         {
             if(!anchor||!anchor.Valid||Vector3.Distance(player.Shoulder,anchor.transform.position)>Range||!ClearTo(anchor))return;
             if(anchor.Surface){var latch=SurfaceAnchor(ref surfaceLatch);latch.SetSurface(anchor.SurfaceCollider,anchor.transform.position);Target=latch;}else Target=anchor;
-            Length=Vector3.Distance(player.Shoulder,Target.transform.position)*.94f;AttachCount++;
+            Length=Vector3.Distance(player.Shoulder,Target.transform.position)*.94f;blockedFor=0;AttachCount++;
             player.Velocity+=(Target.transform.position-player.Shoulder).normalized*8+Vector3.up*5;
             player.Director.OnAnchor(Target);SignalEffects.Burst(Target.transform.position,SignalEffects.Cyan,14,3);player.Director.Audio.Play("rope_attach",player.Shoulder,.3f,2);
         }
@@ -99,7 +118,7 @@ namespace AfterSignal
             if(!Attached)return;Target.FollowSurface();Vector3 radial=player.Shoulder-Target.transform.position;float distance=radial.magnitude;
             if(distance>Length+.1f){Vector3 outward=radial/distance;player.Controller.Move(-outward*Mathf.Min(distance-Length,.65f));float speed=Vector3.Dot(player.Velocity,outward);if(speed>0)player.Velocity-=outward*speed;}
         }
-        public void Release(){if(Target&&player&&player.Director&&player.Director.Audio)player.Director.Audio.Play("rope_release",player.Shoulder,.13f,1);Target=null;if(line)line.enabled=false;}
+        public void Release(){if(Target&&player&&player.Director&&player.Director.Audio)player.Director.Audio.Play("rope_release",player.Shoulder,.13f,1);Target=null;pressBuffer=0;blockedFor=0;if(line)line.enabled=false;}
         void LateUpdate()
         {
             if(!line)return;line.enabled=Attached;if(!Attached)return;Target.FollowSurface();

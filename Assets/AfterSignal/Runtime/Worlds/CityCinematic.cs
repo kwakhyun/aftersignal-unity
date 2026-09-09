@@ -18,9 +18,9 @@ namespace AfterSignal
             var go=new GameObject("Cinematic letterbox",typeof(Canvas),typeof(CanvasScaler));overlay=go.GetComponent<Canvas>();overlay.renderMode=RenderMode.ScreenSpaceOverlay;overlay.sortingOrder=500;go.transform.SetParent(transform);
             var scaler=go.GetComponent<CanvasScaler>();scaler.uiScaleMode=CanvasScaler.ScaleMode.ScaleWithScreenSize;scaler.referenceResolution=new(1600,900);
             RectTransform Panel(string name,Vector2 min,Vector2 max,Color color){var p=new GameObject(name,typeof(RectTransform),typeof(Image));p.transform.SetParent(overlay.transform,false);var r=p.GetComponent<RectTransform>();r.anchorMin=min;r.anchorMax=max;r.offsetMin=r.offsetMax=Vector2.zero;p.GetComponent<Image>().color=color;p.GetComponent<Image>().raycastTarget=false;return r;}
-            Panel("Top cinema bar",new(0,.86f),Vector2.one,Color.black);Panel("Bottom cinema bar",Vector2.zero,new(1,.16f),Color.black);
-            title=Label("Chapter",new(.06f,.88f),new(.85f,.95f),24);subtitle=Label("Dialogue",new(.20f,.025f),new(.92f,.145f),24);subtitle.alignment=TextAnchor.MiddleLeft;
-            portrait=Panel("Story speaker portrait",new(.045f,.008f),new(.175f,.25f),Color.white).GetComponent<Image>();portrait.preserveAspect=true;portrait.enabled=false;
+            Panel("Top cinema bar",new(0,.86f),Vector2.one,Color.black);Panel("Bottom cinema bar",Vector2.zero,new(1,.22f),Color.black);
+            title=Label("Chapter",new(.06f,.88f),new(.85f,.95f),24);subtitle=Label("Dialogue",new(.30f,.025f),new(.95f,.205f),24);subtitle.alignment=TextAnchor.MiddleLeft;
+            portrait=Panel("Story speaker portrait",new(.022f,.008f),new(.265f,.50f),Color.white).GetComponent<Image>();portrait.preserveAspect=true;portrait.enabled=false;
             var hint=Label("Skip",new(.86f,.89f),new(.97f,.95f),16);hint.text="ESC  건너뛰기";
             fade=Panel("Shot fade",Vector2.zero,Vector2.one,Color.black).GetComponent<Image>();
         }
@@ -38,7 +38,7 @@ namespace AfterSignal
             {
                 camera.fieldOfView=shot==0?52:shot==1?44:37;
                 subtitle.text=shot==0?"":speaker+"\n"+parts[Mathf.Min(shot-1,parts.Length-1)];
-                portrait.sprite=StoryPortraits.Get(speaker);portrait.enabled=shot>0&&portrait.sprite;
+                portrait.sprite=StoryPortraits.Bust(speaker);portrait.enabled=shot>0&&portrait.sprite;
                 if(shot==1)MemoryFigures(objective);
                 float time=0;
                 while(time<duration[shot]&&!skip)

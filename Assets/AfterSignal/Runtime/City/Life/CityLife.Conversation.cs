@@ -13,7 +13,7 @@ namespace AfterSignal
             history.Clear();
             Panel("talk", npc.displayName, "대화를 시작합니다…");
             Sending = false;
-            Send("안녕하세요. 요즘 이곳은 어떤가요?");
+            RequestReply(null);
         }
 
         public void Send(string text)
@@ -23,11 +23,17 @@ namespace AfterSignal
             text = text.Trim();
             if (text.Length > 350)
                 text = text.Substring(0, 350);
+            RequestReply(text);
+        }
+
+        void RequestReply(string text)
+        {
+            bool opening=string.IsNullOrEmpty(text);
             Sending = true;
             SendingStarted = Time.unscaledTime;
-            Body = "서하: " + text + "\n\n…";
+            Body = opening ? "주변을 살피며 말을 고르는 중…" : "서하: " + text + "\n\n…";
             Revision++;
-            history.Add(new NpcLine { role = "user", content = text });
+            if(!opening)history.Add(new NpcLine { role = "user", content = text });
             while (history.Count > 8)
                 history.RemoveAt(0);
             var speaker = Speaker;
@@ -36,7 +42,7 @@ namespace AfterSignal
                 if (Mode != "talk" || Speaker != speaker)
                     return;
                 Sending = false;
-                Body = "서하: " + text + "\n\n" + result.reply;
+                Body = (opening ? "" : "서하: " + text + "\n\n") + result.reply;
                 history.Add(new NpcLine { role = "assistant", content = result.reply });
                 Options.Clear();
                 if (!string.IsNullOrEmpty(result.status))

@@ -58,10 +58,10 @@ namespace AfterSignal
                     {Car.speed=Mathf.MoveTowards(Car.speed,0,dt*18);return;}
             float max=Air?Mathf.Abs(delta.y)>20?28:68:21;
             Car.speed=Mathf.MoveTowards(Car.speed,Mathf.Min(max,Mathf.Sqrt(delta.magnitude*8)),dt*(Air?12:4));
-            var horizontal=Vector3.ProjectOnPlane(delta,Vector3.up);if(horizontal.sqrMagnitude>.01f)transform.rotation=Quaternion.RotateTowards(transform.rotation,Quaternion.Euler(0,Mathf.Atan2(-horizontal.z,horizontal.x)*Mathf.Rad2Deg,0),dt*48);
+            var horizontal=Car.IsWatercraft?SeaTraffic.Steer(Car,delta):Vector3.ProjectOnPlane(delta,Vector3.up);if(horizontal.sqrMagnitude>.01f)transform.rotation=Quaternion.RotateTowards(transform.rotation,Quaternion.Euler(0,Mathf.Atan2(-horizontal.z,horizontal.x)*Mathf.Rad2Deg,0),dt*48);
             var step=Vector3.ClampMagnitude(delta,Mathf.Max(.5f,Car.speed)*dt);
             if(!Air&&Physics.Raycast(transform.position+Vector3.up*1.6f,step.normalized,out var obstruction,step.magnitude+2,1,QueryTriggerInteraction.Ignore)&&!obstruction.collider.transform.IsChildOf(transform)&&!obstruction.collider.GetComponentInParent<CityVehicle>()){Car.speed=0;return;}
-            transform.position+=step;
+            transform.position=SeaTraffic.Move(Car,transform.position+step);
             if(delta.magnitude<.3f)
             {
                 Arrivals++;bool stop=Berth(leg);

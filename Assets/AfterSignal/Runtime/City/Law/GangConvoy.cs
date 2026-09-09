@@ -8,10 +8,10 @@ namespace AfterSignal
         CityVehicle car;WorldActor victim;Vector3 objective;float age,scan,shot,release;bool reported;WorldActor gunner;readonly ResponseDrive drive=new();readonly List<GangMember> crew=new();
         public static GangConvoy Dispatch(Vector3 near)
         {
-            if(CityEventGate.Busy||CampaignBattle.Active)return null;
+            if(!LocalSimulation.CanStart(near)||CityEventGate.Busy||CampaignBattle.Active)return null;
             if(!ResponseDispatch.TryOrigin(near,false,false,Active+8,out var at))return null;
             var c=UrbanSimulation.Instance.Spawn(at,false,0);c.name="혈선 연합 / 무장 습격 차량";c.occupied=true;c.health=c.MaxHealth;
-            var convoy=c.gameObject.AddComponent<GangConvoy>();convoy.car=c;convoy.objective=near;CityEventGate.Begin(convoy,CityEventKind.Gang);CityEventGate.Enroll(c);
+            var convoy=c.gameObject.AddComponent<GangConvoy>();convoy.car=c;convoy.objective=near;CityEventGate.Begin(convoy,CityEventKind.Gang,near);CityEventGate.Enroll(c);
             var go=new GameObject("Convoy roof gunner");go.transform.SetParent(c.transform,false);convoy.gunner=go.AddComponent<WorldActor>();convoy.gunner.gang=true;convoy.gunner.helicopter=true;convoy.gunner.enabled=false;
             SecurityVehicleArt.Install(c,true);return convoy;
         }
@@ -25,7 +25,8 @@ namespace AfterSignal
             if(age<1)car.GetComponent<VehicleCabin>()?.SetCrew("GangCrimson",3);
             if(car.Wrecked){PrepareEvacuation();return;}
             if(car.owned||UrbanSimulation.Instance.Current==car){while(Released<4)Disembark();if(gunner)gunner.health=0;enabled=false;return;}
-            if(scan<=0)
+            if(!LocalSimulation.Within(objective,LocalSimulation.RetireRadius)&&!LocalSimulation.Combat(transform.position)){foreach(var member in crew)if(member)Destroy(member.gameObject);CityEventGate.Cancel(this);Destroy(gameObject);return;}
+            if(scan<=0&&LocalSimulation.Combat(transform.position))
             {
                 scan=1;victim=FactionCombat.NearestOpponent(gunner,65);
                 if(!victim)foreach(var a in WorldActor.All)if(a&&a.Alive&&!a.Downed&&!a.gang&&!a.monster&&!a.helicopter&&!a.environmental&&Vector3.Distance(a.transform.position,transform.position)<55){victim=a;break;}
@@ -34,7 +35,7 @@ namespace AfterSignal
             if(Released==0)drive.Drive(car,objective,dt,20);else car.speed=0;
             bool close=Vector3.ProjectOnPlane(objective-transform.position,Vector3.up).magnitude<28;
             if(close&&Released<4&&release<=0){Disembark();release=.75f;}
-            if(car.occupied&&Released<4&&gunner&&gunner.Alive&&victim&&shot<=0&&FactionCombat.Visible(transform.position+Vector3.up*2.4f,victim.Center,65))
+            if(LocalSimulation.Combat(transform.position)&&car.occupied&&Released<4&&gunner&&gunner.Alive&&victim&&shot<=0&&FactionCombat.Visible(transform.position+Vector3.up*2.4f,victim.Center,65))
             {
                 shot=.38f;FactionCombat.Fire(gunner,transform.position+Vector3.up*2.4f,victim.Center,70,12,SignalEffects.Red,false,transform);g.Audio.PlayGun(GunshotKind.Rifle,transform.position,.5f);
                 if(!reported){reported=true;SecurityResponse.Request(gunner,false);CitySafety.Shock(victim.transform.position);}

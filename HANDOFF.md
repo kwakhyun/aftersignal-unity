@@ -1,4 +1,74 @@
+# Current handoff · 2026-09-09 · facility response and public source
+
+- Latest validated player: Builds/FacilityResponse/AFTERSIGNAL.exe; PLAY.cmd follows Builds/active-player.txt.
+- Added FacilityParking: two local dedicated fire/police/ambulance bays per station, generic parking exclusions, safe bay checks, cooldown refill, and preservation of player/active/burning vehicles. Fire service requisitions waiting engines; distant traffic cleanup no longer deletes en-route fire engines. Corrected fire-body/lightbar lifecycle and chassis.
+- Strong motorcycle/car collisions launch both bike and rider a bounded distance. Player vehicle ownership is released safely during Drive; ground settling, traffic and drift pause during flight. NPC ejections preserve driver identity. Bike regains upright control after landing.
+- Main quest navigation now uses live objectives and interaction points, active combat/extraction targets, and the current small-house entrance. Road-edge attachment prevents junction backtracking; the world pin follows route progress.
+- NPC-first conversation removes the fabricated default Seoha opener. HTTP payload includes opening mode and nearby place/time/injury/danger context. The gateway generates the NPC opening, with local contextual fallback on connection failure.
+- README rewritten against current controls and implementation, with three inspected native gameplay captures in Documentation/Screenshots.
+- IMPORTANT PUBLIC POLICY: 20,546 visual asset paths were removed from the Git index, all 20,546 retained locally. Reusable images/models, Geometry/WorldAssets, authored scenes/prefabs and metadata must not be re-added. Tools/public-assets.cjs, .gitignore, local pre-commit hook and CI enforce the current policy. Earlier public Git history is NOT rewritten and may still contain old assets. Fresh checkouts require the matching private asset pack; see Documentation/PRIVATE-ASSETS.md.
+- Verification: native FacilityResponseProbe 15 passed / 0 errors; Windows release 0 errors / 91 existing warnings. Offline gateway opener/follow-up and public asset boundary checks passed. Evidence: Documentation/FacilityResponse/result.json and build-result.json. Did not repeat old diagnostic suites or use live API credentials. Screenshots exclude synthetic collision fixtures and the obscured Nereid overview.
+
+---
+
 # 다음 Codex 작업을 위한 인계 — 2026-09-09
+
+## 최신 작업: 카메라 복구 · 도시 선택 리스폰 · 선박/차량 경로 · 군부대/폭격기
+
+활성 실행 파일은 `Builds/DefenseMobility/AFTERSIGNAL.exe`, `PLAY.cmd`는 `Builds/active-player.txt`를 따른다. 이번 요청에는 커밋·푸시가 없으므로 수행하지 않았다. 이전 노아/타이틀/주변 시뮬레이션/도시 안전 수정과 생성 이미지를 모두 보존했다.
+
+CameraRig는 평소 기존 어깨 오프셋(.75m), 45도 화각, .15m near clip, 보간된 카메라 위치에서 Focus를 바라보는 회전을 복구했다. 추가 focus/겹침 보정, 근접 주인공 숨김과 화각 확대는 WallClimbing 상태에서만 적용한다. 사망 화면은 4개 도시 선택 후 확인 방식이며 기본은 애프터라이트 서하의 집이다. 다른 도시는 RespawnNetwork가 FourCityWorld 생성 완료와 안전한 바닥을 기다린다. 그 동안 게임 입력을 막는다. 도시 재진입 시 sim.Prompt가 초기화되지 않아 HUD가 예외를 내던 문제를 빈 문자열 초기화와 null-safe 검사로 수정했다. 플레이 HUD의 7개 무기 목록은 제거했고 현재 장착 무기 패널은 유지한다.
+
+VehicleNavigator는 정적 장애물/지면을 실제 크기로 검사하는 제한 A*를 일반 교통과 ResponseDrive에 공유한다. 최대 850노드, 프레임당 1검색, 경로 재사용. 도로 그래프도 최소 힙을 적용했다. SeaTraffic은 모든 수상 탈것에 등록되며 선체 방향별 투영/이동 구간 충돌/회전 취소/초기 겹침 분리와 공통 회피를 제공한다. 수동 조종 배는 자동 옆이동 없이 충돌만 제한한다.
+
+GarrisonSupport는 기존 군 시설 병력에만 붙으며 기존 생활/경비 루틴을 잠시 중단하고 근처 위협에 사격 지원한 뒤 복귀한다. 공간 인덱스 0.8초 탐색, 테러는 군 대응 제외. MilitaryArmory는 루멘 육군기지·공군·해군에 물리 진열대를 제공한다. E로 13종 무기 장착/탄약 보급, 군사시설 서비스 메뉴에서도 선택 가능하다. 추가 비용을 내는 일반 무기상점은 유지한다.
+
+CityVehicleType.Bomber는 기존 enum 뒤에 추가하여 저장 호환을 유지한다. BomberAirframe/BomberBay는 별도 비행익 메시/충돌/2인 조종석/투하창/공군 승무원, 공군 기지 2대, 적재 96발, 우클릭 24발 연속 투하, 착륙 후 R 8초 보급을 제공한다. FallingBomb는 중력 낙하/충돌 폭발하며 전역 활성 수 72 제한. NPC FlyRun은 탄도 투하점과 진입·이탈 항로를 사용한다. 조종자 입력 필터에도 Bomber를 군용 무장 기체로 추가했다.
+
+에레보스 사건은 최대 5마리의 분산된 잠식체를 한 사건 슬롯에 등록한다. 출동군은 트럭 4대/전차 7대/헬기 5대/전투기 3대/폭격기 2대, 30초 준비 후 7초 간격이다. 일반 도시는 기존 편성과 준비시간 유지. ResponseDispatch의 에레보스 출동지 제외 조건을 목표 도시가 에레보스이면 허용하도록 고쳤다. 기존 240/420/550m 사건 시작/전투/정리 범위, 도입 미션 보호, 단일 사건 제약을 유지한다.
+
+최종 Windows 빌드 성공(오류 0, 기존 경고 91). `-defense-mobility-probe` 네이티브 필수 검증 29개 모두 통과/실행 오류 0. 카메라 회전, 사망 UI 선택, 실제 네레이드 재로드/생존/바닥, 일반 차량과 출동 트럭의 물리 우회 도착, 기존 군인 지원 사격/복귀, 선박 분리/이동 관통 방지/저속 회피, 13종 무기, 플레이어 폭격기 조종석 탑승/24발 실제 투하·폭발, NPC 탄도 투하, 5마리 동시 출현을 확인했다. 초기 테스트에서 바운드 경계의 기대값과 이미 등록된 선박을 서로 통과하도록 재배치하는 잘못된 테스트 준비를 수정했다. UI 재진입 예외는 실제 구현에서 수정했다. 결과/캡처/설명은 `Documentation/DefenseMobility`에 있다. 이 진단은 사용자의 진행/재화를 저장하지 않는다. 전체 교차로나 캠페인/장시간 최대 교전의 전수 테스트는 하지 않았다.
+
+
+## 최신 작업: NPC 교통사고 추격 · 자연 회복 · 해안/외벽 충돌 · 중력 포획 · 소방 구조
+
+실행 파일은 `Builds/CitySafetyActions/AFTERSIGNAL.exe`, PLAY.cmd는 `Builds/active-player.txt`를 따른다. 사용자가 실행 중인 LocalSimulation 게임(PID 92084)은 종료하지 않았다. 이번 요청에는 커밋·푸시가 없다. 이전 노아/타이틀/주변 시뮬레이션 수정 등 모든 기존 작업을 보존했다.
+
+TrafficOffense는 NPC 차량 보행자 충돌을 서하 수배와 분리해 신고/경찰차 추격/운전자 정차·하차로 연결한다(3초 신고, 사건 2건·경찰차 각 2대). 몬스터 진압을 우선한다. PlayerRecovery는 8초 무피해 후 초당 2.5 HP 회복. ShoreAccess는 해안 지하 진입 차단/수면 등반/기존 침투 복구, 실제 모래 해안 경계와 물 판정 정합, 수중도시 통로 예외를 처리한다. DistrictTower의 외형 62% 코어를 폐기하고 CityGeometry.SolidPrism의 실제 외벽·후퇴·쌍둥이 타워를 따르는 건물당 하나의 정적 충돌 메시로 교체했다.
+
+CivilianImpact.Blast는 군인·경찰의 넉백을 약 8m 이하로 제한하고 중첩 재발사를 막는다. 자동차 고속 충돌은 별도 Launch를 유지한다. 몬스터 출동군은 탱크 4·전투헬기 3·전투기 1·트럭 2로 순차 투입. TitanGravitySnare는 260m 내 탑승 항공기를 2.6초 예고 후 최대 4.5초 동안 당겨 VehicleFailure 추락으로 전환한다. 지상 적 어그로와 항공 차단 대상을 분리하고, 빈 항공기 제외/몬스터 사망 시 취소/조종·자동항로 경쟁 차단/F 탈출을 적용했다.
+
+소방서는 실제 Door(2)를 기준으로 출동한다. FireEngine은 방수 시야 차단 시 위치 변경, 진압·구조 담당 분리, 구조 완료와 승무원 복귀 대기, 5대 제한을 유지한다. FireRescue는 시민·중상자를 안전지대까지 구조하며 경상자 응급처치/중상자 안정화·구급 신고를 한다. 기존 EMS 예약을 공유하고 EmergencyAmbulance가 소방 구조 중 환자를 동시에 옮기지 않게 FireRescueClaim으로 인계한다.
+
+대화 인물 21명(SeoDialogue/CoreCast/WorldCast)의 배경을 imagegen으로 분리했다. 알파 대신 체크무늬가 나온 첫 생성은 사용하지 않았고, 순색 키 배경으로 재생성한 원본을 PortraitAlpha가 실제 RGBA PNG로 변환했다. 검은색은 마스킹 기준이 아니다. 머리카락 안쪽 음영의 잔여 키 색은 순색 내부 공간에서 연결된 배경을 추가 탐색해 제거한다. 생성 프롬프트·산출물 위치와 동작 설명은 Documentation/CitySafetyActions에 있다.
+
+최종 Windows 빌드 오류 0/기존 경고 91, 별도 네이티브 필수 확인 29개 통과/실행 오류 0. 지상 공격자 어그로 중에도 자동 중력 포획이 선택되는 경우와 초상화 내부 머리카락 경계 마감까지 반영한 결과다. 최종 결과는 Documentation/CitySafetyActions/result.json 및 build-result.json과 PNG 캡처 3개를 참고한다. 진단은 -city-safety-actions-probe로만 작동하며 저장 파일을 쓰지 않는다. 전체 도시의 모든 내부/전체 캠페인을 전수 검증하지는 않았다.
+
+## 최신 작업: 주변 사건 시뮬레이션 · 원격 알림 차단 · 갈고리/벽 카메라
+
+실행 대상은 `Builds/LocalSimulation/AFTERSIGNAL.exe`이며 `PLAY.cmd`에 반영했다. 이전 노아 지원/타이틀 변경을 포함하며 기존 로컬 수정도 유지했다. 사용자 실행 중인 `Builds/NoaSupport` 게임은 종료하지 않았다. 새 버전은 기존 게임을 닫고 PLAY.cmd로 다시 실행해야 한다. 이번 요청에는 커밋·푸시가 없었다.
+
+거리와 무관하게 전 해역에서 진행되던 SeaCombat의 탐색/사격 및 공통 사건 슬롯 우회를 수정했다. LocalSimulation: 사건 시작 240m, 전투 420m, 이탈 정리 550m 기준. 원격 경찰/군인/로봇/갱단/몬스터의 전투 판단을 쉬고 원격 구조/소방 사건을 만들지 않는다. 여객 이동과 출동 경로는 유지한다. 몬스터 이탈 유예 12초 동안 슬롯을 유지하고 중도 종료된 생존 몬스터를 바로 제거해 사건 재중첩을 막는다. VehicleFailure 탈출 안내는 현재 탑승 차량만, ToastNear는 표시 중 이탈해도 숨긴다.
+
+CameraOcclusion은 100m 이내 시각 후보를 캐시하고 복원 완료 대상을 추적 사전에서 제거한다. 원거리/변화 없는 수목 업로드, 파편/차량 연기/일시 효과 부담을 줄였다. 바닥/도로/건물 컬링 정책은 변경하지 않았다. 구형 사격 직선/경찰 헬기 예고선을 제거하고 현행 움직이는 탄도/섬광/탄착을 유지한다.
+
+갈고리는 탐험 160m, 우클릭 연결 유지/다시 클릭 해제, 자동 감기, W 가속/S 풀기/SPACE 도약이다. 좁은 조준 보조 및 클릭 버퍼, 12Hz 후보 검색. 벽 근처 카메라 초점/충돌/침투를 보정하고 시야각 확대 및 가까운 서하 가림을 적용한다. 마우스 회전과 캐릭터 가시성 복구를 확인했다.
+
+최종 Windows 빌드 오류 0, 경고 91개. `-local-simulation-probe` 필수 동작 20개 통과, 실행 오류 0. 가까운 해상 교전 5회 발포, 멀어진 뒤 추가 0회. 사건 중첩 차단/중도 정리, 원격 알림, 탑승자 경고, 로프 연결/해제/보조, 카메라 벽 충돌/회전/복원을 확인했다. 시내 캡처에서 도로/건물 유지 확인. 첫 검사에서 지역 안내가 시험 알림을 교체한 문제는 검사 순서를 수정했고 초기 기록을 Artifacts/LocalSimulation/FirstRun에 남겼다. 장시간 FPS/전체 캠페인 검증은 반복하지 않았으며 모든 멈춤 제거를 보장하는 측정은 아니다. 상세 범위와 최종 결과/캡처는 `Documentation/LocalSimulation`에 있다.
+
+## 최신 작업: 노아 수배 해제 지원 · 대화 상반신 확대
+
+수배가 발생하면 노아가 12쌍의 무작위 무전 중 하나로 지원하고 약 4초의 플레이 시간 뒤 기존 WantedSystem.Clear 경로로 수배/추격/대기 신고를 해제한다. 단계 상승은 타이머를 연장하지 않는다. 완료 무전은 5초 표시하며 직전 대사 중복을 피한다. 일시정지/대화/타이틀/전환 중에는 진행하지 않고, 외부 해제·사망·체포는 무전을 취소한다. API 호출 없이 작동하며 이미 수감된 플레이어를 석방하지 않는다.
+
+StoryPortraits.Bust가 원본 텍스처를 공유하며 얼굴·상반신 구도를 캐시한다. 일반 대화/스토리 초상화 폭을 396 기준 픽셀로 늘리고 대사·스크롤·입력칸·계속 버튼 위치를 조정했다. 전투 무전/시네마틱도 확대했다. 노아 수배 무전은 이동을 막지 않는 하단 패널이고 캠페인 무전과 겹치지 않게 표시한다. 지난 타이틀 변경도 포함되어 있다.
+
+최신 실행 대상은 `Builds/NoaSupport/AFTERSIGNAL.exe`이며 `PLAY.cmd`에 반영됐다. Windows 빌드 오류 0/기존 경고 91개. 네이티브 필수 확인 11개 통과/실행 오류 0: 5단계 수배 해제 실측 4.62초(캡처 작업 포함, 일시정지 제외), 단계 상승/일시정지/신고 정리/무전 중복 회피/외부 취소/초상화 캐시 및 UI 표시. 실제 5개 캡처를 `Documentation/NoaSupport`에 보존했다. 전체 캠페인 검증은 반복하지 않았다. 사용자 실행 중 게임은 종료하지 않았으며 이번 요청에 커밋·푸시는 없었다. 아래 실행 경로는 이전 작업 기록이다.
+
+## 최신 작업: 핵심 3인 타이틀 원화 · 좌측 로고
+
+타이틀을 기존 7인에서 서하·노아·이솔 3인으로 다시 제작했다. 서하는 자연스럽게 서 있는 자세, 조연 둘은 뒤쪽으로 배치했다. 영문 `AFTER / SIGNAL` 로고는 이미지 좌측에 포함했고 중복 UI 로고·상단 장식을 제거했다. 원화·메뉴를 같은 1600×900 프레임으로 묶어 다른 화면 비율에서도 잘리지 않게 했다. 메뉴 하단 그라데이션만 남겨 로고 밝기를 유지했다.
+
+최신 실행 대상은 `Builds/TitleTrio/AFTERSIGNAL.exe`이며 `PLAY.cmd`에 반영됐다. Windows 빌드 오류 0/기존 경고 91개, 타이틀 핵심 확인 3개 통과/실행 오류 0. 실제 타이틀 캡처에서 3인·좌측 로고·메뉴 간격을 확인했다. 전체 게임 플레이 검증은 반복하지 않았다. `Documentation/TitleTrio`에 생성 프롬프트·빌드/표시 결과·캡처를 보존했다. 기존 사용자 게임은 종료하지 않았다. 이번 요청에 커밋·푸시는 없었다. 아래 실행 경로는 이전 작업 기록이다.
 
 ## 최신 작업: 튜토리얼 표시 범위·범용 로프·프레임 부담 완화
 

@@ -14,7 +14,7 @@ namespace AfterSignal
         void Awake()=>Instance=this;
         public static BurningObject Ignite(GameObject target,Vector3 at,float intensity=1)
         {
-            if(!Instance||!target||target.GetComponentInParent<WorldActor>()&&!target.GetComponentInParent<CityVehicle>()||target.GetComponentInParent<FireEngine>())return null;
+            if(!Instance||!target||!LocalSimulation.Combat(at)||target.GetComponentInParent<WorldActor>()&&!target.GetComponentInParent<CityVehicle>()||target.GetComponentInParent<FireEngine>())return null;
             var existing=target.GetComponent<BurningObject>();if(existing){existing.Heat=Mathf.Min(120,existing.Heat+intensity*10);return existing;}
             Instance.Fires.RemoveAll(f=>!f);if(Instance.Fires.Count>=FireLimit)return null;
             var quenched=target.GetComponent<ExtinguishedObject>();if(quenched&&Time.time<quenched.Until)return null;
@@ -23,7 +23,7 @@ namespace AfterSignal
         }
         public static void IgniteBlast(Vector3 at,float radius,float damage)
         {
-            if(!Instance||damage<70)return;int n=Physics.OverlapSphereNonAlloc(at,Mathf.Min(radius,22),contacts,1,QueryTriggerInteraction.Ignore),count=0;
+            if(!Instance||damage<70||!LocalSimulation.Combat(at))return;int n=Physics.OverlapSphereNonAlloc(at,Mathf.Min(radius,22),contacts,1,QueryTriggerInteraction.Ignore),count=0;
             for(int i=0;i<n&&count<3;i++)
             {
                 var c=contacts[i];if(!c||c.GetComponentInParent<WorldActor>()&&!c.GetComponentInParent<CityVehicle>())continue;
@@ -34,7 +34,7 @@ namespace AfterSignal
         }
         public static Vector3 Station(Vector3 target)
         {
-            Vector3 at=UrbanCatalog.Door(1);float best=float.MaxValue;
+            Vector3 at=UrbanCatalog.Door(2);float best=(at-target).sqrMagnitude;
             foreach(var v in FourCityCatalog.Venues)if(v.kind==VenueKind.FireStation&&v.city!=2){float d=(v.Entrance-target).sqrMagnitude;if(d<best){best=d;at=v.Entrance;}}
             return at;
         }
@@ -44,9 +44,10 @@ namespace AfterSignal
             Fires.RemoveAll(f=>!f);Engines.RemoveAll(e=>!e);if(Engines.Count>=EngineLimit)return;
             foreach(var fire in Fires)
             {
-                if(!fire||fire.Assigned||fire.Heat<=0||(fire.Position-g.Player.transform.position).sqrMagnitude>650*650)continue;
-                var station=Station(fire.Position);Vector3 origin=station+Vector3.back*15+Vector3.right*(Engines.Count*7);
-                if(!CityGangWar.FindGround(origin,out origin)&&!ResponseDispatch.TryOrigin(fire.Position,false,false,Engines.Count,out origin))continue;
+                if(!fire||fire.Assigned||fire.Heat<=0||!LocalSimulation.Combat(fire.Position))continue;
+                var station=Station(fire.Position);Vector3 origin=station;bool found=false;
+                for(int n=0;n<12;n++){var candidate=station+new Vector3(n%2==0?-14:14,0,-8-(n/2)*7);if(FacilityParking.ClearBay(candidate,out origin)){found=true;break;}}
+                if(!found&&!ResponseDispatch.TryOrigin(fire.Position,false,false,Engines.Count,out origin))continue;
                 var engine=FireEngine.Create(fire,origin,station);fire.Assigned=engine;Engines.Add(engine);break;
             }
         }
@@ -73,7 +74,7 @@ namespace AfterSignal
         void Update()
         {
             var g=GameDirector.Instance;if(!g||g.Blocked)return;age+=Time.deltaTime;if(age>240){Suppress(1000);return;}
-            if(Time.time<tick)return;tick=Time.time+1;bool near=(Position-g.Player.transform.position).sqrMagnitude<650*650;
+            if(Time.time<tick)return;tick=Time.time+1;bool near=LocalSimulation.Combat(Position);
             foreach(var p in new[]{flame,smoke})if(p){var e=p.emission;e.enabled=near;e.rateOverTime=p==flame?Mathf.Lerp(2,20,Heat/100):Mathf.Lerp(3,18,Heat/100);}
             if(!near)return;
             if(car&&!car.Wrecked)car.Damage(car.MaxHealth*.003f,Position,TrafficDamageSource.Environment,false);
@@ -90,11 +91,14 @@ namespace AfterSignal
     public sealed class FireEngine:MonoBehaviour
     {
         public CityVehicle Car {get;private set;}public BurningObject Fire {get;private set;}public int Phase {get;private set;}
-        readonly ResponseDrive drive=new();Vector3 station;Firefighter[] crew;float age,water=1000;LineRenderer cannon;
+        readonly ResponseDrive drive=new();Vector3 station,reposition;Firefighter[] crew;float age,blockedNozzle,water=1000;LineRenderer cannon;bool relocating;
         public static FireEngine Create(BurningObject fire,Vector3 origin,Vector3 station)
         {
-            var car=UrbanSimulation.Instance.Spawn(origin,false,(int)CityVehicleType.Truck);car.occupied=true;car.traffic=false;car.name="119 / 펌프·방수 소방차";
-            car.gameObject.AddComponent<FireEngineArt>();car.gameObject.AddComponent<ResponseLightbar>();
+            var car=FacilityParking.TakeFireEngine(station);
+            if(!car)car=UrbanSimulation.Instance.Spawn(origin,false,(int)CityVehicleType.Truck);
+            car.occupied=true;car.traffic=false;car.name="119 / 펌프·방수 소방차";
+            if(!car.GetComponent<FireEngineArt>())car.gameObject.AddComponent<FireEngineArt>();
+            var light=car.GetComponent<ResponseLightbar>()??car.gameObject.AddComponent<ResponseLightbar>();light.enabled=true;
             var e=car.gameObject.AddComponent<FireEngine>();e.Car=car;e.Fire=fire;e.station=station;return e;
         }
         void Update()
@@ -107,10 +111,24 @@ namespace AfterSignal
             {
                 var nozzle=transform.position+Vector3.up*3.6f;
                 bool clear=BlastDamage.Exposed(nozzle,Fire.Position,Fire.transform,Car);
-                if(clear){water-=dt*4;Fire.Suppress(dt*5);Firefighter.Jet(cannon,nozzle,Fire.Position);}
-                else if(cannon)cannon.enabled=false;
+                if(clear){blockedNozzle=0;relocating=false;Car.speed=0;water-=dt*4;Fire.Suppress(dt*5);Firefighter.Jet(cannon,nozzle,Fire.Position);}
+                else
+                {
+                    if(cannon)cannon.enabled=false;blockedNozzle+=dt;
+                    if(relocating){drive.Drive(Car,reposition,dt,4);if((transform.position-reposition).sqrMagnitude<36){relocating=false;Car.speed=0;}}
+                    else if(blockedNozzle>4)
+                    {
+                        blockedNozzle=0;
+                        for(int i=0;i<8;i++){var p=Fire.Position+Quaternion.Euler(0,i*45,0)*Vector3.forward*21;if(CityGangWar.FindGround(p,out p)&&BlastDamage.Exposed(p+Vector3.up*3.6f,Fire.Position,Fire.transform,Car)){reposition=p;relocating=true;break;}}
+                    }
+                }
             }
-            else {drive.Drive(Car,station,dt,18);if(Vector3.ProjectOnPlane(transform.position-station,Vector3.up).magnitude<22)Finish();}
+            else
+            {
+                bool waiting=false;if(crew!=null)foreach(var c in crew)if(c&&(c.Rescuing||c.GetComponent<WorldActor>().Alive&&!c.GetComponent<WorldActor>().Downed&&(c.transform.position-transform.position).sqrMagnitude>64)){waiting=true;break;}
+                if(waiting){Car.speed=0;return;}
+                drive.Drive(Car,station,dt,18);if(Vector3.ProjectOnPlane(transform.position-station,Vector3.up).magnitude<22)Finish();
+            }
         }
         void Deploy()
         {
@@ -125,12 +143,13 @@ namespace AfterSignal
     public sealed class Firefighter:MonoBehaviour
     {
         public bool Returning;FireEngine truck;BurningObject fire;SpriteRenderer visual;WorldActor body;int variant;LineRenderer hose,jet;readonly PursuitPath path=new();
-        float assess,radio;Vector3 workPoint;WorldActor hazard;public string Decision {get;private set;}="방수 위치 확보";
+        float assess,radio;Vector3 workPoint;WorldActor hazard;FireRescue rescue;public bool Rescuing=>rescue&&rescue.Busy;public string Decision {get;private set;}="방수 위치 확보";
         public static Firefighter Create(FireEngine truck,BurningObject fire,Vector3 at,int variant)
         {
             var go=new GameObject(variant==0?"소방대원 / 방수 담당":"소방대원 / 구조 담당",typeof(SpriteRenderer),typeof(CityNpc));go.transform.position=at;
             var npc=go.GetComponent<CityNpc>();npc.Configure(94000+variant,"119 소방대원",null,"화재 현장에서 시민을 대피시키고 호스로 불을 끄는 전문 소방관이다.");
             var f=go.AddComponent<Firefighter>();f.truck=truck;f.fire=fire;f.variant=variant;f.body=go.GetComponent<WorldActor>();
+            npc.enabled=false;f.rescue=go.AddComponent<FireRescue>();
             f.visual=go.GetComponent<SpriteRenderer>();f.visual.sharedMaterial=Resources.Load<Material>("Materials/PixelActor");
             f.hose=Line(go.transform,"Connected fire hose",.07f,new Color(.8f,.22f,.035f));f.jet=Line(go.transform,"Pressurised water",.1f,new Color(.62f,.88f,1,.6f));return f;
         }
@@ -144,22 +163,29 @@ namespace AfterSignal
         }
         void Update()
         {
-            var g=GameDirector.Instance;if(!g||g.Blocked||!truck)return;if(!body.Alive||body.Downed){jet.enabled=hose.enabled=false;return;}
+            var g=GameDirector.Instance;if(!g||g.Blocked||!truck)return;if(!body.Alive||body.Downed){rescue.Cancel();jet.enabled=hose.enabled=false;return;}
             if(!fire)Returning=true;
             if(Time.time>assess){assess=Time.time+1.2f;hazard=TacticalJudgment.Hazard(transform.position,23);if(fire)workPoint=TacticalJudgment.SafeWorkPoint(fire.Position,transform.position,9+variant*2,variant);}
             bool unsafeArea=TacticalJudgment.Active(hazard);
+            if(rescue.Tick(truck,fire,body,Mathf.Min(Time.deltaTime,.06f),variant==1&&!Returning&&!unsafeArea))
+            {Decision=rescue.Decision;hose.enabled=jet.enabled=false;Pose(false,workPoint-transform.position);return;}
+            hose.enabled=true;
             Vector3 goal=Returning||unsafeArea?truck.transform.position:workPoint;Vector3 d=goal-transform.position;d.y=0;
             bool spraying=!Returning&&!unsafeArea&&fire&&Vector3.Distance(transform.position,fire.Position)<14&&BlastDamage.Exposed(transform.position+Vector3.up*1.35f,fire.Position,fire.transform,truck.Car);
             Decision=Returning?"소방차 복귀":unsafeArea?"엄호 요청 / 안전 위치 이동":spraying?"화점 방수":"장애물을 우회해 방수 위치 확보";
             if(unsafeArea&&Time.time>radio){radio=Time.time+15;NpcSpeech.Say(this,"소방대 사격 위험! 경찰 엄호가 필요합니다!",4,5);TacticalJudgment.RequestProtection(this,hazard);}
             if(!spraying)PedestrianSteering.For(this).Move(transform.position+path.Direction(transform.position,goal)*3,Time.deltaTime*3);
             if(Returning&&d.magnitude<8){Destroy(gameObject);return;}
-            int facing=PeopleArt.Direction(spraying?fire.Position-transform.position:d);var sprites=FireCrewArt.Frames;int index=variant*8+(spraying?4:0)+facing;if(sprites.Length>index)visual.sprite=sprites[index];
-            if(Camera.main)visual.transform.rotation=Quaternion.Euler(Camera.main.transform.eulerAngles.x,Camera.main.transform.eulerAngles.y,0);
+            Pose(spraying,spraying?fire.Position-transform.position:d);
             var nozzle=transform.position+Vector3.up*1.35f;
             for(int i=0;i<9;i++){float t=i/8f;var p=Vector3.Lerp(truck.transform.position+Vector3.up*.8f,nozzle,t);p.y=Mathf.Lerp(p.y,transform.position.y+.1f,Mathf.Sin(t*Mathf.PI));hose.SetPosition(i,p);}
             bool clear=spraying&&BlastDamage.Exposed(nozzle,fire.Position,fire.transform,truck.Car);jet.enabled=clear;
             if(clear){Jet(jet,nozzle,fire.Position);fire.Suppress(Time.deltaTime*4);}
+        }
+        void Pose(bool spraying,Vector3 direction)
+        {
+            int facing=PeopleArt.Direction(direction);var sprites=FireCrewArt.Frames;int index=variant*8+(spraying?4:0)+facing;if(sprites.Length>index)visual.sprite=sprites[index];
+            if(Camera.main)visual.transform.rotation=Quaternion.Euler(Camera.main.transform.eulerAngles.x,Camera.main.transform.eulerAngles.y,0);
         }
     }
     public static class FireCrewArt

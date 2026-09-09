@@ -18,7 +18,7 @@ namespace AfterSignal
             vehicle.traffic=false;vehicle.fuel=0;
             foreach(var controller in vehicle.GetComponents<MonoBehaviour>())
                 if(controller is PassengerRoute || controller is IntercityService || controller is CityTaxiService || controller is MilitaryVehicleAI || controller is SeaCombat)controller.enabled=false;
-            GameDirector.Instance?.Toast(f.Sinking?"선체 침수 · F로 즉시 탈출하세요":"항공기 동력 상실 · 추락 중 · F로 탈출하세요",5);
+            if(LocalSimulation.PlayerAboard(vehicle))GameDirector.Instance?.Toast(f.Sinking?"선체 침수 · F로 즉시 탈출하세요":"항공기 동력 상실 · 추락 중 · F로 탈출하세요",5);
         }
         void Update()
         {

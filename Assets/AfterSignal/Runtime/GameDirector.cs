@@ -28,7 +28,7 @@ namespace AfterSignal
         public bool Dead { get; private set; }
         public bool Transition { get; private set; }
         public bool Dialogue => !string.IsNullOrEmpty(DialogueText);
-        public bool Blocked => Title||Paused||Dead||Transition||Dialogue||CityCinematic.Active;
+        public bool Blocked => RespawnNetwork.Arriving&&stage==StageId.UrbanCity||Title||Paused||Dead||Transition||Dialogue||CityCinematic.Active;
         public bool Cleared => LivingGuards==0;
         public int LivingGuards { get {int n=0;foreach(var e in Enemies)if(e&&e.Alive&&!e.boss)n++;return n;} }
         public int Kills { get; private set; }
@@ -40,6 +40,8 @@ namespace AfterSignal
         public string DialogueTitle { get; private set; }
         public string DialogueText { get; private set; }
         public float NoticeTimer { get; private set; }
+        Vector3 noticeOrigin;float noticeRadius;
+        public bool NoticeInRange=>noticeRadius<=0||Player&&(Player.transform.position-noticeOrigin).sqrMagnitude<=noticeRadius*noticeRadius;
         public float Elapsed { get; private set; }
         public int Capacitors { get; private set; }
         public float ExposeTimer { get; private set; }
@@ -107,6 +109,7 @@ namespace AfterSignal
             float dt=Mathf.Min(Time.deltaTime,.1f);Audio.SetPaused(false);inputSuppress-=dt;
             if(inputSuppress>0){control.attack=control.grapple=control.interact=false;}
             Elapsed+=dt;NoticeTimer=Mathf.Max(0,NoticeTimer-dt);coreCooldown-=dt;
+            Player.TickRecovery(dt);
             VenueRide.BeforeInput(ref control);
             if(UrbanSimulation.Instance&&UrbanSimulation.Instance.enabled)UrbanSimulation.Instance.BeforeInput(ref control,dt);
             CityLife.Instance?.BeforeInput(ref control,dt);
@@ -141,13 +144,14 @@ namespace AfterSignal
         public void SetPaused(bool value){if(value==Paused)return;if(value){prePauseScale=Time.timeScale;Time.timeScale=0;}else Time.timeScale=prePauseScale;Paused=value;inputSuppress=.16f;Player.Rope.Release();}
         public void ShowDialogue(string title,string text){DialogueTitle=title;DialogueText=text;Player.Rope.Release();}
         public void CloseDialogue(){CityLife.Instance?.Close();DialogueText=null;inputSuppress=.18f;if(Audio)Audio.Play("ui_cancel",Player.Shoulder,.12f,1);}
-        public void Toast(string text,float duration=3.2f){Notice=text;NoticeTimer=duration;}
-        public void ToastNear(string text,Vector3 location,float radius=180,float duration=4){if(Player&&(Player.transform.position-location).sqrMagnitude<=radius*radius)Toast(text,duration);}
+        public void Toast(string text,float duration=3.2f){Notice=text;NoticeTimer=duration;noticeRadius=0;}
+        public void ToastNear(string text,Vector3 location,float radius=180,float duration=4){if(Player&&(Player.transform.position-location).sqrMagnitude<=radius*radius){Toast(text,duration);noticeOrigin=location;noticeRadius=radius;}}
         public void DamageNumber(Vector3 position,int amount,bool critical){if(Hud)Hud.AddDamage(position,amount,critical);}
         public void EnemyDied(EnemyBrain enemy){Kills++;LifeState.Earn(enemy.boss?350:25);Player.Heal(enemy.boss?30:3);if(enemy.boss){Toast("컨덕터 정지 · 기억 코어를 회수하세요",6);ExposeTimer=WaveWarning=0;}else if(Cleared)Toast("구역 확보 · 다음 목표로 이동하세요");}
         public void GlassBroken(){BrokenGlass=true;Toast("유리 격벽 파괴 · 다음 객실로 진입하세요");}
         public void Die(){WantedSystem.Clear("");CrimeObservation.Forget();Dead=true;Player.Rope.Release();Time.timeScale=0;}
-        public void Retry(){Time.timeScale=1;SkipTitle=true;Dead=false;CloseDialogue();RespawnNetwork.Respawn(this);}
+        public void Retry()=>Retry(0);
+        public void Retry(int city){Time.timeScale=1;SkipTitle=true;Dead=false;CloseDialogue();RespawnNetwork.Respawn(this,city);}
         public void Restart(){Time.timeScale=1;SkipTitle=false;PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Stage",0);PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Memories",0);ResetExpansion();SceneManager.LoadScene(CampaignRules.Scene(StageId.Station));}
         static void ResetExpansion(){if(CityChronicle.Instance)CityChronicle.Instance.ResetProgress();else PlayerPrefs.DeleteKey(CityChronicle.SaveKey);foreach(string key in new[]{"Chapters","Accepted","Jobs"})PlayerPrefs.DeleteKey("AFTERSIGNAL.Unity.Expansion."+key);}
         public void Travel(StageId next){if(Transition)return;if(next==StageId.Haven){CivicWorld.Travel(this,StageId.Haven,new Vector3(20,.15f,-10));return;}StartCoroutine(TravelRoutine(next));}

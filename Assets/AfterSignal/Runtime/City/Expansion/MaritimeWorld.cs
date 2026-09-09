@@ -17,6 +17,7 @@ namespace AfterSignal
             // The original Lumen air detachment stays in place; the new airfield has its own fleet.
             for(int i=0;i<3;i++)ParkAircraft(AirBase+new Vector3(-28+i*44,.15f,46),CityVehicleType.Fighter);
             for(int i=0;i<2;i++)ParkAircraft(AirBase+new Vector3(12+i*52,.15f,-22),CityVehicleType.CombatHelicopter);
+            for(int i=0;i<2;i++)ParkAircraft(AirBase+new Vector3(-31+i*82,.2f,-45),CityVehicleType.Bomber);
             for(int i=0;i<2;i++){var ship=UrbanSimulation.Instance.Spawn(new Vector3(NavalBase.x+31+i*49,OceanLife.Surface,NavalBase.z-95),false,(int)CityVehicleType.Boat);ship.transform.rotation=Quaternion.Euler(0,90,0);ship.gameObject.AddComponent<MaritimeHull>().Faction=i==0?SeaFaction.Navy:SeaFaction.CoastGuard;ship.gameObject.AddComponent<RegionalParked>();ship.name="해군 기지 정박 / "+(i==0?"방위 함정":"구조 지원함");}
             for(int i=0;i<4;i++)Spawn(new Vector3(1980+i*65,OceanLife.Surface,-780-i*40),i%2==0?SeaFaction.Navy:SeaFaction.CoastGuard);
             for(int i=0;i<3;i++)Spawn(new Vector3(1860+i*60,OceanLife.Surface,-1070-i*45),SeaFaction.Pirates);
@@ -24,7 +25,7 @@ namespace AfterSignal
         }
         void Base(Vector3 at,string title,bool dock,bool coast=false)
         {
-            if(!coast){DefenseBaseArchitecture.Build(transform,at,dock);DutyCrew(at,dock);return;}
+            if(!coast){DefenseBaseArchitecture.Build(transform,at,dock);DutyCrew(at,dock);MilitaryArmory.Build(transform,at+new Vector3(dock?-39:-72,0,-36));return;}
             var root=new GameObject(title).transform;root.SetParent(transform,false);root.position=at;var b=new CityGeometry(root);float width=coast?28:72,depth=coast?30:56;
             b.Box("Service platform",new(0,-.22f,0),new(width,.4f,depth),"Metal",true);
             b.Box("Operations block",new(-width*.24f,3,6),new(width*.35f,6,depth*.55f),"DarkMetal",true);
@@ -49,7 +50,7 @@ namespace AfterSignal
             for(int i=0;i<16;i++)
             {
                 var p=i<6?at+new Vector3(x-12+i%5*6,.1f,i<5?22:5):at+new Vector3(-22+(i-6)%5*22,.1f,(i-6)/5*18-22);
-                if(!CrowdFlow.Place(p,i,out p,4))continue;var guard=PoliceOfficer.Create(WantedSystem.Instance,p,4,i);guard.Ambient=true;guard.Body.military=true;guard.Body.police=false;
+                if(!CrowdFlow.Place(p,i,out p,4))continue;var guard=PoliceOfficer.Create(WantedSystem.Instance,p,4,i);guard.Ambient=true;guard.Body.military=true;guard.Body.police=false;GarrisonSupport.Register(guard.Body,at+new Vector3(0,0,navy?-44:-70));
                 PeopleArt.Attach(guard.gameObject,art);guard.gameObject.AddComponent<RegionalUniform>().art=art;
                 var npc=guard.GetComponent<CityNpc>();string role=(navy?"해군 ":"공군 ")+(i<5?"관제 대원":i%3==0?"정비 대원":i%3==1?(navy?"함정 승조원":"조종사"):"기지 경계병");npc.Configure(96000+(navy?0:100)+i,role,null,"군사 통제 구역에서 근무한다. 정비, 관제, 경계 임무를 담당하며 민간인은 위병소로 안내한다.");guard.name=role;
             }
@@ -76,7 +77,7 @@ namespace AfterSignal
             foreach(var t in model.GetComponentsInChildren<Transform>())if(t.name=="RotatingRadar"){radar=t;radarRest=t.localRotation;}
             car.GetComponent<VehicleCabin>()?.SetCrew(Faction==SeaFaction.Navy?"NavyCrew":Faction==SeaFaction.CoastGuard?"CoastGuard":"SeaRaider",Faction==SeaFaction.Navy?8:4);
         }
-        void LateUpdate(){if(radar)radar.localRotation=radarRest*Quaternion.Euler(0,0,Time.time*36);}
+        void LateUpdate(){if(radar&&LocalSimulation.Within(transform.position,650))radar.localRotation=radarRest*Quaternion.Euler(0,0,Time.time*36);}
     }
     public sealed class SeaCombat:MonoBehaviour
     {
@@ -94,12 +95,19 @@ namespace AfterSignal
             var g=GameDirector.Instance;if(!g||g.Blocked||!Car||!Body)return;float dt=Mathf.Min(Time.deltaTime,.05f);age+=dt;
             if(Body.health<healthMirror&&Car.health>=healthMirror)Car.Damage(healthMirror-Body.health,AimCenter,Body.LastPlayerHit>Time.time-1?null:TrafficDamageSource.Environment,false);
             Body.health=Car.health;healthMirror=Car.health;if(Car.Wrecked){CityIncidentBoard.Neutralized(Body);return;}var sim=UrbanSimulation.Instance;if(sim.Current==Car&&sim.SeatIndex==0)return;
-            if(Time.time>scan){scan=Time.time+1;Target=null;float d=500*500;foreach(var other in MaritimeWorld.Instance.Fleet)if(other&&other!=this&&!other.Car.Wrecked&&((Faction==SeaFaction.Pirates)!=(other.Faction==SeaFaction.Pirates))){float n=(other.AimCenter-AimCenter).sqrMagnitude;if(n<d){d=n;Target=other;}}}
+            if(!LocalSimulation.Combat(transform.position))
+            {
+                Target=null;civilianTarget=null;Car.speed=0;scan=Time.time+.5f;CityEventGate.Cancel(Body);return;
+            }
+            if(Time.time>scan){scan=Time.time+1;Target=null;float d=350*350;foreach(var other in MaritimeWorld.Instance.Fleet)if(other&&other!=this&&!other.Car.Wrecked&&LocalSimulation.Combat(other.transform.position)&&((Faction==SeaFaction.Pirates)!=(other.Faction==SeaFaction.Pirates))){float n=(other.AimCenter-AimCenter).sqrMagnitude;if(n<d){d=n;Target=other;}}}
             if(Faction==SeaFaction.Pirates&&!Target&&Time.time>scan-.1f){civilianTarget=null;float closest=400*400;foreach(var c in sim.Cars)if(c&&c!=Car&&!c.Wrecked&&c.IsWatercraft&&!c.GetComponent<SeaCombat>()){float d=(c.transform.position-transform.position).sqrMagnitude;if(d<closest){closest=d;civilianTarget=c;}}}
+            if(civilianTarget&&!LocalSimulation.Combat(civilianTarget.transform.position))civilianTarget=null;
+            var pirate=Faction==SeaFaction.Pirates?this:Target&&Target.Faction==SeaFaction.Pirates?Target:null;
+            if((Target||civilianTarget)&&(!pirate||!CityEventGate.JoinGang(pirate.Body))){Target=null;civilianTarget=null;}
             Vector3 destination=Target?Target.transform.position:civilianTarget?civilianTarget.transform.position:home+new Vector3(Mathf.Sin(age*.015f+GetInstanceID())*230,0,Mathf.Cos(age*.015f+GetInstanceID())*180);var delta=destination-transform.position;delta.y=0;
             float desired=Target?delta.magnitude>130?Faction==SeaFaction.Pirates?19:14:7:12;var heading=Target&&delta.magnitude<160?Quaternion.Euler(0,75,0)*delta.normalized:delta.normalized;
             foreach(var other in MaritimeWorld.Instance.Fleet)if(other&&other!=this){var away=transform.position-other.transform.position;away.y=0;float separation=Car.HalfLength+other.Car.HalfLength+12;if(away.magnitude<separation)heading+=away.normalized*(separation-away.magnitude)/separation*2;}
-            heading.Normalize();Car.speed=Mathf.MoveTowards(Car.speed,desired,dt*2);var next=transform.position+heading*Car.speed*dt;next.y=OceanLife.Surface;
+            heading=SeaTraffic.Steer(Car,heading);Car.speed=Mathf.MoveTowards(Car.speed,desired,dt*2);var next=transform.position+heading*Car.speed*dt;next.y=OceanLife.Surface;
             if(OceanLife.Contains(next)){transform.position=next;if(heading.sqrMagnitude>.001f)transform.rotation=Quaternion.RotateTowards(transform.rotation,Quaternion.Euler(0,Mathf.Atan2(-heading.z,heading.x)*Mathf.Rad2Deg,0),dt*(Faction==SeaFaction.Navy?12:30));}else home=transform.position-heading*70;
             if((Target||civilianTarget)&&Time.time>fire&&delta.magnitude<350)
             {
@@ -108,5 +116,6 @@ namespace AfterSignal
             }
             if(age>300&&(transform.position-g.Player.transform.position).sqrMagnitude>1400*1400)Destroy(gameObject);
         }
+        void OnDestroy(){if(Body)CityEventGate.Cancel(Body);}
     }
 }

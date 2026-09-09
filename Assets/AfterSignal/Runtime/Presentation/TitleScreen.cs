@@ -47,7 +47,6 @@ namespace AfterSignal
             age+=Time.unscaledDeltaTime;
             entrance.alpha=Mathf.SmoothStep(0,1,age/.65f);
             Cursor.lockState=CursorLockMode.None;Cursor.visible=true;
-            FitArtwork();
             if(SettingsOpen)RefreshSettings();
             bool busy=game.Transition;
             loading.SetActive(busy);menu.SetActive(!busy);
@@ -70,18 +69,21 @@ namespace AfterSignal
             var scaler=screen.GetComponent<CanvasScaler>();scaler.uiScaleMode=CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution=new Vector2(1600,900);scaler.screenMatchMode=CanvasScaler.ScreenMatchMode.Expand;
             entrance=screen.GetComponent<CanvasGroup>();entrance.alpha=0;
-            var root=screen.transform;
+            var canvasRoot=screen.transform;
+            var surround=Box(canvasRoot,0,0,1600,900,new Color(.006f,.018f,.028f));Stretch(surround.rectTransform);
+            // Keep the embedded logo, cast and live menu together at every display aspect ratio.
+            var frame=new GameObject("Title artwork frame",typeof(RectTransform));frame.transform.SetParent(canvasRoot,false);
+            var frameRect=frame.GetComponent<RectTransform>();frameRect.anchorMin=frameRect.anchorMax=frameRect.pivot=new Vector2(.5f,.5f);frameRect.sizeDelta=new Vector2(1600,900);
+            var root=frame.transform;
             var art=new GameObject("Afterlight / title key art",typeof(RectTransform),typeof(RawImage));art.transform.SetParent(root,false);
             artwork=art.GetComponent<RawImage>();artwork.texture=Resources.Load<Texture2D>("Art/Title/AfterlightTitle");
             artwork.raycastTarget=false;artRect=art.GetComponent<RectTransform>();
             Stretch(artRect);
-            var shade=new GameObject("Readability gradient",typeof(RectTransform),typeof(TitleShade));shade.transform.SetParent(root,false);Stretch(shade.GetComponent<RectTransform>());
+            var shade=new GameObject("Menu readability gradient",typeof(RectTransform),typeof(TitleShade));shade.transform.SetParent(root,false);Stretch(shade.GetComponent<RectTransform>());
+            shade.GetComponent<RectTransform>().anchorMax=new Vector2(1,.57f);
             var body=new GameObject("Title composition",typeof(RectTransform));body.transform.SetParent(root,false);
             var bodyRect=body.GetComponent<RectTransform>();bodyRect.anchorMin=new Vector2(0,.5f);bodyRect.anchorMax=new Vector2(0,.5f);bodyRect.pivot=new Vector2(0,.5f);bodyRect.sizeDelta=new Vector2(670,900);
-            Label(body.transform,"A F T E R L I G H T   /   N I G H T   L I N E",84,84,550,26,13,Mint);
-            Box(body.transform,84,126,42,3,Mint);
-            Label(body.transform,"AFTER",76,164,570,116,91,Paper,FontStyle.Bold).font=Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            Label(body.transform,"SIGNAL",76,268,570,124,101,Paper,FontStyle.Bold).font=Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            // English branding is part of the commissioned artwork; do not draw a second logo.
             Label(body.transform,"애 프 터 시 그 널",86,405,460,30,21,Paper);
             Label(body.transform,"끊어진 신호 너머, 다시 이어지는 도시.",86,448,470,26,16,Muted);
             menu=new GameObject("Main menu",typeof(RectTransform));menu.transform.SetParent(body.transform,false);Place(menu.GetComponent<RectTransform>(),84,520,460,268);
@@ -103,15 +105,6 @@ namespace AfterSignal
             var fill=Box(track.transform,0,0,500,3,Mint);progressFill=fill.rectTransform;Stretch(progressFill);
             screen.SetActive(false);
         }
-        void FitArtwork()
-        {
-            if (!artwork.texture) return;
-            float screenRatio=(float)Screen.width/Screen.height, artRatio=(float)artwork.texture.width/artwork.texture.height;
-            float w=1,h=1;
-            if (screenRatio>artRatio) h=artRatio/screenRatio; else w=screenRatio/artRatio;
-            float drift=PresentationSettings.Motion>0 ? Mathf.Sin(age*.14f)*.002f : 0;
-            artwork.uvRect=new Rect(Mathf.Clamp((1-w)*.62f+drift,0,1-w),(1-h)*.5f,w,h);
-        }
         public void Refresh()
         {
             if (!screen) return;
@@ -121,7 +114,7 @@ namespace AfterSignal
             int stage=PlayerPrefs.GetInt("AFTERSIGNAL.Unity.Stage",0);
             string place=CivicWorld.Exploration((StageId)stage)?CivicWorld.Title((StageId)stage):CampaignCatalog.Title((StageId)stage);
             float hours=PlayerPrefs.GetFloat("AFTERSIGNAL.Unity.Life.Hours",8);
-            saveInfo.text=saved?$"DAY {Mathf.FloorToInt(hours/24)+1:00}   ·   {place}\n마지막으로 저장된 구역 입구에서 이어집니다.":"새벽아파트에서 서하의 이야기를 시작하세요.";
+            saveInfo.text=saved?$"DAY {Mathf.FloorToInt(hours/24)+1:00}   ·   {place}\n마지막으로 저장된 구역 입구에서 이어집니다.":"서하의 집에서 이야기를 시작하세요.";
         }
         void SelectDefault(){if(EventSystem.current)EventSystem.current.SetSelectedGameObject((GameDirector.HasSavedGame?ContinueButton:NewGameButton).gameObject);}
         void ClosePanels(){PlayerPrefs.Save();settings.SetActive(false);confirmation.SetActive(false);menu.GetComponent<CanvasGroup>().interactable=true;menu.GetComponent<CanvasGroup>().blocksRaycasts=true;}
@@ -239,8 +232,8 @@ namespace AfterSignal
         protected override void OnPopulateMesh(VertexHelper vh)
         {
             vh.Clear();var r=rectTransform.rect;
-            float[] stops={0,.34f,.57f,1};float[] alpha={.5f,.35f,.02f,0};
-            for(int i=0;i<4;i++){var c=new Color(.008f,.025f,.045f,alpha[i]);vh.AddVert(new Vector3(r.xMin+r.width*stops[i],r.yMin),c,Vector2.zero);vh.AddVert(new Vector3(r.xMin+r.width*stops[i],r.yMax),c,Vector2.zero);}
+            float[] stops={0,.34f,.57f,1};float[] alpha={.38f,.24f,0,0};
+            for(int i=0;i<4;i++){var c=new Color(.008f,.025f,.045f,alpha[i]);vh.AddVert(new Vector3(r.xMin+r.width*stops[i],r.yMin),c,Vector2.zero);c.a=0;vh.AddVert(new Vector3(r.xMin+r.width*stops[i],r.yMax),c,Vector2.zero);}
             for(int i=0;i<3;i++){int k=i*2;vh.AddTriangle(k,k+1,k+2);vh.AddTriangle(k+2,k+1,k+3);}
         }
         protected override void Awake(){base.Awake();raycastTarget=false;}

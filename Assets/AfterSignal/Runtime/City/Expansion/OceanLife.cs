@@ -14,7 +14,7 @@ namespace AfterSignal
             float[] xs={0,250,480,780,1050,1250,1450,2200},zs={-510,-545,-610,-655,-590,-580,-565,-565};
             for(int i=1;i<xs.Length;i++)if(x<=xs[i])return Mathf.Lerp(zs[i-1],zs[i],Mathf.InverseLerp(xs[i-1],xs[i],x));return -565;
         }
-        public static bool Contains(Vector3 p)=>p.x>2&&p.x<FourCityCatalog.East-2&&p.z<Shore(p.x)-12&&p.z>FourCityCatalog.South+2&&!NeonHarbor.OnIsland(p)&&!FourCityCatalog.OnNewLand(p)&&!FourCityCatalog.Dry(p);
+        public static bool Contains(Vector3 p)=>p.x>2&&p.x<FourCityCatalog.East-2&&p.z<Shore(p.x)-3.5f&&p.z>FourCityCatalog.South+2&&!NeonHarbor.OnIsland(p)&&!FourCityCatalog.OnNewLand(p)&&!FourCityCatalog.Dry(p);
         public static float Bed(float x,float z)
         {
             if(x>2400&&z< -2900)return -108+Mathf.Sin(x*.009f+z*.008f)*1.5f;
@@ -51,14 +51,16 @@ namespace AfterSignal
         {
             if(player.Director.stage!=StageId.UrbanCity){ExitWater(player);return false;}
             var at=player.transform.position;
-            if(!Contains(at)||at.y>Surface+.5f){ExitWater(player);return false;}
+            if(!Contains(at)||at.y>Surface+.5f){ShoreAccess.Recover(player);ExitWater(player);return false;}
             EnterWater(player);player.Rope.Release();
             var direction=player.Director.CameraRig.MoveDirection(input.move);
             float vertical=input.vertical;
             if(Mathf.Abs(vertical)<.1f)vertical=at.y<Surface-1?0:.15f;
             float speed=input.boost?7:4;
             player.Velocity=Vector3.MoveTowards(player.Velocity,direction*speed+Vector3.up*vertical*3.4f,dt*14);
-            player.Controller.Move(player.Velocity*dt);
+            var motion=ShoreAccess.Constrain(player,player.Velocity*dt);
+            player.Controller.Move(motion);
+            if(!Contains(player.transform.position)){ExitWater(player);return false;}
             at=player.transform.position;
             float limit=Mathf.Clamp(at.y,Bed(at.x,at.z)+.5f,Surface-.04f);player.Controller.Move(Vector3.up*(limit-at.y));
             WaterSurvival(player,input,dt);

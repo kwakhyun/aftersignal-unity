@@ -159,12 +159,12 @@ namespace AfterSignal
         {
             target=Vector3.zero;label="";var step=CurrentStep;if(step==null)return false;
             label=(Tracked.main?"메인":"서브")+" · "+Tracked.title+" · "+step.label+" [J]";
-            if(game.stage==StageId.UrbanCity){target=step.world?step.position+Vector3.up:UrbanCatalog.Door(step.site)+Vector3.up;if(step.world&&NeonHarbor.Region(target)!=NeonHarbor.Region(game.Player.transform.position))label+=" · 여객선/항공기로 해협 횡단";return true;}
-            if(AtSite(step)){target=LocalTarget()+Vector3.up;return true;}
+            if(game.stage==StageId.UrbanCity){target=step.world?step.position+Vector3.up:step.site==0?CompactHome.Exit+Vector3.up:UrbanCatalog.Door(step.site)+Vector3.up;if(step.world&&NeonHarbor.Region(target)!=NeonHarbor.Region(game.Player.transform.position))label+=" · 여객선/항공기로 해협 횡단";return true;}
+            if(AtSite(step)){target=marker?marker.transform.position+Vector3.up:LocalTarget()+Vector3.up;return true;}
             if(CivicWorld.Interior(game.stage))
             {
-                var exit=InteractionPoint.All.FirstOrDefault(p=>p&&(p.kind==InteractionKind.UrbanExit||p.kind==InteractionKind.FacilityTravel||p.kind==InteractionKind.ReturnTown));
-                if(exit){target=exit.transform.position;label="의뢰 경로 · 시내로 이동 → "+UrbanCatalog.Name(step.site);return true;}
+                var exit=InteractionPoint.All.Where(p=>p&&p.gameObject.activeInHierarchy&&(p.kind==InteractionKind.UrbanExit||p.kind==InteractionKind.ReturnTown||p.kind==InteractionKind.FacilityTravel&&(p.destination==StageId.UrbanCity||p.destination==StageId.Haven))).OrderBy(p=>(p.transform.position-game.Player.transform.position).sqrMagnitude).FirstOrDefault();
+                if(exit){target=exit.transform.position;label="의뢰 경로 · 밖으로 이동 → "+(step.world?step.label:step.site==0?"서하의 집":UrbanCatalog.Name(step.site));return true;}
             }
             return false;
         }

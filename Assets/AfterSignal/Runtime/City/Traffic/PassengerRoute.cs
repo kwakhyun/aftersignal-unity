@@ -30,7 +30,7 @@ namespace AfterSignal
             car.speed=Mathf.MoveTowards(car.speed,Mathf.Min(target,Mathf.Sqrt(distance*10)),dt*8);
             var heading=Vector3.ProjectOnPlane(delta,Vector3.up);
             if(heading.sqrMagnitude>1)transform.rotation=Quaternion.RotateTowards(transform.rotation,Quaternion.Euler(0,Mathf.Atan2(-heading.z,heading.x)*Mathf.Rad2Deg,0),dt*(car.GetComponent<AuthoredCraft>()?3:38));
-            transform.position=Vector3.MoveTowards(transform.position,goal,Mathf.Max(2,car.speed)*dt);
+            transform.position=SeaTraffic.Move(car,Vector3.MoveTowards(transform.position,goal,Mathf.Max(2,car.speed)*dt));
             if(distance<1.2f)
             {
                 leg++;

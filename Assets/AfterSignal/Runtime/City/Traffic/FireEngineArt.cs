@@ -8,7 +8,7 @@ namespace AfterSignal
         IEnumerator Start()
         {
             yield return null;yield return null;
-            foreach(var r in GetComponentsInChildren<MeshRenderer>())r.enabled=false;
+            foreach(var r in GetComponentsInChildren<MeshRenderer>())if(!r.name.StartsWith("Response "))r.enabled=false;
             root=new GameObject("119 dedicated pump engine").transform;root.SetParent(transform,false);
             if(!paint){paint=new Material(Resources.Load<Material>("Materials/Metal"));paint.name="Fire engine red enamel";paint.color=new Color(.65f,.025f,.02f);}
             Box("Ladder chassis",new(0,.72f,0),new(10,.4f,3),"DarkMetal");
@@ -38,6 +38,8 @@ namespace AfterSignal
             Box("Water cannon barrel",new(1.5f,3.65f,0),new(1.3f,.19f,.19f),"DarkMetal");
             Box("Emergency lightbar",new(3.2f,3.08f,0),new(.38f,.22f,2.3f),"RedFX");
             GetComponent<VehicleCabin>()?.SetCrew("Firefighter",2);
+            var chassis=GetComponent<BoxCollider>();if(chassis){chassis.center=new Vector3(0,1.55f,0);chassis.size=new Vector3(10,2.7f,3.1f);}
+            if(!GetComponent<ResponseLightbar>())gameObject.AddComponent<ResponseLightbar>();
         }
         Transform Box(string n,Vector3 p,Vector3 s,string m)=>WorldGeometry.Part(root,n,p,s,m).transform;
         void Red(string n,Vector3 p,Vector3 s){var t=Box(n,p,s,"Metal");t.GetComponent<Renderer>().sharedMaterial=paint;}

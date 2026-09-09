@@ -6,7 +6,6 @@ namespace AfterSignal
     {
         RectTransform interactionCard,travelStatus;
         Text traversalReadout,contextKeys,basicGuide;
-        readonly Image[] quickSlots=new Image[7];
         bool experienceBuilt;MovingLift statusLift;float liftSearch;
         void BuildClientExperience()
         {
@@ -19,10 +18,6 @@ namespace AfterSignal
             Bottom(travelStatus,38,112,300,52);
             traversalReadout=Label(travelStatus,"",12,6,276,19,13,mint,FontStyle.Bold);
             contextKeys=Label(travelStatus,"",12,28,276,18,11,white);
-            var slots=Panel(root,"Weapon shortcuts",0,0,386,70,Color.clear).rectTransform;
-            slots.anchorMin=slots.anchorMax=new Vector2(1,0);slots.pivot=new Vector2(1,0);slots.anchoredPosition=new Vector2(-32,169);slots.sizeDelta=new Vector2(386,70);
-            string[] names={"1  검","2  대검","3  권총","4  소총","5  수류탄","6  바주카","7  산탄총"};
-            for(int i=0;i<7;i++){quickSlots[i]=Panel(slots,"Weapon "+i,(i%4)*98,(i/4)*36,94,32,ink);var t=Label(quickSlots[i].transform,names[i],4,5,86,23,13,white);t.alignment=TextAnchor.MiddleCenter;}
             notice.fontSize=17;notice.color=white;CenterTop(notice.rectTransform,154,780,48);
         }
         void UpdateClientExperience()
@@ -35,13 +30,12 @@ namespace AfterSignal
             interactionCard.gameObject.SetActive(playing&&!string.IsNullOrEmpty(prompt.text));
             CenterBottom(interactionCard,114,driving?980:680,driving?62:50);Rect(prompt.rectTransform,18,9,driving?944:644,driving?44:32);
             travelStatus.gameObject.SetActive(playing&&!driving&&!bus);
-            for(int i=0;i<7;i++){quickSlots[i].transform.parent.gameObject.SetActive(playing&&!driving&&!bus);quickSlots[i].color=i==game.Player.Equipment.Slot?new Color(.12f,.42f,.42f,.95f):ArmoryInventory.Equipped(i)<0?new Color(.03f,.035f,.04f,.5f):new Color(.02f,.055f,.08f,.85f);}
             var p=game.Player;
             if(OceanLife.Swimming){traversalReadout.text="수영 · 수심 "+Mathf.Max(0,OceanLife.Surface-p.transform.position.y).ToString("0.0")+" m";contextKeys.text="WASD 수영 · SPACE 수면으로 / CTRL 잠수 · SHIFT 빠르게";}
             else if(PrisonSystem.Instance&&PrisonSystem.Instance.Jailed){traversalReadout.text="수감 중 · 남은 시간 "+Mathf.CeilToInt(PrisonSystem.Instance.Remaining)+"초";contextKeys.text="E 교정 안내 · 보석금 / 형기 종료 후 출소";}
             else if(WantedSystem.Level>0){traversalReadout.text="경찰 수배 · "+WantedSystem.Level+"단계";contextKeys.text="경찰 근처에서 H 길게 · 투항 / 체포";}
             else if(p.WallClimbing){traversalReadout.text="외벽 등반  ·  에너지 "+Mathf.CeilToInt(p.Energy);contextKeys.text="W 위로  ·  A/D 옆으로  ·  SPACE 벽 차기  ·  S 놓기";}
-            else if(p.Rope.Attached){traversalReadout.text="로프 이동";contextKeys.text="W 감기 / S 풀기  ·  SPACE 도약";}
+            else if(p.Rope.Attached){traversalReadout.text="로프 자동 감기";contextKeys.text="W 빠르게 / S 풀기  ·  SPACE 도약  ·  우클릭 해제";}
             else if(!p.Grounded){traversalReadout.text=p.JumpsUsed<2?"공중  ·  추가 점프 가능":"공중  ·  착지 대기";contextKeys.text="SPACE 추가 점프  ·  벽을 향해 W 등반";}
             else{traversalReadout.text=p.Running?"달리는 중":"탐색";contextKeys.text="WASD 달리기  ·  SPACE 두 번 더블 점프";}
             if(Time.unscaledTime>liftSearch){statusLift=Object.FindAnyObjectByType<MovingLift>();liftSearch=Time.unscaledTime+1;}

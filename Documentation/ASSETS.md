@@ -1,5 +1,7 @@
 # Assets and packages
 
+> Public repository policy (2026-09-09): reusable 3D/image assets and authored scenes/prefabs are now retained locally and excluded from Git. The provenance below describes the full local game, not files promised in a fresh public checkout. See [private asset restoration and history limitations](PRIVATE-ASSETS.md). Only flattened gameplay captures in `Screenshots/` are published as images.
+
 - Four cities: eight original image-generated directional NPC sheets (128 frames), parametric venue architecture, and the original 60-second 3D film `SIGNAL / TIDE`. Creation prompts, reference sources and provenance are documented in `FourCities/REFERENCES.md` and `FourCities/ART-PROMPTS.json`.
 
 - Music: six user-supplied Suno-generated instrumental WAV masters, preserved unchanged in `Assets/AfterSignal/Resources/Audio/Music`. Track mapping, provenance details, playback gain measurements and loop handling are documented in `Audio/MUSIC.md` and `Audio/music-sources.json`. These are supplied recordings, separate from the project's synthesized sound effects.

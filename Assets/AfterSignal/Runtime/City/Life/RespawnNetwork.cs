@@ -8,15 +8,19 @@ namespace AfterSignal
         public static readonly Vector3[] Points=new Vector3[4];
         public static readonly string[] Names={"애프터라이트 회복센터","노바 응급의료센터","에레보스 전진기지 의무실","네레이드 생명지원센터"};
         public static bool SuppressSave;
-        static int transient=-1;
+        static int transient=-1,pendingCity=-1;
+        public static bool Arriving=>pendingCity>=0;
         public static int Selected=>Mathf.Clamp(SuppressSave?transient:PlayerPrefs.GetInt(Key,-1),-1,3);
         public static string Destination=>"서하의 집";
         public static void ResetHome(){if(SuppressSave)transient=-1;else PlayerPrefs.DeleteKey(Key);}
-        public static void Register(int city){city=Mathf.Clamp(city,0,3);ResetHome();GameDirector.Instance?.Player.Heal(100);GameDirector.Instance?.Toast(Names[city]+" · 체력 회복 / 사망 시 서하의 집으로 복귀",5);}
-        public static void Respawn(GameDirector game)
+        public static void Register(int city){city=Mathf.Clamp(city,0,3);ResetHome();GameDirector.Instance?.Player.Heal(100);GameDirector.Instance?.Toast(Names[city]+" · 체력 회복 / 사망 화면에서 리스폰 도시 선택",5);}
+        public static void Respawn(GameDirector game)=>Respawn(game,0);
+        public static void Respawn(GameDirector game,int city)
         {
             ResetHome();ResidentialWorld.VisitHome=-1;CivicWorld.ClearArrival();
-            CivicWorld.Travel(game,StageId.Residence,CompactHome.Spawn);
+            city=Mathf.Clamp(city,0,3);pendingCity=city==0?-1:city;
+            if(city==0)CivicWorld.Travel(game,StageId.Residence,CompactHome.Spawn);
+            else{Resolve();CivicWorld.Travel(game,StageId.UrbanCity,Points[city]);}
         }
         public static void Resolve()
         {
@@ -35,6 +39,13 @@ namespace AfterSignal
         IEnumerator Start()
         {
             var game=GameDirector.Instance;if(!game||game.stage!=StageId.UrbanCity)yield break;
+            if(Arriving)
+            {
+                while(!FourCityWorld.Instance||!FourCityWorld.Instance.Built)yield return null;
+                Resolve();Physics.SyncTransforms();var at=Points[pendingCity];
+                if(CrowdFlow.Place(at,pendingCity,out var safe,24))at=safe;
+                game.Player.Respawn(at);game.checkpoint=at;game.CameraRig.Snap();pendingCity=-1;
+            }
             yield return new WaitForSeconds(3);Resolve();
             for(int i=0;i<4;i++)
             {

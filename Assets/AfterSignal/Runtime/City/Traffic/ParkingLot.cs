@@ -19,6 +19,7 @@ namespace AfterSignal
                 {
                     if(cars[i]||used[i]||i%7==6)continue;
                     var at=transform.TransformPoint(new Vector3((i%6-2.5f)*spacing,0,(i/6)*14));
+                    if(FacilityParking.Reserved(at)!=ServiceParkingKind.None)continue;
                     if(Physics.CheckBox(at+Vector3.up,.8f*Vector3.one,Quaternion.identity,1,QueryTriggerInteraction.Ignore))continue;
                     var car=sim.Spawn(at,false,i%8==0?4:i%6==0?5:i%5==0?1:0);car.transform.rotation=transform.rotation*Quaternion.Euler(0,roadside?0:90,0);
                     var assignment=car.gameObject.AddComponent<ParkingAssignment>();assignment.lot=this;assignment.slot=i;cars[i]=car;used[i]=true;

@@ -24,7 +24,7 @@ namespace AfterSignal
 
         public static void Settle(CityVehicle car, float dt, bool recover = false)
         {
-            if (car.IsAircraft || car.IsWatercraft) return;
+            if (car.IsAircraft || car.IsWatercraft || car.Tumbling) return;
             var p = car.transform.position;
             if (Sample(car, p, .65f, recover ? 2000 : 5, out var hit))
             {

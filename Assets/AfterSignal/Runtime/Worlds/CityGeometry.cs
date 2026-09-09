@@ -9,6 +9,7 @@ namespace AfterSignal
     {
         sealed class Batch {public readonly List<Vector3> v=new(),n=new();public readonly List<Vector2> uv=new();public readonly List<int> t=new();}
         readonly Dictionary<string,Batch> batches=new();
+        readonly List<Vector3> solidVertices=new();readonly List<int> solidTriangles=new();
         public readonly Transform root;
         static readonly Dictionary<string,Material> materials=new();
         static Material depthText;
@@ -83,12 +84,31 @@ namespace AfterSignal
         }
         public TextMesh Sign(string text,Vector3 p,float size=.3f,float yaw=0)
         {var go=new GameObject(text);go.transform.SetParent(root,false);go.transform.localPosition=p;go.transform.localRotation=Quaternion.Euler(0,yaw,0);var t=go.AddComponent<TextMesh>();t.font=Resources.Load<Font>("Fonts/NotoSansKR");t.text=text;t.fontSize=60;t.characterSize=size;t.anchor=TextAnchor.MiddleCenter;t.alignment=TextAlignment.Center;t.color=new Color(.65f,.96f,1);var r=t.GetComponent<MeshRenderer>();if(!depthText){depthText=new Material(Resources.Load<Shader>("Shaders/CityDepthText"));depthText.mainTexture=t.font.material.mainTexture;Font.textureRebuilt+=f=>{if(depthText)depthText.mainTexture=f.material.mainTexture;};}r.sharedMaterial=depthText;r.shadowCastingMode=ShadowCastingMode.Off;return t;}
+        // One low-poly collision mesh follows the real volumes, including setbacks and twin-tower gaps.
+        public void SolidPrism(Vector3 center,Vector3[] outline,float height)
+        {
+            int start=solidVertices.Count,n=outline.Length;
+            for(int i=0;i<n;i++){solidVertices.Add(center+outline[i]-Vector3.up*height*.5f);solidVertices.Add(center+outline[i]+Vector3.up*height*.5f);}
+            for(int i=0;i<n;i++)
+            {
+                int a=start+i*2,b=start+((i+1)%n)*2;
+                solidTriangles.AddRange(new[]{a,a+1,b+1,a,b+1,b});
+                if(i>0&&i<n-1){solidTriangles.AddRange(new[]{start+1,b+1,a+1,start,a,b});}
+            }
+        }
         public void Finish()
         {
             var owner=root.GetComponent<CityMeshOwner>();if(!owner)owner=root.gameObject.AddComponent<CityMeshOwner>();
             foreach(var pair in batches){var b=pair.Value;var mesh=new Mesh{name=root.name+" / "+pair.Key,indexFormat=IndexFormat.UInt32};mesh.SetVertices(b.v);mesh.SetNormals(b.n);mesh.SetUVs(0,b.uv);mesh.SetTriangles(b.t,0);mesh.RecalculateBounds();owner.meshes.Add(mesh);
                 var go=new GameObject("Architecture / "+pair.Key,typeof(MeshFilter),typeof(MeshRenderer));go.transform.SetParent(root,false);go.GetComponent<MeshFilter>().sharedMesh=mesh;var renderer=go.GetComponent<MeshRenderer>();renderer.sharedMaterial=Material(pair.Key);renderer.shadowCastingMode=pair.Key.Contains("Glass")?ShadowCastingMode.Off:ShadowCastingMode.On;}
             batches.Clear();
+            if(solidVertices.Count>0)
+            {
+                var mesh=new Mesh{name=root.name+" / exterior collision",indexFormat=IndexFormat.UInt32};
+                mesh.SetVertices(solidVertices);mesh.SetTriangles(solidTriangles,0);mesh.RecalculateBounds();owner.meshes.Add(mesh);
+                var shell=new GameObject("Facade collision shell",typeof(MeshCollider));shell.transform.SetParent(root,false);shell.GetComponent<MeshCollider>().sharedMesh=mesh;
+                solidVertices.Clear();solidTriangles.Clear();
+            }
         }
     }
     public sealed class CityMeshOwner:MonoBehaviour

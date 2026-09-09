@@ -13,6 +13,17 @@ namespace AfterSignal
         public string Objective {get;private set;}
         CityChronicle chronicle;StoryStep step;string quest;int expected;GameDirector game;
         bool Intro=>quest=="main01";
+        public static bool Guide(Vector3 at,out Vector3 target,out string label)
+        {
+            target=at;label="";if(!current||current.finishing||current.Completed)return false;
+            var c=current;target=c.step.position;label="메인 전투 · "+(c.Objective??c.step.label);
+            if(c.Remaining==0 && c.Wave>=Mathf.Max(1,c.step.waves) && (c.Mode=="rescue"||c.Mode=="escape"))
+            { target=c.survivor&&c.survivor.GetComponent<WorldActor>().Downed?c.survivor.transform.position:c.extraction;return true; }
+            float best=float.MaxValue;
+            foreach(var actor in c.enemies){if(!actor||!actor.Alive||actor.Downed)continue;float d=(actor.Center-at).sqrMagnitude;if(d<best){best=d;target=actor.Center;}}
+            if(best==float.MaxValue)foreach(var device in c.devices)if(device&&device.Alive){target=device.Center;break;}
+            return true;
+        }
         public static bool TutorialActive=>current&&current.Intro&&!current.finishing&&!current.Completed;
         public static bool TutorialTarget(WorldActor actor)=>TutorialActive&&actor&&actor.gameObject.activeInHierarchy&&actor.Alive&&!actor.Downed&&!actor.environmental&&!actor.helicopter&&!actor.police&&!actor.military&&current.enemies.Contains(actor);
         public static void TutorialTargets(List<WorldActor> targets){targets.Clear();if(TutorialActive)foreach(var actor in current.enemies)if(TutorialTarget(actor))targets.Add(actor);}
@@ -38,8 +49,8 @@ namespace AfterSignal
                 var go=new GameObject(name,typeof(RectTransform),typeof(Image));go.transform.SetParent(canvas.transform,false);go.GetComponent<Image>().color=new Color(.012f,.035f,.045f,.86f);go.GetComponent<Image>().raycastTarget=false;var r=go.GetComponent<RectTransform>();r.anchorMin=min;r.anchorMax=max;r.offsetMin=r.offsetMax=Vector2.zero;
                 var text=new GameObject("Text",typeof(RectTransform),typeof(Text));text.transform.SetParent(go.transform,false);var t=text.GetComponent<Text>();t.font=Resources.Load<Font>("Fonts/NotoSansKR");t.fontSize=size;t.color=new Color(.86f,.96f,.97f);t.alignment=TextAnchor.MiddleCenter;t.raycastTarget=false;t.rectTransform.anchorMin=Vector2.zero;t.rectTransform.anchorMax=Vector2.one;t.rectTransform.offsetMin=new Vector2(16,8);t.rectTransform.offsetMax=new Vector2(-16,-8);return t;
             }
-            goalLabel=Label("Live mission",new(.28f,.69f),new(.72f,.84f),20);radio=Label("Live radio",new(.23f,.19f),new(.76f,.34f),24);
-            var portrait=new GameObject("Current radio speaker",typeof(RectTransform),typeof(Image));portrait.transform.SetParent(radio.transform.parent,false);radioPortrait=portrait.GetComponent<Image>();radioPortrait.preserveAspect=true;radioPortrait.raycastTarget=false;var pr=radioPortrait.rectTransform;pr.anchorMin=new Vector2(0,0);pr.anchorMax=new Vector2(0,1);pr.pivot=new Vector2(0,.5f);pr.offsetMin=new Vector2(5,4);pr.offsetMax=new Vector2(118,-4);radio.alignment=TextAnchor.MiddleLeft;radio.rectTransform.offsetMin=new Vector2(134,8);
+            goalLabel=Label("Live mission",new(.28f,.69f),new(.72f,.84f),20);radio=Label("Live radio",new(.08f,.13f),new(.92f,.36f),24);
+            var portrait=new GameObject("Current radio speaker",typeof(RectTransform),typeof(Image));portrait.transform.SetParent(radio.transform.parent,false);radioPortrait=portrait.GetComponent<Image>();radioPortrait.preserveAspect=true;radioPortrait.raycastTarget=false;var pr=radioPortrait.rectTransform;pr.anchorMin=pr.anchorMax=new Vector2(0,0);pr.pivot=new Vector2(0,0);pr.anchoredPosition=new Vector2(8,8);pr.sizeDelta=new Vector2(270,310);radio.alignment=TextAnchor.MiddleLeft;radio.rectTransform.offsetMin=new Vector2(300,18);radio.rectTransform.offsetMax=new Vector2(-24,-18);
             Say((step.person??"노아")+": "+step.line);
             // Small cover objects give each forecourt a readable combat space without sealing roads.
             for(int i=0;i<(Intro?0:5);i++)
@@ -70,7 +81,7 @@ namespace AfterSignal
             }
             SignalEffects.Ring(extraction+Vector3.up*.13f,SignalEffects.Cyan,4,60);
         }
-        void Say(string text){if(radio){radio.text=text;if(radioPortrait){radioPortrait.sprite=StoryPortraits.Get(text.Split(':')[0]);radioPortrait.enabled=radioPortrait.sprite;}radio.transform.parent.gameObject.SetActive(true);speechUntil=age+Mathf.Clamp(text.Length*.12f,5,12);}}
+        void Say(string text){if(radio){radio.text=text;if(radioPortrait){radioPortrait.sprite=StoryPortraits.Bust(text.Split(':')[0]);radioPortrait.enabled=radioPortrait.sprite;}radio.transform.parent.gameObject.SetActive(true);speechUntil=age+Mathf.Clamp(text.Length*.12f,5,12);}}
         bool SpawnWave()
         {
             int count=Intro?2:Mathf.Clamp(step.enemyCount,3,8);int spawned=0;
@@ -89,7 +100,7 @@ namespace AfterSignal
             if(!game||!chronicle||chronicle.Tracked?.id!=quest||chronicle.CurrentStep!=step||game.stage!=StageId.UrbanCity){Destroy(gameObject);return;}
             if(game.Blocked)return;float dt=Mathf.Min(.1f,Time.deltaTime);age+=dt;
             if(age>nextPulse&&(step.battleMode=="rescue"||step.battleMode=="escape")){nextPulse=age+4;SignalEffects.Ring(extraction+Vector3.up*.13f,SignalEffects.Cyan,4,5);}
-            if(age>speechUntil&&radio)radio.transform.parent.gameObject.SetActive(false);
+            if(radio)radio.transform.parent.gameObject.SetActive(age<=speechUntil&&!(WantedSystem.Instance?.NoaSupport.Visible??false));
             if(finishing){if(age>speechUntil){Completed=true;chronicle.Advance(quest,expected);Destroy(gameObject);}return;}
             if(Vector3.Distance(game.Player.transform.position,step.position)>180){Say("노아: 작전 구역을 벗어났어. 현장으로 돌아오면 다시 진입하자.");Destroy(gameObject);return;}
             if(survivor&&!survivor.GetComponent<WorldActor>().Alive){Say("노아: 구조 대상이 쓰러졌다. 진입 지점에서 다시 시도하자.");failedUntil=age+7;survivor=null;}

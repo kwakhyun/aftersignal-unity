@@ -419,6 +419,7 @@ namespace AfterSignal
             }
 
             Health = Mathf.Max(0, Health - amount);
+            recoveryWait=RecoveryDelay;
             invincible = .65f;
             HitsTaken++;
             Director.Audio.Play(blocked ? "guard" : "hurt", Shoulder, .42f, 3);
@@ -445,6 +446,7 @@ namespace AfterSignal
             Controller.enabled = true;
             Velocity = Vector3.zero;
             Grounded = false;
+            recoveryWait=RecoveryDelay;
             WallClimbing=false;wallRelease=0;jumps=0;jumpBuffer=0;coyote=0;
             supportedUntil = 0;
             DashTime = 0;

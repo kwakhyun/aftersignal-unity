@@ -22,6 +22,7 @@ namespace AfterSignal
         {
             var g=GameDirector.Instance;if(!g||g.Blocked)return;float dt=Mathf.Min(.06f,Time.deltaTime);clock+=dt;shot-=dt;scan-=dt;
             if(!Body.Alive){motor.enabled=false;dead+=dt;form.localRotation=Quaternion.Slerp(form.localRotation,Quaternion.Euler(80,0,0),dt*2);if(dead>2){VehicleExplosion.Create(transform.position+Vector3.up,3);BlastDamage.Create(transform.position+Vector3.up,7,110,Body);WreckFragments.Shatter(gameObject,7);Destroy(gameObject);}return;}
+            if(!LocalSimulation.Combat(transform.position)){target=null;return;}
             if(scan<=0||target&&!TacticalJudgment.Opponent(Body,target)){scan=.45f;target=TacticalJudgment.Opponent(Body,attacker)&&Time.time<retaliate?attacker:FactionCombat.NearestOpponent(Body,180);}
             bool player=!target&&!IncidentCommand.Emergency&&WantedSystem.Level>0&&g.Player.Health>0&&(Time.time<retaliate&&!attacker||WantedSystem.Level>=3);
             Vector3 goal=target?target.Center:player?g.Player.Shoulder:IncidentCommand.Emergency?IncidentCommand.Position:home;

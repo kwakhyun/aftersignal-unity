@@ -17,7 +17,7 @@ namespace AfterSignal
         }
         public bool Spawn(Vector3 at)
         {
-            if(!CityEventGate.Begin(this,CityEventKind.Terror))return false;
+            if(!LocalSimulation.CanStart(at)||!CityEventGate.Begin(this,CityEventKind.Terror,at))return false;
             for(int i=0;i<5;i++)if(CrowdFlow.Place(at,i,out var p,20)){var a=TerrorSuspect.Create(p,i);Suspects.Add(a);CityEventGate.Enroll(a.Body);}
             if(Suspects.Count==0){CityEventGate.Cancel(this);return false;}CitySafety.Alarm(at,Suspects[0].Body);return true;
         }
@@ -37,6 +37,7 @@ namespace AfterSignal
         {
             var g=GameDirector.Instance;if(!g||g.Blocked)return;life+=Time.deltaTime;
             if(!Body.Alive||Body.Downed){if(!Body.Alive){dead+=Time.deltaTime;if(dead>45)Destroy(gameObject);}return;}
+            if(!LocalSimulation.Combat(transform.position)){Target=null;shotPose=0;if(!LocalSimulation.Within(transform.position,LocalSimulation.RetireRadius))Destroy(gameObject);return;}
             if(Time.time>scan){scan=Time.time+.55f;float nearest=90*90;Target=null;foreach(var a in WorldActor.All)if(a&&a!=Body&&a.Alive&&!a.Downed&&!a.terrorist&&!a.military&&!a.monster&&!a.environmental&&!a.helicopter){float d=(a.Center-Body.Center).sqrMagnitude;if(a.police)d*=.65f;if(d<nearest){nearest=d;Target=a;}}}
             bool playerThreat=(Time.time-Body.LastPlayerHit<18||!Target)&&(g.Player.transform.position-transform.position).sqrMagnitude<70*70;var target=playerThreat?g.Player.Shoulder:Target?Target.Center:home;AimTarget=target;Vector3 delta=target-transform.position;float dt=Mathf.Min(.06f,Time.deltaTime);gravity=motor.isGrounded?-2:Mathf.Max(-28,gravity-dt*20);
             var direction=path.Direction(transform.position,target);motor.Move((delta.magnitude>14?direction*2.8f:Vector3.zero)*dt+Vector3.up*gravity*dt);if(Firing||delta.magnitude<14)GetComponent<DirectionalPerson>()?.Face(target,.25f);
@@ -59,6 +60,7 @@ namespace AfterSignal
         void Update()
         {
             if(GameDirector.Instance&&GameDirector.Instance.Blocked)return;
+            if(!LocalSimulation.Within(transform.position,LocalSimulation.RetireRadius)){Destroy(gameObject);return;}
             if(!device.Alive){GameDirector.Instance?.ToastNear("폭발 장치를 파괴했습니다",transform.position,120,3);Destroy(gameObject);return;}
             fuse-=Time.deltaTime;if(light)light.localScale=Vector3.one*(1+Mathf.Sin(Time.time*18)*.3f);
             if(fuse<=0){var at=transform.position;VehicleExplosion.Create(at,4);BlastDamage.Create(at,13,120,Source?Source:TrafficDamageSource.Environment);CitySafety.Shock(at);Destroy(gameObject);}

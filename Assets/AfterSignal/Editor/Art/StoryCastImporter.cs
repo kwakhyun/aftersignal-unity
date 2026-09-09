@@ -5,7 +5,7 @@ namespace AfterSignal.Editor
     public sealed class StoryCastImporter:AssetPostprocessor
     {
         bool Match=>assetPath.Contains("/Art/StoryCast/")||assetPath.Contains("/Art/ResponseCrew/");bool Crew=>assetPath.Contains("/ResponseCrew/");
-        public override uint GetVersion()=>1;
+        public override uint GetVersion()=>2;
         void OnPreprocessTexture()
         {
             if(!Match)return;var t=(TextureImporter)assetImporter;t.textureType=TextureImporterType.Sprite;t.spriteImportMode=SpriteImportMode.Multiple;t.mipmapEnabled=false;t.alphaIsTransparency=true;t.isReadable=true;t.filterMode=Crew?FilterMode.Point:FilterMode.Bilinear;t.textureCompression=TextureImporterCompression.Uncompressed;t.maxTextureSize=2048;t.npotScale=TextureImporterNPOTScale.None;
@@ -17,6 +17,6 @@ namespace AfterSignal.Editor
 #pragma warning restore CS0618
             Object.DestroyImmediate(temp);
         }
-        void OnPostprocessTexture(Texture2D image){if(Match&&Crew)SpriteMatte.Apply(image);}
+        void OnPostprocessTexture(Texture2D image){if(Match&&Crew)SpriteMatte.Apply(image);else if(Match)PortraitAlpha.Apply(image,4,assetPath.Contains("CoreCast")?2:3);}
     }
 }

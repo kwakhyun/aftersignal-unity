@@ -1,0 +1,28 @@
+{
+    "completed": true,
+    "nearSeaShots": 5,
+    "farSeaShots": 0,
+    "passed": [
+        "Remote monster, terror and gang-convoy requests are rejected",
+        "Distant incident notices cannot replace the player's notice",
+        "Nearby notice is visible",
+        "Leaving a notice's area hides it before its timer expires",
+        "Nearby sea opponents still fight and occupy the shared incident slot",
+        "A nearby monster warning acquires the incident slot",
+        "Sea combat does not overlap a monster incident",
+        "Moving beyond simulation range stops sea target searches and gunfire",
+        "An unoccupied remote sinking ship produces no escape warning",
+        "The ship carrying Seoha still produces the sinking escape warning",
+        "Retiring an unfinished local monster event removes its live attackers before another incident can begin",
+        "One click attaches to an ordinary facade",
+        "Releasing the mouse keeps the rope latched and automatically reels in",
+        "A second click releases the rope",
+        "Jump releases the rope with upward momentum",
+        "Aim assistance catches a thin structure when the center ray misses",
+        "Wall-climbing camera stays on the open side of the facade",
+        "Close quarters widens the view instead of filling it with the character",
+        "Mouse view can turn freely while clinging to a wall",
+        "Character visibility is restored after moving away from the wall"
+    ],
+    "errors": []
+}

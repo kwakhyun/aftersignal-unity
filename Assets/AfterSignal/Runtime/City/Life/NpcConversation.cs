@@ -15,7 +15,7 @@ namespace AfterSignal
             public NpcLine[] messages;
             public int day, wanted, site;
             public float hour;
-            public bool allowQuest;
+            public bool allowQuest, opening;
         }
 
         [Serializable]
@@ -54,8 +54,9 @@ namespace AfterSignal
                 name = npc.displayName,
                 occupation = npc.occupation,
                 personality = npc.personality,
-                context = npc.context+"\n"+FacilityGuide.Knowledge(npc),
-                place = CivicWorld.Title(game.stage),
+                context = NpcOpening.Context(npc)+"\n"+npc.context+"\n"+FacilityGuide.Knowledge(npc),
+                place = NpcOpening.Place(npc),
+                opening = history==null||history.Length==0,
                 messages = history,
                 day = LifeState.Day,
                 hour = LifeState.Hour,
@@ -95,7 +96,7 @@ namespace AfterSignal
                 if (reply == null || string.IsNullOrWhiteSpace(reply.reply))
                     reply = new Reply
                     {
-                        reply = "지금은 통신 연결이 닿지 않네요. 잠시 후 다시 이야기해요.",
+                        reply = data.opening ? NpcOpening.Fallback(npc) : "지금은 통신 연결이 닿지 않네요. 잠시 후 다시 이야기해요.",
                         status = "AI 대화 연결 실패 · 로컬 대화 서버와 API 키 설정을 확인하세요."
                     };
                 reply.reply = reply.reply.Length > 1300 ? reply.reply.Substring(0, 1300) : reply.reply;

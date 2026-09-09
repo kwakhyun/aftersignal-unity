@@ -41,7 +41,7 @@ namespace AfterSignal
                 case FacilityFunction.Garage:Option("차량 수리·튜닝",Garage);Job("공구·부품 점검 / 240 C","repair",240,1);break;
                 case FacilityFunction.Airport:Job("수하물 보안 검사 / 280 C","airport",280,2);TransitOptions(true);break;
                 case FacilityFunction.Ferry:Job("선박 안전 점검 / 250 C","harbour",250,1);TransitOptions(false);break;
-                case FacilityFunction.Military:Job("통신·보급·무장 점검 / 300 C","military",300,2);Option("방위 장비 보급",()=>Armory());break;
+                case FacilityFunction.Military:Job("통신·보급·무장 점검 / 300 C","military",300,2);Option("무기고 · 장비 / 탄약 보급",()=>MilitarySupply());break;
             }
         }
         void TransitOptions(bool aircraft)

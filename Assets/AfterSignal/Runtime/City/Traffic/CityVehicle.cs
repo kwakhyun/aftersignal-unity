@@ -14,7 +14,8 @@ namespace AfterSignal
         Airliner,
         CombatHelicopter,
         Fighter,
-        Tank
+        Tank,
+        Bomber
     }
 
     public sealed partial class CityVehicle : MonoBehaviour
@@ -32,16 +33,18 @@ namespace AfterSignal
         public bool Wrecked => health <= 0;
         public bool WaitingAtSignal { get; private set; }
         public Vector3 Forward => transform.right;
-        public bool IsAircraft => type == CityVehicleType.Airliner || type == CityVehicleType.CombatHelicopter || type == CityVehicleType.Fighter;
+        public bool IsAircraft => type == CityVehicleType.Airliner || type == CityVehicleType.CombatHelicopter || type == CityVehicleType.Fighter || type == CityVehicleType.Bomber;
         public bool IsWatercraft => type == CityVehicleType.Boat;
         public bool IsHeavy => type == CityVehicleType.Bus || type == CityVehicleType.Truck || type == CityVehicleType.Tank;
         public bool IsSpecial => IsAircraft || IsWatercraft;
         public float Steering { get; private set; }
         public float TopSpeed => type == CityVehicleType.Motorcycle ? 45 : type == CityVehicleType.SportsCar ? 49 : type == CityVehicleType.Tank ? 18 : type == CityVehicleType.Bus ? 21 : type == CityVehicleType.Truck ? 23 : 27;
-        public float HalfLength => IsWatercraft?WaterLength:type == CityVehicleType.Bus ? 4.6f : type == CityVehicleType.Truck ? 3.9f : type == CityVehicleType.Motorcycle ? 1.25f : type == CityVehicleType.Airliner ? 15 : type == CityVehicleType.CombatHelicopter ? 5.5f : type == CityVehicleType.Fighter ? 7.5f : type == CityVehicleType.Tank ? 4 : 2.55f;
-        public float HalfWidth => IsWatercraft?WaterWidth:type == CityVehicleType.Motorcycle ? .42f : type == CityVehicleType.Airliner ? 2 : type == CityVehicleType.Tank ? 1.9f : IsHeavy ? 1.25f : 1.05f;
+        public float HalfLength => type==CityVehicleType.Bomber?14:IsWatercraft?WaterLength:type == CityVehicleType.Bus ? 4.6f : type == CityVehicleType.Truck ? 3.9f : type == CityVehicleType.Motorcycle ? 1.25f : type == CityVehicleType.Airliner ? 15 : type == CityVehicleType.CombatHelicopter ? 5.5f : type == CityVehicleType.Fighter ? 7.5f : type == CityVehicleType.Tank ? 4 : 2.55f;
+        public float HalfWidth => type==CityVehicleType.Bomber?26:IsWatercraft?WaterWidth:type == CityVehicleType.Motorcycle ? .42f : type == CityVehicleType.Airliner ? 2 : type == CityVehicleType.Tank ? 1.9f : IsHeavy ? 1.25f : 1.05f;
         float WaterLength{get{var hull=GetComponent<MaritimeHull>();return hull?hull.Length*.5f:GetComponent<AuthoredCraft>()?235:8;}}
         float WaterWidth{get{var hull=GetComponent<MaritimeHull>();return hull?hull.Beam*.5f:GetComponent<AuthoredCraft>()?19:2.5f;}}
+        readonly VehicleNavigator navigator=new();
+        public bool NavigatingAroundObstacle=>navigator.Detouring;
         readonly System.Collections.Generic.List<CityVehicle> nearbyTraffic=new();
 
         readonly System.Collections.Generic.List<Transform> wheels = new System.Collections.Generic.List<Transform>();
@@ -56,6 +59,7 @@ namespace AfterSignal
         {
             InitializeDurability();
             VehicleDetails.Install(this);
+            if(IsWatercraft&&!GetComponent<SeaTraffic>())gameObject.AddComponent<SeaTraffic>();
             gameObject.AddComponent<VehicleDamagePresentation>();
             gameObject.AddComponent<VehicleHorn>();
             if (IsSpecial) gameObject.AddComponent<CraftDynamics>().Initialize(this);
@@ -87,7 +91,7 @@ namespace AfterSignal
             }
 
             engine = gameObject.AddComponent<AudioSource>();
-            engine.clip = Resources.Load<AudioClip>("Audio/Transport/" + (GetComponent<AuthoredCraft>()?"ship":type.ToString().ToLowerInvariant()));
+            engine.clip = Resources.Load<AudioClip>("Audio/Transport/" + (GetComponent<AuthoredCraft>()?"ship":type==CityVehicleType.Bomber?"fighter":type.ToString().ToLowerInvariant()));
             if (!engine.clip)
                 engine.clip = Resources.Load<AudioClip>("Audio/urban_engine");
             engine.loop = true;
@@ -106,6 +110,8 @@ namespace AfterSignal
 
         public void Drive(ControlFrame input, float dt)
         {
+            if(Tumbling)return;
+            if(GetComponent<TitanGravitySnare>())return;
             if (Wrecked)
             {
                 speed = 0;
@@ -136,7 +142,7 @@ namespace AfterSignal
 
         public void TickTraffic(float dt)
         {
-            if (IsSpecial) return;
+            if (IsSpecial || Tumbling) return;
             if(GetComponent<TrafficYield>()){speed=Mathf.MoveTowards(speed,0,dt*18);return;}
             if (!traffic || Wrecked || route == null || route.Length < 2)
                 return;
@@ -153,8 +159,10 @@ namespace AfterSignal
                 d.y = 0;
             }
 
-            Vector3 heading = d.normalized;
+            Vector3 heading = LocalSimulation.Within(transform.position,420)?navigator.Direction(this,route[waypoint]):d.normalized;
             float target = d.magnitude < 8 ? (escaping?7:4) : escaping?20:9;
+            if(navigator.Waiting)target=0;
+            if(navigator.Detouring)target=Mathf.Min(target,5);
             if(bus && !escaping && waypoint<5) target=Mathf.Min(target,Mathf.Sqrt(Mathf.Max(0,d.magnitude-.03f)*4));
             float stop = CityRoadNetwork.StopDistance(transform.position, heading, HalfLength);
             WaitingAtSignal = stop < 22;

@@ -26,8 +26,8 @@ namespace AfterSignal
                 if(distance>radius||!Exposed(origin,actor.Center,actor.transform,excluded))continue;
                 var d=(actor.Center-origin).normalized;float amount=damage*(actor.monster&&payload!=BlastPayload.Conventional?8:1)*Mathf.Lerp(1,.08f,distance/radius);
                 if(payload!=BlastPayload.Conventional&&!actor.monster&&distance<radius*.32f)amount=Mathf.Max(amount,actor.MaxHealth*2.6f);
-                actor.Damage(amount,d*12,source);
-                if(!actor.helicopter&&!actor.monster)CivilianImpact.Launch(actor,d,Mathf.Lerp(22,7,distance/radius));
+                actor.Damage(amount,d*4,source);
+                if(!actor.helicopter&&!actor.monster)CivilianImpact.Blast(actor,d,Mathf.Lerp(9,3,distance/radius));
             }
             var g=GameDirector.Instance;
             if(g)

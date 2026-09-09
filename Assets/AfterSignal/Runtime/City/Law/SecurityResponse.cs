@@ -9,7 +9,7 @@ namespace AfterSignal
         static readonly List<SecurityResponse> commands=new();
         public static void Request(WorldActor suspect,bool monster)
         {
-            if(!suspect||!UrbanSimulation.Instance||!WantedSystem.Instance)return;
+            if(!suspect||!LocalSimulation.Combat(suspect.transform.position)||!UrbanSimulation.Instance||!WantedSystem.Instance)return;
             foreach(var c in commands)if(c&&c.target&&c.target.Alive&&(c.target.transform.position-suspect.transform.position).sqrMagnitude<320*320){if(monster){c.disaster=true;c.target=suspect;}return;}
             if(commands.Count>=3)return;
             int id=suspect.GetInstanceID();if(!requested.Add(id))return;
@@ -23,12 +23,12 @@ namespace AfterSignal
             {
                 int attempts=0;Vector3 origin;
                 while(target&&target.Alive&&!ResponseDispatch.TryOrigin(target.transform.position,false,false,i,out _)&&attempts++<20)yield return new WaitForSeconds(3);
-                if(!target||!target.Alive)break;
+                if(!target||!target.Alive||!LocalSimulation.Combat(target.transform.position))break;
                 if(ResponseDispatch.TryOrigin(target.transform.position,false,false,i,out origin))
                 {var car=TacticalTransport.Create(WantedSystem.Instance,origin,i<2?2:5,i<2?2:4);car.AssignIncident(target);}
                 yield return new WaitForSeconds(disaster?6:10);
             }
-            while(target&&target.Alive&&!target.Downed)yield return new WaitForSeconds(8);
+            while(target&&target.Alive&&!target.Downed&&LocalSimulation.Combat(target.transform.position))yield return new WaitForSeconds(8);
             Destroy(gameObject);
         }
         void OnDestroy(){requested.Remove(key);commands.Remove(this);}

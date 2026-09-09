@@ -9,9 +9,11 @@ namespace AfterSignal
         public float Armour=>windup>0||vulnerable>0?.82f:.32f;
         public int LaserShots {get;private set;}
         public int Shockwaves {get;private set;}
+        public int GravityAttacks {get;private set;}
+        CityVehicle gravityVictim,gravityCandidate;float gravityAt=12;
         public bool Campaign;
         public float MaximumHealth{get;private set;}
-        public string AttackWarning=>windup>0?skill==3?"전방위 소각 광선 · 즉시 엄폐 / 거리 이탈":skill==2?"집중 광선 · 엄폐하세요":skill==1?"광역 지반 붕괴 · 범위 이탈":"충격파 · 거리를 벌리세요":"";
+        public string AttackWarning=>windup>0?skill==4?"중력 포획 · 항공기는 즉시 거리 이탈":skill==3?"전방위 소각 광선 · 즉시 엄폐 / 거리 이탈":skill==2?"집중 광선 · 엄폐하세요":skill==1?"광역 지반 붕괴 · 범위 이탈":"충격파 · 거리를 벌리세요":"";
         public WorldActor PriorityTarget=>target;
         struct Threat{public WorldActor actor;public float damage,time;}
         readonly Dictionary<int,Threat> threats=new();float playerThreat,playerThreatAt=-100;
@@ -71,6 +73,8 @@ namespace AfterSignal
             airTarget=null;var sim=UrbanSimulation.Instance;
             if(sim)foreach(var car in sim.Cars)
                 if(car&&!car.Wrecked&&car.IsAircraft&&car.transform.position.y-transform.position.y>14&&(car.transform.position-AimCenter).sqrMagnitude<480*480&&(car.occupied||car==sim.Current)&&(!airTarget||(car.transform.position-AimCenter).sqrMagnitude<(airTarget.transform.position-AimCenter).sqrMagnitude))airTarget=car;
+            // Air interdiction remains available even while a ground attacker holds primary aggro.
+            gravityCandidate=airTarget;
             float score=Time.time-playerThreatAt<18?playerThreat/(1+(Time.time-playerThreatAt)*.2f):0;
             bool player=score>0;WorldActor aggressor=null;
             foreach(var pair in threats)
@@ -84,8 +88,9 @@ namespace AfterSignal
         }
         void Update()
         {
-            var g=GameDirector.Instance;if(!g||g.Blocked||!form)return;float dt=Mathf.Min(.05f,Time.deltaTime);phase+=dt;cooldown-=dt;laserAt-=dt;barrageAt-=dt;scan-=dt;vulnerable-=dt;
+            var g=GameDirector.Instance;if(!g||g.Blocked||!form)return;float dt=Mathf.Min(.05f,Time.deltaTime);phase+=dt;cooldown-=dt;laserAt-=dt;barrageAt-=dt;gravityAt-=dt;scan-=dt;vulnerable-=dt;
             if(!Body.Alive){controller.enabled=false;deathAge+=dt;form.localRotation=Quaternion.Slerp(form.localRotation,Quaternion.Euler(0,form.localEulerAngles.y,78),dt*.8f);form.localPosition=Vector3.down*Mathf.Min(2,deathAge*.3f);if(deathAge>12)Destroy(gameObject);return;}
+            if(!LocalSimulation.Combat(transform.position)){target=null;airTarget=null;windup=0;return;}
             if(scan<=0){scan=.6f;ChooseTargets(g);}
             var d=Vector3.ProjectOnPlane(goal-transform.position,Vector3.up);bool moving=d.magnitude>10&&windup<=0;
             gravity=controller.isGrounded?-2:Mathf.Max(-38,gravity-dt*20);
@@ -98,9 +103,11 @@ namespace AfterSignal
             {
                 windup-=dt;
                 if(skill==2){origin=head?head.position+form.forward*2:AimCenter+form.forward*3;SignalEffects.Beam(origin,locked,new Color(.75f,.1f,1,.5f),.035f,.07f);}
-                if(windup<=0){vulnerable=3;if(skill==3)TitanBarrage.Fire(this);else if(skill==2)FireLaser();else Shockwave(skill==1?25:17,skill==1?100:80);cooldown=4.5f;}
+                if(windup<=0){vulnerable=3;if(skill==4){if(TitanGravitySnare.Begin(this,gravityVictim))GravityAttacks++;gravityVictim=null;}else if(skill==3)TitanBarrage.Fire(this);else if(skill==2)FireLaser();else Shockwave(skill==1?25:17,skill==1?100:80);cooldown=4.5f;}
                 return;
             }
+            if(gravityAt<=0&&TitanGravitySnare.Eligible(gravityCandidate,this))
+            {skill=4;windup=2.6f;gravityAt=34;gravityVictim=gravityCandidate;SignalEffects.Ring(gravityCandidate.transform.position,new Color(.65f,.2f,1),12,windup);g.Audio.Play("charge",AimCenter,.5f,3);return;}
             if(barrageAt<=0&&d.magnitude<65){skill=3;windup=2.8f;barrageAt=27;SignalEffects.Ring(transform.position+Vector3.up*.2f,new Color(.85f,.1f,1),48,windup);g.ToastNear("잠식체 전방위 소각 예고 · 48m 밖으로 이탈하거나 건물 뒤로 엄폐!",transform.position,100,3);g.Audio.Play("charge",AimCenter,.5f,3);return;}
             if(laserAt<=0&&(airTarget||target&&target.helicopter||d.magnitude>26&&d.magnitude<180))
             {skill=2;windup=2.2f;laserAt=kind==2?9:14;locked=airTarget?airTarget.transform.position:target?target.Center:g.Player.Shoulder;g.Audio.Play("charge",AimCenter,.5f,3);return;}
@@ -126,7 +133,7 @@ namespace AfterSignal
             foreach(var a in WorldActor.All.ToArray())
             {
                 if(!a||!a.Alive||a.monster||a.helicopter||(a.transform.position-at).sqrMagnitude>radius*radius||!BlastDamage.Exposed(at+Vector3.up*3,a.Center,a.transform))continue;
-                var d=(a.Center-AimCenter).normalized;float falloff=Mathf.InverseLerp(radius,0,Vector3.Distance(a.transform.position,at));a.Damage(falloff>.6f?Mathf.Max(damage,a.MaxHealth*2):damage*Mathf.Lerp(.18f,.8f,falloff),d*22,Body);if(!a.protectedResident)CivilianImpact.Launch(a,d,20);
+                var d=(a.Center-AimCenter).normalized;float falloff=Mathf.InverseLerp(radius,0,Vector3.Distance(a.transform.position,at));a.Damage(falloff>.6f?Mathf.Max(damage,a.MaxHealth*2):damage*Mathf.Lerp(.18f,.8f,falloff),d*4,Body);CivilianImpact.Blast(a,d,8);
                 NpcSpeech.Say(a,NpcDialogueBank.Line(a.GetComponent<CityNpc>(),"monster"),4,8);
             }
             var g=GameDirector.Instance;if((g.Player.transform.position-at).sqrMagnitude<radius*radius&&BlastDamage.Exposed(at+Vector3.up*3,g.Player.Shoulder,g.Player.transform))g.Player.ReceiveDamage(28,at);

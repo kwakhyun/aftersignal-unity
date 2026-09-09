@@ -67,7 +67,9 @@ namespace AfterSignal
                 if (death > 12) Destroy(gameObject);
                 return;
             }
+            if(CivilianImpact.Active(this)){knockback=Vector3.zero;return;}
             if(!motor.enabled||Body.Downed)return;
+            if(!CampaignUnit&&!LocalSimulation.Combat(transform.position)){Target=null;playerTarget=false;aim=0;Decision="원거리 대기";return;}
             if(!CampaignUnit&&Tactics.TickEscape(motor,dt))return;
             cooldown -= dt;
             search -= dt;

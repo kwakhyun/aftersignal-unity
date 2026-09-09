@@ -27,7 +27,6 @@ namespace AfterSignal
                     for(int i=0;i<6;i++)Park(venue,new(-120+i%3*36,.15f,90-i/3*33),CityVehicleType.Tank);
                     Park(venue,new(-65,.15f,94),CityVehicleType.Fighter);Park(venue,new(45,.15f,94),CityVehicleType.CombatHelicopter);
                 }
-                if(v.kind==VenueKind.Police)for(int i=0;i<3;i++){var p=venue.transform.TransformPoint(new(-v.size.x*.38f+i*7,.1f,-v.size.y*.37f));var car=PoliceCar.Create(WantedSystem.Instance,p);car.enabled=false;car.Vehicle.occupied=false;foreach(var audio in car.GetComponentsInChildren<AudioSource>())audio.Stop();car.gameObject.AddComponent<RegionalParked>();}
                 if(v.kind==VenueKind.Island)Park(venue,new(13,OceanLife.Surface,-212),CityVehicleType.Boat);
                 yield return null;
             }

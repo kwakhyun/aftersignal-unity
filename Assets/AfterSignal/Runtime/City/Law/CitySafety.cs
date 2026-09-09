@@ -39,7 +39,7 @@ namespace AfterSignal
         void Report(Vector3 at,WorldActor suspect,CityNpc victim)
         {
             // Player reports belong to CrimeObservation; accidents have no suspect.
-            if(!suspect||suspect.environmental)return;
+            if(!suspect||suspect.environmental||!LocalSimulation.Combat(at))return;
             if(suspect.monster){SecurityResponse.Request(suspect,true);return;}
             int id=suspect?suspect.GetInstanceID():-1;
             if(reported.Contains(id))return;
@@ -59,7 +59,7 @@ namespace AfterSignal
         IEnumerator Respond(Vector3 at,WorldActor suspect,float delay)
         {
             yield return new WaitForSeconds(delay);
-            if(!suspect||!suspect.Alive)yield break;
+            if(!suspect||!suspect.Alive||!LocalSimulation.Combat(at))yield break;
             Dispatches++;
             foreach(var officer in Patrol)if(officer&&officer.Body.Alive&&!officer.Body.military){officer.Dispatch(suspect);NpcSpeech.Say(officer,"신고 접수. 현장으로 이동!",3);}
             SecurityResponse.Request(suspect,false);
@@ -71,6 +71,7 @@ namespace AfterSignal
         }
         public static void Shock(Vector3 at,string cause="danger")
         {
+            if(!LocalSimulation.Combat(at))return;
             foreach(var npc in FindObjectsByType<CityNpc>())
                 if(npc&&Vector3.Distance(npc.transform.position,at)<25&&npc.GetComponent<WorldActor>().Alive)
                 {npc.Panic(at,7);NpcSpeech.Say(npc,NpcDialogueBank.Line(npc,cause),3);}
@@ -81,14 +82,13 @@ namespace AfterSignal
             if(UnityEngine.InputSystem.Keyboard.current!=null&&UnityEngine.InputSystem.Keyboard.current.f6Key.wasPressedThisFrame)PlayerReport();
             if(Time.time<next)return;next=Time.time+1;
             if(game.stage!=StageId.UrbanCity||!UrbanSimulation.Instance)return;
-            int waiting=0;foreach(var a in WorldActor.All){var m=a?a.GetComponent<MedicalState>():null;if(m&&m.NeedsRescue&&!a.GetComponent<MedicalPending>())waiting++;}
             const int capacity=5;int launched=0;
-            var patients=new List<WorldActor>(WorldActor.All);patients.Sort((a,b)=>(b&&b.Downed?1:0).CompareTo(a&&a.Downed?1:0));
+            if(ambulances>=capacity)return;
+            ActorSpatialIndex.Nearby(game.Player.transform.position,LocalSimulation.CombatRadius,patients);patients.Sort((a,b)=>(b&&b.Downed?1:0).CompareTo(a&&a.Downed?1:0));
             foreach(var body in patients)
             {
                 if(!body||!body.Alive||body.robot||body.monster||body.helicopter||body.GetComponent<MedicalPending>())continue;
                 var injury=body.GetComponent<MedicalState>();if(!injury||!injury.NeedsRescue)continue;
-                if(Vector3.Distance(body.transform.position,game.Player.transform.position)>650)continue;
                 if(!injury.Reported)foreach(var witness in WorldActor.All){if(!witness||witness==body||!witness.Alive||witness.Downed||witness.gang||witness.monster||witness.environmental||witness.helicopter||witness.terrorist)continue;if((witness.Center-body.Center).sqrMagnitude<48*48&&FactionCombat.Visible(witness.Center,body.Center,48)){NpcSpeech.Say(witness,"119죠? 여기 사람이 다쳤어요! 구조대를 보내주세요!",5,9);injury.Report();break;}}
                 if(!injury.Reported||ambulances>=capacity||launched>=1)continue;
                 body.gameObject.AddComponent<MedicalPending>();ambulances++;launched++;
@@ -96,5 +96,6 @@ namespace AfterSignal
             }
         }
         void OnDestroy(){if(Instance==this)Instance=null;}
+        readonly List<WorldActor> patients=new();
     }
 }

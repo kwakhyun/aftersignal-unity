@@ -42,6 +42,7 @@ namespace AfterSignal
         void Update()
         {
             var game=GameDirector.Instance;if(!game||game.Blocked||!gang||!gang.Body.Alive)return;
+            if(!LocalSimulation.Combat(transform.position))return;
             if(CityEventGate.Busy&&CityEventGate.Kind!=CityEventKind.Gang)return;
             if(stolen)
             {

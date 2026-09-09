@@ -18,7 +18,8 @@ namespace AfterSignal
         {
             var g=GameDirector.Instance;if(!g||g.Blocked)return;float dt=Mathf.Min(.06f,Time.deltaTime);
             if(!Body.Alive){GetComponentInChildren<SpriteRenderer>().transform.rotation=Quaternion.Euler(0,0,85);controller.enabled=false;enabled=false;Destroy(gameObject,12);return;}
-            if(Body.Downed||!controller.enabled)return;
+            if(Body.Downed||!controller.enabled||CivilianImpact.Active(this))return;
+            if(!LocalSimulation.Combat(transform.position)){target=null;Decision="원거리 대기";return;}
             if(Time.time>=scan||target&&!TacticalJudgment.Opponent(Body,target)){scan=Time.time+.35f;target=FactionCombat.NearestOpponent(Body,100);}
             cooldown-=dt;gravity=controller.isGrounded?-2:gravity-dt*23;
             Vector3 desired=incident?incident.Position+new Vector3((variation%3-1)*9,0,-14+variation/3*8):transform.position;

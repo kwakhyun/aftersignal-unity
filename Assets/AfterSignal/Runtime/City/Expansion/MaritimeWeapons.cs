@@ -16,7 +16,7 @@ namespace AfterSignal
                 else {hit.collider.GetComponentInParent<WorldActor>()?.Damage(damage,direction*8,source);hit.collider.GetComponentInParent<PlayerMotor>()?.ReceiveDamage(25,muzzle);}
                 VehicleExplosion.Create(end,1.1f);
             }
-            SignalEffects.Beam(muzzle,end,vessel.Faction==SeaFaction.Pirates?SignalEffects.Red:SignalEffects.Cyan,.13f,.3f);
+            CombatVfx.Tracer(muzzle,end,SignalEffects.Gold);
             GameDirector.Instance?.Audio.PlayGun(GunshotKind.Rifle,muzzle,.85f);
         }
     }

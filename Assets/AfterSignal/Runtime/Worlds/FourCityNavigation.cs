@@ -33,16 +33,40 @@ namespace AfterSignal
         public static List<Vector3> Route(Vector3 from,Vector3 to,out bool connected)
         {
             connected=true;
-            if(nodes==null)Build();int Nearest(Vector3 p){int best=0;float d=float.MaxValue;for(int i=0;i<nodes.Count;i++){float n=(nodes[i]-p).sqrMagnitude;if(n<d){best=i;d=n;}}return best;}
-            int start=Nearest(from),end=Nearest(to);var dist=new float[nodes.Count];var prev=new int[nodes.Count];var closed=new bool[nodes.Count];Array.Fill(dist,float.PositiveInfinity);Array.Fill(prev,-1);dist[start]=0;
-            var heap=new List<(int node,float score)>();
-            void Push(int n,float s){heap.Add((n,s));int i=heap.Count-1;while(i>0){int p=(i-1)/2;if(heap[p].score<=s)break;heap[i]=heap[p];i=p;}heap[i]=(n,s);}
-            int Pop(){int result=heap[0].node;var last=heap[heap.Count-1];heap.RemoveAt(heap.Count-1);if(heap.Count==0)return result;int i=0;while(i*2+1<heap.Count){int c=i*2+1;if(c+1<heap.Count&&heap[c+1].score<heap[c].score)c++;if(heap[c].score>=last.score)break;heap[i]=heap[c];i=c;}heap[i]=last;return result;}
-            Push(start,0);while(heap.Count>0){int n=Pop();if(closed[n])continue;if(n==end)break;closed[n]=true;foreach(int k in links[n]){float score=dist[n]+Vector3.Distance(nodes[n],nodes[k]);if(score<dist[k]){dist[k]=score;prev[k]=n;Push(k,score+Vector3.Distance(nodes[k],nodes[end]));}}}
+            if(nodes==null)Build();
+            if(nodes.Count==0){connected=false;return new List<Vector3>{from,to};}
+            // Attach to road segments, not distant junctions; a goal halfway down the
+            // same street must not send the player back to the previous intersection.
+            (int a,int b,Vector3 p) Attach(Vector3 point)
+            {
+                float best=float.PositiveInfinity;var result=(a:0,b:0,p:nodes[0]);
+                for(int i=0;i<nodes.Count;i++)foreach(int j in links[i])if(j>i)
+                {
+                    var delta=nodes[j]-nodes[i];float t=Mathf.Clamp01(Vector3.Dot(point-nodes[i],delta)/delta.sqrMagnitude);
+                    var projected=nodes[i]+delta*t;float d=(projected-point).sqrMagnitude;
+                    if(d<best){best=d;result=(i,j,projected);}
+                }
+                return result;
+            }
+            var source=Attach(from);var destination=Attach(to);int start=nodes.Count,end=start+1,count=end+1;
+            Vector3 Position(int i)=>i==start?source.p:i==end?destination.p:nodes[i];
+            bool sameEdge=source.a==destination.a&&source.b==destination.b;
+            IEnumerable<int> Neighbours(int i)
+            {
+                if(i==start){yield return source.a;yield return source.b;if(sameEdge)yield return end;yield break;}
+                if(i==end)yield break;
+                foreach(int n in links[i])yield return n;
+                if(i==destination.a||i==destination.b)yield return end;
+            }
+            var dist=new float[count];var prev=new int[count];var closed=new bool[count];Array.Fill(dist,float.PositiveInfinity);Array.Fill(prev,-1);dist[start]=0;
+            var heap=new VehicleNavigator.MinHeap();heap.Push(start,0);
+            while(heap.Count>0)
+            {
+                int n=heap.Pop();if(closed[n])continue;if(n==end)break;closed[n]=true;
+                foreach(int k in Neighbours(n)){float score=dist[n]+Vector3.Distance(Position(n),Position(k));if(score>=dist[k])continue;dist[k]=score;prev[k]=n;heap.Push(k,score+Vector3.Distance(Position(k),destination.p));}
+            }
             if(float.IsInfinity(dist[end])){connected=false;return new List<Vector3>{from,to};}
-            var path=new List<Vector3>{to};for(int n=end;n>=0;n=prev[n]){path.Add(nodes[n]);if(n==start)break;}path.Add(from);path.Reverse();
-            if(path.Count>3){var edge=path[2]-path[1];if(edge.sqrMagnitude>.01f){float t=Mathf.Clamp01(Vector3.Dot(from-path[1],edge)/edge.sqrMagnitude);path[1]+=edge*t;}}
-            // Collapse duplicate points before generating turn instructions.
+            var path=new List<Vector3>{to};for(int n=end;n>=0;n=prev[n]){path.Add(Position(n));if(n==start)break;}path.Add(from);path.Reverse();
             for(int i=path.Count-2;i>=0;i--)if((path[i+1]-path[i]).sqrMagnitude<.04f)path.RemoveAt(i+1);
             if(path.Count==1)path.Add(to);return path;
         }

@@ -57,9 +57,9 @@ namespace AfterSignal
                 return;
             EnsureCityHud();
             bool active = !game.Blocked;
-            if (sim.Prompt.Length > 0 && active)
+            if (active && !string.IsNullOrEmpty(sim.Prompt))
                 prompt.text = sim.Prompt;
-            if(CityBusService.Instance && CityBusService.Instance.Prompt.Length>0 && active) prompt.text=CityBusService.Instance.Prompt;
+            if(active && CityBusService.Instance && !string.IsNullOrEmpty(CityBusService.Instance.Prompt)) prompt.text=CityBusService.Instance.Prompt;
             if (Time.unscaledTime >= nextCityText)
             {
                 nextCityText = Time.unscaledTime + .1f;

@@ -50,13 +50,13 @@ namespace AfterSignal
             {
                 float y=podium+f*4;g.Beam(new(s*w*.43f,y,-d*.47f),new(-s*w*.28f,Mathf.Min(y+12,roof),-d*.47f),.55f,"FutureCopper");
             }
-            // Broad, stable hidden collision has no decorative ledges to launch vehicles.
-            g.Box("Building structural core",new(0,h*.5f,0),new(w*.62f,h,d*.62f),"FutureCarbon",true);
+            // Structural prisms supply collision at the facade; a narrow core left most walls permeable.
         }
         static void Prism(CityGeometry g,Vector3 center,float w,float d,float height,string mat,float bevel)
         {
             float x=w*.5f,z=d*.5f,b=Mathf.Min(bevel,Mathf.Min(x,z)*.25f);
             Vector3[] p={new(-x+b,0,-z),new(x-b,0,-z),new(x,0,-z+b),new(x,0,z-b),new(x-b,0,z),new(-x+b,0,z),new(-x,0,z-b),new(-x,0,-z+b)};
+            g.SolidPrism(center,p,height);
             for(int i=0;i<8;i++)
             {var a=center+p[i]-Vector3.up*height*.5f;var c=center+p[(i+1)%8]-Vector3.up*height*.5f;g.Quad(a,a+Vector3.up*height,c+Vector3.up*height,c,mat);g.Quad(center+Vector3.up*height*.5f,c+Vector3.up*height,a+Vector3.up*height,center+Vector3.up*height*.5f,mat);}
         }

@@ -14,9 +14,28 @@ namespace AfterSignal
         public bool FreeOrbit { get; private set; }=true;
         public float OrbitYaw => orbitYaw;
         public float OrbitPitch => orbitPitch;
+        public bool WallCorrection=>!Driving&&director&&director.Player&&director.Player.WallClimbing;
+        public bool CloseQuarters=>WallCorrection&&(transform.position-director.Player.Shoulder).sqrMagnitude<2.2f*2.2f;
+        Vector3 cachedFocus;int focusFrame=-1;SphereCollider cameraProbe;
+        readonly Collider[] cameraOverlaps=new Collider[16];readonly RaycastHit[] focusHits=new RaycastHit[12];
+        Renderer[] heroRenderers;bool[] heroWasHidden;bool heroHidden;
         public void SetView(Vector3 target){var d=target-director.Player.Shoulder;orbitYaw=Mathf.Atan2(d.x,d.z)*Mathf.Rad2Deg;orbitPitch=Mathf.Clamp(-Mathf.Atan2(d.y,new Vector2(d.x,d.z).magnitude)*Mathf.Rad2Deg,-65,78);velocity=Vector3.zero;Snap();}
         public bool CanLook => director && director.Ready && !director.Blocked && !(UrbanSimulation.Instance && UrbanSimulation.Instance.MapOpen);
-        Vector3 Focus => Driving ? VehicleFocus() : director.Player.Shoulder + Quaternion.Euler(0,orbitYaw,0)*Vector3.right*.75f + Vector3.up*.25f;
+        Vector3 Focus
+        {
+            get
+            {
+                if(Driving)return VehicleFocus();
+                if(focusFrame==Time.frameCount)return cachedFocus;focusFrame=Time.frameCount;
+                var p=director.Player;var origin=p.Shoulder;
+                if(!WallCorrection)return cachedFocus=origin+Quaternion.Euler(0,orbitYaw,0)*Vector3.right*.75f+Vector3.up*.25f;
+                var shift=p.WallNormal*.9f+Vector3.up*.35f;
+                float distance=shift.magnitude;
+                int count=Physics.SphereCastNonAlloc(origin,.18f,shift.normalized,focusHits,distance,1,QueryTriggerInteraction.Ignore);
+                for(int i=0;i<count;i++)if(focusHits[i].collider)distance=Mathf.Min(distance,Mathf.Max(0,focusHits[i].distance-.08f));
+                return cachedFocus=origin+shift.normalized*distance;
+            }
+        }
         public Vector3 ViewRight => FreeOrbit ? Vector3.ProjectOnPlane(transform.right, Vector3.up).normalized : Vector3.right;
         public Vector3 LookForward=>Vector3.Cross(ViewRight,Vector3.up);
         public Vector3 MoveDirection(Vector2 input) => ViewRight * input.x + Vector3.Cross(ViewRight, Vector3.up) * input.y;
@@ -60,7 +79,21 @@ namespace AfterSignal
                 if (!hit.collider || Driving && hit.collider.transform.IsChildOf(UrbanSimulation.Instance.Current.transform)) continue;
                 length = Mathf.Min(length, Mathf.Max(.05f, hit.distance - .08f));
             }
-            return focus + ray.normalized * length;
+            var result=focus+ray.normalized*length;
+            if(WallCorrection)
+            {
+                int count=Physics.OverlapSphereNonAlloc(result,.28f,cameraOverlaps,1,QueryTriggerInteraction.Ignore);
+                if(count>0)
+                {
+                    if(!cameraProbe){cameraProbe=gameObject.AddComponent<SphereCollider>();cameraProbe.radius=.28f;cameraProbe.enabled=false;}
+                    for(int i=0;i<count;i++)
+                    {
+                        var obstacle=cameraOverlaps[i];if(!obstacle||obstacle.transform.IsChildOf(director.Player.transform))continue;
+                        if(Physics.ComputePenetration(cameraProbe,result,Quaternion.identity,obstacle,obstacle.transform.position,obstacle.transform.rotation,out var push,out float depth))result+=push*(depth+.02f);
+                    }
+                }
+            }
+            return result;
         }
         readonly RaycastHit[] walls = new RaycastHit[24];
         bool Driving => UrbanSimulation.Instance && UrbanSimulation.Instance.Driving;
@@ -88,12 +121,13 @@ namespace AfterSignal
 
         public void Snap()
         {
+            focusFrame=-1;
             if (VenueRuntime.ViewingCinema) { SetCinemaSeat(); return; }
             if (FirstPersonVehicle) { SetCockpit(); return; }
             basePosition = Target();
             velocity = Vector3.zero;
             transform.position = basePosition;
-            transform.rotation = FreeOrbit && !Viewing ? Quaternion.LookRotation(Focus - basePosition) : Angle;
+            transform.rotation = FreeOrbit && !Viewing ? Quaternion.LookRotation(Focus-basePosition) : Angle;
         }
 
         Vector3 Target()
@@ -159,17 +193,30 @@ namespace AfterSignal
             if (!director || !director.Player || director.Blocked)
                 return;
             if (VenueRuntime.ViewingCinema) { SetCinemaSeat(); return; }
-            if (FirstPersonVehicle) { SetCockpit(); return; }
-            GetComponent<Camera>().nearClipPlane=.15f;
+            if (FirstPersonVehicle) { SetHeroHidden(false);SetCockpit(); return; }
+            focusFrame=-1;
+            GetComponent<Camera>().nearClipPlane=WallCorrection?.08f:.15f;
             lead = Mathf.Lerp(lead, Mathf.Clamp(director.Player.Velocity.x * .22f + director.Player.Facing * .65f, -2.4f, 2.4f), 1 - Mathf.Exp(-Time.deltaTime * 4));
             basePosition = Vector3.SmoothDamp(basePosition, Target(), ref velocity, Driving ? .22f : .14f);
             if (FreeOrbit || Viewing) basePosition = AvoidWalls(basePosition);
             shake = Mathf.Max(0, shake - Time.unscaledDeltaTime);
             impulse = Vector3.Lerp(impulse, Vector3.zero, 1 - Mathf.Exp(-Time.unscaledDeltaTime * 24));
             transform.position = basePosition + (ReducedMotion ? Vector3.zero : impulse * Mathf.Cos((.13f - shake) * 46));
-            transform.rotation = FreeOrbit && !Viewing ? Quaternion.LookRotation(Focus - basePosition) : Quaternion.Slerp(transform.rotation, Angle, 1 - Mathf.Exp(-Time.deltaTime * (Driving ? 9 : 14)));
+            transform.rotation = FreeOrbit && !Viewing ? Quaternion.LookRotation(Focus-basePosition) : Quaternion.Slerp(transform.rotation, Angle, 1 - Mathf.Exp(-Time.deltaTime * (Driving ? 9 : 14)));
+            SetHeroHidden(WallCorrection&&(transform.position-director.Player.Shoulder).sqrMagnitude<1.2f*1.2f);
             var camera = GetComponent<Camera>();
-            camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, Viewing ? 62 : Driving ? 56 : 45, 1 - Mathf.Exp(-Time.deltaTime * 5));
+            camera.fieldOfView = Mathf.Lerp(camera.fieldOfView, Viewing ? 62 : Driving ? 56 : CloseQuarters?62:45, 1 - Mathf.Exp(-Time.deltaTime * 5));
         }
+        void SetHeroHidden(bool hidden)
+        {
+            if(hidden==heroHidden)return;heroHidden=hidden;
+            if(hidden)
+            {
+                heroRenderers=director.Player.GetComponentsInChildren<Renderer>();heroWasHidden=new bool[heroRenderers.Length];
+                for(int i=0;i<heroRenderers.Length;i++){heroWasHidden[i]=heroRenderers[i].forceRenderingOff;heroRenderers[i].forceRenderingOff=true;}
+            }
+            else if(heroRenderers!=null)for(int i=0;i<heroRenderers.Length;i++)if(heroRenderers[i])heroRenderers[i].forceRenderingOff=heroWasHidden[i];
+        }
+        void OnDisable()=>SetHeroHidden(false);
     }
 }

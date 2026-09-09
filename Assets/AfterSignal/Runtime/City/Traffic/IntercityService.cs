@@ -122,10 +122,10 @@ namespace AfterSignal
             float target=Aircraft?(path[leg].y>100?95:path[leg].y>1?45:11):23;
             phase=Aircraft?(leg<2?"지상 활주":leg<4?"이륙 / 상승":leg<7?"순항":leg<10?"접근 / 착륙":"도착 게이트 이동"):"해협 항해 중";
             Car.speed=Mathf.MoveTowards(Car.speed,Mathf.Min(target,Mathf.Sqrt(distance*(Aircraft?15:7))),dt*(Aircraft?9:3));
-            var horizontal=Vector3.ProjectOnPlane(delta,Vector3.up);if(horizontal.sqrMagnitude>.01f)transform.rotation=Quaternion.RotateTowards(transform.rotation,Quaternion.Euler(0,Mathf.Atan2(-horizontal.z,horizontal.x)*Mathf.Rad2Deg,0),dt*(Aircraft?32:30));
+            var horizontal=Car.IsWatercraft?SeaTraffic.Steer(Car,delta):Vector3.ProjectOnPlane(delta,Vector3.up);if(horizontal.sqrMagnitude>.01f)transform.rotation=Quaternion.RotateTowards(transform.rotation,Quaternion.Euler(0,Mathf.Atan2(-horizontal.z,horizontal.x)*Mathf.Rad2Deg,0),dt*(Aircraft?32:30));
             var step=Vector3.ClampMagnitude(delta,Mathf.Max(.5f,Car.speed)*dt);
             if(Aircraft&&StructuralImpact.CheckCraft(Car,step))return;
-            transform.position+=step;Car.fuel=Mathf.Max(0,Car.fuel-step.magnitude*.0003f);
+            transform.position=SeaTraffic.Move(Car,transform.position+step);Car.fuel=Mathf.Max(0,Car.fuel-step.magnitude*.0003f);
             if(distance<.25f){leg++;if(leg>=path.Length){AtNova=!AtNova;Arrivals++;dwell=55;Car.speed=0;Car.fuel=45;Exchange();if(sim&&sim.Current==Car)g.Toast((AtNova?"노바":"애프터라이트")+" 도착 · F 하차 / 55초 후 재출발",6);}}
         }
         public void ReleaseAfterCrash(){foreach(var t in Manifest)if(t){t.Inside=false;t.WantsBoard=false;t.gameObject.SetActive(true);t.transform.position=transform.position+Random.insideUnitSphere*3;t.GetComponent<WorldActor>()?.Damage(999,Vector3.up*4,Car?Car.DamageSource:TrafficDamageSource.Environment);}Manifest.Clear();}

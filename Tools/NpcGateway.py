@@ -52,8 +52,13 @@ def build_request(data):
         f"allowQuest: {bool(data.get('allowQuest'))}"
     )
     messages = [{"role": m.get("role") if m.get("role") in ("user", "assistant") else "user", "content": bounded(m.get("content"), 1500)} for m in data.get("messages", [])[-8:] if isinstance(m, dict)]
-    if not messages:
-        messages = [{"role": "user", "content": "안녕하세요."}]
+    if data.get("opening") or not messages:
+        instructions += (
+            "\nThis is the NPC's opening turn. Seoha has approached but has NOT spoken. "
+            "Start the conversation yourself, based on the immediate situation and your role. "
+            "Prioritize injuries, danger, work, and time of day. Do not invent or quote a player greeting. "
+        )
+        messages = [{"role": "developer", "content": "Generate this character's first spoken line for the current encounter."}]
     quest = {"type": "object", "additionalProperties": False, "properties": {
         "title": {"type": "string"}, "description": {"type": "string"},
         "kind": {"type": "string", "enum": ["delivery", "visit", "rooftop"]},

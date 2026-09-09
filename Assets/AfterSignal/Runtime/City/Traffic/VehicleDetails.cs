@@ -6,6 +6,7 @@ namespace AfterSignal
         CityVehicle car;Transform[] wheels;Vector3 previous;
         public static void Install(CityVehicle vehicle)
         {
+            if(vehicle.type==CityVehicleType.Bomber){BomberAirframe.Install(vehicle);return;}
             if(vehicle.GetComponent<VehicleDetails>()||vehicle.GetComponent<AuthoredCraft>())return;
             var detail=vehicle.gameObject.AddComponent<VehicleDetails>();detail.car=vehicle;
             if(!vehicle.GetComponent<AuthoredCraft>())

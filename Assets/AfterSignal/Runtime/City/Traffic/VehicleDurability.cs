@@ -13,7 +13,7 @@ namespace AfterSignal
                 CityVehicleType.Bus=>2200, CityVehicleType.Truck=>2800,
                 CityVehicleType.Boat=>7000, CityVehicleType.Airliner=>18000,
                 CityVehicleType.CombatHelicopter=>6000, CityVehicleType.Fighter=>10000,
-                CityVehicleType.Tank=>24000, _=>car.GetComponent<PoliceCar>()?1400:1000
+                CityVehicleType.Bomber=>22000,CityVehicleType.Tank=>24000, _=>car.GetComponent<PoliceCar>()?1400:1000
             };
         }
         // A bumper contact is a small repair bill; even a severe road impact takes
@@ -47,6 +47,7 @@ namespace AfterSignal
             if(sim&&sim.Current==this&&game)
                 game.Player.ReceiveDamage(VehicleDurability.OccupantDamage(closingSpeed,type==CityVehicleType.Motorcycle),point);
             GetComponent<VehicleCabin>()?.InjureOccupants(closingSpeed);
+            MotorcycleImpact.TryLaunch(this,other,closingSpeed,point);
         }
     }
 }

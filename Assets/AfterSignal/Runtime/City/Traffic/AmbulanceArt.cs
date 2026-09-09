@@ -12,7 +12,7 @@ namespace AfterSignal
             car=GetComponent<CityVehicle>();yield return null;yield return null;
             car.GetComponent<VehicleCabin>()?.SetCrew("Doctor",1);
             var asset=Resources.Load<GameObject>("Response/Ambulance");if(!asset)yield break;
-            foreach(var r in GetComponentsInChildren<MeshRenderer>())r.enabled=false;
+            foreach(var r in GetComponentsInChildren<MeshRenderer>())if(!r.name.StartsWith("Response "))r.enabled=false;
             model=Instantiate(asset,transform).transform;model.localRotation=Quaternion.Euler(0,180,0)*model.localRotation;
             foreach(var r in model.GetComponentsInChildren<Renderer>())
             {

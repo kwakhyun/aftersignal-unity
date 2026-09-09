@@ -25,7 +25,7 @@ namespace AfterSignal
             if(Time.time<refresh)return;refresh=Time.time+1;Active.Clear();
             foreach(var actor in WorldActor.All)
             {
-                if(!actor||!actor.Alive||actor.Downed||!(actor.monster||actor.gang||actor.terrorist))continue;
+                if(!actor||!actor.Alive||actor.Downed||!LocalSimulation.Combat(actor.transform.position)||!(actor.monster||actor.gang||actor.terrorist))continue;
                 var gang=actor.GetComponent<GangMember>();if(gang&&gang.CampaignUnit||actor.Titan&&actor.Titan.Campaign)continue;
                 string title=actor.monster?"잠식 몬스터 출현":actor.terrorist?"테러 신고 · 경찰 대응":actor.GetComponent<SeaCombat>()?"해적 습격 · 해경·해군 대응":"무장 조직 습격";
                 if(actor.gang&&!actor.GetComponent<SeaCombat>()&&gang&&!gang.Target&&!gang.AttackingPlayer&&!actor.GetComponent<GangCrime>())continue;

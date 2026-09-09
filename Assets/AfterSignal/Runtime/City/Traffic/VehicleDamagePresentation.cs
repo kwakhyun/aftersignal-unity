@@ -10,7 +10,7 @@ namespace AfterSignal
         {
             var g=GameDirector.Instance;if(!car||!g||g.Blocked||Time.time<next)return;next=Time.time+.3f;
             Stage=car.HealthFraction>.75f?0:car.HealthFraction>.5f?1:car.HealthFraction>.25f?2:car.Wrecked?4:3;
-            bool near=(transform.position-g.Player.transform.position).sqrMagnitude<650*650;
+            bool near=LocalSimulation.Combat(transform.position);
             if(Stage>=2&&near&&!smoke)Build();
             Set(smoke,near&&Stage>=2,Stage>=3?16:7);
             bool quenched=GetComponent<ExtinguishedObject>();

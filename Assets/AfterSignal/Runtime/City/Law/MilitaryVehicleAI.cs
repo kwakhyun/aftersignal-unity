@@ -19,12 +19,15 @@ namespace AfterSignal
             if(response.Incident||IncidentCommand.Emergency)foreach(var actor in WorldActor.All)if(actor&&actor.monster&&actor.Alive&&(!monster||(actor.Center-transform.position).sqrMagnitude<(monster.Center-transform.position).sqrMagnitude))monster=actor;
             if(monster)target=monster.transform.position;
             var delta=target-transform.position;
+            if(car.type==CityVehicleType.Bomber){var bay=car.GetComponent<BomberBay>();if(bay)bay.FlyRun(target,dt);return;}
             if(car.IsAircraft)
             {
                 var orbit=target+new Vector3(Mathf.Cos(clock*.13f)*120,car.type==CityVehicleType.Fighter?140:55,Mathf.Sin(clock*.13f)*120);
                 var d=orbit-transform.position;var input=ControlFrame.Empty;input.move=new Vector2(Mathf.Clamp(Vector3.SignedAngle(car.Forward,Vector3.ProjectOnPlane(d,Vector3.up),Vector3.up)/28,-1,1),car.type==CityVehicleType.Fighter?.25f:.7f);input.vertical=Mathf.Clamp(d.y/15,-1,1);car.Drive(input,dt);
             }
             else route.Drive(car,target,dt,car.type==CityVehicleType.Truck?35:60);
+            // Arrival routes remain active; distant response vehicles do not deploy troops or fire.
+            if(!LocalSimulation.Combat(transform.position))return;
             if(car.type==CityVehicleType.Truck)
             {
                 if(Vector3.ProjectOnPlane(delta,Vector3.up).magnitude<40&&deployed<6&&disembark<=0)

@@ -32,6 +32,7 @@ namespace AfterSignal
         }
         public static void Muzzle(Vector3 at,GunshotKind kind)
         {
+            if(!Near(at))return;
             Muzzles++;var direction=Heading(at);float scale=kind==GunshotKind.Shotgun?1.3f:kind==GunshotKind.Automatic?1.1f:kind==GunshotKind.Rifle?.8f:.55f;
             Emit("Muzzle / hot gas petals",at,direction,new Color(1,.7f,.25f),8,5,.32f*scale,.055f);
             Emit("Muzzle / residual smoke",at,direction,new Color(.48f,.5f,.53f,.3f),3,.5f,.18f*scale,.7f,true);

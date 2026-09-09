@@ -36,6 +36,13 @@ namespace AfterSignal
             if(item.slot==4)state.rounds[id]++;else if(!owned){state.rounds[id]=item.magazine;state.reserve[id]=item.pack;}
             Save();return true;
         }
+        public static bool Issue(int id)
+        {
+            Load();if(id<0||id>=Items.Length)return false;var item=Items[id];
+            state.owned|=1<<id;state.equipped[item.slot]=id;
+            state.rounds[id]=Mathf.Max(state.rounds[id],item.slot==4?6:item.magazine);
+            state.reserve[id]=Mathf.Max(state.reserve[id],item.pack);Save();return true;
+        }
         public static void Equip(int id){if(!Owns(id))return;state.equipped[Items[id].slot]=id;Save();}
         public static bool BuyAmmo(int id)
         {

@@ -6,11 +6,11 @@ namespace AfterSignal
     public sealed class VehicleFleet : MonoBehaviour
     {
         public static string ModelName(CityVehicleType type) => type==CityVehicleType.Sedan||type==CityVehicleType.Taxi?"FutureSedan":type==CityVehicleType.Bus?"FutureBus":type==CityVehicleType.Truck?"FutureTruck":type==CityVehicleType.SportsCar?"FutureSportsCar":type==CityVehicleType.Motorcycle?"FutureMotorcycle":type.ToString();
-        public static bool Persistent(CityVehicle c) => c.IsSpecial || c.GetComponent<PersonalMotorcycle>() || c.GetComponent<RegionalParked>() || c.GetComponent<ParkingAssignment>() || c.GetComponent<TacticalTransport>() || c.GetComponent<MilitaryVehicleAI>() || c.type == CityVehicleType.Tank;
+        public static bool Persistent(CityVehicle c) => c.IsSpecial || c.GetComponent<FireEngine>() || c.GetComponent<FacilityParked>() || c.GetComponent<PersonalMotorcycle>() || c.GetComponent<RegionalParked>() || c.GetComponent<ParkingAssignment>() || c.GetComponent<TacticalTransport>() || c.GetComponent<MilitaryVehicleAI>() || c.type == CityVehicleType.Tank;
         public static void Configure(CityVehicle c, int variant)
         {
             if (variant < 4) return;
-            c.type = (CityVehicleType)Mathf.Clamp(variant, 4, 10);
+            c.type = (CityVehicleType)Mathf.Clamp(variant, 4, 11);
             foreach (var col in c.GetComponentsInChildren<Collider>()) Object.Destroy(col);
             var collider = c.gameObject.AddComponent<BoxCollider>();
             float height = c.type == CityVehicleType.Airliner ? 4.8f : c.type == CityVehicleType.CombatHelicopter ? 2.5f : c.type == CityVehicleType.Boat ? 3.5f : 1.45f;
@@ -58,9 +58,10 @@ namespace AfterSignal
 
     public static class VehicleSeats
     {
-        public static int Count(CityVehicle c) => c.GetComponent<TacticalTransport>()&&!c.GetComponent<PoliceCar>()||c.GetComponent<MilitaryVehicleAI>()&&c.type==CityVehicleType.Truck?8:c.GetComponent<CityTaxiService>()&&c.IsWatercraft?13:c.type == CityVehicleType.Bus ? 15 : c.type == CityVehicleType.Airliner ? 26 : c.type == CityVehicleType.Boat ? 15 : c.type == CityVehicleType.Motorcycle || c.type == CityVehicleType.Fighter || c.type == CityVehicleType.Tank ? 1 : c.type == CityVehicleType.CombatHelicopter ? 4 : c.type == CityVehicleType.Truck || c.type == CityVehicleType.SportsCar ? 2 : 4;
+        public static int Count(CityVehicle c) => c.type==CityVehicleType.Bomber?2: c.GetComponent<TacticalTransport>()&&!c.GetComponent<PoliceCar>()||c.GetComponent<MilitaryVehicleAI>()&&c.type==CityVehicleType.Truck?8:c.GetComponent<CityTaxiService>()&&c.IsWatercraft?13:c.type == CityVehicleType.Bus ? 15 : c.type == CityVehicleType.Airliner ? 26 : c.type == CityVehicleType.Boat ? 15 : c.type == CityVehicleType.Motorcycle || c.type == CityVehicleType.Fighter || c.type == CityVehicleType.Tank ? 1 : c.type == CityVehicleType.CombatHelicopter ? 4 : c.type == CityVehicleType.Truck || c.type == CityVehicleType.SportsCar ? 2 : 4;
         public static Vector3 Local(CityVehicle c, int seat)
         {
+            if(c.type==CityVehicleType.Bomber)return new Vector3(8.4f,2.25f,seat==0?-.65f:.65f);
             var naval=c.GetComponent<MaritimeHull>();if(naval)return naval.Helm+new Vector3(seat<2?0:-2-(seat-2)/2*1.4f,seat<2?0:-2,seat%2==0?-.6f:.6f);
             if(c.GetComponent<TacticalTransport>()&&!c.GetComponent<PoliceCar>()||c.GetComponent<MilitaryVehicleAI>()&&c.type==CityVehicleType.Truck)return seat<2?new Vector3(2.25f,1.45f,seat==0?-.6f:.6f):new Vector3(.2f-(seat-2)/2*1.05f,1.45f,seat%2==0?-.85f:.85f);
             var taxi=c.GetComponent<CityTaxiService>();if(taxi)return taxi.Air?new Vector3(seat<2?1.7f:-.7f,1.43f,seat%2==0?-.55f:.55f):seat==0?new Vector3(4,1.55f,0):new Vector3(-4+(seat-1)/2*1.25f,1.47f,seat%2==0?-1.2f:1.2f);
@@ -75,9 +76,9 @@ namespace AfterSignal
             if (c.type == CityVehicleType.Truck) return new Vector3(2.8f,1.52f,seat==0?-.53f:.53f);
             return new Vector3(seat<2?.3f:-.68f,c.type==CityVehicleType.SportsCar?.53f:.78f,seat%2==0?-.43f:.43f);
         }
-        public static Vector3 Door(CityVehicle c) => c.GetComponent<CityTaxiService>()&&c.IsAircraft?c.transform.TransformPoint(new Vector3(0,0,-5.2f)):c.GetComponent<AuthoredCraft>()?c.GetComponent<AuthoredCraft>().BoardingPoint:c.transform.TransformPoint(c.type==CityVehicleType.Airliner?new Vector3(8,0,-3.4f):c.type==CityVehicleType.Boat?new Vector3(0,1.4f,3.3f):new Vector3(0,0,-c.HalfWidth-1));
+        public static Vector3 Door(CityVehicle c) => c.type==CityVehicleType.Bomber?c.transform.TransformPoint(new Vector3(9,0,-4)): c.GetComponent<CityTaxiService>()&&c.IsAircraft?c.transform.TransformPoint(new Vector3(0,0,-5.2f)):c.GetComponent<AuthoredCraft>()?c.GetComponent<AuthoredCraft>().BoardingPoint:c.transform.TransformPoint(c.type==CityVehicleType.Airliner?new Vector3(8,0,-3.4f):c.type==CityVehicleType.Boat?new Vector3(0,1.4f,3.3f):new Vector3(0,0,-c.HalfWidth-1));
         public static string Name(CityVehicle c,int seat) => seat==0 ? c.IsAircraft ? "조종석" : c.IsWatercraft ? "선장석" : "운전석" : c.IsSpecial || c.type==CityVehicleType.Bus ? "승객석 "+seat : seat==1?"조수석":seat==2?"뒷좌석 왼쪽":"뒷좌석 오른쪽";
-        public static string Title(CityVehicleType t) => new[]{"세단","택시","시내버스","트럭","루멘 바이크","오로라 스포츠카","블루워터 여객선","루멘 에어 여객기","레이븐 전투헬기","스펙터 전투기","아이언 전차"}[(int)t];
-        public static string Controls(CityVehicle c) => c.type==CityVehicleType.Tank ? "W/S 전후진 · A/D 궤도 선회 · 마우스 포탑 · 좌/우클릭 주포/기관총 · C 시점" : c.IsAircraft ? "W/S 추력 · A/D 선회 · SPACE 상승 / CTRL 하강 · SHIFT 가속 · C 시점"+(c.type==CityVehicleType.Airliner?"":" · 우클릭 미사일 / R 장전")+" · F 하차" : c.IsWatercraft ? "W/S 추진 · A/D 키 · SHIFT 가속 · SPACE 제동 · C 시점 · F 하선" : "W/S 가속·후진 · A/D 조향 · SHIFT 가속 · SPACE+조향 드리프트 / 제동 · C 시점 · E 하차";
+        public static string Title(CityVehicleType t) => new[]{"세단","택시","시내버스","트럭","루멘 바이크","오로라 스포츠카","블루워터 여객선","루멘 에어 여객기","레이븐 전투헬기","스펙터 전투기","아이언 전차","옵시디언 전략폭격기"}[(int)t];
+        public static string Controls(CityVehicle c) => c.type==CityVehicleType.Tank ? "W/S 전후진 · A/D 궤도 선회 · 마우스 포탑 · 좌/우클릭 주포/기관총 · C 시점" : c.IsAircraft ? "W/S 추력 · A/D 선회 · SPACE 상승 / CTRL 하강 · SHIFT 가속 · C 시점"+(c.type==CityVehicleType.Airliner?"":c.type==CityVehicleType.Bomber?" · 우클릭 24발 연속 투하 / 착륙 후 R 재보급":" · 우클릭 미사일 / R 장전")+" · F 하차" : c.IsWatercraft ? "W/S 추진 · A/D 키 · SHIFT 가속 · SPACE 제동 · C 시점 · F 하선" : "W/S 가속·후진 · A/D 조향 · SHIFT 가속 · SPACE+조향 드리프트 / 제동 · C 시점 · E 하차";
     }
 }

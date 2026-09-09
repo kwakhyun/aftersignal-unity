@@ -51,7 +51,7 @@ namespace AfterSignal
             go.transform.position=spawn;var sr=go.GetComponent<SpriteRenderer>();sr.sharedMaterial=actorMaterial;sr.sprite=PeopleArt.Get(art,0);
             var npc=go.GetComponent<CityNpc>();npc.Configure(6000+district.first+i,job,null,seed.title+"에서 생활한다. 주변 시설과 교통편을 잘 안다. 실제 위치와 직업에 맞게 대화한다.");
             PeopleArt.Attach(go,art);var c=go.GetComponent<FacilityCitizen>();c.origin=go.transform.position;c.radius=seed.radius;c.district=seed.title;c.serial=district.first+i;
-            if(soldier)go.GetComponent<WorldActor>().military=true;
+            if(soldier){var body=go.GetComponent<WorldActor>();body.military=true;GarrisonSupport.Register(body,seed.transform.position);}
             if(prisoner){var routine=go.AddComponent<CivicRoutine>();routine.Initialize(job,go.transform.position);routine.prisoner=true;routine.work=c.origin;routine.rest=c.origin+Vector3.right*.4f;c.enabled=false;}
             if(district.health[i]<0)go.GetComponent<WorldActor>().health=0;
             else if(district.health[i]>0)go.GetComponent<WorldActor>().health=district.health[i];

@@ -21,6 +21,7 @@ namespace AfterSignal
         float next;
         readonly Collider[] overlaps = new Collider[32];
         readonly List<Renderer> roofStructures = new List<Renderer>();
+        readonly List<Renderer> localVisuals=new(),restored=new();float nextVisuals;Vector3 lastVisualPosition;
         void Awake()
         {
             foreach (var renderer in FindObjectsByType<MeshRenderer>())
@@ -77,25 +78,24 @@ namespace AfterSignal
                         Mark(c.GetComponent<Renderer>());
                 }
 
-                foreach (var renderer in roofStructures)
-                    MarkVisualObstruction(renderer, start, line, g.Player.transform.position.y);
-                foreach (var group in CityBuildingCutaway.All)
-                    if (group && group.visualOnly && group.upper != null)
-                        foreach (var r in group.upper)
-                        {
-                            MarkVisualObstruction(r, start, line, g.Player.transform.position.y);
-                        }
+                if(Time.unscaledTime>=nextVisuals||(g.Player.transform.position-lastVisualPosition).sqrMagnitude>625)
+                {
+                    nextVisuals=Time.unscaledTime+1;lastVisualPosition=g.Player.transform.position;localVisuals.Clear();
+                    foreach(var renderer in roofStructures)if(renderer&&renderer.bounds.SqrDistance(lastVisualPosition)<10000)localVisuals.Add(renderer);
+                    foreach(var group in CityBuildingCutaway.All)if(group&&group.visualOnly&&group.upper!=null)
+                        foreach(var renderer in group.upper)if(renderer&&renderer.bounds.SqrDistance(lastVisualPosition)<10000)localVisuals.Add(renderer);
+                }
+                foreach(var renderer in localVisuals)MarkVisualObstruction(renderer,start,line,g.Player.transform.position.y);
             }
 
+            restored.Clear();
             foreach (var pair in surfaces)
             {
                 var r = pair.Key;
-                if (!r)
-                    continue;
+                if (!r){restored.Add(r);continue;}
                 var surface = pair.Value;
                 float target = blocking.Contains(r) ? .04f : 1;
-                if (Mathf.Approximately(target,surface.opacity))
-                    continue;
+                if (Mathf.Approximately(target,surface.opacity)){if(target>=1)restored.Add(r);continue;}
                 surface.opacity = Mathf.MoveTowards(surface.opacity, target, Time.unscaledDeltaTime * 5);
                 if (surface.opacity < .999f)
                 {
@@ -108,8 +108,10 @@ namespace AfterSignal
                 {
                     r.sharedMaterials = surface.originals;
                     surface.applied=false;
+                    restored.Add(r);
                 }
             }
+            foreach(var renderer in restored)surfaces.Remove(renderer);
         }
 
         void MarkVisualObstruction(Renderer renderer, Vector3 start, Vector3 line, float playerHeight)

@@ -18,7 +18,7 @@ namespace AfterSignal
         public bool Refueling { get; private set; }
         public int Hijacks { get; private set; }
         public int Entries { get; private set; }
-        public string Prompt { get; private set; }
+        public string Prompt { get; private set; }="";
         public bool MapOpen { get; private set; }
 
         public void CloseMap()=>MapOpen=false;
@@ -42,6 +42,7 @@ namespace AfterSignal
             while (!game.Ready)
                 yield return null;
             Cars.AddRange(FindObjectsByType<CityVehicle>());
+            if(game.stage==StageId.UrbanCity&&!GetComponent<FacilityParking>())gameObject.AddComponent<FacilityParking>();
             foreach (var c in Cars)
                 c.occupied = false;
             if (PlayerPrefs.GetInt(UrbanCatalog.Prefix + "Car", 0) > 0 && PlayerPrefs.GetInt(UrbanCatalog.Prefix + "CarStage", 23) == (int)game.stage)
@@ -176,7 +177,7 @@ namespace AfterSignal
                 }
 
                 var navalGun=Current?Current.GetComponent<SeaCombat>():null;if(navalGun&&SeatIndex==0){Prompt+=" · 좌클릭 함포";if(input.attack){navalGun.ManualFire();input.attack=false;}}
-                bool armed=Current&&(Current.type==CityVehicleType.Tank||Current.type==CityVehicleType.Fighter||Current.type==CityVehicleType.CombatHelicopter);
+                bool armed=Current&&(Current.type==CityVehicleType.Bomber||Current.type==CityVehicleType.Tank||Current.type==CityVehicleType.Fighter||Current.type==CityVehicleType.CombatHelicopter);
                 input.grapple = input.dash = input.skill = false;
                 if(!armed||SeatIndex>0)input.secondaryFire=false;
                 Prompt+=" · B 크락션"+(!armed||SeatIndex>0?" · 좌클릭 사격 / R 장전":"");
@@ -262,7 +263,7 @@ namespace AfterSignal
                 {
                     int id = random.Next(UrbanCatalog.SiteCount);
                     var p = UrbanCatalog.Center(id) + new Vector3(-12, .02f, -44);
-                    if (Vector3.Distance(p, game.Player.transform.position) < 210 && Vector3.Distance(p, game.Player.transform.position) > 45)
+                    if (FacilityParking.Reserved(p)==ServiceParkingKind.None && Vector3.Distance(p, game.Player.transform.position) < 210 && Vector3.Distance(p, game.Player.transform.position) > 45)
                         Spawn(p, false, TrafficVariant());
                 }
             }
@@ -283,15 +284,16 @@ namespace AfterSignal
                 return;
             game.Player.TickVehicleStatus(dt);
             if(SeatIndex==0)Current.Drive(input, dt);
+            if(!Current)return; // A motorcycle impact can eject the rider during Drive.
             game.Player.transform.position = Current.transform.TransformPoint(VehicleSeats.Local(Current,SeatIndex));
             if(input.horn)Current.GetComponent<VehicleHorn>()?.Honk();
-            bool armed=Current.GetComponent<VehicleArmament>()&&SeatIndex==0;
+            bool armed=(Current.GetComponent<VehicleArmament>()||Current.GetComponent<BomberBay>())&&SeatIndex==0;
             if(!armed)game.Player.TickMountedCombat(input,dt);
         }
 
         public bool Enter(CityVehicle car,int seat=0)
         {
-            if (!car || Current || car.Wrecked)
+            if (!car || Current || car.Wrecked || car.Tumbling)
                 return false;
             if (Mathf.Abs(car.speed) > 12)
             {

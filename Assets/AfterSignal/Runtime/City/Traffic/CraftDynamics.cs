@@ -18,9 +18,9 @@ namespace AfterSignal
         }
         public void Drive(ControlFrame input,float dt)
         {
-            if(!car||car.Wrecked)return;
+            if(!car||car.Wrecked||GetComponent<TitanGravitySnare>())return;
             bool helicopter=car.type==CityVehicleType.CombatHelicopter;
-            float max=car.IsWatercraft?19:helicopter?52:car.type==CityVehicleType.Fighter?130:92;
+            float max=car.IsWatercraft?19:helicopter?52:car.type==CityVehicleType.Bomber?84:car.type==CityVehicleType.Fighter?130:92;
             bool cargo=car.GetComponent<AuthoredCraft>();if(cargo)max=8;
             max*=input.boost?1.35f:1;
             if(car.IsWatercraft||helicopter)throttle=input.move.y;
@@ -30,7 +30,7 @@ namespace AfterSignal
             float target=throttle*max;
             if(car.IsWatercraft&&input.vertical>0)target=0;
             car.speed=Mathf.MoveTowards(car.speed,target,dt*(car.IsWatercraft?4:helicopter?12:18));
-            float steering=input.move.x*(car.IsWatercraft?(cargo?3:28):helicopter?52:car.speed>25?28:14)*dt;
+            float steering=input.move.x*(car.IsWatercraft?(cargo?3:28):helicopter?52:car.type==CityVehicleType.Bomber?18:car.speed>25?28:14)*dt;
             transform.Rotate(0,steering,0,Space.World);
             var old=transform.position;var delta=car.Forward*car.speed*dt;
             if(car.IsAircraft)
@@ -58,6 +58,7 @@ namespace AfterSignal
             }
             if(model)model.localRotation=Quaternion.Euler(input.move.x*(car.IsAircraft?-12:2),0,car.IsAircraft?verticalSpeed*.5f:Mathf.Sin(Time.time)*.6f)*modelRest;
             GetComponent<VehicleArmament>()?.Tick(input,dt);
+            GetComponent<BomberBay>()?.Tick(input,dt);
         }
         void Update()
         {

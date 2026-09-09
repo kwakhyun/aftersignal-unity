@@ -94,7 +94,7 @@ namespace AfterSignal
                 if (!initial && OnCamera(positions[i] + Vector3.up)) return false;
             }
             site.root = new GameObject("거리 교전 / " + GangMember.CrewName(site.crew));
-            if(!CityEventGate.Begin(site.root,CityEventKind.Gang)){Destroy(site.root);site.root=null;return false;}
+            if(!CityEventGate.Begin(site.root,CityEventKind.Gang,site.center)){Destroy(site.root);site.root=null;return false;}
             site.root.transform.SetParent(transform, false);
             site.age = site.resolved = 0;
             for (int i = 0; i < positions.Length; i++)

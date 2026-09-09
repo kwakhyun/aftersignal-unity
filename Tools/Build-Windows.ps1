@@ -1,6 +1,7 @@
 param([string]$Editor='C:/Program Files/Unity/Hub/Editor/6000.4.0f1/Editor/Unity.exe',[switch]$Release)
 $ErrorActionPreference='Stop'
 $projectRoot=Split-Path $PSScriptRoot -Parent
+& (Join-Path $PSScriptRoot 'Check-PrivateAssets.ps1')
 if(-not(Test-Path -LiteralPath $Editor)){throw "Unity 6000.4.0f1 editor not found: $Editor"}
 & (Join-Path $PSScriptRoot 'Restore-UnityPackages.ps1') -Editor $Editor -ProjectRoot $projectRoot
 New-Item -ItemType Directory -Force -Path (Join-Path $projectRoot 'Artifacts') | Out-Null

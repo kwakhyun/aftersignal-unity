@@ -1,0 +1,21 @@
+{
+    "completed": true,
+    "passed": [
+        "애프터라이트 소방서 has its dedicated, unoccupied parked fleet / 2",
+        "동부경찰서 has its dedicated, unoccupied parked fleet / 2",
+        "온유병원 has its dedicated, unoccupied parked fleet / 2",
+        "Ambient random parking is excluded from the fire station forecourt",
+        "A real local fire dispatches a visible dedicated engine that survives distant-traffic culling / fire=True, engine=True, service=True",
+        "Dispatched engine arrives and deploys its hose and rescue crew",
+        "Player enters the motorcycle before the collision",
+        "Strong motorcycle/car collision ejects the player and launches the bike / tumbling=True, riding=False, bikeY=201.1663, controller=True",
+        "Ejected rider receives bounded launch velocity and survives the impact",
+        "Motorcycle lands upright within a moderate distance and remains mountable",
+        "Navigation attaches mid-street objectives to road edges without a junction backtrack",
+        "The active navigation point stays ahead after route progress",
+        "Main combat navigation switches from battle origin to the active extraction point",
+        "Opening conversation does not invent a spoken line for Seoha",
+        "The NPC-first HTTP request has no fabricated user history and displays the reply"
+    ],
+    "errors": []
+}

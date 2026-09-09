@@ -6,6 +6,7 @@ namespace AfterSignal
     {
         public static bool Resolve(GameDirector game, InteractionPoint[] points, out Vector3 target, out string label)
         {
+            if(CampaignBattle.Guide(game.Player.transform.position,out target,out label))return true;
             if(CityChronicle.Instance&&CityChronicle.Instance.Guide(out target,out label))return true;
             target = game.Player.transform.position;
             label = game.Objective;
@@ -33,7 +34,7 @@ namespace AfterSignal
             {
                 if (game.Player.transform.position.y > 18)
                 {
-                    foreach (var p in points)
+                    foreach (var p in InteractionPoint.All)
                         if (p && p.kind == InteractionKind.HomeDoor && p.door && !p.door.Open && game.Player.transform.position.x < 29)
                         {
                             target = p.transform.position;
@@ -120,7 +121,7 @@ namespace AfterSignal
 
             float distance = float.MaxValue;
             bool found = false;
-            foreach (var p in points)
+            foreach (var p in InteractionPoint.All)
                 if (p && p.gameObject.activeInHierarchy && p.kind == kind)
                 {
                     if (game.stage == StageId.Haven && first && p.destination != StageId.Headquarters)

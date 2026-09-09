@@ -41,14 +41,13 @@ namespace AfterSignal
 
         public static void Fire(WorldActor source, Vector3 muzzle, Vector3 target, float range, float damage, Color color, bool hostilePlayer, Transform firingMount=null)
         {
-            if(!TacticalJudgment.Active(source)||source.Downed)return;
+            if(!TacticalJudgment.Active(source)||source.Downed||!LocalSimulation.Combat(muzzle))return;
             var mounted=firingMount?firingMount.GetComponentInParent<CityVehicle>():source.GetComponentInParent<CityVehicle>();
             if(mounted&&!mounted.occupied&&!(UrbanSimulation.Instance&&UrbanSimulation.Instance.Current==mounted))return;
             var direction = (target - muzzle).normalized;
             var end = muzzle + direction * range;
             if (!firingMount && Physics.Linecast(source.Center, muzzle, out var wall, 1, QueryTriggerInteraction.Ignore))
             {
-                SignalEffects.Beam(source.Center, wall.point, color, .025f, .09f);
                 return;
             }
             int count = Physics.RaycastNonAlloc(muzzle, direction, hits, range, Mask, QueryTriggerInteraction.Collide);

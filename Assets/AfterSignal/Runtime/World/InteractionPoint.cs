@@ -82,6 +82,7 @@ namespace AfterSignal
             var taxi=GetComponent<CityTaxiService>();if(taxi){taxi.Board();return;}
             var credits=GetComponent<CreditDrop>();if(credits){credits.Collect();return;}
             var cash=GetComponent<CashContainer>();if(cash){cash.Open();return;}
+            var rack=GetComponent<MilitaryWeaponRack>();if(rack){rack.Use();return;}
             var armory=GetComponent<ArmoryCounter>();if(armory){armory.Open();return;}
             var work=GetComponent<FacilityWorkPoint>();if(work){work.Use();return;}
             var prop=GetComponent<UsableProp>();if(prop){prop.Use(game);return;}

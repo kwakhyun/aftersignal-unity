@@ -18,12 +18,12 @@ namespace AfterSignal
         Image hpBar,energyBar,bossBar,fade;
         GameObject modal,dialogueBox,bossPanel;
         RectTransform cursor,candidate,safeMarker;
-        Button primary,secondary,third,musicButton,sfxButton,homeButton,bikeButton;
+        Button primary,secondary,third,musicButton,sfxButton,homeButton,bikeButton,dialogueContinue;
         Button motionButton,effectButton,postButton,graphicsButton;GameObject settingsRow;
         Image hpTrail;float displayedHealth=100,nextText;
         static readonly string[] weaponNames={"01  ·  KATANA / 연속 검격","02  ·  GREATSWORD / 중검","03  ·  PISTOL / 조준 사격"};
         static readonly string[] stageNames={"01 / CENTRAL STATION","02 / THE NIGHT CARRIAGE","03 / ABOVE THE CITY","HUB / AFTERLIGHT"};
-        string modalMode;
+        Text menuFooter;string modalMode;int respawnCity;readonly Button[] respawnChoices=new Button[4];
         readonly List<(Text text,Vector3 world,float born)> numbers=new List<(Text,Vector3,float)>();
         readonly Dictionary<EnemyBrain,Text> warnings=new Dictionary<EnemyBrain,Text>();
         public void Initialize(GameDirector owner)
@@ -41,6 +41,7 @@ namespace AfterSignal
             Panel(card,"Accent",40,74,64,3,mint);
             modalTitle=Label(card,"",40,96,530,115,44,white,FontStyle.Bold);
             modalBody=Label(card,"",40,223,530,102,18,muted);
+            for(int i=0;i<4;i++){int city=i;respawnChoices[i]=MakeButton(card,"",40+(i%2)*272,250+(i/2)*77,258,67,()=>{respawnCity=city;ConfigureModal("dead");});respawnChoices[i].name="Respawn city "+i;respawnChoices[i].GetComponentInChildren<Text>().fontSize=17;respawnChoices[i].gameObject.SetActive(false);}
             primary=MakeButton(card,"",40,350,530,58,()=>Primary());
             secondary=MakeButton(card,"",40,423,530,48,()=>Secondary());
             third=MakeButton(card,"",40,486,190,44,()=>Third());
@@ -65,11 +66,11 @@ namespace AfterSignal
             });
             sfxButton.GetComponentInChildren<Text>().fontSize=16;
             graphicsButton=MakeButton(card,"",40,683,530,32,()=>{FidelityPresentation.Cycle();ConfigureModal("pause");});graphicsButton.GetComponentInChildren<Text>().fontSize=15;
-            Label(card,"ESC  메뉴 닫기     ·     배경음악과 화면 연출 조절",40,723,530,20,12,muted);
+            menuFooter=Label(card,"ESC  메뉴 닫기     ·     배경음악과 화면 연출 조절",40,723,530,20,12,muted);
             dialogueBox=Panel(root,"Dialogue",0,0,1020,230,ink).gameObject;CenterBottom(dialogueBox.GetComponent<RectTransform>(),90,1020,230);
             dialogueName=Label(dialogueBox.transform,"",30,23,920,28,14,mint,FontStyle.Bold);
             dialogueText=Label(dialogueBox.transform,"",30,67,952,95,23,white);
-            MakeButton(dialogueBox.transform,"대화 계속  [ E ]",754,177,230,35,()=>game.CloseDialogue());
+            dialogueContinue=MakeButton(dialogueBox.transform,"대화 계속  [ E ]",754,177,230,35,()=>game.CloseDialogue());
             fade=Panel(root,"Transition",0,0,1600,900,Color.black);Stretch(fade.rectTransform);fade.raycastTarget=false;
             foreach(var e in game.Enemies){var txt=Label(root,"",0,0,160,42,17,SignalEffects.Red,FontStyle.Bold);txt.alignment=TextAnchor.MiddleCenter;warnings.Add(e,txt);}
         }
@@ -84,10 +85,10 @@ namespace AfterSignal
             if(game.stage==StageId.Haven){int jobs=((CampaignCatalog.Jobs&4)!=0?1:0)+((CampaignCatalog.Jobs&16)!=0?1:0);rail.text=$"주민 의뢰  {jobs} / 2     ·     기록  {game.Memories:00}";}
             var district=CampaignCatalog.Get(game.stage);if(district!=null&&district.chapter>0){int first=district.chapter==5?22:district.chapter==2?4:district.chapter==3?11:14,count=district.chapter==5?1:district.chapter==2?7:3;area.text=$"CH {district.chapter:00}  ·  {(int)game.stage-first+1}/{count}  /  {district.title}";}
             }
-            notice.text=game.NoticeTimer>0&&!game.Blocked?game.Notice:"";
+            notice.text=game.NoticeTimer>0&&game.NoticeInRange&&!game.Blocked?game.Notice:"";
             notice.rectTransform.anchoredPosition=new Vector2(0,CampaignBattle.Active?-96:-200);
             prompt.text=!game.Blocked&&game.Nearby?$"[ E ]   {game.Nearby.title}":"";
-            anchorHint.text=game.Blocked?"":game.Player.Rope.Attached?"오른쪽 버튼 유지 · W 감기 / S 풀기 · SPACE 도약 · 버튼을 놓아 관성 이동":game.Player.Rope.Candidate?"오른쪽 클릭 유지 · 조준한 표면에 로프 발사":"";
+            anchorHint.text=game.Blocked?"":game.Player.Rope.Attached?"로프 자동 감기 · W 빠르게 / S 풀기 · SPACE 도약 · 우클릭 해제":game.Player.Rope.Candidate?$"우클릭 · 갈고리 연결  {Vector3.Distance(game.Player.Shoulder,game.Player.Rope.Candidate.transform.position):0}m"+(game.Player.Rope.AimAssisted?" · 조준 보조":""):"";
             Cursor.visible=!game.CameraRig.CanLook;cursor.gameObject.SetActive(game.CameraRig.CanLook);
             PlaceScreen(cursor,new Vector2(Screen.width*.5f,Screen.height*.5f),new Vector2(15,15));
             var anchor=game.Player.Rope.Candidate;candidate.gameObject.SetActive(anchor&&!game.Blocked);
@@ -100,14 +101,15 @@ namespace AfterSignal
             foreach(var pair in warnings){bool visible=pair.Key&&pair.Key.Alive&&pair.Key.Telegraph>0&&!pair.Key.boss&&!game.Blocked;pair.Value.gameObject.SetActive(visible);if(visible){pair.Value.text=pair.Key.kind=="gunner"?"!  SHOT":"!  STRIKE";PlaceWorld(pair.Value.rectTransform,pair.Key.transform.position+Vector3.up*2.8f,new Vector2(80,32));}}
             for(int i=numbers.Count-1;i>=0;i--){var n=numbers[i];float age=Time.time-n.born;if(age>.85f){Destroy(n.text.gameObject);numbers.RemoveAt(i);}else{PlaceWorld(n.text.rectTransform,n.world+Vector3.up*age,new Vector2(40,20));}}
             string mode=game.Dead?"dead":game.Paused?"pause":"";
-            modal.SetActive(mode!="");if(mode!=modalMode){modalMode=mode;ConfigureModal(mode);}
-            dialogueBox.SetActive(game.Dialogue);if(game.Dialogue){dialogueName.text=game.DialogueTitle;dialogueText.text=game.DialogueText;if(storyPortrait){storyPortrait.sprite=StoryPortraits.Get(game.DialogueTitle);storyPortrait.gameObject.SetActive(storyPortrait.sprite);}}
+            modal.SetActive(mode!="");if(mode!=modalMode){if(mode=="dead")respawnCity=0;modalMode=mode;ConfigureModal(mode);}
+            dialogueBox.SetActive(game.Dialogue);if(game.Dialogue){dialogueName.text=game.DialogueTitle;dialogueText.text=game.DialogueText;if(storyPortrait){storyPortrait.sprite=StoryPortraits.Bust(game.DialogueTitle);storyPortrait.gameObject.SetActive(storyPortrait.sprite);}}
             UpdateUrbanHud();UpdateQuestHud();UpdateLifeHud();UpdateClientExperience();
+            UpdateNoaRadio();
             fade.gameObject.SetActive(game.Transition);fade.color=new Color(0,0,0,game.Fade);
         }
         void ConfigureModal(string mode)
         {
-            if(mode=="")return;
+            if(mode=="")return;menuFooter.gameObject.SetActive(mode=="pause");
             musicButton.gameObject.SetActive(mode=="pause");
             homeButton.gameObject.SetActive(mode=="pause");bikeButton.gameObject.SetActive(mode=="pause");
             sfxButton.gameObject.SetActive(mode=="pause");
@@ -116,13 +118,16 @@ namespace AfterSignal
             float musicLevel=SignalMusic.Instance?SignalMusic.Instance.MusicLevel:SignalMusic.DefaultLevel;
             ButtonText(musicButton,musicLevel<.01f?"배경음악: 꺼짐  ·  클릭하여 변경":$"배경음악: {musicLevel*100:0}%  ·  클릭하여 변경");
             settingsRow.SetActive(mode=="pause");ButtonText(motionButton,PresentationSettings.Motion>0?"화면 충격: 켜짐":"화면 충격: 꺼짐");ButtonText(effectButton,PresentationSettings.Effects>0?"전투 효과: 켜짐":"전투 효과: 꺼짐");ButtonText(postButton,PresentationSettings.Post?"후처리: 켜짐":"후처리: 꺼짐");
+            for(int i=0;i<4;i++){respawnChoices[i].gameObject.SetActive(mode=="dead");ButtonText(respawnChoices[i],(i==respawnCity?"● ":"○ ")+FourCityCatalog.CityNames[i]+"\n"+(i==0?"서하의 집":i==1?"응급의료센터":i==2?"전진기지 의무실":"생명지원센터"));respawnChoices[i].GetComponent<Image>().color=i==respawnCity?new Color(.13f,.43f,.42f):new Color(.08f,.16f,.19f);}
+            Rect(primary.GetComponent<RectTransform>(),40,mode=="dead"?424:350,530,58);Rect(secondary.GetComponent<RectTransform>(),40,mode=="dead"?500:423,530,48);Rect(third.GetComponent<RectTransform>(),40,mode=="dead"?566:486,190,44);
+            Rect(modalBody.rectTransform,40,mode=="dead"?207:223,530,mode=="dead"?40:102);
             if(mode=="dead"){
-                modalTitle.text="SIGNAL LOST";modalBody.text="기억은 아직 사라지지 않았습니다.\n서하의 집에서 다시 시작합니다.";ButtonText(primary,RespawnNetwork.Destination+"에서 리스폰   →");ButtonText(secondary,"타이틀로 돌아가기");ButtonText(third,"게임 종료");secondary.interactable=true;
+                modalTitle.text="SIGNAL LOST";modalBody.text="다시 시작할 도시를 선택하세요.";ButtonText(primary,FourCityCatalog.CityNames[respawnCity]+"에서 다시 시작   →");ButtonText(secondary,"타이틀로 돌아가기");ButtonText(third,"게임 종료");secondary.interactable=true;
             }else{
                 modalTitle.text="잠시 멈춘 밤";modalBody.text="WASD 달리기 · 마우스 왼쪽 공격 / 오른쪽 로프\n휠 확대·축소 / 1–3 무기 · R 장전 · Q 기술 · CTRL 방어\nSPACE 두 번 더블 점프 · 벽으로 W 등반 · SHIFT 대시\n마우스 시점 · J 사건 일지 · F6 구조 신고 · HOME 시점 초기화";ButtonText(primary,"계속하기   →");ButtonText(secondary,game.Audio.Volume>.01f?"소리 끄기":"소리 켜기");ButtonText(third,"저장하고 타이틀로");secondary.interactable=true;
             }
         }
-        void Primary(){if(game.Title)game.Begin();else if(game.Dead)game.Retry();else game.SetPaused(false);}
+        void Primary(){if(game.Title)game.Begin();else if(game.Dead)game.Retry(respawnCity);else game.SetPaused(false);}
         void Secondary(){if(game.Title)game.Begin(true);else if(game.Dead)game.ReturnToTitle();else{game.Audio.SetVolume(game.Audio.Volume>.01f?0:.45f);ConfigureModal("pause");}}
         void Third(){if(game.Paused){game.ReturnToTitle();}else Application.Quit();}
         public void AddDamage(Vector3 position,int damage,bool critical)

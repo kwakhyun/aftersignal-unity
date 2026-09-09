@@ -8,7 +8,7 @@ namespace AfterSignal
         static Material Material(Color c) => Resources.Load<Material>(c.r > .8f ? (c.g > .4f ? "Materials/GoldFX" : "Materials/RedFX") : "Materials/CyanFX");
         public static void Beam(Vector3 from, Vector3 to, Color color, float width, float life)
         {
-            if (PresentationSettings.Effects <= 0 || EffectBudget.Active >= 64)
+            if (PresentationSettings.Effects <= 0 || EffectBudget.Active >= 64 || !LocalSimulation.Combat((from+to)*.5f))
                 return;
             var go = new GameObject("Energy trail");
             var line = go.AddComponent<LineRenderer>();
@@ -28,7 +28,7 @@ namespace AfterSignal
 
         public static void Ring(Vector3 center, Color color, float radius, float life)
         {
-            if (PresentationSettings.Effects <= 0 || EffectBudget.Active >= 64)
+            if (PresentationSettings.Effects <= 0 || EffectBudget.Active >= 64 || !LocalSimulation.Within(center,LocalSimulation.CombatRadius+radius))
                 return;
             var go = new GameObject("Resonance ring");
             var line = go.AddComponent<LineRenderer>();
@@ -56,7 +56,7 @@ namespace AfterSignal
         {
             heading=Vector3.ProjectOnPlane(heading,Vector3.up).normalized;
             if(heading.sqrMagnitude<.01f)heading=Vector3.forward;
-            if (PresentationSettings.Effects <= 0 || EffectBudget.Active >= 54)
+            if (PresentationSettings.Effects <= 0 || EffectBudget.Active >= 54 || !LocalSimulation.Combat(center))
                 return;
             if (radius < 3)
             {
@@ -88,7 +88,7 @@ namespace AfterSignal
 
         public static void Burst(Vector3 center, Color color, int count, float speed)
         {
-            if (PresentationSettings.Effects <= 0 || EffectBudget.Active >= 48)
+            if (PresentationSettings.Effects <= 0 || EffectBudget.Active >= 48 || !LocalSimulation.Combat(center))
                 return;
             count = Mathf.Min(32, Mathf.CeilToInt(count * PresentationSettings.Effects));
             var go = new GameObject("Signal sparks");

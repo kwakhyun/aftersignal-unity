@@ -144,7 +144,6 @@ namespace AfterSignal
             {
                 aim = priority?priority.Center:g.Player.Shoulder;
                 warning = .7f;
-                SignalEffects.Beam(transform.position + Vector3.down, aim, new Color(1, .2f, .12f, .5f), .015f, .7f);
             }
         }
 
@@ -166,7 +165,7 @@ namespace AfterSignal
             }
 
             for (int i = 0; i < 3; i++)
-                SignalEffects.Beam(start + transform.right * (i - 1) * .12f, end, SignalEffects.Gold, .025f, .12f);
+                CombatVfx.Tracer(start + transform.right * (i - 1) * .12f,end,SignalEffects.Gold);
             g.Audio.PlayGun(GunshotKind.Automatic, start, 1.1f);
         }
 

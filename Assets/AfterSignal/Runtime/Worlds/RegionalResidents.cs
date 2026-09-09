@@ -38,7 +38,7 @@ namespace AfterSignal
             if(v.kind==VenueKind.Slum)NeighborBond.Attach(npc);
             if(v.kind==VenueKind.Prison&&!staff)actor.gameObject.AddComponent<RegionalUniform>().art="Prisoner";
             bool security=v.kind==VenueKind.Police&&staff||v.kind==VenueKind.Military||v.kind==VenueKind.Prison&&staff||(v.kind==VenueKind.Laboratory||v.id=="erebos-institute")&&i%4==0;
-            if(security){var body=actor.GetComponent<WorldActor>();body.police=v.kind==VenueKind.Police||v.kind==VenueKind.Prison;body.military=!body.police;body.health=180;var guard=actor.gameObject.AddComponent<RegionalGuard>();guard.venue=venue;if(v.city==2)actor.gameObject.AddComponent<RegionalUniform>().art="Swat";}
+            if(security){var body=actor.GetComponent<WorldActor>();body.police=v.kind==VenueKind.Police||v.kind==VenueKind.Prison;body.military=!body.police;body.health=180;if(body.military)GarrisonSupport.Register(body,v.Entrance);var guard=actor.gameObject.AddComponent<RegionalGuard>();guard.venue=venue;if(v.city==2)actor.gameObject.AddComponent<RegionalUniform>().art="Swat";}
         }
     }
     public sealed class RegionalUniform:MonoBehaviour{public string art;}

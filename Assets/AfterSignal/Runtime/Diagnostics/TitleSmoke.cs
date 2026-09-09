@@ -19,12 +19,14 @@ namespace AfterSignal
         [Serializable] sealed class Backup { public List<Preference> values=new List<Preference>(); }
         readonly Report report=new Report();readonly Backup backup=new Backup();
         string output;bool finished;float began;
+        bool ArtworkOnly => Environment.GetCommandLineArgs().Contains("-title-artwork-only");
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void Install(){if(Environment.GetCommandLineArgs().Contains("-title-smoke")&&!FindAnyObjectByType<TitleSmoke>())new GameObject("Title essential check").AddComponent<TitleSmoke>();}
         void Awake()
         {
             DontDestroyOnLoad(gameObject);Application.runInBackground=true;began=Time.realtimeSinceStartup;
             output=Path.GetFullPath(QualitySession.Arg("-quality-output","Artifacts/Title/Final"));Directory.CreateDirectory(output);
+            if(ArtworkOnly){LifeState.SuppressSave=CityChronicle.SuppressSave=RespawnNetwork.SuppressSave=true;Application.logMessageReceived+=Log;return;}
             foreach(string k in new[]{"Stage","Memories","Completed","Expansion.Chapters","Expansion.Accepted","Expansion.Jobs","Life.CampaignSerial","Life.Credits","Life.Savings","Life.Outfit","Life.Outfits","Urban.Site","Urban.Car","Urban.CarStage","Urban.CarType","Post","Fullscreen"})Save("AFTERSIGNAL.Unity."+k,0);
             foreach(string k in new[]{"Life.Hours","Life.Heat","Life.Hidden","Urban.CarX","Urban.CarZ","Urban.CarYaw","Urban.CarFuel","Urban.CarHealth","Volume","MusicVolume","Motion","Effects"})Save("AFTERSIGNAL.Unity."+k,1);
             Save("AFTERSIGNAL.Unity.Life.Errand",2);Save(CityChronicle.SaveKey,2);
@@ -47,6 +49,7 @@ namespace AfterSignal
             Check(g.Title&&title.Visible&&Time.timeScale==0&&!g.CameraRig.CanLook,"Launch presents a paused title with free cursor");
             Check(title.ArtworkLoaded,"Dedicated illustration loads at runtime");
             Check(FindObjectsByType<Canvas>().Where(c=>c.name.StartsWith("HUD")).All(c=>!c.enabled),"World HUD is hidden behind title");
+            if(ArtworkOnly){Capture("title-composition");Finish();yield break;}
             PlayerPrefs.DeleteKey("AFTERSIGNAL.Unity.Stage");title.Refresh();yield return null;
             Check(!title.ContinueButton.interactable,"Continue is disabled without a save");
             Capture("title-new");
@@ -83,7 +86,7 @@ namespace AfterSignal
         {
             if(finished)return;finished=true;LifeState.SuppressSave=true;CityChronicle.SuppressSave=true;
             foreach(var p in backup.values){if(!p.exists)PlayerPrefs.DeleteKey(p.key);else if(p.kind==0)PlayerPrefs.SetInt(p.key,p.integer);else if(p.kind==1)PlayerPrefs.SetFloat(p.key,p.number);else PlayerPrefs.SetString(p.key,p.text);}
-            PlayerPrefs.Save();report.completed=report.errors.Count==0;
+            if(!ArtworkOnly)PlayerPrefs.Save();report.completed=report.errors.Count==0;
             File.WriteAllText(Path.Combine(output,"title.json"),JsonUtility.ToJson(report,true));Application.Quit(report.completed?0:1);
         }
         void OnDestroy(){Application.logMessageReceived-=Log;}

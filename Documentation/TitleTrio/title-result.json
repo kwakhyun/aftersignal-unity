@@ -1,0 +1,9 @@
+{
+    "completed": true,
+    "passed": [
+        "Launch presents a paused title with free cursor",
+        "Dedicated illustration loads at runtime",
+        "World HUD is hidden behind title"
+    ],
+    "errors": []
+}

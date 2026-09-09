@@ -22,6 +22,7 @@ namespace AfterSignal
         public PoliceHelicopter Helicopter;
         public Vector3 LastSeen { get; private set; }
         public bool Seen { get; private set; }
+        public NoaWantedSupport NoaSupport { get; } = new NoaWantedSupport();
         public float EscapeTime => 36 + Level * 10;
 
         public int ActiveOfficers
@@ -80,6 +81,7 @@ namespace AfterSignal
             LifeState.Save();
             if (Instance)
             {
+                Instance.NoaSupport.Cancel();
                 Instance.deployed = Instance.carCount = 0;
                 Instance.engaged = false;
                 Instance.Seen = false;
@@ -104,8 +106,10 @@ namespace AfterSignal
 
         void Update()
         {
-            if (!game || !game.Ready || game.Blocked || Level == 0)
+            if (!game || !game.Ready || game.Blocked)
                 return;
+            NoaSupport.Tick(Mathf.Min(.1f,Time.deltaTime));
+            if(Level == 0)return;
             if(IncidentCommand.Emergency){Seen=false;return;}
             float dt = Mathf.Min(.1f, Time.deltaTime);
             incidentClock -= dt;responseAge+=dt;

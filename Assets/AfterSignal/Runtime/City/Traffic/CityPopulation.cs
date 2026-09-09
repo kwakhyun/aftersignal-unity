@@ -194,6 +194,7 @@ namespace AfterSignal
                 if(Mathf.Abs(local.x)>car.HalfLength+.3f||Mathf.Abs(local.z)>car.HalfWidth+.35f||Mathf.Abs(local.y)>1.8f)continue;
                 impactCooldown[id]=Time.time+.8f;
                 actor.VehicleHit(car.Forward*Mathf.Sign(speed),Mathf.Abs(speed),player?null:TrafficDamageSource.Environment);
+                if(!player)TrafficOffense.Report(car,actor,Mathf.Abs(speed));
                 Impacts++;if(!actor.Alive)Fatalities++;
                 game?.Audio.Play("urban_impact",pos,.22f,1);
             }

@@ -93,7 +93,6 @@ namespace AfterSignal
                             Vector3 start = transform.position + new Vector3(Facing * .6f, 1.25f, 0);
                             Vector3 end = lockedAim;
                             director.Audio.PlayGun(GunshotKind.Rifle, start);
-                            SignalEffects.Beam(start, end, SignalEffects.Red, .035f, .2f);
                             var shot = (end - start).normalized;
                             if (Physics.Raycast(start, shot, out var contact, 16, (1 << 0) | (1 << 8), QueryTriggerInteraction.Ignore) && contact.collider.GetComponentInParent<PlayerMotor>())
                                 player.ReceiveDamage(10, transform.position);

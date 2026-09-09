@@ -56,7 +56,7 @@ namespace AfterSignal
             for(int i=0;i<nodes.Count;i++)
             {
                 var p=nodes[i];float distance=Vector3.Distance(p,target);
-                if(distance<min||distance>max||Mathf.Abs(p.y-(target.y< -30?-62:0))>20||RegionalCatalog.InRift(p,20))continue;distant++;if(!Hidden(p))continue;hidden++;
+                if(distance<min||distance>max||Mathf.Abs(p.y-(target.y< -30?-62:0))>20||FourCityCatalog.CityAt(target)!=2&&RegionalCatalog.InRift(p,20))continue;distant++;if(!Hidden(p))continue;hidden++;
                 float score=distance+Mathf.Min(500,Vector3.Distance(p,station))*.8f+Mathf.Abs((i%11)-index)*4;
                 if(score>=best||!CityGangWar.FindGround(p,out var safe)||Mathf.Abs(safe.y-p.y)>3)continue;grounded++;
                 if(Physics.CheckBox(safe+Vector3.up*2,new Vector3(2,1.5f,2),Quaternion.identity,1,QueryTriggerInteraction.Ignore))continue;
@@ -68,13 +68,11 @@ namespace AfterSignal
         static int Nearest(Vector3 p){int n=0;float best=float.MaxValue;for(int i=0;i<nodes.Count;i++){float d=(nodes[i]-p).sqrMagnitude;if(d<best){best=d;n=i;}}return n;}
         public static List<Vector3> Route(Vector3 from,Vector3 to)
         {
-            Build();int start=Nearest(from),end=Nearest(to);var open=new List<int>{start};var closed=new HashSet<int>();var cost=new Dictionary<int,float>{{start,0}};var previous=new Dictionary<int,int>();bool reached=false;
+            Build();int start=Nearest(from),end=Nearest(to);var open=new VehicleNavigator.MinHeap();open.Push(start,Vector3.Distance(nodes[start],nodes[end]));var closed=new HashSet<int>();var cost=new Dictionary<int,float>{{start,0}};var previous=new Dictionary<int,int>();bool reached=false;
             for(int steps=0;open.Count>0&&steps<12000;steps++)
             {
-                int slot=0;float best=float.MaxValue;
-                for(int j=0;j<open.Count;j++){int n=open[j];float f=cost[n]+Vector3.Distance(nodes[n],nodes[end]);if(f<best){best=f;slot=j;}}
-                int k=open[slot];open.RemoveAt(slot);if(k==end){reached=true;break;}closed.Add(k);
-                foreach(int n in edges[k]){if(closed.Contains(n))continue;float g=cost[k]+Vector3.Distance(nodes[k],nodes[n]);if(cost.TryGetValue(n,out float old)&&g>=old)continue;cost[n]=g;previous[n]=k;if(!open.Contains(n))open.Add(n);}
+                int k=open.Pop();if(closed.Contains(k)){steps--;continue;}if(k==end){reached=true;break;}closed.Add(k);
+                foreach(int n in edges[k]){if(closed.Contains(n))continue;float g=cost[k]+Vector3.Distance(nodes[k],nodes[n]);if(cost.TryGetValue(n,out float old)&&g>=old)continue;cost[n]=g;previous[n]=k;open.Push(n,g+Vector3.Distance(nodes[n],nodes[end]));}
             }
             var path=new List<Vector3>();if(!reached)return path;
             int walk=end;path.Add(nodes[walk]);while(walk!=start&&previous.TryGetValue(walk,out int parent)){walk=parent;path.Add(nodes[walk]);}path.Reverse();return path;
@@ -82,6 +80,8 @@ namespace AfterSignal
     }
     public sealed class ResponseDrive
     {
+        readonly VehicleNavigator navigator=new();
+        public bool Detouring=>navigator.Detouring;
         List<Vector3> route;int index;Vector3 lastTarget;float next,stuck,reverse;
         public void Drive(CityVehicle car,Vector3 destination,float dt,float stop=26)
         {
@@ -96,10 +96,15 @@ namespace AfterSignal
             }
             while(route!=null&&index<route.Count&&Vector3.ProjectOnPlane(route[index]-p,Vector3.up).magnitude<11)index++;
             var goal=route!=null&&index<route.Count?route[index]:destination;
-            car.traffic=false;var d=EmergencyTraffic.Steer(car,Vector3.ProjectOnPlane(goal-p,Vector3.up));float angle=Vector3.SignedAngle(car.Forward,d,Vector3.up);
+            // Skip a road node embedded in a rebuilt building, and route around its footprint.
+            while(route!=null&&index<route.Count-1&&!VehicleNavigator.Open(car,goal)){index++;goal=route[index];}
+            if(delta.magnitude<100)goal=destination;
+            car.traffic=false;var d=navigator.Direction(car,goal,goal==destination?stop:2);
+            if(navigator.Waiting){car.Drive(new ControlFrame{guard=true},dt);return;}
+            d=EmergencyTraffic.Steer(car,d);float angle=Vector3.SignedAngle(car.Forward,d,Vector3.up);
             stuck=Mathf.Abs(car.speed)<.6f?stuck+dt:0;
-            if(stuck>2.2f){reverse=1.1f;stuck=0;route=null;next=0;}reverse-=dt;
-            var input=ControlFrame.Empty;input.boost=reverse<=0&&Mathf.Abs(angle)<20;input.move=new Vector2(Mathf.Clamp(angle/28,-1,1)*(reverse>0?-1:1),reverse>0?-.35f:Mathf.Abs(angle)>65?.22f:.72f);car.Drive(input,dt);
+            if(stuck>2.2f){reverse=1.1f;stuck=0;route=null;next=0;navigator.Find(car,goal,goal==destination?stop:2);}reverse-=dt;
+            var input=ControlFrame.Empty;input.boost=!navigator.Detouring&&reverse<=0&&Mathf.Abs(angle)<20;input.move=new Vector2(Mathf.Clamp(angle/28,-1,1)*(reverse>0?-1:1),reverse>0?-.35f:Mathf.Abs(angle)>65?.18f:navigator.Detouring?.38f:.72f);car.Drive(input,dt);
         }
     }
 }

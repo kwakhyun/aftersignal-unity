@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 namespace AfterSignal
 {
@@ -6,6 +7,17 @@ namespace AfterSignal
     {
         static readonly string[] core={"노아","민재","은서","다은","수연","지훈","라온","윤"},world={"해진","다미","리안","나리","수호","미루","이솔","유건","유라","세린","도윤","시장 상인"};
         static Sprite[] first,second;static Sprite seo;
+        static readonly Dictionary<Sprite,Sprite> busts=new();
+        public static Sprite Bust(string name)
+        {
+            var source=Get(name);if(!source)return null;
+            if(busts.TryGetValue(source,out var portrait)&&portrait)return portrait;
+            // Preserve the head and shoulders; discard lower-body space without scaling the texture.
+            var rect=source.rect;float height=Mathf.Min(rect.height,rect.width*1.12f);
+            rect.yMin=rect.yMax-height;
+            portrait=Sprite.Create(source.texture,rect,new Vector2(.5f,0),source.pixelsPerUnit,0,SpriteMeshType.FullRect);
+            portrait.name=source.name+" / dialogue bust";busts[source]=portrait;return portrait;
+        }
         static Sprite[] Load(string name){var a=Resources.LoadAll<Sprite>("Art/StoryCast/"+name);Array.Sort(a,(x,y)=>string.CompareOrdinal(x.name,y.name));return a;}
         public static Sprite Get(string name)
         {
