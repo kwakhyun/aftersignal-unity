@@ -287,7 +287,8 @@ namespace AfterSignal
             if(!Current)return; // A motorcycle impact can eject the rider during Drive.
             game.Player.transform.position = Current.transform.TransformPoint(VehicleSeats.Local(Current,SeatIndex));
             if(input.horn)Current.GetComponent<VehicleHorn>()?.Honk();
-            bool armed=(Current.GetComponent<VehicleArmament>()||Current.GetComponent<BomberBay>())&&SeatIndex==0;
+            if(SeatIndex==0)Current.GetComponent<MilitaryGunTruck>()?.TickPlayer(input,dt);
+            bool armed=(Current.GetComponent<MilitaryGunTruck>()||Current.GetComponent<VehicleArmament>()||Current.GetComponent<BomberBay>())&&SeatIndex==0;
             if(!armed)game.Player.TickMountedCombat(input,dt);
         }
 

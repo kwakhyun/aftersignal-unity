@@ -99,6 +99,7 @@ namespace AfterSignal
             car.occupied=true;car.traffic=false;car.name="119 / 펌프·방수 소방차";
             if(!car.GetComponent<FireEngineArt>())car.gameObject.AddComponent<FireEngineArt>();
             var light=car.GetComponent<ResponseLightbar>()??car.gameObject.AddComponent<ResponseLightbar>();light.enabled=true;
+            car.GetComponent<VehicleCabin>()?.SetCrew("Firefighter",2);
             var e=car.gameObject.AddComponent<FireEngine>();e.Car=car;e.Fire=fire;e.station=station;return e;
         }
         void Update()
@@ -132,6 +133,7 @@ namespace AfterSignal
         }
         void Deploy()
         {
+            Car.GetComponent<VehicleCabin>()?.SetPassengers(0);
             crew=new Firefighter[2];for(int i=0;i<2;i++)crew[i]=Firefighter.Create(this,Fire,transform.position-Car.Forward*7+transform.forward*(i*2-1),i);
             cannon=Firefighter.Line(transform,"Roof water cannon",.17f,new Color(.52f,.82f,1,.6f));
             NpcSpeech.Say(crew[0],"소방대 도착! 시민들은 물러나세요. 방수 개시!",5);
@@ -149,8 +151,13 @@ namespace AfterSignal
             var go=new GameObject(variant==0?"소방대원 / 방수 담당":"소방대원 / 구조 담당",typeof(SpriteRenderer),typeof(CityNpc));go.transform.position=at;
             var npc=go.GetComponent<CityNpc>();npc.Configure(94000+variant,"119 소방대원",null,"화재 현장에서 시민을 대피시키고 호스로 불을 끄는 전문 소방관이다.");
             var f=go.AddComponent<Firefighter>();f.truck=truck;f.fire=fire;f.variant=variant;f.body=go.GetComponent<WorldActor>();
-            npc.enabled=false;f.rescue=go.AddComponent<FireRescue>();
+            npc.enabled=false;
+            // Firefighter owns the directional idle/spray frames; the civilian LateUpdate must not overwrite them.
+            var direction=PeopleArt.Attach(go,"Firefighter");direction.enabled=false;
+            var wardrobe=go.GetComponent<ActorWardrobe>();if(wardrobe)wardrobe.enabled=false;
+            f.rescue=go.AddComponent<FireRescue>();
             f.visual=go.GetComponent<SpriteRenderer>();f.visual.sharedMaterial=Resources.Load<Material>("Materials/PixelActor");
+            f.Pose(false,Vector3.forward);
             f.hose=Line(go.transform,"Connected fire hose",.07f,new Color(.8f,.22f,.035f));f.jet=Line(go.transform,"Pressurised water",.1f,new Color(.62f,.88f,1,.6f));return f;
         }
         public static LineRenderer Line(Transform parent,string name,float width,Color color)

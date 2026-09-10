@@ -1,6 +1,24 @@
 using UnityEngine;
 namespace AfterSignal
 {
+    // Resolve after service components are attached, including cabins initialized before dispatch.
+    public static class VehicleCrew
+    {
+        public static string Role(CityVehicle car)
+        {
+            if(!car)return null;
+            if(car.GetComponent<GangConvoy>())return "GangCrimson";
+            if(car.GetComponent<FireEngine>()||car.GetComponent<FireEngineArt>())return "Firefighter";
+            if(car.GetComponent<EmergencyAmbulance>()||car.GetComponent<AmbulanceArt>())return "Doctor";
+            var hull=car.GetComponent<MaritimeHull>();
+            if(hull)return hull.Faction==SeaFaction.Navy?"NavyCrew":hull.Faction==SeaFaction.CoastGuard?"CoastGuard":"SeaRaider";
+            if(car.GetComponent<TacticalTransport>()||car.GetComponent<PoliceCar>())return "CyberPolice";
+            if(car.type==CityVehicleType.CombatHelicopter||car.type==CityVehicleType.Fighter||car.type==CityVehicleType.Bomber)return "AirForceCrew";
+            if(car.type==CityVehicleType.Tank||car.GetComponent<MilitaryVehicleAI>()||car.GetComponent<MilitaryGunTruck>())return "Soldier";
+            var security=car.GetComponent<SecurityVehicleArt>();if(security)return security.Military?"Soldier":"GangCrimson";
+            return null;
+        }
+    }
     public static class VehicleOccupant
     {
         public static WorldActor Create(CityVehicle car,string identity,int seat,bool fallen,Vector3 danger)

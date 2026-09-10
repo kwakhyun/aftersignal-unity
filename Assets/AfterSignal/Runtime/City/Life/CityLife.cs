@@ -37,7 +37,7 @@ namespace AfterSignal
             gameObject.AddComponent<CrimeObservation>();
             gameObject.AddComponent<FacilitySecurity>();
             gameObject.AddComponent<CashLocations>();
-            if(game.stage==StageId.UrbanCity)gameObject.AddComponent<MilitaryInstallation>();
+            if(game.stage==StageId.UrbanCity){gameObject.AddComponent<MilitaryInstallation>();gameObject.AddComponent<MilitaryBaseOperations>();}
             if (game.stage == StageId.UrbanCity)
                 gameObject.AddComponent<CityGangWar>().Initialize(game);
             gameObject.AddComponent<CityClock>().Initialize(game);

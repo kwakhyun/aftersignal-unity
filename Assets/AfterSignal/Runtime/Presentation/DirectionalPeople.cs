@@ -21,7 +21,7 @@ namespace AfterSignal
         }
         static readonly int[] Pose24={0,1,3,5},Walk16={1,0,2,0};
         public static Sprite Get(string key,int facing,int phase=0){if(key=="Firefighter"){var crew=FireCrewArt.Frames;return crew.Length>=16?crew[Mathf.Clamp(facing,0,3)]:null;}if(key.StartsWith("Facility"))key=FacilityPeople.UniformArt(key);var s=Sheet(key);return s.Length==24?s[Mathf.Clamp(facing,0,3)*6+Pose24[Mathf.Clamp(phase,0,3)]]:s.Length>=16?s[Mathf.Clamp(facing,0,3)*4+Mathf.Clamp(phase,0,3)]:null;}
-        public static Sprite Walk(string key,int facing,int phase){if(key.StartsWith("Facility"))key=FacilityPeople.UniformArt(key);var s=Sheet(key);return s.Length==24?s[Mathf.Clamp(facing,0,3)*6+1+phase%4]:Get(key,facing,Walk16[phase%4]);}
+        public static Sprite Walk(string key,int facing,int phase){if(key=="Firefighter")return Get(key,facing);if(key.StartsWith("Facility"))key=FacilityPeople.UniformArt(key);var s=Sheet(key);return s.Length==24?s[Mathf.Clamp(facing,0,3)*6+1+phase%4]:Get(key,facing,Walk16[phase%4]);}
         public static int Direction(Vector3 world)
         {
             var camera=ViewCamera;var right=camera?Vector3.ProjectOnPlane(camera.transform.right,Vector3.up).normalized:Vector3.right;

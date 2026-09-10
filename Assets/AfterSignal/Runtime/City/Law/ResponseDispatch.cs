@@ -42,6 +42,7 @@ namespace AfterSignal
         }
         public static bool TryOrigin(Vector3 target,bool army,bool aircraft,int index,out Vector3 at)
         {
+            if(army&&MilitaryBaseOperations.Handles(target)){at=default;LastSearch="Stationed garrison handles this incident";return false;}
             Build();float min=aircraft?650:220,max=aircraft?1800:950;
             if(aircraft)
             {

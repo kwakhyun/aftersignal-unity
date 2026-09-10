@@ -1,0 +1,20 @@
+{
+    "completed": true,
+    "passed": [
+        "Healthy adult citizens can start a local argument",
+        "Argument escalates into alternating nonlethal melee / punches=5",
+        "Nearby police stop the civilian fight before a death",
+        "Residual civilian inside a military installation becomes a uniformed registered soldier",
+        "Base has existing indoor personnel and a parked weapons fleet / personnel=117, vehicles=29",
+        "Ten original armed 6x6 vehicles have actual weapon mounts and military cabin identities",
+        "Gun truck hull detail is batched by material while wheels and turret stay articulated",
+        "Ground and air reinforcement generators defer to the existing garrison inside its base",
+        "Base alarm mobilizes the stationed roster beyond ordinary dispatch limits / active=141",
+        "Real soldiers board pre-existing tanks, helicopters and gun trucks / types=Tank,Fighter,CombatHelicopter,Tank,Truck,Truck,Tank,Tank,Tank,CombatHelicopter,Fighter,Fighter,Truck,Truck,CombatHelicopter,Fighter,Tank,Fighter,Tank,CombatHelicopter,CombatHelicopter,Truck,Tank,Truck,Truck",
+        "Mounted soldiers remain the same actor and use their vehicle weapons / shots=1143",
+        "Armed indoor personnel leave the real facility entrances to join base defense",
+        "Vehicle takeover ejects the same stationed soldier without creating a substitute",
+        "Seoha can take over the new gun truck and fire its mounted weapon"
+    ],
+    "errors": []
+}

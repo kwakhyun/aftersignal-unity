@@ -20,9 +20,11 @@ namespace AfterSignal
             return kinds;
         }
         public static MilitaryResponse ForIncident(RiftIncursion incident)
-        {var r=new GameObject("국방 출동 지휘 / 잠식체").AddComponent<MilitaryResponse>();r.Incident=incident;return r;}
+        {if(incident&&MilitaryBaseOperations.Handles(incident.Position))return null;var r=new GameObject("국방 출동 지휘 / 잠식체").AddComponent<MilitaryResponse>();r.Incident=incident;return r;}
         IEnumerator Start()
         {
+            while(Active&&MilitaryBaseOperations.Handles(Target))yield return new WaitForSeconds(2);
+            if(!Active)yield break;
             GameDirector.Instance.ToastNear(Incident?"방위기지에 긴급 지원 요청 · 중장비 출동 준비":"민간인 대규모 희생 확인 · 방위기지 출동 준비",Target,180,6);
             float wait=Incident?Incident.RiftCity?30:44:55;
             while(wait>0&&Active){if(!GameDirector.Instance.Blocked)wait-=Time.deltaTime;yield return null;}
@@ -41,7 +43,7 @@ namespace AfterSignal
         }
         public void Deploy(Vector3 at,int index)
         {
-            if(!Active||!CityGangWar.FindGround(at,out var safe))return;
+            if(!Active||MilitaryBaseOperations.Handles(Target)||!CityGangWar.FindGround(at,out var safe))return;
             WorldActor body;
             if(Incident)body=ArmyResponder.Create(safe,index,Incident).Body;
             else{var s=PoliceOfficer.Create(WantedSystem.Instance,safe,4,index);s.name="군 긴급대응 소총수";s.Body.military=true;PeopleArt.Attach(s.gameObject,"Soldier");WantedSystem.Instance.Officers.Add(s);body=s.Body;}

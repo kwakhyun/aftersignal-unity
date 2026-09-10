@@ -20,8 +20,8 @@ namespace AfterSignal
         {
             if(fatal){if(State==Reaction.Destroyed)return;Evacuate(true,danger);State=Reaction.Destroyed;return;}
             if(State==Reaction.Evacuated||State==Reaction.Destroyed)return;
-            if(car.GetComponent<EmergencyAmbulance>())return;
-            if(!car.occupied&&(!car.GetComponent<VehicleCabin>()||car.GetComponent<VehicleCabin>().PassengerCount==0)||car.GetComponent<PoliceCar>()||car.GetComponent<TacticalTransport>()||car.GetComponent<MilitaryVehicleAI>()||car.GetComponent<SeaCombat>()||car.GetComponent<GangConvoy>()||car.GetComponent<StolenVehicle>()||UrbanSimulation.Instance&&UrbanSimulation.Instance.Current==car)return;
+            if(car.GetComponent<EmergencyAmbulance>()||car.GetComponent<FireEngine>())return;
+            if(!car.occupied&&(!car.GetComponent<VehicleCabin>()||car.GetComponent<VehicleCabin>().PassengerCount==0)||car.GetComponent<PoliceCar>()||car.GetComponent<TacticalTransport>()||car.GetComponent<MilitaryVehicleAI>()||car.GetComponent<GarrisonVehicleDriver>()||car.GetComponent<SeaCombat>()||car.GetComponent<GangConvoy>()||car.GetComponent<StolenVehicle>()||UrbanSimulation.Instance&&UrbanSimulation.Instance.Current==car)return;
             var intercity=car.GetComponent<IntercityService>();if(intercity&&!intercity.Boarding)return;
             CitySafety.Shock(car.transform.position);
             if(car.HealthFraction<.25f||Mathf.Abs(car.speed)<2.5f||!car.traffic||car.route==null||car.route.Length<2)
@@ -45,8 +45,9 @@ namespace AfterSignal
             var cabin=car.GetComponent<VehicleCabin>();
             var service=car.GetComponent<IntercityService>();if(service&&fallen){service.ReleaseAfterCrash();cabin?.SetPassengers(0);}
             var stolen=car.GetComponent<StolenVehicle>();
-            bool realDriver=stolen&&stolen.Driver;
-            if(realDriver&&fallen){stolen.Driver.GetComponent<GangCrime>()?.EjectFromWreck(car);Ejected++;}
+            var garrison=car.GetComponent<GarrisonVehicleDriver>();bool realDriver=stolen&&stolen.Driver||garrison;
+            if(garrison){garrison.Dismount(fallen);Ejected++;}
+            if(stolen&&stolen.Driver&&fallen){stolen.Driver.GetComponent<GangCrime>()?.EjectFromWreck(car);Ejected++;}
             bool playerDriver=UrbanSimulation.Instance&&UrbanSimulation.Instance.Current==car;
             foreach(var role in cabin?cabin.ReleaseOccupants(playerDriver||realDriver):new List<string>())
             {

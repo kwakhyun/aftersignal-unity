@@ -6,7 +6,7 @@ namespace AfterSignal
     public sealed class VehicleFleet : MonoBehaviour
     {
         public static string ModelName(CityVehicleType type) => type==CityVehicleType.Sedan||type==CityVehicleType.Taxi?"FutureSedan":type==CityVehicleType.Bus?"FutureBus":type==CityVehicleType.Truck?"FutureTruck":type==CityVehicleType.SportsCar?"FutureSportsCar":type==CityVehicleType.Motorcycle?"FutureMotorcycle":type.ToString();
-        public static bool Persistent(CityVehicle c) => c.IsSpecial || c.GetComponent<FireEngine>() || c.GetComponent<FacilityParked>() || c.GetComponent<PersonalMotorcycle>() || c.GetComponent<RegionalParked>() || c.GetComponent<ParkingAssignment>() || c.GetComponent<TacticalTransport>() || c.GetComponent<MilitaryVehicleAI>() || c.type == CityVehicleType.Tank;
+        public static bool Persistent(CityVehicle c) => c.IsSpecial || c.GetComponent<MilitaryGunTruck>() || c.GetComponent<GarrisonVehicleDriver>() || c.GetComponent<FireEngine>() || c.GetComponent<FacilityParked>() || c.GetComponent<PersonalMotorcycle>() || c.GetComponent<RegionalParked>() || c.GetComponent<ParkingAssignment>() || c.GetComponent<TacticalTransport>() || c.GetComponent<MilitaryVehicleAI>() || c.type == CityVehicleType.Tank;
         public static void Configure(CityVehicle c, int variant)
         {
             if (variant < 4) return;
@@ -62,6 +62,7 @@ namespace AfterSignal
         public static Vector3 Local(CityVehicle c, int seat)
         {
             if(c.type==CityVehicleType.Bomber)return new Vector3(8.4f,2.25f,seat==0?-.65f:.65f);
+            if(c.GetComponent<MilitaryGunTruck>())return new Vector3(1.85f,1.72f,seat==0?-.6f:.6f);
             var naval=c.GetComponent<MaritimeHull>();if(naval)return naval.Helm+new Vector3(seat<2?0:-2-(seat-2)/2*1.4f,seat<2?0:-2,seat%2==0?-.6f:.6f);
             if(c.GetComponent<TacticalTransport>()&&!c.GetComponent<PoliceCar>()||c.GetComponent<MilitaryVehicleAI>()&&c.type==CityVehicleType.Truck)return seat<2?new Vector3(2.25f,1.45f,seat==0?-.6f:.6f):new Vector3(.2f-(seat-2)/2*1.05f,1.45f,seat%2==0?-.85f:.85f);
             var taxi=c.GetComponent<CityTaxiService>();if(taxi)return taxi.Air?new Vector3(seat<2?1.7f:-.7f,1.43f,seat%2==0?-.55f:.55f):seat==0?new Vector3(4,1.55f,0):new Vector3(-4+(seat-1)/2*1.25f,1.47f,seat%2==0?-1.2f:1.2f);

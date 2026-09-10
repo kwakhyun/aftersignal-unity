@@ -19,7 +19,7 @@ namespace AfterSignal
         public RiftCreature Titan;
         public Vector3 Center => Titan ? Titan.AimCenter : transform.position + Vector3.up * (helicopter ? 0 : Downed ? .3f : robot ? 1.8f : 1.1f);
 
-        float hurt;
+        float hurt,nextWitnessInjury;
         void OnEnable()
         {
             if (!All.Contains(this))
@@ -39,7 +39,7 @@ namespace AfterSignal
             MaxHealth=Mathf.Max(MaxHealth,health);
             if(Alive){if(!helicopter&&!monster&&!GetComponent<NpcBody>())gameObject.AddComponent<NpcBody>();return;}
             if(!helicopter&&!robot&&!GetComponent<CorpseBlood>())CorpseBlood.Attach(gameObject);
-            if(!deathHandled){deathHandled=true;CreditDrop.From(this);CityIncidentBoard.Neutralized(this);FamilyGroup.Harm(this,true,transform.position,null);}
+            if(!deathHandled){deathHandled=true;WitnessReactions.Notify(this,true);CreditDrop.From(this);CityIncidentBoard.Neutralized(this);FamilyGroup.Harm(this,true,transform.position,null);}
         }
 
         public void ResetHealth()
@@ -50,7 +50,7 @@ namespace AfterSignal
             var defense=GetComponent<CivilianDefense>();if(defense)Destroy(defense);
             health = 70;
             deathHandled=false;
-            hurt = 0;
+            nextWitnessInjury=0;hurt = 0;
         }
 
         public void Damage(float amount, Vector3 force, WorldActor source = null, bool blade = false)
@@ -59,6 +59,7 @@ namespace AfterSignal
             if (!Alive || amount <= 0 || Time.time < hurt)
                 return;
             hurt = Time.time + .08f;
+            if(military)MilitaryBaseOperations.ReportAttack(transform.position,source);
             if(Titan)amount*=Titan.Armour;
             float before = health;
             MaxHealth=Mathf.Max(MaxHealth,before);
@@ -72,6 +73,7 @@ namespace AfterSignal
                 if(!medical)medical=gameObject.AddComponent<MedicalState>();
                 medical.Wound(this,before,amount);
             }
+            if(Alive&&amount>=MaxHealth*.08f&&Time.time>=nextWitnessInjury){nextWitnessInjury=Time.time+5;WitnessReactions.Notify(this,false);}
             if(!Alive)GetComponent<DirectionalPerson>()?.PreserveAppearance();
             if(amount>0){CityIncidentBoard.Contribution(this,amount,source);FamilyGroup.Harm(this,!Alive,source?source.transform.position:GameDirector.Instance?GameDirector.Instance.Player.transform.position:transform.position,source);VenueSafety.Report(this,source);}
             if(!Alive&&blade&&!helicopter&&Random.value<.62f)SeveredSprite.Create(this,force);

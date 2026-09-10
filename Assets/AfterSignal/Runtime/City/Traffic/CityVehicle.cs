@@ -39,8 +39,8 @@ namespace AfterSignal
         public bool IsSpecial => IsAircraft || IsWatercraft;
         public float Steering { get; private set; }
         public float TopSpeed => type == CityVehicleType.Motorcycle ? 45 : type == CityVehicleType.SportsCar ? 49 : type == CityVehicleType.Tank ? 18 : type == CityVehicleType.Bus ? 21 : type == CityVehicleType.Truck ? 23 : 27;
-        public float HalfLength => type==CityVehicleType.Bomber?14:IsWatercraft?WaterLength:type == CityVehicleType.Bus ? 4.6f : type == CityVehicleType.Truck ? 3.9f : type == CityVehicleType.Motorcycle ? 1.25f : type == CityVehicleType.Airliner ? 15 : type == CityVehicleType.CombatHelicopter ? 5.5f : type == CityVehicleType.Fighter ? 7.5f : type == CityVehicleType.Tank ? 4 : 2.55f;
-        public float HalfWidth => type==CityVehicleType.Bomber?26:IsWatercraft?WaterWidth:type == CityVehicleType.Motorcycle ? .42f : type == CityVehicleType.Airliner ? 2 : type == CityVehicleType.Tank ? 1.9f : IsHeavy ? 1.25f : 1.05f;
+        public float HalfLength => GetComponent<MilitaryGunTruck>()?5.1f:type==CityVehicleType.Bomber?14:IsWatercraft?WaterLength:type == CityVehicleType.Bus ? 4.6f : type == CityVehicleType.Truck ? 3.9f : type == CityVehicleType.Motorcycle ? 1.25f : type == CityVehicleType.Airliner ? 15 : type == CityVehicleType.CombatHelicopter ? 5.5f : type == CityVehicleType.Fighter ? 7.5f : type == CityVehicleType.Tank ? 4 : 2.55f;
+        public float HalfWidth => GetComponent<MilitaryGunTruck>()?1.85f:type==CityVehicleType.Bomber?26:IsWatercraft?WaterWidth:type == CityVehicleType.Motorcycle ? .42f : type == CityVehicleType.Airliner ? 2 : type == CityVehicleType.Tank ? 1.9f : IsHeavy ? 1.25f : 1.05f;
         float WaterLength{get{var hull=GetComponent<MaritimeHull>();return hull?hull.Length*.5f:GetComponent<AuthoredCraft>()?235:8;}}
         float WaterWidth{get{var hull=GetComponent<MaritimeHull>();return hull?hull.Beam*.5f:GetComponent<AuthoredCraft>()?19:2.5f;}}
         readonly VehicleNavigator navigator=new();
@@ -270,6 +270,7 @@ namespace AfterSignal
             InitializeDurability();
             if (Wrecked || amount <= 0)
                 return;
+            if(alertOccupants&&(VehicleCrew.Role(this)=="Soldier"||VehicleCrew.Role(this)=="AirForceCrew"||VehicleCrew.Role(this)=="NavyCrew"))MilitaryBaseOperations.ReportAttack(transform.position,source);
             RecordDamageSource(source);
             health = Mathf.Max(0, health - amount);
             var marine=GetComponent<SeaCombat>();if(marine&&marine.Body){marine.Body.health=health;CityIncidentBoard.Contribution(marine.Body,amount,source);}

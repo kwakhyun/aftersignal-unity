@@ -1,3 +1,26 @@
+# Current handoff · 2026-09-10 · civilian disputes and base mobilization
+
+- Latest validated player: Builds/BaseMobilization/AFTERSIGNAL.exe; PLAY.cmd follows Builds/active-player.txt. Essential native checks: 14 passed, 0 errors including shutdown. Build: succeeded, 0 errors, 95 warnings. Documentation/BaseMobilization contains results and primary military vehicle/facility references.
+- StreetDispute provides one local nonlethal adult dispute at a time, 100–180 second cooldown, alternating punches, police de-escalation, and excludes children/families/vulnerable NPCs. CitySocial starts arguments; generic panic, retaliation and police escalation no longer override a petty scuffle.
+- MilitaryBaseOperations enlists legacy/streamed room staff by actual installation bounds and corrects uniforms. Ambient street spawning excludes military grounds. GarrisonSupport mobilizes the full stationed roster on base attacks; two infantry path requests per frame distribute CPU work without limiting force size. Ordinary ground/air reinforcement spawns defer inside bases. Terror incidents retain the existing police-only response policy.
+- Actual enlisted actors reserve and approach parked tanks, fighters, combat helicopters and KESTREL gun trucks. GarrisonVehicleDriver retains the actor while mounted, dismounts the same soldier on takeover and returns surviving vehicles after combat. Armed vehicles use real crew, missiles/main guns/machine guns; heavy weapons pause near friendly troops. Scene/quit teardown guards prevent dismount exceptions.
+- GarrisonArchitecture adds four staffed facilities (operations, maintenance, barracks, mess/medical), fuel/munitions/tool supplies, and 10 original 6x6 machine-gun carriers. Static truck hull pieces combine per material; wheels and gun mount articulate separately. Service stations repair/refuel/rearm; existing physical armory issues all 13 player weapon variants. GarrisonLiftRide uses real building lifts, queues around player use and permits staircase alternatives when occupied.
+- FacilityResponseProbe -base-mobilization-probe runs the bounded native integration check with save writes suppressed. Final run mobilized 141 stationed actors; 25 pre-existing vehicles were crewed, with 1,143 mounted shots recorded. Initial human-shaped probe target was correctly killed by an anti-armor payload; final long engagement uses a damageable monster target to observe ongoing mobilization. Raw captures and roster traces remain local under Artifacts/BaseMobilization/Native.
+- Prior witness/crew, README/gallery, and public-asset changes remain preserved in the working tree. No commit/push requested this turn. Public reusable-image/model index check passed.
+
+---
+
+# Current handoff · 2026-09-10 · witness reactions and vehicle crew
+
+- Latest validated player: Builds/CrewWitness/AFTERSIGNAL.exe; PLAY.cmd follows Builds/active-player.txt.
+- WitnessReactions handles injury events and one-time deaths via WorldActor, including direct death state changes. Spatial query within 32 m, geometry visibility, three speakers per event/six per frame, individual cooldown, and immediate injury-to-death upgrade. StreetVoices adds 72 lines for general citizens, elders, students, children, medics, police, military and gangs. Role-specific witness speech does not pass through the generic faction combat-line replacement.
+- VehicleCrew resolves emergency/military affiliation at display and evacuation time, including components added after cabin initialization. Explicit crew survives boarding changes; normal civilian manifests remain varied. Firefighters own their idle/spray frames instead of civilian DirectionalPerson overwriting them in LateUpdate. Active fire engines do not run ordinary civilian panic evacuation on nonfatal hits.
+- CitySafety.Shock uses nearby actors and line of sight instead of a global NPC scan and avoids civilian panic lines for response units.
+- Essential native checks: 13 passed, 0 errors (Documentation/CrewWitness/result.json). Windows build succeeded, 0 errors, 92 warnings (build-result.json). No full regression suite or live API calls.
+- README gallery now contains title, dialogue, police/defense-force monster combat, map, and populated night driving. Native captures were prepared through opt-in FacilityResponseProbe photo mode; normal population budgets are unchanged. Prior README/photo edits remain included in the working tree. No commit or push requested for this turn.
+
+---
+
 # Current handoff · 2026-09-09 · facility response and public source
 
 - Latest validated player: Builds/FacilityResponse/AFTERSIGNAL.exe; PLAY.cmd follows Builds/active-player.txt.

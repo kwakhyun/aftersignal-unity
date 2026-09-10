@@ -1,0 +1,19 @@
+{
+    "completed": true,
+    "passed": [
+        "Tank uses military crew in cabin, boarding and evacuation",
+        "CombatHelicopter uses military crew in cabin, boarding and evacuation",
+        "Fighter uses military crew in cabin, boarding and evacuation",
+        "Bomber uses military crew in cabin, boarding and evacuation",
+        "Military component added after cabin initialization overrides cached civilian identities",
+        "Military driver exits as a functioning soldier",
+        "Fire crew survives reboarding and evacuation without civilian replacement",
+        "Dedicated firefighter sprite remains after multiple LateUpdate frames",
+        "Damage event makes a nearby witness react to the injury",
+        "Distant and wall-occluded people do not react to the victim",
+        "Witness cooldown suppresses repeated injury chatter",
+        "Death event upgrades an earlier injury reaction immediately",
+        "Consecutive witness lines avoid immediate repetition"
+    ],
+    "errors": []
+}

@@ -55,6 +55,7 @@ namespace AfterSignal
             if(prisoner){var routine=go.AddComponent<CivicRoutine>();routine.Initialize(job,go.transform.position);routine.prisoner=true;routine.work=c.origin;routine.rest=c.origin+Vector3.right*.4f;c.enabled=false;}
             if(district.health[i]<0)go.GetComponent<WorldActor>().health=0;
             else if(district.health[i]>0)go.GetComponent<WorldActor>().health=district.health[i];
+            var station=MilitaryBaseOperations.At(go.transform.position);if(station!=null)MilitaryBaseOperations.Enlist(go.GetComponent<WorldActor>(),station);
             return c;
         }
         public static bool TrySpawnPosition(FacilityCrowd seed,int index,out Vector3 point)
@@ -82,10 +83,10 @@ namespace AfterSignal
                     for(int i=0;i<district.live.Count;i++)if(district.live[i]){var body=district.live[i].GetComponent<WorldActor>();district.health[i]=body&&body.Alive?body.health:-1;Destroy(district.live[i].gameObject);}
                     district.live.Clear();district.created=0;continue;
                 }
-                if(distance<250*250)while(district.created<district.seed.count&&budget>0)
+                if(distance<(MilitaryBaseOperations.At(district.seed.transform.position)?.Active==true?600*600:250*250))while(district.created<district.seed.count&&budget>0)
                 {district.live.Add(SpawnResident(district,district.created++));budget--;}
                 if(distance<230*230&&district.created>=district.seed.count&&Time.time>district.retry){district.retry=Time.time+5;for(int i=0;i<district.live.Count&&budget>0;i++)if(!district.live[i]&&district.health[i]>=0){district.live[i]=SpawnResident(district,i);budget--;}}
-                foreach(var c in district.live)if(c){bool active=(c.transform.position-player).sqrMagnitude<210*210;if(c.gameObject.activeSelf!=active)c.gameObject.SetActive(active);ResidentObjects++;if(active)ActiveResidents++;}
+                foreach(var c in district.live)if(c){bool active=(c.transform.position-player).sqrMagnitude<210*210||c.GetComponent<GarrisonSupport>()?.Base?.Active==true;if(c.gameObject.activeSelf!=active)c.gameObject.SetActive(active);ResidentObjects++;if(active)ActiveResidents++;}
             }
         }
         void OnDestroy(){if(Instance==this)Instance=null;}

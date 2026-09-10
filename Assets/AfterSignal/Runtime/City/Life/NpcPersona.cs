@@ -3,7 +3,7 @@ namespace AfterSignal
 {
     public static class NpcPersona
     {
-        public static string Job(string art)=>art.Contains("Police")||art=="Swat"?"도시 치안대":art.Contains("Gang")?"무장 조직원":art=="Soldier"?"방위군 소총수":art.Contains("Doctor")?"의사":art.Contains("Nurse")?"간호사":art.Contains("Teacher")?"교사":art.Contains("Student")?"학생":art.Contains("Patient")?"통원 환자":art.Contains("Elder")?"은퇴한 주민":art.Contains("Office")?"회사원":art=="Worker"?"현장 기술자":art=="Bartender"?"바텐더":"도시 주민";
+        public static string Job(string art)=>art=="Firefighter"?"119 소방대원":art=="AirForceCrew"?"공군 조종사":art=="NavyCrew"?"해군 승조원":art=="CoastGuard"?"해양경찰":art=="SeaRaider"?"해적 조직원":art.Contains("Police")||art=="Swat"?"도시 치안대":art.Contains("Gang")?"무장 조직원":art=="Soldier"?"방위군 소총수":art.Contains("Doctor")?"의사":art.Contains("Nurse")?"간호사":art.Contains("Teacher")?"교사":art.Contains("Student")?"학생":art.Contains("Patient")?"통원 환자":art.Contains("Elder")?"은퇴한 주민":art.Contains("Office")?"회사원":art=="Worker"?"현장 기술자":art=="Bartender"?"바텐더":"도시 주민";
         public static string Group(CityNpc npc)
         {
             if(!npc)return "general";string art=NpcVoice.Role(npc),job=npc.occupation??"";var body=npc.GetComponent<WorldActor>();

@@ -72,6 +72,7 @@ namespace AfterSignal
             foreach(var door in doors)door.localRotation=Quaternion.RotateTowards(door.localRotation,Quaternion.Euler(Dropping?(door.localPosition.z<0?75:-75):0,0,0),Time.deltaTime*140);
             if(ripple<=0||Time.time<next||FallingBomb.Active>=72)return;
             if(GetComponent<MilitaryVehicleAI>()&&!gunner){var go=new GameObject("Bomber crew");go.transform.SetParent(transform,false);gunner=go.AddComponent<WorldActor>();gunner.military=true;gunner.helicopter=true;gunner.enabled=false;}
+            var stationed=GetComponent<GarrisonVehicleDriver>();if(stationed&&stationed.Soldier)gunner=stationed.Soldier.Body;
             next=Time.time+.17f;ripple--;Bombs--;Released++;
             var at=transform.TransformPoint(new Vector3(-1,.1f,Released%2==0?-1.15f:1.15f));FallingBomb.Release(at,car.Forward*Mathf.Abs(car.speed)+transform.forward*(Released%2==0?-1.4f:1.4f),car,UrbanSimulation.Instance&&UrbanSimulation.Instance.Current==car?null:gunner);
             if(Released%6==1)g.Audio.Play("cannon",at,.12f,2);

@@ -4,13 +4,22 @@ namespace AfterSignal
 {
     public sealed class NpcSpeech:MonoBehaviour
     {
-        Transform bubble;Text words;float until;int priority;
+        Transform bubble;Text words;float until;int priority;float witnessUntil;bool witnessedDeath;
         public string CurrentLine=>words?words.text:"";
         public static void Say(Component actor,string line,float seconds=3.5f,int importance=0)
         {
             if(!actor)return;
             var speech=actor.GetComponent<NpcSpeech>();if(!speech)speech=actor.gameObject.AddComponent<NpcSpeech>();
             speech.Show(FactionVoice.Filter(actor,line,importance),seconds,importance);
+        }
+        public static bool Witness(WorldActor actor,bool death)
+        {
+            if(!actor)return false;var speech=actor.GetComponent<NpcSpeech>();
+            if(!speech)speech=actor.gameObject.AddComponent<NpcSpeech>();
+            if(Time.time<speech.witnessUntil&&(!death||speech.witnessedDeath)||Time.time<speech.until&&speech.priority>9)return false;
+            speech.witnessUntil=Time.time+UnityEngine.Random.Range(7f,11f);speech.witnessedDeath=death;
+            // These lines are already specific to both the event and the speaker, including faction roles.
+            speech.Show(NpcDialogueBank.Line(actor.GetComponent<CityNpc>(),death?"witness_death":"witness_injury"),4.5f,9);return true;
         }
         void Show(string line,float seconds,int importance)
         {

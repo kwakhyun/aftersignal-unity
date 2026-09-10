@@ -14,7 +14,7 @@ namespace AfterSignal
         }
         public static void React(WorldActor target,WorldActor source)
         {
-            if(!Eligible(target)||source==target)return;
+            if(!Eligible(target)||source==target||StreetDispute.Contains(target))return;
             var d=target.GetComponent<CivilianDefense>()??target.gameObject.AddComponent<CivilianDefense>();
             d.body=target;d.npc=target.GetComponent<CityNpc>();d.aggressor=source;d.until=Time.time+20;
             d.npc.SocialUntil=0;

@@ -20,7 +20,7 @@ namespace AfterSignal
         void Awake(){Instance=this;game=GetComponent<GameDirector>();}
         static bool Available(CityNpc n)
         {
-            if(!n||!n.gameObject.activeInHierarchy||n.fixedQuest||n.Fleeing||n.GetComponent<MedicalPending>()||n.GetComponent<RescueMedic>())return false;
+            if(!n||StreetDispute.Contains(n)||!n.gameObject.activeInHierarchy||n.fixedQuest||n.Fleeing||n.GetComponent<MedicalPending>()||n.GetComponent<RescueMedic>())return false;
             var body=n.GetComponent<WorldActor>();var visual=n.GetComponent<SpriteRenderer>();
             if(!body||!body.Alive||body.Downed||body.monster||body.robot||!visual||!visual.enabled)return false;
             if((body.police||body.military||body.gang)&&(IncidentCommand.Emergency||WantedSystem.Level>0||FactionCombat.NearestOpponent(body,65)))return false;
@@ -41,7 +41,7 @@ namespace AfterSignal
             }
             var a=people[Random.Range(0,people.Count)];
             var b=people.FirstOrDefault(n=>n!=a&&Vector3.Distance(n.transform.position,a.transform.position)<7&&Mathf.Abs(n.transform.position.y-a.transform.position.y)<1.2f&&!Physics.Linecast(n.transform.position+Vector3.up,a.transform.position+Vector3.up,1,QueryTriggerInteraction.Ignore));
-            if(b)Exchange(a,b);
+            if(b&&!StreetDispute.TryBegin(a,b))Exchange(a,b);
         }
         public void Hail(CityNpc npc)
         {

@@ -14,10 +14,11 @@ namespace AfterSignal
         public void InjureOccupants(float speed){OccupantInjury=Mathf.Clamp(OccupantInjury+VehicleDurability.OccupantDamage(speed,false),0,50);}
         static readonly string[] passengerRoles={"CivilianMan","CivilianWoman","OfficeMan","OfficeWoman","Worker","ElderMan","ElderWoman","TeacherMan","TeacherWoman","Doctor","Nurse","Bartender","PatientMan","PatientWoman"};
         readonly List<string> identities=new List<string>();
-        int boardingSerial;float visualClock;
-        public string IdentityAt(int seat)=>car&&car.GetComponent<GangConvoy>()?"GangCrimson":seat>=0&&seat<identities.Count?identities[seat]:"CivilianMan";
+        int boardingSerial;float visualClock;string crewIdentity;
+        public string IdentityAt(int seat)=>VehicleCrew.Role(car)??crewIdentity??(seat>=0&&seat<identities.Count?identities[seat]:"CivilianMan");
         public WorldActor EjectDriver()
         {
+            var garrison=car.GetComponent<GarrisonVehicleDriver>();if(garrison)return garrison.Dismount(false);
             var convoy=car.GetComponent<GangConvoy>();if(convoy)return convoy.EjectDriver();
             var stolen=car.GetComponent<StolenVehicle>();
             if(stolen&&stolen.Driver){var driver=stolen.Driver;driver.GetComponent<GangCrime>()?.EjectFromWreck(car,false);return driver.Body;}
@@ -69,6 +70,7 @@ namespace AfterSignal
                 if(car.GetComponent<MilitaryVehicleAI>())identity="Soldier";
                 if(car.IsAircraft)identity=i==0?FacilityPeople.Key(0):FacilityPeople.Key(4+i%4);
                 if(car.IsWatercraft)identity=i==0?FacilityPeople.Key(10):passengerRoles[i%passengerRoles.Length];
+                identity=VehicleCrew.Role(car)??crewIdentity??identity;
                 identities.Add(identity);
                 var directional=i==0?VehiclePortraits.Driver(identity,1):VehiclePortraits.Passenger(identity,1);if(directional)r.sprite=directional;
                 occupants.Add(r);people.Add(r.sprite);
@@ -84,7 +86,7 @@ namespace AfterSignal
         public void SetPassengers(int count)
         {
             int next=Mathf.Clamp(count,0,Mathf.Max(0,occupants.Count-1));
-            for(int i=PassengerCount+1;i<=next;i++)identities[i]=car.GetComponent<TacticalTransport>()?"Swat":car.GetComponent<MilitaryVehicleAI>()?"Soldier":car.GetComponent<PoliceCar>()?"Police":car.IsAircraft?FacilityPeople.Key(4+(boardingSerial++ + i)%4):passengerRoles[(boardingSerial++ + i)%passengerRoles.Length];
+            for(int i=PassengerCount+1;i<=next;i++)identities[i]=VehicleCrew.Role(car)??crewIdentity??(car.GetComponent<TacticalTransport>()?"Swat":car.GetComponent<MilitaryVehicleAI>()?"Soldier":car.GetComponent<PoliceCar>()?"Police":car.IsAircraft?FacilityPeople.Key(4+(boardingSerial++ + i)%4):passengerRoles[(boardingSerial++ + i)%passengerRoles.Length]);
             PassengerCount=next;
         }
         public void SetManifest(List<string> manifest)
@@ -92,13 +94,13 @@ namespace AfterSignal
             PassengerCount=Mathf.Min(manifest.Count,occupants.Count-2);
             for(int i=0;i<PassengerCount;i++)identities[i+1]=manifest[i];
         }
-        public void SetCrew(string identity,int count){for(int i=0;i<identities.Count;i++)identities[i]=identity;PassengerCount=Mathf.Clamp(count,0,occupants.Count-1);}
+        public void SetCrew(string identity,int count){crewIdentity=identity;for(int i=0;i<identities.Count;i++)identities[i]=identity;PassengerCount=Mathf.Clamp(count,0,occupants.Count-1);}
         public List<string> ReleaseOccupants(bool playerDriver)
         {
             var result=new List<string>();
             var taxi=car.GetComponent<CityTaxiService>();
-            if(car.occupied&&!playerDriver&&identities.Count>0&&!(taxi&&taxi.Air))result.Add(identities[0]);
-            for(int i=1;i<=PassengerCount;i++)result.Add(identities[i]);
+            if(car.occupied&&!playerDriver&&identities.Count>0&&!(taxi&&taxi.Air))result.Add(IdentityAt(0));
+            for(int i=1;i<=PassengerCount;i++)result.Add(IdentityAt(i));
             SetPassengers(0);return result;
         }
         void LateUpdate()
@@ -120,7 +122,7 @@ namespace AfterSignal
                 if(!nearby&&!isSeo)continue;
                 if(isSeo&&GameDirector.Instance&&GameDirector.Instance.CameraRig.FirstPersonVehicle)r.enabled=false;
                 if(!r.enabled)continue;
-                string identity=identities[i];
+                string identity=IdentityAt(i);
                 if(car.GetComponent<GangConvoy>())identity="GangCrimson";
                 var stolen=car.GetComponent<StolenVehicle>();
                 if(i==0&&stolen&&stolen.Driver)

@@ -29,6 +29,7 @@ namespace AfterSignal
         void LateUpdate()
         {
             if(!actor||!solid)return;
+            if(GetComponent<GarrisonPassenger>()||GetComponent<GarrisonLiftRide>()?.Riding==true){solid.enabled=false;return;}
             var pose=GetComponent<DirectionalPerson>();var walker=GetComponent<CityPedestrian>();bool lying=pose&&pose.Lying||walker&&walker.struck;
             solid.enabled=actor.Alive&&!actor.Downed&&!lying&&!GetComponentInParent<CityVehicle>()&&!(actor.GetComponent<MedicalPending>()&&actor.GetComponent<MedicalPending>().carried);
             if(lying&&!actor.Downed&&!restingHit&&!GetComponentInChildren<ProneHitVolume>())restingHit=ProneHitVolume.Create(actor);

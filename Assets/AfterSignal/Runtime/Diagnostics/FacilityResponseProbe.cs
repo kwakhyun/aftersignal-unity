@@ -18,11 +18,14 @@ namespace AfterSignal
     {
         [Serializable] sealed class Report {public bool completed;public List<string> passed=new(),errors=new();}
         readonly Report report=new();GameDirector game;float began;bool finished;HttpListener listener;
-        const string Output="Artifacts/FacilityResponse/Native";
+        static bool BaseProbe => Environment.GetCommandLineArgs().Contains("-base-mobilization-probe");
+        static bool CrewWitness => Environment.GetCommandLineArgs().Contains("-crew-witness-probe");
+        static bool DrivingPhoto => Environment.GetCommandLineArgs().Contains("-readme-driving-photo");
+        static string Output => BaseProbe ? "Artifacts/BaseMobilization/Native" : CrewWitness ? "Artifacts/CrewWitness/Native" : DrivingPhoto ? "Artifacts/ReadmeDriving" : "Artifacts/FacilityResponse/Native";
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-        static void Install(){if(!Environment.GetCommandLineArgs().Contains("-facility-response-probe")||FindAnyObjectByType<FacilityResponseProbe>())return;GameDirector.SkipTitle=true;new GameObject("Facility response essentials").AddComponent<FacilityResponseProbe>();}
+        static void Install(){if((!BaseProbe&&!CrewWitness&&!DrivingPhoto&&!Environment.GetCommandLineArgs().Contains("-facility-response-probe"))||FindAnyObjectByType<FacilityResponseProbe>())return;GameDirector.SkipTitle=true;new GameObject("Facility response essentials").AddComponent<FacilityResponseProbe>();}
         void Awake(){DontDestroyOnLoad(gameObject);Application.runInBackground=true;LifeState.SuppressSave=CityChronicle.SuppressSave=RespawnNetwork.SuppressSave=true;Directory.CreateDirectory(Output);began=Time.realtimeSinceStartup;Application.logMessageReceived+=Log;}
-        void Log(string line,string stack,LogType type){if(type==LogType.Error||type==LogType.Exception){report.errors.Add(line+"\n"+stack);Save();}}
+        void Log(string line,string stack,LogType type){if(type==LogType.Error||type==LogType.Exception){report.completed=false;report.errors.Add(line+"\n"+stack);Save();}}
         void Check(bool ok,string text){(ok?report.passed:report.errors).Add(text);Debug.Log("FACILITY RESPONSE "+ok+" / "+text);Save();}
         void Save()=>File.WriteAllText(Path.Combine(Output,"result.json"),JsonUtility.ToJson(report,true));
         static void Set(object o,string name,object value)=>o.GetType().GetField(name,BindingFlags.Instance|BindingFlags.NonPublic).SetValue(o,value);
@@ -33,6 +36,9 @@ namespace AfterSignal
             game=GameDirector.Instance;game.Input.ExternalControl=true;game.Input.ExternalFrame=ControlFrame.Empty;game.CloseDialogue();game.SetPaused(false);Set(game,"<Title>k__BackingField",false);Set(game,"<Fade>k__BackingField",0f);game.enabled=false;game.CameraRig.enabled=false;
             foreach(var b in FindObjectsByType<MonoBehaviour>())if(b is PrisonSystem||b is CityChronicle||b is CitySafety||b is WantedSystem||b is CityGangWar||b is GangStrongholds||b is GangCrime||b is GangMember||b is PoliceOfficer||b is ArmyResponder||b is RegionalGuard||b is SeaCombat||b is RiftIncursion||b is CivicTerrorEvents||b is FourCityCampaign||b is SecurityResponse)b.enabled=false;
             foreach(var battle in FindObjectsByType<CampaignBattle>())Destroy(battle.gameObject);if(PrisonSystem.Instance)Set(PrisonSystem.Instance,"remaining",0f);WantedSystem.Clear("");CityEventGate.Reset();Set(game,"<Nearby>k__BackingField",null);Set(game,"<NoticeTimer>k__BackingField",0f);
+            if(BaseProbe){yield return BaseChecks();Finish();yield break;}
+            if(CrewWitness){yield return CrewWitnessChecks();Finish();yield break;}
+            if(DrivingPhoto){yield return DrivingShowcase();yield return BattleShowcase();Finish();yield break;}
             var sim=UrbanSimulation.Instance;sim.enabled=false;
             foreach(int site in new[]{2,1,4})
             {
@@ -76,6 +82,139 @@ namespace AfterSignal
             var garden=FourCityCatalog.Venues.First(v=>v.city==1&&v.kind==VenueKind.Amusement);yield return Shot("nova-city",garden.Entrance+Vector3.back*18,new Vector3(-80,70,-110),new Vector3(10,15,65));
             var hospital=FourCityCatalog.Venues.First(v=>v.city==3&&v.kind==VenueKind.Hospital);yield return Shot("nereid-city",hospital.Entrance+Vector3.back*18,new Vector3(-55,45,-85),new Vector3(15,12,45));
             Finish();
+        }
+        // Reproducible photo session on the actual city road, without changing normal population settings.
+        IEnumerator DrivingShowcase()
+        {
+            var sim=UrbanSimulation.Instance;var at=CityRoadNetwork.Junction(1,1)+new Vector3(55,.12f,-5);
+            game.Player.Respawn(at+Vector3.back*4);LifeState.Hours=22;game.enabled=true;
+            yield return new WaitForSeconds(5);Physics.SyncTransforms();
+            var car=sim.Spawn(at,false,0);car.owned=true;
+            yield return null;Check(sim.Enter(car),"Seoha is seated at the wheel in the city showcase");
+            var photoCars=new List<CityVehicle>();
+            for(int i=0;i<10;i++)
+            {
+                var p=at+new Vector3(-15-(i/2)*13,0,i%2==0?0:10);
+                var traffic=sim.Spawn(p,true,new[]{0,1,5,3,0}[i%5]);
+                traffic.transform.rotation=Quaternion.Euler(0,i%2==0?0:180,0);
+                traffic.route=new[]{p,p+(i%2==0?Vector3.right:Vector3.left)*100};traffic.waypoint=1;traffic.speed=3;photoCars.Add(traffic);
+            }
+            for(int i=0;i<28;i++)
+            {
+                var p=at+new Vector3(10-(i/2)*5+(i%3)*.8f,0,(i%2==0?-12:22)+(i%3-1)*1.1f);
+                if(!CityGangWar.FindGround(p,out p))continue;
+                var person=new GameObject("Showcase sidewalk citizen",typeof(SpriteRenderer),typeof(CityNpc),typeof(CityPedestrian),typeof(ContactShadow));
+                person.GetComponent<SpriteRenderer>().sharedMaterial=Resources.Load<Material>("Materials/PixelActor");
+                person.GetComponent<CityNpc>().Configure(24000+i);var walk=person.GetComponent<CityPedestrian>();
+                walk.ResetAt(p,p+Vector3.right*6,null);walk.WalkTo(p+Vector3.right*6,false);
+            }
+            Physics.SyncTransforms();var input=ControlFrame.Empty;input.move=Vector2.up;game.Input.ExternalFrame=input;
+            yield return new WaitForSeconds(.6f);game.Input.ExternalFrame=ControlFrame.Empty;
+            Set(game,"<NoticeTimer>k__BackingField",0f);Set(game,"<Nearby>k__BackingField",null);
+            CameraAt(car.transform.position+new Vector3(15,7,-19),car.transform.position+new Vector3(-14,1,0));
+            yield return null;Capture("city-driving");
+            CameraAt(car.transform.position+new Vector3(11,4,-12),car.transform.position+new Vector3(-7,1,0));
+            yield return null;Capture("city-driving-close");
+            Check(sim.Current==car&&photoCars.All(c=>c&&c.occupied),"Showcase contains Seoha driving and ten occupied civilian vehicles");
+        }
+        IEnumerator BattleShowcase()
+        {
+            var sim=UrbanSimulation.Instance;sim.Exit();
+            var at=CityRoadNetwork.Junction(3,2);game.Player.Respawn(at+new Vector3(45,.2f,0));LifeState.Hours=18.4f;
+            yield return new WaitForSeconds(3);Physics.SyncTransforms();
+            var titan=RiftCreature.Create(at,0);var soldiers=new List<ArmyResponder>();var officers=new List<PoliceOfficer>();
+            for(int i=0;i<6;i++)
+            {
+                var p=at+new Vector3(20+i%3*4,.1f,-7+i/3*4);
+                var officer=PoliceOfficer.Create(WantedSystem.Instance,p,4,i);officer.Ambient=true;officers.Add(officer);
+                var soldier=ArmyResponder.Create(at+new Vector3(19+i%3*4,.1f,3+i/3*4),i,null);soldiers.Add(soldier);
+            }
+            titan.Attacked(soldiers[0].Body,100);Physics.SyncTransforms();
+            CameraAt(at+new Vector3(43,8,-9),at+new Vector3(5,4,0));
+            for(int i=0;i<12;i++)
+            {
+                yield return new WaitForSeconds(.5f);Set(game,"<NoticeTimer>k__BackingField",0f);
+                CameraAt(at+new Vector3(43,8,-9),at+new Vector3(5,4,0));
+                Capture("monster-battle-"+i.ToString("00"));
+            }
+            Check(soldiers.Any(a=>a&&a.Shots>0)&&officers.Any(a=>a&&a.ShotsFired>0),"Police and defense soldiers actually fire at the live rift creature during capture");
+        }
+        WorldActor WitnessPerson(Vector3 at,int id)
+        {
+            var go=new GameObject("Witness essentials / "+id,typeof(SpriteRenderer),typeof(CityNpc));go.transform.position=at;
+            go.GetComponent<SpriteRenderer>().sharedMaterial=Resources.Load<Material>("Materials/PixelActor");go.GetComponent<CityNpc>().Configure(id);return go.GetComponent<WorldActor>();
+        }
+        IEnumerator BaseChecks()
+        {
+            while(!MilitaryBaseOperations.Instance||!MilitaryBaseOperations.Instance.Built)yield return null;
+            var sim=UrbanSimulation.Instance;sim.enabled=false;var street=CityRoadNetwork.Junction(1,1);game.Player.Respawn(street);Physics.SyncTransforms();
+            var a=WitnessPerson(street+new Vector3(3,.1f,2),6101);var b=WitnessPerson(street+new Vector3(4.4f,.1f,2),6102);a.health=b.health=70;
+            a.GetComponent<CityNpc>().occupation=b.GetComponent<CityNpc>().occupation="회사원";PeopleArt.Attach(a.gameObject,"OfficeMan");PeopleArt.Attach(b.gameObject,"OfficeMan");yield return null;
+            Check(StreetDispute.Begin(a.GetComponent<CityNpc>(),b.GetComponent<CityNpc>()),"Healthy adult citizens can start a local argument");
+            yield return new WaitForSeconds(8);var fight=FindAnyObjectByType<StreetDispute>();
+            Check(fight&&fight.Punches>1&&a.Alive&&b.Alive&&a.health<70&&b.health<70,"Argument escalates into alternating nonlethal melee / punches="+(fight?fight.Punches:0));
+            var patrol=PoliceOfficer.Create(WantedSystem.Instance,street+new Vector3(3,.1f,7),2,71);patrol.enabled=false;Physics.SyncTransforms();yield return new WaitForSeconds(1);
+            Check(!FindAnyObjectByType<StreetDispute>()&&a.Alive&&b.Alive,"Nearby police stop the civilian fight before a death");Destroy(a.gameObject);Destroy(b.gameObject);Destroy(patrol.gameObject);
+            var site=MilitaryBaseOperations.Bases[0];game.Player.Respawn(new Vector3(510,.15f,765));LifeState.Hours=13;yield return new WaitForSeconds(5);Physics.SyncTransforms();
+            var civilian=WitnessPerson(new Vector3(514,.15f,765),6110);PeopleArt.Attach(civilian.gameObject,"CivilianMan");yield return new WaitForSeconds(1.5f);
+            Check(civilian.military&&civilian.GetComponent<RegionalUniform>()?.art=="Soldier"&&civilian.GetComponent<GarrisonSupport>()?.Base==site,"Residual civilian inside a military installation becomes a uniformed registered soldier");
+            Check(site.Personnel.Count>=40&&site.Vehicles.Count>=20,"Base has existing indoor personnel and a parked weapons fleet / personnel="+site.Personnel.Count+", vehicles="+site.Vehicles.Count);
+            var truck=FindObjectsByType<MilitaryGunTruck>().First();Check(FindObjectsByType<MilitaryGunTruck>().Length>=10&&truck.Built&&truck.GetComponent<VehicleCabin>().IdentityAt(0)=="Soldier","Ten original armed 6x6 vehicles have actual weapon mounts and military cabin identities");
+            Check(truck.GetComponentsInChildren<MeshRenderer>().Count(r=>r.enabled)<65,"Gun truck hull detail is batched by material while wheels and turret stay articulated");
+            CameraAt(truck.transform.position+new Vector3(13,7,-12),truck.transform.position+Vector3.up*1.7f);yield return null;Capture("gun-truck");
+            CameraAt(new Vector3(580,34,957),new Vector3(580,1,915));yield return null;Capture("base-facilities");
+            Check(!ResponseDispatch.TryOrigin(site.Center,true,false,0,out _)&&!ResponseDispatch.TryOrigin(site.Center,true,true,0,out _),"Ground and air reinforcement generators defer to the existing garrison inside its base");
+            var ids=new HashSet<int>(site.Vehicles.Where(v=>v).Select(v=>v.GetInstanceID()));
+            var enemy=new GameObject("Probe base intruder",typeof(CapsuleCollider),typeof(WorldActor));enemy.transform.position=new Vector3(465,.1f,824);var body=enemy.GetComponent<WorldActor>();body.monster=true;body.health=1000000;enemy.layer=9;enemy.GetComponent<CapsuleCollider>().height=3;enemy.GetComponent<CapsuleCollider>().center=Vector3.up*1.5f;
+            MilitaryBaseOperations.ReportAttack(site.Center,body);Physics.SyncTransforms();
+            for(int sample=0;sample<5;sample++){yield return new WaitForSeconds(sample==0?.5f:5.4f);File.WriteAllLines(Path.Combine(Output,"roster-"+sample+".txt"),new[]{"siteActive="+site.Active+" target="+(site.Threat?site.Threat.name:"none")+" intruder="+body.transform.position+" health="+body.health+" down="+body.Downed+" blocked="+game.Blocked+" player="+game.Player.transform.position}.Concat(site.Personnel.Where(s=>s).Select(s=>s.name+" pos="+s.transform.position+" enabled="+s.enabled+" active="+s.gameObject.activeInHierarchy+" sameSite="+(s.Base==site)+" state="+s.DutyState+" health="+s.Body.health+" target="+(s.Target?s.Target.name:"none"))));}
+            var drivers=FindObjectsByType<GarrisonVehicleDriver>().Where(d=>d&&d.Car&&ids.Contains(d.Car.GetInstanceID())).ToArray();
+            Check(site.Active&&site.Personnel.Count(s=>s&&s.Supporting)>20,"Base alarm mobilizes the stationed roster beyond ordinary dispatch limits / active="+site.Personnel.Count(s=>s&&s.Supporting));
+            Check(drivers.Any(d=>d.Car.type==CityVehicleType.Tank)&&drivers.Any(d=>d.Car.type==CityVehicleType.CombatHelicopter)&&drivers.Any(d=>d.Car.GetComponent<MilitaryGunTruck>()),"Real soldiers board pre-existing tanks, helicopters and gun trucks / types="+string.Join(",",drivers.Select(d=>d.Car.type)));
+            Check(drivers.All(d=>d.Soldier&&d.Soldier.GetComponent<GarrisonPassenger>()&&d.Soldier.transform.IsChildOf(d.Car.transform))&&drivers.Any(d=>d.Shots>0),"Mounted soldiers remain the same actor and use their vehicle weapons / shots="+drivers.Sum(d=>d.Shots));
+            Check(site.Personnel.Where(s=>s&&s.name.Contains("근무 군인")).Any(s=>s.transform.position.z<888||s.GetComponent<GarrisonPassenger>()),"Armed indoor personnel leave the real facility entrances to join base defense");
+            CameraAt(new Vector3(465,26,745),new Vector3(468,2,817));yield return null;Capture("base-defense");
+            var mounted=drivers.FirstOrDefault(d=>d.Car.GetComponent<MilitaryGunTruck>());if(mounted){var car=mounted.Car;var original=mounted.Soldier.Body;var result=car.GetComponent<VehicleCabin>().EjectDriver();Check(result==original&&!original.transform.IsChildOf(car.transform),"Vehicle takeover ejects the same stationed soldier without creating a substitute");yield return null;car.occupied=false;sim.Enter(car);yield return null;var gun=car.GetComponent<MilitaryGunTruck>();int shots=gun.Shots;gun.TickPlayer(new ControlFrame{attack=true},.2f);Check(sim.Current==car&&gun.Shots>shots,"Seoha can take over the new gun truck and fire its mounted weapon");sim.Exit();}
+            Destroy(enemy);site.Threat=null;site.PlayerAlarmUntil=0;site.Active=false;
+        }
+        IEnumerator CrewWitnessChecks()
+        {
+            var sim=UrbanSimulation.Instance;var at=CityRoadNetwork.Junction(1,1);game.Player.Respawn(at);Physics.SyncTransforms();
+            var vehicles=new List<CityVehicle>();
+            foreach(var kind in new[]{CityVehicleType.Tank,CityVehicleType.CombatHelicopter,CityVehicleType.Fighter,CityVehicleType.Bomber})
+            {
+                var car=sim.Spawn(at+new Vector3(0,0,40),false,(int)kind);vehicles.Add(car);car.occupied=true;yield return new WaitForSeconds(.2f);
+                var cabin=car.GetComponent<VehicleCabin>();cabin.SetPassengers(2);string role=kind==CityVehicleType.Tank?"Soldier":"AirForceCrew";
+                Check(cabin.IdentityAt(0)==role&&cabin.IdentityAt(1)==role&&cabin.ReleaseOccupants(false).All(x=>x==role),kind+" uses military crew in cabin, boarding and evacuation");
+                Destroy(car.gameObject);yield return null;
+            }
+            var truck=sim.Spawn(at+Vector3.right*25,false,(int)CityVehicleType.Truck);yield return new WaitForSeconds(.2f);
+            truck.gameObject.AddComponent<MilitaryVehicleAI>().Initialize(truck,null);truck.occupied=true;
+            var truckCabin=truck.GetComponent<VehicleCabin>();truckCabin.SetPassengers(3);
+            Check(truckCabin.IdentityAt(0)=="Soldier"&&truckCabin.IdentityAt(2)=="Soldier","Military component added after cabin initialization overrides cached civilian identities");
+            var survivor=VehicleOccupant.Create(truck,truckCabin.IdentityAt(0),0,false,at);Check(survivor.military&&survivor.GetComponent<ArmyResponder>(),"Military driver exits as a functioning soldier");Destroy(survivor.gameObject);Destroy(truck.gameObject);yield return null;
+            var fireCar=sim.Spawn(at+Vector3.right*28,false,(int)CityVehicleType.Truck);yield return new WaitForSeconds(.2f);fireCar.gameObject.AddComponent<FireEngineArt>();fireCar.occupied=true;
+            yield return new WaitForSeconds(.3f);var fireCabin=fireCar.GetComponent<VehicleCabin>();fireCabin.SetPassengers(0);fireCabin.SetPassengers(2);
+            Check(fireCabin.IdentityAt(0)=="Firefighter"&&fireCabin.ReleaseOccupants(false).All(x=>x=="Firefighter"),"Fire crew survives reboarding and evacuation without civilian replacement");
+            var engine=fireCar.gameObject.AddComponent<FireEngine>();Set(engine,"<Car>k__BackingField",fireCar);engine.enabled=false;
+            var firefighter=Firefighter.Create(engine,null,at+new Vector3(20,0,7),0);
+            yield return new WaitForSeconds(.4f);
+            Check(firefighter&&!firefighter.GetComponent<DirectionalPerson>().enabled&&FireCrewArt.Frames.Contains(firefighter.GetComponent<SpriteRenderer>().sprite),"Dedicated firefighter sprite remains after multiple LateUpdate frames");
+            Destroy(firefighter.gameObject);Destroy(fireCar.gameObject);yield return null;
+            // Isolate the visibility and cooldown regression from ongoing ambient incidents.
+            at=new Vector3(1000,200,-800);var deck=GameObject.CreatePrimitive(PrimitiveType.Cube);deck.transform.position=at-Vector3.up*.5f;deck.transform.localScale=new Vector3(120,1,100);Physics.SyncTransforms();game.Player.Respawn(at);yield return null;
+            var victim=WitnessPerson(at,26000);var witness=WitnessPerson(at+Vector3.right*5,26001);var far=WitnessPerson(at+Vector3.right*70,26002);var hidden=WitnessPerson(at+Vector3.forward*9,26003);
+            var wall=GameObject.CreatePrimitive(PrimitiveType.Cube);wall.transform.position=at+new Vector3(0,2,5);wall.transform.localScale=new Vector3(8,5,1);Physics.SyncTransforms();ActorSpatialIndex.Changed();
+            var source=new GameObject("Environmental test source").AddComponent<WorldActor>();source.environmental=true;source.transform.position=at;
+            victim.Damage(15,Vector3.zero,source);yield return null;
+            var speech=witness.GetComponent<NpcSpeech>();string injuryLine=speech?speech.CurrentLine:"";
+            Check(speech&&!string.IsNullOrEmpty(injuryLine),"Damage event makes a nearby witness react to the injury");
+            Check(!far.GetComponent<NpcSpeech>()&&!hidden.GetComponent<NpcSpeech>(),"Distant and wall-occluded people do not react to the victim");
+            Check(!NpcSpeech.Witness(witness,false),"Witness cooldown suppresses repeated injury chatter");
+            yield return new WaitForSeconds(.12f);victim.Damage(150,Vector3.zero,source);yield return null;yield return null;
+            Check(!victim.Alive&&speech.CurrentLine!=injuryLine,"Death event upgrades an earlier injury reaction immediately");
+            string first=NpcDialogueBank.Line(witness.GetComponent<CityNpc>(),"witness_death"),second=NpcDialogueBank.Line(witness.GetComponent<CityNpc>(),"witness_death");Check(first!=second,"Consecutive witness lines avoid immediate repetition");
+            foreach(var body in new[]{victim,witness,far,hidden,source})Destroy(body.gameObject);Destroy(wall);Destroy(deck);
         }
         IEnumerator Shot(string name,Vector3 at,Vector3 offset,Vector3 focus)
         {game.Player.Respawn(at);game.enabled=true;yield return new WaitForSeconds(4);game.enabled=false;Set(game,"<NoticeTimer>k__BackingField",0f);CameraAt(at+offset,at+focus);yield return null;Capture(name);}

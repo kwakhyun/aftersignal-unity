@@ -31,6 +31,7 @@ namespace AfterSignal
     public sealed class SecurityVehicleArt:MonoBehaviour
     {
         CityVehicle car;Transform model,ramp;readonly List<Transform> wheels=new();bool gang,openRamp;Quaternion rampRest;
+        public bool Military=>!gang;
         public void OpenRear(){openRamp=true;}
         public static void Install(CityVehicle car,bool gang)
         {

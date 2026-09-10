@@ -39,7 +39,7 @@ namespace AfterSignal
         void Report(Vector3 at,WorldActor suspect,CityNpc victim)
         {
             // Player reports belong to CrimeObservation; accidents have no suspect.
-            if(!suspect||suspect.environmental||!LocalSimulation.Combat(at))return;
+            if(!suspect||suspect.environmental||StreetDispute.Contains(suspect)||!LocalSimulation.Combat(at))return;
             if(suspect.monster){SecurityResponse.Request(suspect,true);return;}
             int id=suspect?suspect.GetInstanceID():-1;
             if(reported.Contains(id))return;
@@ -69,12 +69,17 @@ namespace AfterSignal
             yield return new WaitForSeconds(8);
             for(int i=0;i<2;i++){var o=PoliceOfficer.Create(WantedSystem.Instance,new Vector3(5+i*2,.12f,0),2,i);o.Ambient=true;Patrol.Add(o);NpcSpeech.Say(o,"경찰입니다. 무기를 내려놓으세요!",4);}
         }
+        static readonly List<WorldActor> shocked=new();
         public static void Shock(Vector3 at,string cause="danger")
         {
             if(!LocalSimulation.Combat(at))return;
-            foreach(var npc in FindObjectsByType<CityNpc>())
-                if(npc&&Vector3.Distance(npc.transform.position,at)<25&&npc.GetComponent<WorldActor>().Alive)
-                {npc.Panic(at,7);NpcSpeech.Say(npc,NpcDialogueBank.Line(npc,cause),3);}
+            ActorSpatialIndex.Nearby(at,25,shocked);
+            foreach(var body in shocked)
+            {
+                if(!body||!body.Alive||body.Downed||body.police||body.military||body.gang||body.monster||body.robot||body.helicopter||body.environmental)continue;
+                var npc=body.GetComponent<CityNpc>();if(!npc||!FactionCombat.Visible(body.Center,at+Vector3.up,27))continue;
+                npc.Panic(at,7);NpcSpeech.Say(npc,NpcDialogueBank.Line(npc,cause),3);
+            }
         }
         void Update()
         {

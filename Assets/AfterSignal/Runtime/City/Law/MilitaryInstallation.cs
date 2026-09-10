@@ -30,8 +30,8 @@ namespace AfterSignal
             var g=GameDirector.Instance;if(!g||g.Blocked||!barrier)return;
             var p=g.Player.transform.position;bool near=(p-Gate).sqrMagnitude<18*18;
             inspection=near&&WantedSystem.Level==0?inspection+Time.deltaTime:0;
-            bool authorized=inspection>4;
-            barrier.localRotation=Quaternion.RotateTowards(barrier.localRotation,Quaternion.Euler(0,0,near&&authorized?80:0),Time.deltaTime*65);
+            bool alarm=MilitaryBaseOperations.At(Gate)?.Active==true;bool authorized=inspection>4||alarm;
+            barrier.localRotation=Quaternion.RotateTowards(barrier.localRotation,Quaternion.Euler(0,0,(near&&authorized||alarm)?80:0),Time.deltaTime*65);
             if(blocker)blocker.enabled=barrier.localEulerAngles.z<55;
             if(near&&!authorized&&Time.time>warning){warning=Time.time+8;foreach(var guard in guards)if(guard&&guard.Body.Alive)NpcSpeech.Say(guard,"통제 구역입니다. 잠시 정지하세요. 신원을 조회하겠습니다.",4);g.Toast("위병소 · 정문에서 4초간 신원 조회 · 수배 중 출입 금지",3);}
         }

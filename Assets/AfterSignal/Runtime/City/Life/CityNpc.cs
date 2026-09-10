@@ -130,7 +130,7 @@ namespace AfterSignal
 
         public void Panic(Vector3 danger,float duration)
         {
-            if(GetComponent<RescueMedic>())return;
+            if(GetComponent<RescueMedic>()||StreetDispute.Contains(this))return;
             if(CivilianDefense.Active(this))return;
             if(body&&(body.police||body.military||body.gang||body.monster||body.terrorist||body.Downed))return;
             if(fixedQuest||body&&!body.Alive)return;
@@ -142,6 +142,7 @@ namespace AfterSignal
         }
         public void ReactToAttack(bool down, Vector3 force)
         {
+            if(StreetDispute.Contains(this)&&!down)return;
             if(body&&(body.police||body.military||body.gang||body.terrorist||body.Downed))return;
             if(!down&&CivilianDefense.Active(this))return;
             fleeUntil = Time.time + (down ? 3600 : 7);

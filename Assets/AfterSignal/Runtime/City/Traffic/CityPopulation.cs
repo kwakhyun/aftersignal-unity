@@ -93,7 +93,7 @@ namespace AfterSignal
             if(!PopulationBudget.ClaimFrame())return null;
             var p = Position(hidden);
             if(float.IsNaN(p.x))return null;
-            if(!CityGangWar.FindGround(p,out p))return null;
+            if(!CityGangWar.FindGround(p,out p)||MilitaryBaseOperations.Restricted(p))return null;
             if(!PopulationBudget.Room(p))return null;
             Citizens.RemoveAll(person=>!person);
             CityPedestrian c = Citizens.Find(person => !person.gameObject.activeSelf);
