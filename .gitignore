@@ -98,3 +98,4 @@
 *.stl.meta
 !Documentation/Screenshots/*.png
 !Documentation/Screenshots/*.jpg
+!Documentation/Branding/aftersignal-icon.png

@@ -7,7 +7,7 @@
 - `Assets/AfterSignal/Resources/` 아래 `Art`, `Characters`, `Creatures`, `Geometry`, `Maritime`, `Response`, `Security`, `WorldAssets` 및 해당 `.meta`.
 - `Assets/AfterSignal/Prefabs`, `Assets/AfterSignal/Scenes` 및 `.meta`. 씬과 프리팹에는 제작한 3D 배치·구조가 직렬화되므로 함께 분리합니다.
 - 위치에 관계없이 원본 이미지, 텍스처, 스프라이트 시트, Blender/FBX/OBJ/glTF 등 모델 파일. 문서 폴더의 작업 원본·모델링 미리보기도 포함합니다.
-- 공개 예외는 `Documentation/Screenshots/`의 게임 플레이 PNG/JPG 캡처뿐입니다. 이 폴더에 스프라이트 원본이나 모델링 자료를 넣지 마세요.
+- 공개 예외는 `Documentation/Screenshots/`의 게임 플레이 PNG/JPG 캡처와 사용자가 공개를 승인한 `Documentation/Branding/aftersignal-icon.png` 게임 아이콘입니다. 다른 스프라이트 원본이나 모델링 자료를 이 경로에 넣지 마세요.
 
 오디오·폰트와 라이선스, 프로그래밍 소스, 제작 도구·프롬프트 기록, 튜닝·스토리 데이터는 유지합니다. 절차적으로 구조를 만드는 프로그램 코드는 소스에 남고, 그 출력 모델·프리팹·메시 파일은 공개하지 않습니다.
 

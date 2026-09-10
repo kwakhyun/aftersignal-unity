@@ -1,5 +1,9 @@
 # AFTERSIGNAL · Night Line
 
+<img src="Documentation/Branding/aftersignal-icon.png" alt="AFTERSIGNAL 게임 아이콘" width="128" height="128">
+
+[게임 아이콘 PNG · 제작 기록](Documentation/Branding/README.md)
+
 서하가 기억을 빼앗긴 도시의 사건을 추적하는 **Unity 오픈월드 액션 게임**입니다. 실제 3D 도시·탈것과 방향별 캐릭터 스프라이트를 조합합니다. 현재 서하는 스프라이트를 사용하며 실험용 3D 모델은 적용하지 않습니다.
 
 Unity **6.4 / 6000.4.0f1**, URP **17.4.0**, Windows 플레이어를 기준으로 개발합니다. 현재 기능과 검증 범위는 [HANDOFF](HANDOFF.md)와 [최근 검증](Documentation/FacilityResponse/README.md)을 확인하세요.

@@ -1,4 +1,4 @@
-// Keep reusable visual assets private. Flattened README gameplay captures are allowed.
+// Keep reusable visual assets private. Gameplay captures and the approved public game icon are allowed.
 const fs = require('node:fs');
 const path = require('node:path');
 const cp = require('node:child_process');
@@ -12,6 +12,7 @@ const privateRoots = [
 ];
 const visual = /\.(png|jpe?g|webp|gif|tga|tiff?|psd|exr|hdr|svg|fbx|blend\d*|obj|mtl|glb|gltf|stl|usd[acz]?|unitypackage)(\.meta)?$/i;
 function isPrivate(name) {
+  if (name === 'Documentation/Branding/aftersignal-icon.png') return false;
   if (/^Documentation\/Screenshots\/[a-z0-9-]+\.(png|jpg)$/.test(name)) return false;
   return visual.test(name) || privateRoots.some(p => name === p || name === p+'.meta' || name.startsWith(p+'/'));
 }
