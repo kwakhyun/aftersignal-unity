@@ -12,6 +12,7 @@ namespace AfterSignal
         readonly int[] importance=new int[VoiceCount];
         readonly float[] voiceGain=new float[VoiceCount];
         readonly Dictionary<string,AudioClip> bank=new Dictionary<string,AudioClip>();
+        GeneratedSoundBank generated=new GeneratedSoundBank();
         readonly Dictionary<string,int> variations=new Dictionary<string,int>();
         readonly Dictionary<string,float> lastPlayed=new Dictionary<string,float>();
         readonly Dictionary<string,int> cueCounts=new Dictionary<string,int>();
@@ -20,6 +21,7 @@ namespace AfterSignal
         public float Volume {get;private set;}=.45f;
         public float SfxVolume {get;private set;}=.9f;
         public float MusicDuck => duck>0?.76f:1;
+        public bool IsPaused => paused;
         public int Played {get;private set;}
         public int MissingCues=>missing.Count;
         public int ActiveVoices {get{int n=0;foreach(var v in voices)if(v&&v.isPlaying)n++;return n;}}
@@ -33,6 +35,7 @@ namespace AfterSignal
             foreach(var clip in Resources.LoadAll<AudioClip>("Audio/Firearms"))Register(clip);
             foreach(var clip in Resources.LoadAll<AudioClip>("Audio/Transport"))Register(clip);
             foreach(var clip in Resources.LoadAll<AudioClip>("Audio/CombatDetail"))Register(clip);
+            generated=new GeneratedSoundBank(Resources.LoadAll<AudioClip>(GeneratedSoundBank.ResourcePath));
             SfxVolume=Mathf.Clamp01(PlayerPrefs.GetFloat("AFTERSIGNAL.Unity.SfxVolume",.9f));
             for(int i=0;i<voices.Length;i++)
             {
@@ -42,7 +45,7 @@ namespace AfterSignal
             ambience=gameObject.AddComponent<AudioSource>();ambience.loop=true;ambience.playOnAwake=false;ambience.spatialBlend=0;
             var g=GameDirector.Instance;
             string scene=g.stage==StageId.Station?"station":g.stage==StageId.Carriage?"train":g.stage==StageId.Roof?"roof":"town";
-            bank.TryGetValue("ambient_"+scene,out var ambient);ambience.clip=ambient;
+            var ambient=GeneratedLoops.Load("ambient_"+scene,"Audio/Quality/ambient_"+scene);ambience.clip=ambient;
             SetVolume(PlayerPrefs.GetFloat("AFTERSIGNAL.Unity.Volume",.45f));
             if(ambient)ambience.Play();
         }
@@ -53,12 +56,18 @@ namespace AfterSignal
             if(cue=="pistol"||cue=="pistol_overdrive")return "gun_pistol";
             return cue;
         }
-        public bool HasCue(string cue){cue=ResolveCue(cue);return bank.ContainsKey(cue+"_0")||bank.ContainsKey(cue);}
+        public bool HasCue(string cue){cue=ResolveCue(cue);return generated.Contains(cue)||bank.ContainsKey(cue+"_0")||bank.ContainsKey(cue);}
+        public AudioClip OptionalGeneratedClip(string cue)
+        {
+            int next=variations.TryGetValue(cue,out var value)?value:0;
+            var clip=generated.Resolve(cue,next,null);
+            if(clip)variations[cue]=next+1;
+            return clip;
+        }
         AudioClip Next(string cue)
         {
             int next=variations.TryGetValue(cue,out var value)?value:0;variations[cue]=next+1;
-            for(int i=0;i<3;i++)if(bank.TryGetValue(cue+"_"+((next+i)%3),out var clip))return clip;
-            bank.TryGetValue(cue,out var single);return single;
+            return generated.Resolve(cue,next,bank);
         }
         public void SetVolume(float value)
         {

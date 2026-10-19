@@ -1,0 +1,2835 @@
+{
+  "schema": "mirelo-production-plan-v1",
+  "status": "installed_and_playback_verified_noncommercial_local_preview",
+  "fish_audio_drama_3": "cancelled_by_user",
+  "model": "sfx-2.0",
+  "generated_assets": 123,
+  "api_endpoint": "https://api.mirelo.ai/v3/text-to-sfx/generations",
+  "estimate": {
+    "basis": "Public list rate, not an authenticated preflight quote; excludes retries and subscription purchase.",
+    "rate_date": "2026-10-20",
+    "credits_per_second": 10,
+    "source": "https://mirelo.ai/pricing/usage",
+    "pilot": {
+      "cues": 12,
+      "clips": 24,
+      "generated_seconds": 20.8,
+      "estimated_credits": 208
+    },
+    "full_game_including_pilot": {
+      "cues": 71,
+      "clips": 123,
+      "generated_seconds": 333.6,
+      "estimated_credits": 3336
+    }
+  },
+  "exclusions": {
+    "music": "Keep all six user BGM masters.",
+    "voice": "No Fish generation or voice replacement.",
+    "legacy_aliases": {
+      "pistol": "gun_pistol",
+      "pistol_overdrive": "gun_pistol"
+    },
+    "root_urban_engine_files": "Legacy fallback files remain; current transport engines are covered."
+  },
+  "quality_gates": [
+    "Audition each output against its existing cue; reject worse takes.",
+    "Trim onset without cutting transients; keep decays, avoid clicks and excessive bass.",
+    "Match perceived in-game loudness to the current cue, then compare with BGM playing.",
+    "Convert reviewed exports to PCM16 mono 48 kHz; preserve raw output and provenance.",
+    "SFX 2.0 has no loop control. Edit and audition seams externally before loop import.",
+    "Run actual Unity SFX, mute, pause, spatial and transition playback checks after installation."
+  ],
+  "requests": [
+    {
+      "cue": "blade_hit",
+      "priority": "pilot",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/blade_hit_0.wav",
+          "seconds": 0.28
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/blade_hit_1.wav",
+          "seconds": 0.28
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/blade_hit_2.wav",
+          "seconds": 0.28
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "blade_hit_0.wav",
+        "blade_hit_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 800,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One katana strike hitting an armored opponent. Sharp cutting snap followed by a compact solid impact and subtle metal texture. Satisfying, focused and restrained, without gore or screaming. Isolated dry game sound effect, one event only. No music, speech, background ambience or long reverb. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 16,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "blade_swing",
+      "priority": "pilot",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/blade_swing_0.wav",
+          "seconds": 0.28
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/blade_swing_1.wav",
+          "seconds": 0.28
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/blade_swing_2.wav",
+          "seconds": 0.28
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "blade_swing_0.wav",
+        "blade_swing_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 800,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One fast katana slash through air. Sharp narrow whoosh, crisp attack, delicate metallic edge, short clean decay. Agile and precise, suitable for rapid repeated sword attacks. Isolated dry game sound effect, one event only. No music, speech, background ambience or long reverb. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 16,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "dash",
+      "priority": "pilot",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/dash_0.wav",
+          "seconds": 0.28
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/dash_1.wav",
+          "seconds": 0.28
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/dash_2.wav",
+          "seconds": 0.28
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "dash_0.wav",
+        "dash_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 800,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One extremely fast directional dash. Tight rush of displaced air with a subtle futuristic energy accent, immediate attack and quick taper. Agile and forceful without a teleport explosion. Isolated dry game sound effect, one event only. No music, speech, background ambience or long reverb. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 16,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "guard",
+      "priority": "pilot",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/guard_0.wav",
+          "seconds": 0.28
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/guard_1.wav",
+          "seconds": 0.28
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/guard_2.wav",
+          "seconds": 0.28
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "guard_0.wav",
+        "guard_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 800,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One weapon strike blocked by a steel blade. Crisp metallic clash, brief bright ring and a solid low impact. Clear defensive feedback with controlled high frequencies and a short tail. Isolated dry game sound effect, one event only. No music, speech, background ambience or long reverb. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 16,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "gun_pistol",
+      "priority": "pilot",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Firearms/gun_pistol_0.wav",
+          "seconds": 1.18
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Firearms/gun_pistol_1.wav",
+          "seconds": 1.18
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Firearms/gun_pistol_2.wav",
+          "seconds": 1.18
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "gun_pistol_0.wav",
+        "gun_pistol_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 1500,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One close compact semiautomatic pistol shot: dry ballistic crack, firm low punch, a quiet slide mechanism. No tail; distant reflection is a separate game layer. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 30,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "heavy_hit",
+      "priority": "pilot",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/heavy_hit_0.wav",
+          "seconds": 0.55
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/heavy_hit_1.wav",
+          "seconds": 0.55
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/heavy_hit_2.wav",
+          "seconds": 0.55
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "heavy_hit_0.wav",
+        "heavy_hit_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 800,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One heavy greatsword impact against reinforced armor. Dense low thud, blunt metallic crunch and a brief resonant tail. Clearly heavier than a katana, controlled bass, no explosion. Isolated dry game sound effect, one event only. No music, speech, background ambience or long reverb. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 16,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "heavy_swing",
+      "priority": "pilot",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/heavy_swing_0.wav",
+          "seconds": 0.28
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/heavy_swing_1.wav",
+          "seconds": 0.28
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/heavy_swing_2.wav",
+          "seconds": 0.28
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "heavy_swing_0.wav",
+        "heavy_swing_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 800,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One massive greatsword swinging through air. Broad deep whoosh, heavy air displacement and restrained metallic resonance. Powerful weight and momentum, with a clear attack and short tail. Isolated dry game sound effect, one event only. No music, speech, background ambience or long reverb. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 16,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "rope_attach",
+      "priority": "pilot",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/rope_attach_0.wav",
+          "seconds": 0.28
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/rope_attach_1.wav",
+          "seconds": 0.28
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/rope_attach_2.wav",
+          "seconds": 0.28
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "rope_attach_0.wav",
+        "rope_attach_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 800,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One grappling hook locking firmly onto a metal anchor. Sharp mechanical clack, a tight cable tension snap and a brief metal ring. Immediate secure attachment feedback, no long cable launch. Isolated dry game sound effect, one event only. No music, speech, background ambience or long reverb. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 16,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "rope_release",
+      "priority": "pilot",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/rope_release_0.wav",
+          "seconds": 0.28
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/rope_release_1.wav",
+          "seconds": 0.28
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/rope_release_2.wav",
+          "seconds": 0.28
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "rope_release_0.wav",
+        "rope_release_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 800,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One grappling cable latch releasing under tension. A crisp small mechanical click followed by a short cable flick. Lighter and shorter than attachment, clean immediate release feedback. Isolated dry game sound effect, one event only. No music, speech, background ambience or long reverb. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 16,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "step_metal",
+      "priority": "pilot",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/step_metal_0.wav",
+          "seconds": 0.12
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/step_metal_1.wav",
+          "seconds": 0.12
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/step_metal_2.wav",
+          "seconds": 0.12
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "step_metal_0.wav",
+        "step_metal_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 800,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One single footstep in sturdy shoes on a metal train floor. Firm sole impact with a brief hollow metallic resonance. Compact, dry and repeatable, without train ambience. Isolated dry game sound effect, one event only. No music, speech, background ambience or long reverb. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 16,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "step_tile",
+      "priority": "pilot",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/step_tile_0.wav",
+          "seconds": 0.12
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/step_tile_1.wav",
+          "seconds": 0.12
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/step_tile_2.wav",
+          "seconds": 0.12
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "step_tile_0.wav",
+        "step_tile_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 800,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One single footstep in sturdy rubber-soled shoes on smooth hard tile. Defined heel contact followed closely by the sole, subtle weight, dry close perspective. No walking sequence. Isolated dry game sound effect, one event only. No music, speech, background ambience or long reverb. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 16,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "urban_crash",
+      "priority": "pilot",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/urban_crash_0.wav",
+          "seconds": 0.65
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/urban_crash_1.wav",
+          "seconds": 0.65
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/urban_crash_2.wav",
+          "seconds": 0.65
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "urban_crash_0.wav",
+        "urban_crash_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 900,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One moderate vehicle collision. Dense metal panel crunch, low chassis impact and a few brief plastic rattles. Immediate readable impact with a short tail, no explosion or extended crash sequence. Isolated dry game sound effect, one event only. No music, speech, background ambience or long reverb. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 18,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "airliner",
+      "priority": "full_game",
+      "kind": "loop",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Transport/airliner.wav",
+          "seconds": 4.92
+        }
+      ],
+      "runtime_route": "generated_loop_override",
+      "needs_seam_edit": true,
+      "planned_files": [
+        "airliner.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 10000,
+        "num_variants": 1,
+        "input": {
+          "prompt": "Steady passenger jet turbine at constant cruise thrust, smooth broad fan wash and restrained low body. Onboard mechanical texture, no announcements or changing engine speed. Maintain constant loudness, timbre and speed throughout; no intro, fade or ending. This is raw material for an externally edited game loop. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 100,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true,
+      "seam_processing": "250 ms equal-power crossfade; boundary PCM and Unity wrapping verified; human listening pending"
+    },
+    {
+      "cue": "ambient_roof",
+      "priority": "full_game",
+      "kind": "loop",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/ambient_roof.wav",
+          "seconds": 8.0
+        }
+      ],
+      "runtime_route": "generated_loop_override",
+      "needs_seam_edit": true,
+      "planned_files": [
+        "ambient_roof.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 10000,
+        "num_variants": 1,
+        "input": {
+          "prompt": "On the roof of a steadily moving train at night. Broad controlled rushing air over a distant low rail rumble. Consistent speed and intensity, seamless loop, no strong gusts, horns or voices. Isolated game audio loop. No music or speech, no fade-in or fade-out. Maintain constant loudness, timbre and speed throughout; no intro, fade or ending. This is raw material for an externally edited game loop. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 100,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true,
+      "seam_processing": "250 ms equal-power crossfade; boundary PCM and Unity wrapping verified; human listening pending"
+    },
+    {
+      "cue": "ambient_station",
+      "priority": "full_game",
+      "kind": "loop",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/ambient_station.wav",
+          "seconds": 8.0
+        }
+      ],
+      "runtime_route": "generated_loop_override",
+      "needs_seam_edit": true,
+      "planned_files": [
+        "ambient_station.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 10000,
+        "num_variants": 1,
+        "input": {
+          "prompt": "Quiet enclosed railway station ambience at night. Low ventilation hum, subtle distant electrical infrastructure and spacious enclosed air. Stable seamless atmospheric loop, no announcements, identifiable voices, footsteps, arriving train or music. Isolated game audio loop. No music or speech, no fade-in or fade-out. Maintain constant loudness, timbre and speed throughout; no intro, fade or ending. This is raw material for an externally edited game loop. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 100,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true,
+      "seam_processing": "250 ms equal-power crossfade; boundary PCM and Unity wrapping verified; human listening pending"
+    },
+    {
+      "cue": "ambient_town",
+      "priority": "full_game",
+      "kind": "loop",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/ambient_town.wav",
+          "seconds": 8.0
+        }
+      ],
+      "runtime_route": "generated_loop_override",
+      "needs_seam_edit": true,
+      "planned_files": [
+        "ambient_town.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 10000,
+        "num_variants": 1,
+        "input": {
+          "prompt": "Quiet late-night urban neighborhood ambience. Soft distant traffic wash, restrained building ventilation and open nighttime air. Calm continuous background texture, seamless loop, no identifiable speech, sirens, horns, distinct footsteps or music. Isolated game audio loop. No music or speech, no fade-in or fade-out. Maintain constant loudness, timbre and speed throughout; no intro, fade or ending. This is raw material for an externally edited game loop. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 100,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true,
+      "seam_processing": "250 ms equal-power crossfade; boundary PCM and Unity wrapping verified; human listening pending"
+    },
+    {
+      "cue": "ambient_train",
+      "priority": "full_game",
+      "kind": "loop",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/ambient_train.wav",
+          "seconds": 8.0
+        }
+      ],
+      "runtime_route": "generated_loop_override",
+      "needs_seam_edit": true,
+      "planned_files": [
+        "ambient_train.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 10000,
+        "num_variants": 1,
+        "input": {
+          "prompt": "Inside a steadily moving passenger train. Continuous subdued rail rumble, gentle carriage vibration and faint ventilation. Consistent speed and perspective, seamless loop, no announcements, voices, braking or prominent isolated clacks. Isolated game audio loop. No music or speech, no fade-in or fade-out. Maintain constant loudness, timbre and speed throughout; no intro, fade or ending. This is raw material for an externally edited game loop. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 100,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true,
+      "seam_processing": "250 ms equal-power crossfade; boundary PCM and Unity wrapping verified; human listening pending"
+    },
+    {
+      "cue": "bike_start",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Transport/bike_start.wav",
+          "seconds": 3.5
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "bike_start_0.wav",
+        "bike_start_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 3800,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One motorcycle engine startup: quick starter, compact engine catch, restrained initial exhaust pulse, then clean end. No accelerating away. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 76,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "blast_pressure",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/CombatDetail/blast_pressure.wav",
+          "seconds": 4.0
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "blast_pressure_0.wav",
+        "blast_pressure_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 4300,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One distant heavy explosion pressure wave, rounded low impulse and a diffuse decaying air rumble. No close crack, no debris impacts, controlled sub bass. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 86,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "boat",
+      "priority": "full_game",
+      "kind": "loop",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Transport/boat.wav",
+          "seconds": 5.42
+        }
+      ],
+      "runtime_route": "generated_loop_override",
+      "needs_seam_edit": true,
+      "planned_files": [
+        "boat.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 10000,
+        "num_variants": 1,
+        "input": {
+          "prompt": "Steady small motorboat engine and gentle close water wash at fixed speed. Stable pitch, no acceleration, no voices. Maintain constant loudness, timbre and speed throughout; no intro, fade or ending. This is raw material for an externally edited game loop. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 100,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true,
+      "seam_processing": "250 ms equal-power crossfade; boundary PCM and Unity wrapping verified; human listening pending"
+    },
+    {
+      "cue": "bus",
+      "priority": "full_game",
+      "kind": "loop",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Transport/bus.wav",
+          "seconds": 6.92
+        }
+      ],
+      "runtime_route": "generated_loop_override",
+      "needs_seam_edit": true,
+      "planned_files": [
+        "bus.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 10000,
+        "num_variants": 1,
+        "input": {
+          "prompt": "Steady heavy city bus diesel engine at fixed idle, warm low rhythmic body and light chassis vibration. No acceleration, brakes, horn or voices. Maintain constant loudness, timbre and speed throughout; no intro, fade or ending. This is raw material for an externally edited game loop. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 100,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true,
+      "seam_processing": "250 ms equal-power crossfade; boundary PCM and Unity wrapping verified; human listening pending"
+    },
+    {
+      "cue": "cannon",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Transport/cannon.wav",
+          "seconds": 4.0
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "cannon_0.wav",
+        "cannon_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 4300,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One mounted vehicle cannon shot: forceful compact blast, heavy low mechanical punch and short clean chamber decay. No music, voices, reload or repeated shots. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 86,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "combathelicopter",
+      "priority": "full_game",
+      "kind": "loop",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Transport/combathelicopter.wav",
+          "seconds": 5.92
+        }
+      ],
+      "runtime_route": "generated_loop_override",
+      "needs_seam_edit": true,
+      "planned_files": [
+        "combathelicopter.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 10000,
+        "num_variants": 1,
+        "input": {
+          "prompt": "Steady utility helicopter rotor and turbine at fixed flight speed, distinct rhythmic blade pulses and controlled low mechanical body. No flyby, weapons or voices. Maintain constant loudness, timbre and speed throughout; no intro, fade or ending. This is raw material for an externally edited game loop. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 100,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true,
+      "seam_processing": "250 ms equal-power crossfade; boundary PCM and Unity wrapping verified; human listening pending"
+    },
+    {
+      "cue": "death",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/death_0.wav",
+          "seconds": 0.55
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/death_1.wav",
+          "seconds": 0.55
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/death_2.wav",
+          "seconds": 0.55
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "death_0.wav",
+        "death_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 800,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One armored opponent collapsing onto a hard floor. A compact body thump with a short equipment rattle and fabric movement. Restrained, readable and non-graphic, without a scream. Isolated dry game sound effect, one event only. No music, speech, background ambience or long reverb. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 16,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "door",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/door_0.wav",
+          "seconds": 0.65
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/door_1.wav",
+          "seconds": 0.65
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/door_2.wav",
+          "seconds": 0.65
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "door_0.wav",
+        "door_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 900,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One sturdy interior door latch operating with a short hinge movement. Natural mechanical click and restrained wooden panel resonance. Neutral transition detail suitable for opening or closing, no prolonged creak. Isolated dry game sound effect, one event only. No music, speech, background ambience or long reverb. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 18,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "fighter",
+      "priority": "full_game",
+      "kind": "loop",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Transport/fighter.wav",
+          "seconds": 11.92
+        }
+      ],
+      "runtime_route": "generated_loop_override",
+      "needs_seam_edit": true,
+      "planned_files": [
+        "fighter.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 10000,
+        "num_variants": 1,
+        "input": {
+          "prompt": "Steady military jet engine at constant thrust, powerful controlled turbine roar and smooth air wash. No flyby, missiles or changing speed. Maintain constant loudness, timbre and speed throughout; no intro, fade or ending. This is raw material for an externally edited game loop. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 100,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true,
+      "seam_processing": "250 ms equal-power crossfade; boundary PCM and Unity wrapping verified; human listening pending"
+    },
+    {
+      "cue": "glass",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/glass_0.wav",
+          "seconds": 0.55
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/glass_1.wav",
+          "seconds": 0.55
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/glass_2.wav",
+          "seconds": 0.55
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "glass_0.wav",
+        "glass_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 800,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One reinforced glass partition shattering from a decisive impact. A sharp initial fracture followed by many small glass fragments falling briefly. Clear sparkling detail with controlled highs, no explosion. Isolated dry game sound effect, one event only. No music, speech, background ambience or long reverb. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 16,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "gun_auto",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Firearms/gun_auto_0.wav",
+          "seconds": 1.55
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Firearms/gun_auto_1.wav",
+          "seconds": 1.55
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Firearms/gun_auto_2.wav",
+          "seconds": 1.55
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "gun_auto_0.wav",
+        "gun_auto_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 1800,
+        "num_variants": 2,
+        "input": {
+          "prompt": "Exactly one automatic rifle shot, not a burst: fast hard transient, restrained low punch, rapid mechanical click. Clear when repeated rapidly. No distant reflection. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 36,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "gun_gang_pistol",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Firearms/gun_gang_pistol_0.wav",
+          "seconds": 1.1
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Firearms/gun_gang_pistol_1.wav",
+          "seconds": 1.1
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Firearms/gun_gang_pistol_2.wav",
+          "seconds": 1.1
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "gun_gang_pistol_0.wav",
+        "gun_gang_pistol_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 1400,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One worn compact handgun shot: rough dry snap, modest uneven mechanical rattle, tight body. No distant reflection. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 28,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "gun_police_pistol",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Firearms/gun_police_pistol_0.wav",
+          "seconds": 1.12
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Firearms/gun_police_pistol_1.wav",
+          "seconds": 1.12
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Firearms/gun_police_pistol_2.wav",
+          "seconds": 1.12
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "gun_police_pistol_0.wav",
+        "gun_police_pistol_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 1400,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One service pistol shot: clean sharp report, controlled bass, precise short slide click. Slightly brighter and more disciplined than a civilian pistol. No distant reflection. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 28,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "gun_rifle",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Firearms/gun_rifle_0.wav",
+          "seconds": 1.18
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Firearms/gun_rifle_1.wav",
+          "seconds": 1.18
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Firearms/gun_rifle_2.wav",
+          "seconds": 1.18
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "gun_rifle_0.wav",
+        "gun_rifle_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 1500,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One rifle shot: high velocity dry crack, compact forceful midrange body, light action click. No distant reflection. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 30,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "gun_shotgun",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Firearms/gun_shotgun_0.wav",
+          "seconds": 1.45
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Firearms/gun_shotgun_1.wav",
+          "seconds": 1.45
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Firearms/gun_shotgun_2.wav",
+          "seconds": 1.45
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "gun_shotgun_0.wav",
+        "gun_shotgun_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 1700,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One pump shotgun shot: broad heavy crack, dense low pressure, short dry muzzle body. No pump or reload, no distant reflection. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 34,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "heavy_slam",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/heavy_slam_0.wav",
+          "seconds": 0.55
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/heavy_slam_1.wav",
+          "seconds": 0.55
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/heavy_slam_2.wav",
+          "seconds": 0.55
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "heavy_slam_0.wav",
+        "heavy_slam_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 800,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One heavy greatsword slamming into the ground and releasing a compact shockwave. Dense impact, low pressure burst and short gritty debris. Powerful but controlled, no long rumbling aftermath. Isolated dry game sound effect, one event only. No music, speech, background ambience or long reverb. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 16,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "horn_car",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [],
+      "runtime_route": "generated_horn_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "horn_car_0.wav",
+        "horn_car_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 900,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One short real passenger car horn, clear restrained dual tone with quick attack and release. No engine, traffic, siren or background. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 18,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "horn_heavy",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [],
+      "runtime_route": "generated_horn_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "horn_heavy_0.wav",
+        "horn_heavy_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 900,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One short heavy truck air horn, deep dual tone and restrained air body with clean attack and release. No engine, traffic, siren or background. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 18,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "hurt",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/hurt_0.wav",
+          "seconds": 0.28
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/hurt_1.wav",
+          "seconds": 0.28
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/hurt_2.wav",
+          "seconds": 0.28
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "hurt_0.wav",
+        "hurt_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 800,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One blunt impact against a clothed human torso, compact body thud and brief fabric movement. Strong readable damage feedback without gore, bones breaking, voices or exaggerated bass. Isolated dry game sound effect, one event only. No music, speech, background ambience or long reverb. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 16,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "ignition",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Transport/ignition.wav",
+          "seconds": 3.5
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "ignition_0.wav",
+        "ignition_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 3800,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One car engine startup: brief starter crank, engine catches, one small settling vibration, then clean end. No driving away or horn. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 76,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "impact_concrete",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/CombatDetail/impact_concrete_0.wav",
+          "seconds": 0.45
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/CombatDetail/impact_concrete_1.wav",
+          "seconds": 0.45
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/CombatDetail/impact_concrete_2.wav",
+          "seconds": 0.45
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "impact_concrete_0.wav",
+        "impact_concrete_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 800,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One bullet striking concrete: compact stone tick and gritty chip scatter with a short dry decay. No gunshot. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 16,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "impact_flesh",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/CombatDetail/impact_flesh_0.wav",
+          "seconds": 0.45
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/CombatDetail/impact_flesh_1.wav",
+          "seconds": 0.45
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/CombatDetail/impact_flesh_2.wav",
+          "seconds": 0.45
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "impact_flesh_0.wav",
+        "impact_flesh_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 800,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One non-graphic compact impact on a clothed torso, muted body thump and fabric scuff. No voice, gore, crack or gunshot. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 16,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "impact_glass",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/CombatDetail/impact_glass_0.wav",
+          "seconds": 0.45
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/CombatDetail/impact_glass_1.wav",
+          "seconds": 0.45
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/CombatDetail/impact_glass_2.wav",
+          "seconds": 0.45
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "impact_glass_0.wav",
+        "impact_glass_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 800,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One bullet impact on glass: sharp brittle tick followed by a small short shower of glass fragments. No gunshot. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 16,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "impact_metal",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/CombatDetail/impact_metal_0.wav",
+          "seconds": 0.45
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/CombatDetail/impact_metal_1.wav",
+          "seconds": 0.45
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/CombatDetail/impact_metal_2.wav",
+          "seconds": 0.45
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "impact_metal_0.wav",
+        "impact_metal_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 800,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One bullet impact on steel: precise metallic ping, compact low contact and restrained ringing. No gunshot. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 16,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "jump",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/jump_0.wav",
+          "seconds": 0.28
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/jump_1.wav",
+          "seconds": 0.28
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/jump_2.wav",
+          "seconds": 0.28
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "jump_0.wav",
+        "jump_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 800,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One athletic jump takeoff. A short shoe push against a hard surface, slight clothing movement and a subtle upward air swish. Light, dry and understated, no cartoon spring. Isolated dry game sound effect, one event only. No music, speech, background ambience or long reverb. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 16,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "katana_wave",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/katana_wave_0.wav",
+          "seconds": 0.48
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/katana_wave_1.wav",
+          "seconds": 0.48
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/katana_wave_2.wav",
+          "seconds": 0.48
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "katana_wave_0.wav",
+        "katana_wave_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 800,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One crescent-shaped energy slash released from a katana. Razor-thin air cut layered with a luminous electrical shimmer and a short traveling tail. Elegant and forceful, no charge-up sequence. Isolated dry game sound effect, one event only. No music, speech, background ambience or long reverb. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 16,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "land",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/land_0.wav",
+          "seconds": 0.28
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/land_1.wav",
+          "seconds": 0.28
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/land_2.wav",
+          "seconds": 0.28
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "land_0.wav",
+        "land_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 800,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One controlled two-foot landing in sturdy shoes on a hard surface. Compact low impact, brief sole contact and light clothing movement. Firm weight, no large debris or vocal effort. Isolated dry game sound effect, one event only. No music, speech, background ambience or long reverb. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 16,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "motorcycle",
+      "priority": "full_game",
+      "kind": "loop",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Transport/motorcycle.wav",
+          "seconds": 7.92
+        }
+      ],
+      "runtime_route": "generated_loop_override",
+      "needs_seam_edit": true,
+      "planned_files": [
+        "motorcycle.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 10000,
+        "num_variants": 1,
+        "input": {
+          "prompt": "Steady motorcycle engine at constant midrange RPM, tight mechanical combustion pulses and restrained exhaust rasp. No rev changes, gear shifts or horn. Maintain constant loudness, timbre and speed throughout; no intro, fade or ending. This is raw material for an externally edited game loop. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 100,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true,
+      "seam_processing": "250 ms equal-power crossfade; boundary PCM and Unity wrapping verified; human listening pending"
+    },
+    {
+      "cue": "police_siren",
+      "priority": "full_game",
+      "kind": "loop",
+      "existing_sources": [],
+      "runtime_route": "generated_loop_override",
+      "needs_seam_edit": true,
+      "planned_files": [
+        "police_siren.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 10000,
+        "num_variants": 1,
+        "input": {
+          "prompt": "Continuous two tone electronic police siren, smoothly alternating high and low tones at a regular fixed cadence. Stationary isolated source, no Doppler, traffic, radio or speech. Maintain constant loudness, timbre and speed throughout; no intro, fade or ending. This is raw material for an externally edited game loop. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 100,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true,
+      "seam_processing": "250 ms equal-power crossfade; boundary PCM and Unity wrapping verified; human listening pending"
+    },
+    {
+      "cue": "reload_in",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/reload_in_0.wav",
+          "seconds": 0.16
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/reload_in_1.wav",
+          "seconds": 0.16
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/reload_in_2.wav",
+          "seconds": 0.16
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Firearms/reload_in_0.wav",
+          "seconds": 0.265
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Firearms/reload_in_1.wav",
+          "seconds": 0.265
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Firearms/reload_in_2.wav",
+          "seconds": 0.265
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "reload_in_0.wav",
+        "reload_in_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 800,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One pistol magazine inserted firmly into the grip. Short polymer and metal contact followed by a decisive locking click. Dry and tactile. Only magazine insertion, no slide action. Isolated dry game sound effect, one event only. No music, speech, background ambience or long reverb. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 16,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "reload_out",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/reload_out_0.wav",
+          "seconds": 0.2
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/reload_out_1.wav",
+          "seconds": 0.2
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/reload_out_2.wav",
+          "seconds": 0.2
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Firearms/reload_out_0.wav",
+          "seconds": 0.305
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Firearms/reload_out_1.wav",
+          "seconds": 0.305
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Firearms/reload_out_2.wav",
+          "seconds": 0.305
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "reload_out_0.wav",
+        "reload_out_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 800,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One pistol magazine release. A small button click followed by the short mechanical slide of a magazine leaving the grip. Dry close detail. Only magazine removal, no full reload. Isolated dry game sound effect, one event only. No music, speech, background ambience or long reverb. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 16,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "reload_slide",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/reload_slide_0.wav",
+          "seconds": 0.25
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/reload_slide_1.wav",
+          "seconds": 0.25
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/reload_slide_2.wav",
+          "seconds": 0.25
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Firearms/reload_slide_0.wav",
+          "seconds": 0.285
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Firearms/reload_slide_1.wav",
+          "seconds": 0.285
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Firearms/reload_slide_2.wav",
+          "seconds": 0.285
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "reload_slide_0.wav",
+        "reload_slide_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 800,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One pistol slide pulled back and released. Brief metallic rail scrape, spring tension and a sharp forward locking clack. Tight close detail. No gunshot or magazine handling. Isolated dry game sound effect, one event only. No music, speech, background ambience or long reverb. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 16,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "sedan",
+      "priority": "full_game",
+      "kind": "loop",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Transport/sedan.wav",
+          "seconds": 11.92
+        }
+      ],
+      "runtime_route": "generated_loop_override",
+      "needs_seam_edit": true,
+      "planned_files": [
+        "sedan.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 10000,
+        "num_variants": 1,
+        "input": {
+          "prompt": "Steady modern petrol sedan engine at constant idle, soft low combustion pulses and subtle smooth mechanical texture. No gear shift, horn or rev change. Maintain constant loudness, timbre and speed throughout; no intro, fade or ending. This is raw material for an externally edited game loop. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 100,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true,
+      "seam_processing": "250 ms equal-power crossfade; boundary PCM and Unity wrapping verified; human listening pending"
+    },
+    {
+      "cue": "ship",
+      "priority": "full_game",
+      "kind": "loop",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Transport/ship.wav",
+          "seconds": 10.92
+        }
+      ],
+      "runtime_route": "generated_loop_override",
+      "needs_seam_edit": true,
+      "planned_files": [
+        "ship.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 10000,
+        "num_variants": 1,
+        "input": {
+          "prompt": "Steady large freight vessel diesel machinery at constant speed, deep restrained mechanical vibration and smooth ventilation texture. No horns, voices or wave impacts. Maintain constant loudness, timbre and speed throughout; no intro, fade or ending. This is raw material for an externally edited game loop. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 100,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true,
+      "seam_processing": "250 ms equal-power crossfade; boundary PCM and Unity wrapping verified; human listening pending"
+    },
+    {
+      "cue": "skill",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/skill_0.wav",
+          "seconds": 0.55
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/skill_1.wav",
+          "seconds": 0.55
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/skill_2.wav",
+          "seconds": 0.55
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "skill_0.wav",
+        "skill_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 800,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One short controlled energy ability activation: a quick rising air pulse, compact resonant shimmer and clean decay. Subtle near-future technology, no musical phrase or voice. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 16,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "sportscar",
+      "priority": "full_game",
+      "kind": "loop",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Transport/sportscar.wav",
+          "seconds": 1.62
+        }
+      ],
+      "runtime_route": "generated_loop_override",
+      "needs_seam_edit": true,
+      "planned_files": [
+        "sportscar.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 10000,
+        "num_variants": 1,
+        "input": {
+          "prompt": "Steady sports car engine under constant load at fixed RPM, focused exhaust growl and clean mechanical body. No acceleration sweep, gear change or tire skid. Maintain constant loudness, timbre and speed throughout; no intro, fade or ending. This is raw material for an externally edited game loop. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 100,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true,
+      "seam_processing": "250 ms equal-power crossfade; boundary PCM and Unity wrapping verified; human listening pending"
+    },
+    {
+      "cue": "tail_pistol",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/CombatDetail/tail_pistol_0.wav",
+          "seconds": 3.0
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/CombatDetail/tail_pistol_1.wav",
+          "seconds": 3.0
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/CombatDetail/tail_pistol_2.wav",
+          "seconds": 3.0
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "tail_pistol_0.wav",
+        "tail_pistol_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 3300,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One distant environmental reflection of a pistol report only: soft diffuse slap echo and quick air decay. No direct muzzle crack or mechanical sound. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 66,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "tail_rifle",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/CombatDetail/tail_rifle_0.wav",
+          "seconds": 3.0
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/CombatDetail/tail_rifle_1.wav",
+          "seconds": 3.0
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/CombatDetail/tail_rifle_2.wav",
+          "seconds": 3.0
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "tail_rifle_0.wav",
+        "tail_rifle_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 3300,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One distant reflection of a rifle report only: wider diffuse echo scattering between city buildings and fading into air. No direct muzzle crack. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 66,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "tail_shotgun",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/CombatDetail/tail_shotgun_0.wav",
+          "seconds": 3.0
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/CombatDetail/tail_shotgun_1.wav",
+          "seconds": 3.0
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/CombatDetail/tail_shotgun_2.wav",
+          "seconds": 3.0
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "tail_shotgun_0.wav",
+        "tail_shotgun_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 3300,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One distant reflection of a shotgun report only: broad low echo with a smooth decay. No direct muzzle crack or reload. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 66,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "tank",
+      "priority": "full_game",
+      "kind": "loop",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Transport/tank.wav",
+          "seconds": 4.92
+        }
+      ],
+      "runtime_route": "generated_loop_override",
+      "needs_seam_edit": true,
+      "planned_files": [
+        "tank.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 10000,
+        "num_variants": 1,
+        "input": {
+          "prompt": "Steady armored tracked vehicle engine and continuous mechanical tread texture at fixed speed. Restrained low weight, no gunfire, acceleration or voices. Maintain constant loudness, timbre and speed throughout; no intro, fade or ending. This is raw material for an externally edited game loop. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 100,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true,
+      "seam_processing": "250 ms equal-power crossfade; boundary PCM and Unity wrapping verified; human listening pending"
+    },
+    {
+      "cue": "taxi",
+      "priority": "full_game",
+      "kind": "loop",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Transport/taxi.wav",
+          "seconds": 7.92
+        }
+      ],
+      "runtime_route": "generated_loop_override",
+      "needs_seam_edit": true,
+      "planned_files": [
+        "taxi.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 10000,
+        "num_variants": 1,
+        "input": {
+          "prompt": "Steady compact taxi combustion engine at fixed idle, muted low purr with subtle cabin vibration. No horn, doors or voices. Maintain constant loudness, timbre and speed throughout; no intro, fade or ending. This is raw material for an externally edited game loop. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 100,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true,
+      "seam_processing": "250 ms equal-power crossfade; boundary PCM and Unity wrapping verified; human listening pending"
+    },
+    {
+      "cue": "titan_barrage",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/CombatDetail/titan_barrage.wav",
+          "seconds": 2.9
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "titan_barrage_0.wav",
+        "titan_barrage_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 3200,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One gigantic mechanical cannon discharge: huge controlled low punch, metallic chamber resonance, brief decaying air pressure. One shot, no barrage sequence or music. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 64,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "truck",
+      "priority": "full_game",
+      "kind": "loop",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Transport/truck.wav",
+          "seconds": 6.92
+        }
+      ],
+      "runtime_route": "generated_loop_override",
+      "needs_seam_edit": true,
+      "planned_files": [
+        "truck.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 10000,
+        "num_variants": 1,
+        "input": {
+          "prompt": "Steady heavy truck diesel engine at fixed RPM, deep rhythmic mechanical pulses and light chassis resonance. No horn, brake hiss or acceleration. Maintain constant loudness, timbre and speed throughout; no intro, fade or ending. This is raw material for an externally edited game loop. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 100,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true,
+      "seam_processing": "250 ms equal-power crossfade; boundary PCM and Unity wrapping verified; human listening pending"
+    },
+    {
+      "cue": "turbine",
+      "priority": "full_game",
+      "kind": "loop",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Transport/turbine.wav",
+          "seconds": 4.42
+        }
+      ],
+      "runtime_route": "generated_loop_override",
+      "needs_seam_edit": true,
+      "planned_files": [
+        "turbine.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 10000,
+        "num_variants": 1,
+        "input": {
+          "prompt": "Steady aircraft turbine load layer, smooth high fan whine and restrained low air pressure at constant pitch. No flyby, speed sweep or voices. Maintain constant loudness, timbre and speed throughout; no intro, fade or ending. This is raw material for an externally edited game loop. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 100,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true,
+      "seam_processing": "250 ms equal-power crossfade; boundary PCM and Unity wrapping verified; human listening pending"
+    },
+    {
+      "cue": "ui_cancel",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/ui_cancel_0.wav",
+          "seconds": 0.28
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/ui_cancel_1.wav",
+          "seconds": 0.28
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/ui_cancel_2.wav",
+          "seconds": 0.28
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "ui_cancel_0.wav",
+        "ui_cancel_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 800,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One subtle futuristic interface dismissal. A soft dry click and a brief downward electronic tick. Quiet, neutral and clearly shorter than a confirmation sound, no error alarm. Isolated dry game sound effect, one event only. No music, speech, background ambience or long reverb. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 16,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "ui_confirm",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/ui_confirm_0.wav",
+          "seconds": 0.28
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/ui_confirm_1.wav",
+          "seconds": 0.28
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/ui_confirm_2.wav",
+          "seconds": 0.28
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "ui_confirm_0.wav",
+        "ui_confirm_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 800,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One subtle futuristic interface confirmation. A soft tactile click with a very brief clean upward electronic ping. Warm, precise and reassuring, minimal tonal content, no musical jingle. Isolated dry game sound effect, one event only. No music, speech, background ambience or long reverb. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 16,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "ui_warn",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/ui_warn_0.wav",
+          "seconds": 0.28
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/ui_warn_1.wav",
+          "seconds": 0.28
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/ui_warn_2.wav",
+          "seconds": 0.28
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "ui_warn_0.wav",
+        "ui_warn_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 800,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One short restrained interface warning: two compact soft electronic pulses with a clear but non-piercing attack. No alarm sequence, music or voice. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 16,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "underwater",
+      "priority": "full_game",
+      "kind": "loop",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Transport/underwater.wav",
+          "seconds": 5.42
+        }
+      ],
+      "runtime_route": "generated_loop_override",
+      "needs_seam_edit": true,
+      "planned_files": [
+        "underwater.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 10000,
+        "num_variants": 1,
+        "input": {
+          "prompt": "Steady submerged water ambience, soft low pressure wash and sparse tiny bubbles. Calm close perspective, no music, breathing, swimming strokes or voices. Maintain constant loudness, timbre and speed throughout; no intro, fade or ending. This is raw material for an externally edited game loop. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 100,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true,
+      "seam_processing": "250 ms equal-power crossfade; boundary PCM and Unity wrapping verified; human listening pending"
+    },
+    {
+      "cue": "urban_brake",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/urban_brake_0.wav",
+          "seconds": 0.9
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/urban_brake_1.wav",
+          "seconds": 0.9
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/urban_brake_2.wav",
+          "seconds": 0.9
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "urban_brake_0.wav",
+        "urban_brake_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 1200,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One brief vehicle braking sound. Controlled rubber friction on dry asphalt, a restrained tire squeal that quickly settles. Moderate speed stop, no crash, horn or engine recording. Isolated dry game sound effect, one event only. No music, speech, background ambience or long reverb. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 24,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "urban_door",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/urban_door_0.wav",
+          "seconds": 0.38
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/urban_door_1.wav",
+          "seconds": 0.38
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/urban_door_2.wav",
+          "seconds": 0.38
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "urban_door_0.wav",
+        "urban_door_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 800,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One solid passenger car door latch and close. A short metal latch click followed by a compact insulated door thump. Close mechanical detail, no engine, footsteps or remote-lock beep. Isolated dry game sound effect, one event only. No music, speech, background ambience or long reverb. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 16,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "urban_explosion",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/urban_explosion_0.wav",
+          "seconds": 1.8
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/urban_explosion_1.wav",
+          "seconds": 1.8
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/urban_explosion_2.wav",
+          "seconds": 1.8
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "urban_explosion_0.wav",
+        "urban_explosion_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 2100,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One damaged vehicle exploding. A sharp ignition crack followed by a deep compact pressure burst and brief metallic debris. Powerful controlled bass, natural decay, no cinematic riser or secondary explosions. Isolated dry game sound effect, one event only. No music, speech, background ambience or long reverb. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 42,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "urban_impact",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/urban_impact_0.wav",
+          "seconds": 0.4
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/urban_impact_1.wav",
+          "seconds": 0.4
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/urban_impact_2.wav",
+          "seconds": 0.4
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "urban_impact_0.wav",
+        "urban_impact_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 800,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One restrained soft-body impact against a vehicle panel. A compact padded thud, slight fabric movement and brief muted panel resonance. Non-graphic, no screaming, bones breaking or gore. Isolated dry game sound effect, one event only. No music, speech, background ambience or long reverb. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 16,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "waterstroke",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Transport/waterstroke.wav",
+          "seconds": 1.25
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "waterstroke_0.wav",
+        "waterstroke_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 1500,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One human swimming stroke through water: compact hand splash, smooth short water pull and a few droplets. One stroke, no breathing or voices. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 30,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    },
+    {
+      "cue": "weapon_switch",
+      "priority": "full_game",
+      "kind": "one_shot",
+      "existing_sources": [
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/weapon_switch_0.wav",
+          "seconds": 0.15
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/weapon_switch_1.wav",
+          "seconds": 0.15
+        },
+        {
+          "path": "Assets/AfterSignal/Resources/Audio/Quality/weapon_switch_2.wav",
+          "seconds": 0.15
+        }
+      ],
+      "runtime_route": "existing_optional_sfx_override",
+      "needs_seam_edit": false,
+      "planned_files": [
+        "weapon_switch_0.wav",
+        "weapon_switch_1.wav"
+      ],
+      "request": {
+        "model": "sfx-2.0",
+        "duration_ms": 800,
+        "num_variants": 2,
+        "input": {
+          "prompt": "One compact tactical weapon-ready movement. A short equipment shift, restrained fabric rustle and a precise mechanical locking click. Neutral enough for a sword or pistol, quick and unobtrusive. Isolated dry game sound effect, one event only. No music, speech, background ambience or long reverb. Exactly one event in each variant, immediate onset, preserve the full short decay. No second event. Leave a little clean silence after the tail. Cohesive grounded near-future Korean city action game sound design. Clear at modest volume; no exaggerated cinematic bass.",
+          "negative_prompt": "music, speech, vocals, clipping, distortion, unrelated sounds"
+        },
+        "output": {
+          "format": "wav"
+        }
+      },
+      "estimated_credits": 16,
+      "generation_status": "succeeded",
+      "reviewed": false,
+      "installation_status": "noncommercial_local_preview",
+      "playback_verified": true
+    }
+  ],
+  "credits_used": 3336,
+  "commercial_use": false,
+  "human_listening_reviewed": false
+}

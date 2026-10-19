@@ -78,7 +78,7 @@ namespace AfterSignal
                     game.stage == StageId.Roof && game.Boss && !game.Boss.Alive));
                 SetMasterVolume(game.Audio.Volume);
                 SetPaused(game.Paused || game.Dead);
-                duckTarget = game.Dialogue || (CityLife.Instance && CityLife.Instance.Mode.Length > 0) ? .45f : game.Audio.MusicDuck;
+                duckTarget = StoryVoice.IsSpeaking ? .28f : game.Dialogue || (CityLife.Instance && CityLife.Instance.Mode.Length > 0) ? .45f : game.Audio.MusicDuck;
             }
             if (paused) return;
             float dt = Time.unscaledDeltaTime;

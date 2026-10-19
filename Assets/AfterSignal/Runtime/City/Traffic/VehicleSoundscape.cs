@@ -12,7 +12,8 @@ namespace AfterSignal
             car=owner;engine=source;engine.dopplerLevel=.25f;engine.minDistance=5;engine.maxDistance=car.IsAircraft?230:car.IsWatercraft?95:65;
             low=engine.gameObject.AddComponent<AudioLowPassFilter>();
             var go=new GameObject("Engine load and drivetrain");go.transform.SetParent(transform,false);load=go.AddComponent<AudioSource>();
-            load.clip=Resources.Load<AudioClip>("Audio/Transport/"+(car.IsAircraft?"turbine":car.type==CityVehicleType.Tank?"tank":car.IsWatercraft?"ship":car.IsHeavy?"truck":car.type==CityVehicleType.Motorcycle?"motorcycle":"sportscar"));
+            string loadCue=car.IsAircraft?"turbine":car.type==CityVehicleType.Tank?"tank":car.IsWatercraft?"ship":car.IsHeavy?"truck":car.type==CityVehicleType.Motorcycle?"motorcycle":"sportscar";
+            load.clip=GeneratedLoops.Load(loadCue,"Audio/Transport/"+loadCue);
             load.loop=true;load.spatialBlend=1;load.minDistance=4;load.maxDistance=engine.maxDistance;load.dopplerLevel=.2f;load.volume=0;if(load.clip)load.Play();
         }
         public void SetThrottle(float value){throttle=Mathf.Abs(value);}

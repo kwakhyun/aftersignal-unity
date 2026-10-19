@@ -16,7 +16,9 @@ namespace AfterSignal
         public bool Honk(bool reaction=true)
         {
             var g=GameDirector.Instance;if(!car||car.Wrecked||cooldown>0||!g||g.Blocked)return false;
-            cooldown=2.2f;Honks++;sound.PlayOneShot(Clip(car.IsHeavy||car.IsWatercraft),.38f*g.Audio.Volume*g.Audio.SfxVolume);
+            bool heavy=car.IsHeavy||car.IsWatercraft;
+            var replacement=g.Audio.OptionalGeneratedClip(heavy?"horn_heavy":"horn_car");
+            cooldown=2.2f;Honks++;sound.PlayOneShot(replacement?replacement:Clip(heavy),.38f*g.Audio.Volume*g.Audio.SfxVolume);
             if(reaction)
             {
                 foreach(var npc in FindObjectsByType<CityNpc>())

@@ -1,0 +1,112 @@
+{
+  "schema": 1,
+  "status": "awaiting_audio",
+  "assets": [
+    {
+      "kind": "sfx",
+      "id": "blade_swing",
+      "cue": "blade_swing",
+      "target_seconds": 0.4,
+      "prompt": "One fast katana slash through air. Sharp narrow whoosh, crisp attack, delicate metallic edge and short clean decay. Isolated dry game sound, one event only. No music, speech, ambience or long reverb.",
+      "source_file": null,
+      "provider": "Mirelo",
+      "model": "sfx-2.0",
+      "license_url": "https://mirelo.ai/terms",
+      "source_url": "",
+      "reviewed": false
+    },
+    {
+      "kind": "sfx",
+      "id": "blade_hit",
+      "cue": "blade_hit",
+      "target_seconds": 0.5,
+      "prompt": "One katana strike against armor. Sharp cutting snap, compact solid impact and subtle metal texture. No gore or screams. Isolated dry game sound, one event only. No music, speech, ambience or long reverb.",
+      "source_file": null,
+      "provider": "Mirelo",
+      "model": "sfx-2.0",
+      "license_url": "https://mirelo.ai/terms",
+      "source_url": "",
+      "reviewed": false
+    },
+    {
+      "kind": "sfx",
+      "id": "heavy_swing",
+      "cue": "heavy_swing",
+      "target_seconds": 0.7,
+      "prompt": "One massive greatsword swing. Broad deep whoosh, heavy air displacement and restrained metallic resonance. Isolated dry game sound, one event only. No music, speech, ambience or long reverb.",
+      "source_file": null,
+      "provider": "Mirelo",
+      "model": "sfx-2.0",
+      "license_url": "https://mirelo.ai/terms",
+      "source_url": "",
+      "reviewed": false
+    },
+    {
+      "kind": "sfx",
+      "id": "heavy_hit",
+      "cue": "heavy_hit",
+      "target_seconds": 0.8,
+      "prompt": "One greatsword impact against reinforced armor. Dense low thud, blunt metallic crunch, brief tail and controlled bass. No explosion. Isolated dry game sound, one event only. No music, speech, ambience or long reverb.",
+      "source_file": null,
+      "provider": "Mirelo",
+      "model": "sfx-2.0",
+      "license_url": "https://mirelo.ai/terms",
+      "source_url": "",
+      "reviewed": false
+    },
+    {
+      "kind": "sfx",
+      "id": "guard",
+      "cue": "guard",
+      "target_seconds": 0.6,
+      "prompt": "One weapon strike blocked by a steel blade. Crisp metallic clash, brief bright ring and solid low impact. Controlled high frequencies. Isolated dry game sound, one event only. No music, speech, ambience or long reverb.",
+      "source_file": null,
+      "provider": "Mirelo",
+      "model": "sfx-2.0",
+      "license_url": "https://mirelo.ai/terms",
+      "source_url": "",
+      "reviewed": false
+    },
+    {
+      "kind": "sfx",
+      "id": "dash",
+      "cue": "dash",
+      "target_seconds": 0.4,
+      "prompt": "One extremely fast directional dash. Tight rush of displaced air, subtle futuristic energy accent, immediate attack and quick taper. Isolated dry game sound, one event only. No music, speech, ambience or long reverb.",
+      "source_file": null,
+      "provider": "Mirelo",
+      "model": "sfx-2.0",
+      "license_url": "https://mirelo.ai/terms",
+      "source_url": "",
+      "reviewed": false
+    },
+    {
+      "kind": "sfx",
+      "id": "rope_attach",
+      "cue": "rope_attach",
+      "target_seconds": 0.5,
+      "prompt": "One compact grappling hook latching onto metal. Fast mechanical snap, firm metal click and brief cable tension. One event. Isolated dry game sound, one event only. No music, speech, ambience or long reverb.",
+      "source_file": null,
+      "provider": "Mirelo",
+      "model": "sfx-2.0",
+      "license_url": "https://mirelo.ai/terms",
+      "source_url": "",
+      "reviewed": false
+    },
+    {
+      "kind": "sfx",
+      "id": "rope_release",
+      "cue": "rope_release",
+      "target_seconds": 0.35,
+      "prompt": "One grappling cable release. Precise latch click followed by a short soft cable recoil. Light and agile. Isolated dry game sound, one event only. No music, speech, ambience or long reverb.",
+      "source_file": null,
+      "provider": "Mirelo",
+      "model": "sfx-2.0",
+      "license_url": "https://mirelo.ai/terms",
+      "source_url": "",
+      "reviewed": false
+    }
+  ],
+  "voice_production": "cancelled_by_user",
+  "full_game_plan": "mirelo-sfx-plan.json"
+}

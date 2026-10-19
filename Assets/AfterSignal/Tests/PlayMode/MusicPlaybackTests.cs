@@ -9,7 +9,7 @@ namespace AfterSignal.Tests
     public class MusicPlaybackTests
     {
         SignalMusic music;
-        bool hadVolume, hadMusicVolume, hadSite, suppressed;
+        bool hadVolume, hadMusicVolume, hadSite, suppressed, chronicleSuppressed, skipTitle;
         float volume, musicVolume;
         int site;
         [UnitySetUp] public IEnumerator Setup()
@@ -18,6 +18,8 @@ namespace AfterSignal.Tests
             hadMusicVolume=PlayerPrefs.HasKey("AFTERSIGNAL.Unity.MusicVolume");musicVolume=PlayerPrefs.GetFloat("AFTERSIGNAL.Unity.MusicVolume");
             hadSite=PlayerPrefs.HasKey(UrbanCatalog.Prefix+"Site");site=UrbanCatalog.Current;
             suppressed=LifeState.SuppressSave;LifeState.SuppressSave=true;
+            chronicleSuppressed=CityChronicle.SuppressSave;CityChronicle.SuppressSave=true;
+            skipTitle=GameDirector.SkipTitle;
             if (SignalMusic.Instance) Object.Destroy(SignalMusic.Instance.gameObject);
             yield return null;
             GameDirector.SkipTitle=true;
@@ -40,9 +42,16 @@ namespace AfterSignal.Tests
             float until=Time.realtimeSinceStartup+12;
             while (Time.realtimeSinceStartup<until &&
                    (!music.CurrentSource.clip || music.CurrentCue!=cue || music.IsFading || !music.CurrentSource.isPlaying)) yield return null;
-            Assert.AreEqual(cue,music.CurrentCue);
-            Assert.IsFalse(music.IsFading);
-            Assert.IsTrue(music.CurrentSource.isPlaying);
+            var game=GameDirector.Instance;
+            var source=music.CurrentSource;
+            string state=$"Expected cue={cue}; scene={SceneManager.GetActiveScene().name}; " +
+                (game?$"stage={game.stage}, ready={game.Ready}, paused={game.Paused}, dead={game.Dead}, transition={game.Transition}; ":"no game director; ") +
+                $"musicCue={music.CurrentCue}, paused={music.IsPaused}, fading={music.IsFading}, " +
+                $"playing={source.isPlaying}, time={source.time:F3}, clip={(source.clip?source.clip.name:"none")}, " +
+                $"loadState={(source.clip?source.clip.loadState.ToString():"none")}";
+            Assert.AreEqual(cue,music.CurrentCue,state);
+            Assert.IsFalse(music.IsFading,state);
+            Assert.IsTrue(music.CurrentSource.isPlaying,state);
         }
         [UnityTearDown] public IEnumerator Teardown()
         {
@@ -52,7 +61,7 @@ namespace AfterSignal.Tests
             for(int i=SceneManager.sceneCount-1;i>=0;i--){var s=SceneManager.GetSceneAt(i);if(s!=empty)yield return SceneManager.UnloadSceneAsync(s);}
             if (SignalMusic.Instance) Object.Destroy(SignalMusic.Instance.gameObject);
             yield return null;
-            LifeState.SuppressSave=suppressed;
+            LifeState.SuppressSave=suppressed;CityChronicle.SuppressSave=chronicleSuppressed;GameDirector.SkipTitle=skipTitle;
             Restore("AFTERSIGNAL.Unity.Volume",volume,hadVolume);
             Restore("AFTERSIGNAL.Unity.MusicVolume",musicVolume,hadMusicVolume);
             if(hadSite)PlayerPrefs.SetInt(UrbanCatalog.Prefix+"Site",site);else PlayerPrefs.DeleteKey(UrbanCatalog.Prefix+"Site");
@@ -66,7 +75,8 @@ namespace AfterSignal.Tests
             yield return Load(StageId.Clinic);
             Assert.AreSame(transport,SignalMusic.Instance);Assert.AreSame(source,music.CurrentSource);
             Assert.GreaterOrEqual(source.time,before);
-            yield return Load(StageId.Haven);yield return Settle(MusicCue.Town);
+            // Haven redirects into the procedural open city; School provides the same Town cue in a stable scene.
+            yield return Load(StageId.School);yield return Settle(MusicCue.Town);
             yield return Load(StageId.Station);yield return Settle(MusicCue.Tension);
             yield return Load(StageId.Lab);yield return Settle(MusicCue.Mystery);
             Assert.AreEqual(1,Object.FindObjectsByType<SignalMusic>(FindObjectsSortMode.None).Length);
@@ -77,7 +87,7 @@ namespace AfterSignal.Tests
         {
             var game=GameDirector.Instance;
             var capture=Camera.main.gameObject.AddComponent<QualityAudioCapture>();
-            string evidence=System.IO.Path.GetFullPath("Artifacts/Music");
+            string evidence=System.IO.Path.GetFullPath("Artifacts/AudioProduction/LicenseRecovery/MusicOutput");
             System.IO.Directory.CreateDirectory(evidence);
             game.SetPaused(true);yield return new WaitForSecondsRealtime(.15f);
             ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(evidence,"pause-menu.png"));

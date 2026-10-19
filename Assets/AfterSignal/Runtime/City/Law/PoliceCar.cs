@@ -33,7 +33,8 @@ namespace AfterSignal
             WorldGeometry.Part(car.transform, "Police blue stripe", new Vector3(0, 1.05f, 1.06f), new Vector3(4.5f, .35f, .05f), "DistrictBlue");
 
             p.siren = car.gameObject.AddComponent<AudioSource>();
-            p.siren.clip = SirenClip();
+            p.siren.clip = GeneratedLoops.Load("police_siren");
+            if(!p.siren.clip)p.siren.clip=SirenClip();
             p.siren.spatialBlend = 1;
             p.siren.minDistance = 5;
             p.siren.maxDistance = 90;

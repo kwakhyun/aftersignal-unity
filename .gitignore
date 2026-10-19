@@ -109,3 +109,7 @@
 *.vectorcraft.meta
 *.drawcraft.meta
 *.vctemplate.meta
+
+# Optional generated voice/SFX masters and provenance remain in local asset packs.
+/Assets/AfterSignal/Resources/Audio/Generated/
+/Assets/AfterSignal/Resources/Audio/Generated.meta

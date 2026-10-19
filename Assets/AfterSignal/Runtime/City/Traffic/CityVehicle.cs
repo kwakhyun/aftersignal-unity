@@ -91,7 +91,8 @@ namespace AfterSignal
             }
 
             engine = gameObject.AddComponent<AudioSource>();
-            engine.clip = Resources.Load<AudioClip>("Audio/Transport/" + (GetComponent<AuthoredCraft>()?"ship":type==CityVehicleType.Bomber?"fighter":type.ToString().ToLowerInvariant()));
+            string engineCue=GetComponent<AuthoredCraft>()?"ship":type==CityVehicleType.Bomber?"fighter":type.ToString().ToLowerInvariant();
+            engine.clip = GeneratedLoops.Load(engineCue,"Audio/Transport/"+engineCue);
             if (!engine.clip)
                 engine.clip = Resources.Load<AudioClip>("Audio/urban_engine");
             engine.loop = true;

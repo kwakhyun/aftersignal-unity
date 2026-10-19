@@ -190,6 +190,7 @@ namespace AfterSignal
 
         void Panel(string mode, string heading, string body)
         {
+            if(storyVoice)storyVoice.StopSpeech();
             Mode = mode;
             Heading = heading;
             Body = body;
@@ -205,6 +206,7 @@ namespace AfterSignal
 
         public void Close()
         {
+            if(storyVoice)storyVoice.StopSpeech();
             conversation?.Cancel();
             Mode = "";
             Speaker = null;
@@ -229,8 +231,14 @@ namespace AfterSignal
             LifeState.Save();
         }
 
+        void OnDisable()
+        {
+            if(storyVoice)storyVoice.StopSpeech();
+        }
+
         void OnDestroy()
         {
+            if(storyVoice)storyVoice.StopSpeech();
             LifeState.Save();
             if (Instance == this)
                 Instance = null;

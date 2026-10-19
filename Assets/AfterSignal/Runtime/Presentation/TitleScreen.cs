@@ -94,6 +94,12 @@ namespace AfterSignal
             saveInfo=Label(body.transform,"",86,814,550,48,13,Muted);
             var footer=Label(root,"© AFTERSIGNAL STUDIO   /   "+Application.version,0,0,390,25,11,Muted);
             var f=footer.rectTransform;f.anchorMin=f.anchorMax=f.pivot=new Vector2(1,0);f.anchoredPosition=new Vector2(-38,24);
+            var audioCredit=Resources.Load<TextAsset>("Audio/Generated/attribution");
+            if(audioCredit)
+            {
+                var credit=Label(root,audioCredit.text.Trim(),0,0,470,25,12,Muted);
+                var cr=credit.rectTransform;cr.anchorMin=cr.anchorMax=cr.pivot=new Vector2(1,0);cr.anchoredPosition=new Vector2(-38,52);
+            }
             var hint=Label(root,"↑ ↓  메뉴 선택     ENTER  확인     ESC  뒤로",0,0,450,24,12,Muted);
             var hr=hint.rectTransform;hr.anchorMin=hr.anchorMax=hr.pivot=new Vector2(0,0);hr.anchoredPosition=new Vector2(84,22);
             BuildSettings(root);BuildConfirmation(root);
