@@ -10,7 +10,7 @@ const privateRoots = [
   'Assets/AfterSignal/Resources/Security', 'Assets/AfterSignal/Resources/WorldAssets',
   'Assets/AfterSignal/Prefabs', 'Assets/AfterSignal/Scenes',
 ];
-const visual = /\.(png|jpe?g|webp|gif|tga|tiff?|psd|exr|hdr|svg|fbx|blend\d*|obj|mtl|glb|gltf|stl|usd[acz]?|unitypackage)(\.meta)?$/i;
+const visual = /\.(png|jpe?g|webp|gif|tga|tiff?|psd|exr|hdr|svg|fbx|blend\d*|obj|mtl|glb|gltf|stl|usd[acz]?|unitypackage|pcraft|vectorcraft|drawcraft|vctemplate)(\.meta)?$/i;
 function isPrivate(name) {
   if (name === 'Documentation/Branding/aftersignal-icon.png') return false;
   if (/^Documentation\/Screenshots\/[a-z0-9-]+\.(png|jpg)$/.test(name)) return false;

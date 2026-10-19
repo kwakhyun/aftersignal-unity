@@ -1,0 +1,10 @@
+{
+  "structural_errors": [],
+  "weighted_meshes": 230,
+  "base_vertices": 96072,
+  "evaluated_triangles": 740188,
+  "skeleton_bones": 169,
+  "face_texture_packed": true,
+  "artistic_acceptance": false,
+  "gameplay_replacement": false
+}

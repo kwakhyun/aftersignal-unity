@@ -51,7 +51,7 @@ namespace AfterSignal
 
         void UpdateUrbanHud()
         {
-            if(miniAtlasTitle&&game&&game.Ready)miniAtlasTitle.text=new[]{"애프터라이트","노바 시티","에레보스","네레이드"}[FourCityCatalog.CityAt(game.Player.transform.position)]+" / "+NavigationGuide.Bearing(game.CameraRig.LookForward);
+            if(miniAtlasTitle&&game&&game.Ready)miniAtlasTitle.text=FourCityCatalog.CityNames[FourCityCatalog.CityAt(game.Player.transform.position)]+" / "+NavigationGuide.Bearing(game.CameraRig.LookForward);
             var sim = UrbanSimulation.Instance;
             if (!sim)
                 return;

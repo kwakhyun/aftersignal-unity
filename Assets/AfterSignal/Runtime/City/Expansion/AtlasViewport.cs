@@ -7,6 +7,7 @@ using UnityEngine.UI;
 namespace AfterSignal
 {
     // All layers use one metres-to-pixels transform, so roads, routes and pins stay aligned.
+    [RequireComponent(typeof(CanvasRenderer))]
     public sealed class AtlasViewport : MaskableGraphic, IBeginDragHandler, IDragHandler, IScrollHandler, IPointerClickHandler
     {
         public Vector2 Center { get; private set; }
@@ -32,8 +33,18 @@ namespace AfterSignal
         public void OnScroll(PointerEventData e) {if(mini)return;RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform,e.position,e.pressEventCamera,out var p);Zoom(Mathf.Pow(.83f,e.scrollDelta.y),p);}
         public void OnBeginDrag(PointerEventData e) {dragStart=e.position;dragged=false;}
         public void OnDrag(PointerEventData e) {if(mini)return;dragged|=(e.position-dragStart).sqrMagnitude>16;RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform,e.position,e.pressEventCamera,out var p);RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform,e.position-e.delta,e.pressEventCamera,out var old);Center-=(p-old)*Span/rectTransform.rect.width;Center=new Vector2(Mathf.Clamp(Center.x,-300,5700),Mathf.Clamp(Center.y,-6500,2650));follow=false;SetVerticesDirty();}
-        public bool Visible(CityVenue v)=>category==0||category==1&&v.Sport||category==2&&(v.kind is VenueKind.Garden or VenueKind.Monument or VenueKind.Cinema or VenueKind.Museum or VenueKind.Amusement)||category==3&&v.kind==VenueKind.Hotel||category==5&&FourCityCampaign.Contains(Array.IndexOf(FourCityCatalog.Venues,v))||category==6&&(v.kind is VenueKind.Hospital or VenueKind.Market or VenueKind.Civic or VenueKind.Research);
-        bool VisibleLandmark(int i)=>filter!=2||i==1||i==2||i==4||i==12||i==14||i==20;
+        public static int CategoryFor(CityVenue venue) => venue.Sport ? 1 : venue.kind == VenueKind.Hotel ? 3 :
+            venue.kind is VenueKind.Garden or VenueKind.Monument or VenueKind.Cinema or VenueKind.Museum or VenueKind.Amusement ? 2 : 6;
+        public static bool IsTransport(string name) => !string.IsNullOrEmpty(name) &&
+            (name.Contains("공항") || name.Contains("항만") || name.Contains("항구") || name.Contains("터미널") ||
+             name.Contains("선착장") || name.Contains("여객") ||
+             name.EndsWith("역", StringComparison.Ordinal) && !name.EndsWith("구역", StringComparison.Ordinal) &&
+             !name.EndsWith("지역", StringComparison.Ordinal) && !name.EndsWith("해역", StringComparison.Ordinal));
+        public static int CategoryForName(string name) => IsTransport(name) ? 4 : name.Contains("호텔") ? 3 : 6;
+        public bool VisibleFacility(string name) => category == 0 || category == CategoryForName(name);
+        public bool Visible(CityVenue v) => category == 0 || category == CategoryFor(v) ||
+            category == 5 && FourCityCampaign.Contains(Array.IndexOf(FourCityCatalog.Venues, v));
+        bool VisibleLandmark(int i)=>VisibleFacility(ExpansionWorld.Names[i]);
         public void OnPointerClick(PointerEventData e)
         {
             if(!mini&&e.button==PointerEventData.InputButton.Right){ClearWaypoint?.Invoke();return;}
@@ -42,7 +53,7 @@ namespace AfterSignal
             foreach(var incident in CityIncidentBoard.Active)if(Vector2.Distance(p,Project(incident.position))<18){Waypoint?.Invoke(incident.position);GameDirector.Instance?.Toast(incident.title+" · 현장 지원 시 기여 보상",5);return;}
             CityVenue selected=null;foreach(var venue in FourCityCatalog.Venues)if(Visible(venue)){float d=Vector2.Distance(p,Project(venue.position));if(d<best){best=d;selected=venue;}}
             if(selected!=null){SelectVenue?.Invoke(selected);return;}
-            for(int i=0;i<UrbanCatalog.SiteCount;i++){if(filter==2)continue;float d=Vector2.Distance(p,Project(UrbanCatalog.Center(i)));if(d<best){best=d;id=i;}}
+            for(int i=0;i<UrbanCatalog.SiteCount;i++){if(!VisibleFacility(UrbanCatalog.Name(i)))continue;float d=Vector2.Distance(p,Project(UrbanCatalog.Center(i)));if(d<best){best=d;id=i;}}
             for(int i=0;i<ExpansionWorld.Places.Length;i++){if(!VisibleLandmark(i))continue;float d=Vector2.Distance(p,Project(ExpansionWorld.Places[i]));if(d<best){best=d;id=i;expanded=true;}}
             if(id>=0)Select?.Invoke(id,expanded);else Waypoint?.Invoke(Unproject(p));
         }
@@ -74,7 +85,7 @@ namespace AfterSignal
                 if(route.Count>0){var p=route[^1];var xy=Project(p);if(rectTransform.rect.Contains(xy)){Disc(vh,p,Span*.012f,Span*.012f,new Color(1,.76f,.3f,.25f),20);Diamond(vh,xy,mini?6:11,new Color(1,.81f,.34f));Diamond(vh,xy,mini?2:4,new Color(.04f,.09f,.12f));}}
                 if(!mini)for(int i=1;i<route.Count;i++){var a=Project(route[i-1]);var b=Project(route[i]);float length=(b-a).magnitude;for(float n=34;n<length;n+=60){var p=Vector2.Lerp(a,b,n/length);if(rectTransform.rect.Contains(p))Arrow(vh,p,(b-a).normalized,5,new Color(.88f,1,.96f));}}
             }
-            if(filter!=2)for(int i=0;i<UrbanCatalog.SiteCount;i++)Pin(vh,UrbanCatalog.Center(i),mini?2:4,new Color(.55f,.77f,.78f));
+            for(int i=0;i<UrbanCatalog.SiteCount;i++)if(VisibleFacility(UrbanCatalog.Name(i)))Pin(vh,UrbanCatalog.Center(i),mini?2:4,new Color(.55f,.77f,.78f));
             for(int i=0;i<ExpansionWorld.Places.Length;i++)if(VisibleLandmark(i))Pin(vh,ExpansionWorld.Places[i],mini?3:6,new Color(.34f,.77f,.96f));
             foreach(var venue in FourCityCatalog.Venues)if(Visible(venue)){Pin(vh,venue.position,mini?4:9,FourCityAtlasSelection.Color(venue.kind));if(FourCityAtlasSelection.Venue==venue)Disc(vh,venue.position,Span*.014f,Span*.014f,new Color(1,.87f,.42f,.35f),24);}
             var sim=UrbanSimulation.Instance;if(!mini&&sim)foreach(var c in sim.Cars)if(c&&c.GetComponent<IntercityService>())Pin(vh,c.transform.position,5,new Color(.83f,.55f,1));

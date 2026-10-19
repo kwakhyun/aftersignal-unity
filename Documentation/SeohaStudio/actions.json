@@ -1,0 +1,48 @@
+{
+  "shipping": false,
+  "reason": "Six deformation studies, not final gameplay animation. Review shoulder, knee and grip contact before integration.",
+  "clips": [
+    {
+      "clip": "Idle",
+      "frames": 49,
+      "fps": 60,
+      "status": "deformation_review",
+      "foot_ik": false
+    },
+    {
+      "clip": "RunForward",
+      "frames": 49,
+      "fps": 60,
+      "status": "deformation_review",
+      "foot_ik": true
+    },
+    {
+      "clip": "Jump",
+      "frames": 49,
+      "fps": 60,
+      "status": "deformation_review",
+      "foot_ik": false
+    },
+    {
+      "clip": "WallClimb",
+      "frames": 49,
+      "fps": 60,
+      "status": "deformation_review",
+      "foot_ik": false
+    },
+    {
+      "clip": "Rifle",
+      "frames": 49,
+      "fps": 60,
+      "status": "deformation_review",
+      "foot_ik": false
+    },
+    {
+      "clip": "Drive",
+      "frames": 49,
+      "fps": 60,
+      "status": "deformation_review",
+      "foot_ik": false
+    }
+  ]
+}

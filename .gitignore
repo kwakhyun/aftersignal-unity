@@ -99,3 +99,13 @@
 !Documentation/Screenshots/*.png
 !Documentation/Screenshots/*.jpg
 !Documentation/Branding/aftersignal-icon.png
+
+# Private editable ArtCraft artwork. Tool binaries remain under ignored Artifacts.
+*.pcraft
+*.vectorcraft
+*.drawcraft
+*.vctemplate
+*.pcraft.meta
+*.vectorcraft.meta
+*.drawcraft.meta
+*.vctemplate.meta

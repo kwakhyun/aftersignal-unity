@@ -88,3 +88,9 @@ Unity **6.4 / 6000.4.0f1**, URP **17.4.0**, Windows 플레이어를 기준으로
 - [코드 구조](Documentation/PROJECT-STRUCTURE.md) · [출처와 라이선스](Documentation/ASSETS.md) · [비공개 에셋 정책과 과거 이력의 한계](Documentation/PRIVATE-ASSETS.md).
 
 커밋 전 `node Tools/public-assets.cjs`로 공개 금지 에셋의 추적 여부를 검사합니다. 로컬 훅은 `git config core.hooksPath .githooks`로 설치하며 GitHub Actions에서도 같은 검사를 실행합니다. 검사 도구는 Node.js 24를 사용합니다. 게임 실행에는 Node.js가 필요하지 않습니다.
+
+## ArtCraft 제작 도구
+
+PhotoCraft 0.9.0 · VectorCraft 0.11.0의 로컬 CLI를 연결했습니다. 네 도시 지도와 시설 검색에는 같은 스타일의 시설 아이콘 40종을 사용하며, 지도 라벨을 재사용하고 표시 수를 제한합니다. 게임 실행 중에는 외부 편집 도구가 필요하지 않습니다.
+
+`ARTCRAFT-TOOLS.cmd`로 편집 원본을 열 수 있습니다. 설치·내보내기·AI 에이전트용 MCP 연결 방법과 적용 범위는 [ArtCraft 안내](Documentation/ArtCraft/README.md)를 확인하세요. 편집 원본과 런타임 이미지도 기존 비공개 에셋 팩에 포함해야 합니다. 서하 3D 모델의 목표 품질은 아직 달성하지 않았습니다.
