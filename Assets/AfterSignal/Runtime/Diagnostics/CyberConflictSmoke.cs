@@ -25,7 +25,7 @@ namespace AfterSignal
             game=GameDirector.Instance;game.Input.ExternalControl=true;game.Input.ExternalFrame=ControlFrame.Empty;game.CloseDialogue();game.SetPaused(false);game.enabled=false;game.CameraRig.enabled=false;LifeState.Hours=14;WantedSystem.Clear("");WantedSystem.Instance.enabled=false;CityChronicle.Instance.enabled=false;RiftIncursion.Instance.enabled=false;
             yield return new WaitForSeconds(4);if(GangStrongholds.Instance)GangStrongholds.Instance.enabled=false;
             Check(GangStrongholds.Instance&&GangStrongholds.Instance.Bases.Count==3,"Three accessible gang compounds fit existing city parcels");
-            Check(CityChronicle.Instance.Quests.Count(q=>q.id.StartsWith("gang-main-")&&q.main&&q.steps.All(s=>s.kind=="battle"))==3,"Three linked main-plot gang combat missions");
+            Check(CityChronicle.Instance.Quests.Count(q=>q.id.StartsWith("gang-main-")&&q.main&&q.steps.Count(s=>s.kind=="battle")>=2)==3,"Three linked main-plot gang combat missions");
             foreach(string art in new[]{"CyberGang","CyberPolice"}){var sheet=Resources.LoadAll<Sprite>("Art/CyberSecurity/"+art);Check(sheet.Length==16,"Four directions by four poses / "+art);Check(sheet.Length>0&&sheet.Max(s=>s.bounds.size.y)<2.3f,"Human scale and crop / "+art);}
             var sim=UrbanSimulation.Instance;var at=new Vector3(40,.15f,-210);game.Player.Respawn(at);
             var police=PoliceCar.Create(WantedSystem.Instance,at+Vector3.right*8);police.enabled=false;yield return new WaitForSeconds(.6f);

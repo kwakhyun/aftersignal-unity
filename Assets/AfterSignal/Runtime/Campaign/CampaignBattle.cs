@@ -11,13 +11,18 @@ namespace AfterSignal
         public int Remaining {get{int count=0;foreach(var a in enemies)if(a&&a.Alive&&!a.Downed)count++;return count;}}
         public bool Completed {get;private set;}
         public string Objective {get;private set;}
-        CityChronicle chronicle;StoryStep step;string quest;int expected;GameDirector game;
-        bool Intro=>quest=="main01";
+        /// <summary>Defend: integrity of the held position (0–100). Enemies pressing the zone erode it.</summary>
+        public float Integrity {get;private set;}=100;
+        /// <summary>Escape: seconds until the pursuit closes the area.</summary>
+        public float TimeLeft {get;private set;}
+        CityChronicle chronicle;StoryStep step;StoryQuest data;string quest;int expected,ordinal;GameDirector game;
+        bool Intro=>data!=null&&data.tutorial;
+        bool Evacuating=>(Mode=="rescue"||Mode=="escape")&&(cleared||Remaining==0&&Wave>=Mathf.Max(1,step.waves));
         public static bool Guide(Vector3 at,out Vector3 target,out string label)
         {
             target=at;label="";if(!current||current.finishing||current.Completed)return false;
             var c=current;target=c.step.position;label="메인 전투 · "+(c.Objective??c.step.label);
-            if(c.Remaining==0 && c.Wave>=Mathf.Max(1,c.step.waves) && (c.Mode=="rescue"||c.Mode=="escape"))
+            if(c.Evacuating)
             { target=c.survivor&&c.survivor.GetComponent<WorldActor>().Downed?c.survivor.transform.position:c.extraction;return true; }
             float best=float.MaxValue;
             foreach(var actor in c.enemies){if(!actor||!actor.Alive||actor.Downed)continue;float d=(actor.Center-at).sqrMagnitude;if(d<best){best=d;target=actor.Center;}}
@@ -30,15 +35,16 @@ namespace AfterSignal
         string Mode=>Intro&&step.battleMode=="sabotage"?"assault":step.battleMode;
         Image radioPortrait;
         readonly List<WorldActor> enemies=new(),devices=new();readonly List<GameObject> props=new();
-        CityNpc survivor;Vector3 extraction;Text goalLabel,radio;float age,nextWave=4,held,speechUntil,failedUntil,nextPulse;bool finishing;
+        CityNpc survivor;Vector3 extraction;Text goalLabel,radio;float age,nextWave=4,held,speechUntil,failedUntil,nextPulse,pursuitAt;bool finishing,cleared,warned;
         public static CampaignBattle Begin(CityChronicle owner,StoryStep step)
         {
             if(current)return current;
-            var c=new GameObject("MAIN / active combat operation").AddComponent<CampaignBattle>();current=c;c.chronicle=owner;c.step=step;c.quest=owner.Tracked.id;c.expected=owner.Entry(owner.Tracked).step;c.game=GameDirector.Instance;c.Build();return c;
+            var c=new GameObject("MAIN / active combat operation").AddComponent<CampaignBattle>();current=c;c.chronicle=owner;c.step=step;c.data=owner.Tracked;c.quest=c.data?.id;c.expected=c.data!=null?owner.Entry(c.data).step:0;c.ordinal=owner.Ordinal(c.data);c.game=GameDirector.Instance;c.Build();return c;
         }
         void Build()
         {
             if(Intro)nextWave=16;
+            TimeLeft=step.timeLimit>0?step.timeLimit:Mathf.Max(45,step.duration*2);
             transform.position=step.position;extraction=step.position+new Vector3(-24,0,-18);
             if(CrowdFlow.Place(extraction,expected,out var safeExtraction,20))extraction=safeExtraction;
             else if(CrowdFlow.Place(step.position,expected,out safeExtraction,25))extraction=safeExtraction;
@@ -65,7 +71,7 @@ namespace AfterSignal
             {
                 var desired=step.position+new Vector3((i-1)*9,0,6);if(!CrowdFlow.Place(desired,i,out var support,12))support=extraction+Vector3.right*(i-1)*3;
                 var go=new GameObject("N-17 기억 소거 증폭기");go.transform.position=support;props.Add(go);
-                var body=go.AddComponent<WorldActor>();body.gang=true;body.helicopter=true;body.health=Intro?75:180;devices.Add(body);
+                var body=go.AddComponent<WorldActor>();body.gang=true;body.helicopter=true;body.health=Intro?75:180+ordinal*4;devices.Add(body);
                 var box=CommunityWorld.Box(go.transform,"Power housing",Vector3.up,new Vector3(1.5f,2,1.1f),"Metal");
                 CommunityWorld.Box(go.transform,"Exposed coupler",new Vector3(0,1.4f,-.61f),new Vector3(.65f,.5f,.12f),"NeonAzure",false);
             }
@@ -77,24 +83,39 @@ namespace AfterSignal
             if(step.battleMode=="boss")
             {
                 var at=step.position+Vector3.forward*38;if(!CrowdFlow.Place(at,expected,out var floor,30))floor=extraction;
-                var boss=RiftCreature.Create(floor,Mathf.Abs(quest.GetHashCode()%3));boss.Campaign=true;boss.Body.health=5200;enemies.Add(boss.Body);Wave=1;
+                var boss=RiftCreature.Create(floor,Mathf.Abs((quest??"").GetHashCode()%3));boss.Campaign=true;boss.Body.health=step.enemyHealth>0?step.enemyHealth:4800+ordinal*100;enemies.Add(boss.Body);Wave=1;
             }
             SignalEffects.Ring(extraction+Vector3.up*.13f,SignalEffects.Cyan,4,60);
         }
         void Say(string text){if(radio){radio.text=text;if(radioPortrait){radioPortrait.sprite=StoryPortraits.Bust(text.Split(':')[0]);radioPortrait.enabled=radioPortrait.sprite;}radio.transform.parent.gameObject.SetActive(true);speechUntil=age+Mathf.Clamp(text.Length*.12f,5,12);}}
+        // Grunt health rises with the quest's depth in the story (main02 ≈ 98, main30 ≈ 200) unless the step overrides it.
+        GangMember Recruit(Vector3 at,int i)
+        {
+            var enemy=GangMember.Create(at,i%3,i);enemy.name=i%3==0?"N-17 기억 회수대 / 돌격병":i%3==1?"N-17 기억 회수대 / 산탄병":"N-17 기억 회수대 / 소총수";enemy.CampaignUnit=true;enemy.CampaignWeapon=Intro?0:i%3==1?1:0;enemy.IntroUnit=Intro;
+            enemy.Body.health=Intro?48:step.enemyHealth>0?step.enemyHealth:95+ordinal*3+expected*12;enemies.Add(enemy.Body);return enemy;
+        }
         bool SpawnWave()
         {
-            int count=Intro?2:Mathf.Clamp(step.enemyCount,3,8);int spawned=0;
+            int count=Intro?2:Mathf.Clamp(step.enemyCount,3,12);int spawned=0;
             for(int i=0;i<count;i++)
             {
                 Vector3 at=step.position+new Vector3(Mathf.Cos(i*2.4f+Wave)*27,0,Mathf.Sin(i*2.4f+Wave)*27);
-                if(quest.StartsWith("gang-main-"))at=step.position+(i<4?new Vector3((i-1.5f)*5,.1f,16):new Vector3(i%2==0?-18:18,.1f,5+i%3*5));
+                if(step.formation=="stronghold")at=step.position+(i<4?new Vector3((i-1.5f)*5,.1f,16):new Vector3(i%2==0?-18:18,.1f,5+i%3*5));
                 if(!CrowdFlow.Place(at,i+Wave*11,out var safe,16))continue;
-                var enemy=GangMember.Create(safe,i%3,i);enemy.name=i%3==0?"N-17 기억 회수대 / 돌격병":i%3==1?"N-17 기억 회수대 / 산탄병":"N-17 기억 회수대 / 소총수";enemy.CampaignUnit=true;enemy.CampaignWeapon=Intro?0:i%3==1?1:0;enemy.IntroUnit=Intro;enemy.Body.health=Intro?48:95+expected*18;enemies.Add(enemy.Body);spawned++;
+                var enemy=Recruit(safe,i);spawned++;
                 if(i==0)NpcSpeech.Say(enemy,"대상을 확보해! 증거를 남기지 마!",3,4);
             }
             if(spawned==0)return false;Wave++;Say(Wave==1?"서하: 들었어. 내가 길을 열게. 다들 내 뒤로 와.":"노아: 추가 병력이 진입한다. 엄폐하면서 양쪽을 확인해!");return true;
         }
+        // Escape: once the waves are down, a small pursuit squad closes in from behind the player.
+        void Pursue()
+        {
+            var from=game.Player.transform.position;var away=from-extraction;away.y=0;away=away.sqrMagnitude>1?away.normalized:Vector3.forward;var side=Vector3.Cross(Vector3.up,away);
+            int count=Mathf.Clamp(2+ordinal/10,2,4),spawned=0;
+            for(int i=0;i<count;i++)if(CrowdFlow.Place(from+away*22+side*((i-(count-1)*.5f)*4),70+i,out var safe,10)){Recruit(safe,i);spawned++;}
+            if(spawned>0)Say("노아: 추격대가 따라붙었어! 맞서지 말고 청록색 지점으로 달려!");
+        }
+        void Fail(string radioLine,string notice){Say(radioLine);failedUntil=age+7;game.Toast(notice,6);}
         void Update()
         {
             if(!game||!chronicle||chronicle.Tracked?.id!=quest||chronicle.CurrentStep!=step||game.stage!=StageId.UrbanCity){Destroy(gameObject);return;}
@@ -103,18 +124,22 @@ namespace AfterSignal
             if(radio)radio.transform.parent.gameObject.SetActive(age<=speechUntil&&!(WantedSystem.Instance?.NoaSupport.Visible??false));
             if(finishing){if(age>speechUntil){Completed=true;chronicle.Advance(quest,expected);Destroy(gameObject);}return;}
             if(Vector3.Distance(game.Player.transform.position,step.position)>180){Say("노아: 작전 구역을 벗어났어. 현장으로 돌아오면 다시 진입하자.");Destroy(gameObject);return;}
-            if(survivor&&!survivor.GetComponent<WorldActor>().Alive){Say("노아: 구조 대상이 쓰러졌다. 진입 지점에서 다시 시도하자.");failedUntil=age+7;survivor=null;}
+            if(survivor&&!survivor.GetComponent<WorldActor>().Alive){Fail("노아: 구조 대상이 쓰러졌다. 진입 지점에서 다시 시도하자.","작전 실패 · 구조 대상 피격 — 단계를 처음부터 다시 시작합니다");survivor=null;}
             if(failedUntil>0){if(age>failedUntil)Destroy(gameObject);return;}
             int waves=step.battleMode=="boss"?1:Mathf.Max(1,step.waves);
-            if(step.battleMode!="boss"&&Remaining==0&&Wave<waves&&age>=nextWave){if(SpawnWave())nextWave=age+8;else nextWave=age+3;}
+            if(step.battleMode!="boss"&&!cleared&&Remaining==0&&Wave<waves&&age>=nextWave){if(SpawnWave())nextWave=age+8;else nextWave=age+3;}
             bool defeated=Wave>=waves&&Remaining==0;
             string mode=Mode;
             if(mode=="defend")
             {
                 bool inside=Vector3.Distance(game.Player.transform.position,step.position)<22;
-                if(inside)held+=dt;Objective=$"대피 통로 방어 · {held:0}/{step.duration:0}초\n{Wave}/{waves}차 공격 · 적 {Remaining}명";
-                if(!inside)Objective+=" · 표시된 방어 구역으로 복귀";
+                if(inside)held+=dt;
+                int pressing=0;foreach(var a in enemies)if(a&&a.Alive&&!a.Downed&&(a.Center-step.position).sqrMagnitude<26*26)pressing++;
+                Integrity=Mathf.Max(0,Integrity-dt*(Mathf.Min(2.5f,pressing*.25f)+(!inside&&Remaining>0?1.5f:0)));
+                Objective=$"{step.label} · {held:0}/{step.duration:0}초 · 방어선 {Integrity:0}%\n{Wave}/{waves}차 공격 · 적 {Remaining}명";
+                if(!inside)Objective+=" · 표시된 방어 구역으로 복귀";else if(pressing>0)Objective+=" · 방어선 압박 중";
                 defeated&=held>=step.duration;
+                if(Integrity<=0&&!defeated){Fail("노아: 방어선이 무너졌어! 물러났다가 진입 지점에서 다시 막아 보자.","작전 실패 · 방어선 붕괴 — 단계를 처음부터 다시 시작합니다");return;}
             }
             else if(mode=="sabotage")
             {int left=0;foreach(var device in devices)if(device&&device.Alive)left++;Objective=$"소거 증폭기 파괴 · 남은 장치 {left}/3\n{Wave}/{waves}차 공격 · 적 {Remaining}명";defeated&=left==0;foreach(var device in devices)if(device&&!device.Alive&&device.gameObject.activeSelf){VehicleExplosion.Create(device.transform.position+Vector3.up,1.3f);device.gameObject.SetActive(false);}}
@@ -130,7 +155,17 @@ namespace AfterSignal
                     defeated=!body.Downed&&Vector3.Distance(survivor.transform.position,extraction)<4;
                 }
             }
-            else if(mode=="escape"){Objective=$"추격대 격파 후 청록색 탈출 지점으로 이동\n남은 적 {Remaining}명 · 탈출 {Vector3.Distance(game.Player.transform.position,extraction):0} m";defeated&=Vector3.Distance(game.Player.transform.position,extraction)<5;}
+            else if(mode=="escape")
+            {
+                TimeLeft-=dt;
+                if(!cleared&&defeated){cleared=true;pursuitAt=age+5;}
+                if(pursuitAt>0&&age>=pursuitAt){pursuitAt=0;Pursue();}
+                float distance=Vector3.Distance(game.Player.transform.position,extraction),left=Mathf.Max(0,TimeLeft);
+                Objective=cleared?$"청록색 탈출 지점으로 이동 · 추격대 접근 중\n탈출 {distance:0} m · 포위까지 {left:0}초":$"추격대 격파 후 청록색 탈출 지점으로 이동\n남은 적 {Remaining}명 · 포위까지 {left:0}초";
+                defeated=cleared&&distance<5;
+                if(!defeated&&!warned&&TimeLeft<=15){warned=true;Say("노아: 15초 남았어! 포위되기 전에 빠져나가!");}
+                if(!defeated&&TimeLeft<=0){Fail("노아: 출구가 봉쇄됐어. 포위망이 닫혔다. 진입 지점에서 다시 시도하자.","작전 실패 · 탈출 시간 초과 — 단계를 처음부터 다시 시작합니다");return;}
+            }
             else if(mode=="boss")Objective=$"대형 잠식체 격파 · 발광 기관이 열릴 때 집중 사격\n범위 표시에서 이탈 · 레이저 예고선은 회피";
             else Objective=$"기억 회수대 돌파 · {Wave}/{waves}차 공격\n남은 적 {Remaining}명 · 엄폐물과 측면 통로 활용";
             if(Intro&&Wave==0)Objective="전투 준비 · "+Mathf.CeilToInt(Mathf.Max(0,nextWave-age))+"초\n빨간 ▼가 적입니다 · 마우스 조준 / 좌클릭 공격 / 숫자키 무기 전환";

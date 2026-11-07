@@ -9,3 +9,5 @@ jobs:
         with:
           node-version: '24'
       - run: node Tools/public-assets.cjs
+      - name: Validate story data
+        run: python3 Tools/validate-story.py

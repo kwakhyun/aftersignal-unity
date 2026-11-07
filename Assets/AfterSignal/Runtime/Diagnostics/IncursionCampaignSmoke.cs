@@ -72,7 +72,7 @@ namespace AfterSignal
             var response=FindObjectsByType<MilitaryResponse>().FirstOrDefault(r=>r.Incident==incident);Check(response&&response.VehicleCount==0&&response.SoldierCount==0,"Monster incident waits for military mobilisation instead of instant troops");
             incident.enabled=true;
             foreach(var a in WorldActor.All.ToArray())if(a&&a.monster){a.health=0;}yield return new WaitForSeconds(.4f);incident.enabled=false;
-            var chronicle=CityChronicle.Instance;Check(chronicle.Quests.Count(q=>q.main)==30&&chronicle.Quests.Where(q=>q.main).SelectMany(q=>q.steps).All(s=>s.kind=="battle"),"All 30 main operations use combat phases");
+            var chronicle=CityChronicle.Instance;Check(chronicle.Quests.Where(q=>q.main).All(q=>q.steps.Any(s=>s.kind=="battle")),"Every main operation contains a combat phase");
             foreach(var q in chronicle.Quests.Where(q=>q.main))
             {var p=q.steps[0].position;bool ground=CityGangWar.FindGround(p,out _);Check(ground,"Main combat area has accessible ground / "+q.id);}
             chronicle.ResetProgress();chronicle.enabled=true;var mission=chronicle.CurrentStep;game.Player.Respawn(mission.position+new Vector3(0,0,-20));
