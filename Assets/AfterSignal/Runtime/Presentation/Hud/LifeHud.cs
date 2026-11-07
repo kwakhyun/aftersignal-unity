@@ -57,12 +57,20 @@ namespace AfterSignal
             lifeInput.placeholder = Label(field.transform, "서하의 말을 입력하세요…", 13, 9, 765, 28, 18, muted);
             lifeInput.characterLimit = 350;
             lifeInput.lineType = InputField.LineType.SingleLine;
-            lifeSend = MakeButton(lifePanel.transform, "말하기  ↵", 846, 616, 156, 45, SendLifeText);
+            lifeSend = MakeButton(lifePanel.transform, "말하기  ↵", 846, 616, 156, 45, LifeSendClicked);
             lifePanel.SetActive(false);
             sleepShade = Panel(root, "Sleep fade", 0, 0, 1600, 900, Color.clear);
             Stretch(sleepShade.rectTransform);
             sleepShade.gameObject.SetActive(false);
             BuildConversationPresentation();
+        }
+
+        /// <summary>The send button doubles as "cancel reply" while an AI answer is pending; Enter only ever sends.</summary>
+        void LifeSendClicked()
+        {
+            var life = CityLife.Instance;
+            if (life && life.Sending && life.CanCancelReply) life.CancelReply();
+            else SendLifeText();
         }
 
         void SendLifeText()
@@ -175,7 +183,7 @@ namespace AfterSignal
                 bool talk = life.Mode == "talk";
                 lifeInput.gameObject.SetActive(talk);
                 lifeSend.gameObject.SetActive(talk);
-                lifeSend.interactable = !life.Sending;
+                lifeSend.interactable = !life.Sending || life.CanCancelReply;
                 lifeInput.interactable = !life.Sending;
                 if (talk && Keyboard.current != null && Keyboard.current.enterKey.wasPressedThisFrame)
                     SendLifeText();

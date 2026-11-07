@@ -75,7 +75,7 @@ namespace AfterSignal
                 conversationLoading.text=life.Sending ? (age>10 ? "답변을 정리하고 있어요" : "이야기를 생각하고 있어요") + new string('.',1+(int)(Time.unscaledTime*2)%3) + "   "+age.ToString("0")+"초" : "";
                 lifeSend.GetComponentInChildren<Text>().fontSize=16;
                 PlaceLifeElement(lifeSend.GetComponentInChildren<Text>().rectTransform,8,0,160,44);
-                ButtonText(lifeSend,life.Sending?"답변 기다리는 중":"말하기  ↵");
+                ButtonText(lifeSend,life.Sending?(life.CanCancelReply?"답변 취소":"답변 기다리는 중"):"말하기  ↵");
             }
             else
             {
