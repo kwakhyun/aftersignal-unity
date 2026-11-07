@@ -161,8 +161,8 @@ namespace AfterSignal
                 run = moveValue.sqrMagnitude > .04f,
                 look = held || canLook && stickDelta != Vector2.zero,
                 lookDelta = mouseDelta + stickDelta,
-                // R3 is also VehicleView, so the camera reset only applies on foot.
-                cameraReset = cameraReset.WasPressedThisFrame() && !(UrbanSimulation.Instance && UrbanSimulation.Instance.Driving),
+                // R3 is both CameraReset and VehicleView: in a vehicle a shared press belongs to VehicleView; HOME alone still resets.
+                cameraReset = cameraReset.WasPressedThisFrame() && !(vehicleView.WasPressedThisFrame() && UrbanSimulation.Instance && UrbanSimulation.Instance.Driving),
                 move = moveValue,
                 pointer = new Vector2(Screen.width * .5f, Screen.height * .5f),
                 zoom = held ? zoom.ReadValue<Vector2>().y : 0,

@@ -182,6 +182,11 @@ namespace AfterSignal.Tests
                 KeyHints.Refresh();
                 Assert.AreEqual("K 상호작용 · 120 C", KeyHints.Apply("E 상호작용 · 120 C", false));
                 Assert.AreEqual("CORE EXPOSED", KeyHints.Apply("CORE EXPOSED", false));
+                Assert.AreEqual("1–7 무기 · K 상호작용", KeyHints.Apply("1–7 무기 · E 상호작용", false), "Default weapon keys keep the range");
+                var katana = asset.FindAction("Katana");
+                for (int i = 0; i < katana.bindings.Count; i++) if (katana.bindings[i].groups.Contains(KeyHints.KeyboardGroup)) { katana.ApplyBindingOverride(i, "<Keyboard>/z"); break; }
+                KeyHints.Refresh();
+                Assert.AreEqual("Z/2/3/4/5/6/7 무기", KeyHints.Apply("1–7 무기", false), "A rebound weapon key shows in the range");
             }
             finally { KeyHints.Detach(asset); Object.DestroyImmediate(asset); }
         }
@@ -198,6 +203,7 @@ namespace AfterSignal.Tests
                 Assert.AreEqual("[Y] 길게 투항 · [RS 누름] 시점 초기화", KeyHints.Apply("H 길게 투항 · HOME 시점 초기화", true));
                 Assert.AreEqual("[Y] 돌아가기", KeyHints.Apply("P 돌아가기", true), "The rooftop view is left with Exit on a pad");
                 Assert.AreEqual("— 구조 신고", KeyHints.Apply("F6 구조 신고", true), "No pad binding: no keyboard key either");
+                Assert.AreEqual("[→] 무기 · [RT] 발사", KeyHints.Apply("1–7 무기 · LMB 발사", true), "Pads cycle weapons with WeaponNext");
                 Assert.AreEqual("대화 계속  [ E ]", KeyHints.Apply("대화 계속  [ E ]", false));
             }
             finally { KeyHints.Detach(asset); Object.DestroyImmediate(asset); }

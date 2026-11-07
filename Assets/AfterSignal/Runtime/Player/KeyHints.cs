@@ -20,7 +20,10 @@ namespace AfterSignal
             ("LMB", "Attack"), ("RMB", "Grapple"), ("좌클릭", "Attack"), ("우클릭", "Grapple"), ("F6", "RescueReport"),
             ("E", "Interact"), ("F", "Exit"), ("G", "Passenger"), ("M", "Map"), ("J", "Journal"), ("R", "Reload"), ("Q", "Skill"), ("C", "VehicleView"), ("B", "Horn"), ("V", "SummonBike"), ("H", "Surrender"), ("P", "Panorama"),
         };
-        static readonly Regex pattern = new Regex(@"(?<![A-Za-z0-9가-힣]|\d\s)(WASD|W/S|A/D|SHIFT|SPACE|CTRL|HOME|ESC|LMB|RMB|F6|[EFGMJRQCBVHP])(?![A-Za-z0-9])|좌클릭|우클릭", RegexOptions.CultureInvariant);
+        // "1–7" stands for the seven weapon keys (Katana…Weapon7); a pad cycles them with WeaponNext.
+        public const string WeaponRange = "1–7";
+        static readonly string[] weaponActions = { "Katana", "Greatsword", "Pistol", "Weapon4", "Weapon5", "Weapon6", "Weapon7" };
+        static readonly Regex pattern = new Regex(@"(?<![A-Za-z0-9가-힣]|\d\s)(WASD|W/S|A/D|SHIFT|SPACE|CTRL|HOME|ESC|LMB|RMB|F6|[EFGMJRQCBVHP])(?![A-Za-z0-9])|좌클릭|우클릭|(?<![0-9])" + WeaponRange + "(?![0-9])", RegexOptions.CultureInvariant);
         // "[ E ]" becomes "[ [X] ]" on a pad; keep a single pair of brackets.
         static readonly Regex nested = new Regex(@"\[\s*(\[[^\[\]]+\])\s*\]", RegexOptions.CultureInvariant);
         // Actions without a pad binding whose pad hint is another action's button (the rooftop view is left with Exit).
@@ -62,6 +65,19 @@ namespace AfterSignal
                 // No pad button for this action: never show a keyboard key to a gamepad player.
                 replacements[token + "|pad"] = string.IsNullOrEmpty(pad) ? "—" : pad;
             }
+            // Weapon keys: "1–7" while they are the defaults, else the current keys in slot order ("Z/2/3/…").
+            var slots = new string[weaponActions.Length]; bool moved = false;
+            for (int i = 0; i < slots.Length; i++)
+            {
+                var action = asset.FindAction(weaponActions[i]);
+                slots[i] = action == null ? "" : Display(action, KeyboardGroup);
+                if (string.IsNullOrEmpty(slots[i]) || !Same(slots[i], (i + 1).ToString())) moved = true;
+                if (string.IsNullOrEmpty(slots[i])) slots[i] = "—";
+            }
+            customized |= moved;
+            replacements[WeaponRange + "|kb"] = moved ? string.Join("/", slots) : WeaponRange;
+            string cycle = asset.FindAction("WeaponNext") is InputAction next ? Display(next, GamepadGroup) : "";
+            replacements[WeaponRange + "|pad"] = string.IsNullOrEmpty(cycle) ? "—" : cycle;
         }
 
         /// <summary>Track the device family from actual input so hints follow the controller in use.</summary>
