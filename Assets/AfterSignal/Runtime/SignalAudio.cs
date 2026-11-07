@@ -74,6 +74,10 @@ namespace AfterSignal
             Volume=Mathf.Clamp01(value);PlayerPrefs.SetFloat("AFTERSIGNAL.Unity.Volume",Volume);ApplyVolumes();
             if(SignalMusic.Instance)SignalMusic.Instance.SetMasterVolume(Volume);
         }
+        const string VolumeBeforeMuteKey="AFTERSIGNAL.Unity.VolumeBeforeMute";
+        /// <summary>Mute remembers the audible level in PlayerPrefs, so unmuting after a scene change or restart restores it instead of the default.</summary>
+        public void Mute(){if(Volume>.01f)PlayerPrefs.SetFloat(VolumeBeforeMuteKey,Volume);SetVolume(0);}
+        public void Unmute()=>SetVolume(Mathf.Max(.05f,PlayerPrefs.GetFloat(VolumeBeforeMuteKey,.45f)));
         public void SetSfxVolume(float value){SfxVolume=Mathf.Clamp01(value);PlayerPrefs.SetFloat("AFTERSIGNAL.Unity.SfxVolume",SfxVolume);ApplyVolumes();}
         void ApplyVolumes()
         {

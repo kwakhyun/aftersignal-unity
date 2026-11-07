@@ -63,7 +63,6 @@ namespace AfterSignal
                     PlaceLifeElement(lifeBody.rectTransform,0,0,884,story?236:176);
                     lifeBody.rectTransform.sizeDelta=new Vector2(884,Mathf.Max(story?236:176,lifeBody.preferredHeight+10));
                 }
-                conversationLayoutRevision=life.Revision;
                 PlaceLifeElement(lifeInput.GetComponent<RectTransform>(),380,320,708,44);
                 PlaceLifeElement(lifeInput.textComponent.rectTransform,13,9,682,28);
                 PlaceLifeElement(((Text)lifeInput.placeholder).rectTransform,13,9,682,28);
@@ -91,8 +90,10 @@ namespace AfterSignal
                 PlaceLifeElement(lifeTitle.rectTransform,36,26,820,44);
                 PlaceLifeElement(lifeClose.GetComponent<RectTransform>(),870,28,132,38);
                 PlaceLifeElement(dialogueScroll,36,91,968,life.Options.Exists(o=>ShopItemArt.Get(o.image))?78:320);
-                PlaceLifeElement(lifeBody.rectTransform,0,0,968,Mathf.Max(dialogueScroll.sizeDelta.y,lifeBody.preferredHeight+10));
+                // Re-measure only when the content changes: re-placing every frame snapped the ScrollRect back to the top, so long journal pages could not scroll.
+                if(conversationLayoutRevision!=life.Revision)PlaceLifeElement(lifeBody.rectTransform,0,0,968,Mathf.Max(dialogueScroll.sizeDelta.y,lifeBody.preferredHeight+10));
             }
+            conversationLayoutRevision=life.Revision;
         }
     }
 }
