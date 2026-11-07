@@ -56,7 +56,7 @@ namespace AfterSignal
             PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Stage",(int)StageId.Residence);title.Refresh();
             title.OpenSettings();yield return null;
             Check(title.SettingsOpen&&Time.timeScale==0,"Settings opens without unpausing the world");Capture("title-settings");
-            title.CancelNewGame();title.NewGameButton.onClick.Invoke();yield return null;
+            title.CancelNewGame();title.NewGameButton.onClick.Invoke();yield return null;if(title.SlotsOpen){title.SelectSlot(SaveStore.ActiveSlot);yield return null;}
             Check(title.ConfirmationOpen,"New game asks before replacing existing progress");Capture("title-confirm");
             title.CancelNewGame();
             Check(!title.ConfirmationOpen&&PlayerPrefs.GetInt("AFTERSIGNAL.Unity.Stage")== (int)StageId.Residence,"Cancelling new game preserves the saved checkpoint");
@@ -67,7 +67,7 @@ namespace AfterSignal
             Check(g.stage==StageId.Residence&&!g.Title&&Time.timeScale==1,"Continue loads saved residence into gameplay");
             g.SetPaused(true);g.ReturnToTitle();yield return new WaitForSecondsRealtime(.8f);
             Check(g.Title&&TitleScreen.Instance.Visible&&GameDirector.HasSavedGame&&Time.timeScale==0,"Pause return saves progress and opens title");
-            TitleScreen.Instance.NewGameButton.onClick.Invoke();yield return null;TitleScreen.Instance.ConfirmNewGame();
+            TitleScreen.Instance.NewGameButton.onClick.Invoke();yield return null;if(TitleScreen.Instance.SlotsOpen){TitleScreen.Instance.SelectSlot(SaveStore.ActiveSlot);yield return null;}TitleScreen.Instance.ConfirmNewGame();
             while(GameDirector.Instance==g)yield return null;yield return Ready();g=GameDirector.Instance;yield return null;
             Check(g.stage==StageId.Residence&&!g.Title&&LifeState.Credits==1500&&LifeState.Day==1,"Confirmed new game starts at home with fresh life state");
             Check(CityChronicle.Instance.CompletedMain==0,"Confirmed new game resets story progress");
