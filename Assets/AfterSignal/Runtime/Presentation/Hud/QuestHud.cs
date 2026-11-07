@@ -86,6 +86,7 @@ namespace AfterSignal
             var cam = Camera.main;
             var screen = cam.WorldToScreenPoint(next);
             bool behind = screen.z < 0;
+            float floor = PinFloor();
             if (behind)
             {
                 // A mirrored projection can land mid-screen. Park the pin on the border instead, toward the target's side, with "behind" reading as down.
@@ -94,17 +95,29 @@ namespace AfterSignal
                 dir = dir.sqrMagnitude > .0001f ? dir.normalized : Vector2.down;
                 var centre = new Vector2(Screen.width * .5f, Screen.height * .5f);
                 float tx = dir.x > 0 ? (Screen.width - 110 - centre.x) / dir.x : dir.x < 0 ? (110 - centre.x) / dir.x : float.MaxValue;
-                float ty = (190 - centre.y) / dir.y;
+                float ty = (floor - centre.y) / dir.y;
                 var edge = centre + dir * Mathf.Max(0, Mathf.Min(tx, ty));
                 screen.x = edge.x;
                 screen.y = edge.y;
             }
 
             screen.x = Mathf.Clamp(screen.x, 110, Screen.width - 110);
-            screen.y = Mathf.Clamp(screen.y, 190, Screen.height - 120);
+            screen.y = Mathf.Clamp(screen.y, floor, Screen.height - 120);
             PlaceScreen(mainRoutePin.rectTransform, screen, new Vector2(100, 0));
             string pin = roadRoute != null ? navigation.Arrived?"◆  도착":navigation.Arrow+"  "+navigation.TurnDistance.ToString("0")+" m" : "◆  " + distance.ToString("0") + " m";
             mainRoutePin.text = behind ? RelativeDirection(next - game.Player.transform.position) + "  " + pin : pin;
+        }
+
+        /// <summary>Lowest screen y in pixels for the route pin, whose label hangs 44 units below that point: clear of the bottom-centre prompts, which are drawn over it.</summary>
+        float PinFloor()
+        {
+            float top = 0;
+            void Over(Component c, bool shown) { if (c && shown) { var r = (RectTransform)c.transform; top = Mathf.Max(top, r.anchoredPosition.y + r.sizeDelta.y); } }
+            Over(anchorHint, anchorHint && anchorHint.text.Length > 0);
+            Over(drivingInfo, drivingInfo && drivingInfo.gameObject.activeSelf && drivingInfo.text.Length > 0);
+            Over(interactionCard, interactionCard && interactionCard.gameObject.activeSelf);
+            Over(bossPanel ? bossPanel.transform : null, bossPanel && bossPanel.activeSelf);
+            return Mathf.Max(190, (top + 50) * canvas.scaleFactor);
         }
 
         /// <summary>On foot the route instruction follows where Seo is actually moving, not where the camera happens to look.</summary>

@@ -200,8 +200,7 @@ namespace AfterSignal
                     SendLifeText();
                 // Talk mode keeps keyboard focus free for the reply field unless a gamepad is in use.
                 SelectLifeOption(changed && (!talk || KeyHints.UsingGamepad));
-                if (!lifeInput.isFocused && Gamepad.current != null && Gamepad.current.buttonEast.wasPressedThisFrame)
-                    life.Dismiss();
+                lifeBack = !lifeInput.isFocused && Gamepad.current != null && Gamepad.current.buttonEast.wasPressedThisFrame;
             }
             else
             {
@@ -210,6 +209,18 @@ namespace AfterSignal
             }
             sleepShade.gameObject.SetActive(life.SleepFade > 0);
             sleepShade.color = new Color(.005f, .012f, .025f, life.SleepFade);
+        }
+
+        bool lifeBack;
+        /// <summary>Gamepad B closes the life panel after every Update has run. B is also Dash: closing during Update could unblock GameDirector later in the same frame and turn the press into a dash.</summary>
+        void LateUpdate()
+        {
+            if (!lifeBack)
+                return;
+            lifeBack = false;
+            var life = CityLife.Instance;
+            if (life && life.Mode.Length > 0 && game.Dialogue)
+                life.Dismiss();
         }
 
         /// <summary>Gives gamepad and keyboard navigation a starting point: the first option, unless the selection is already a live control in this panel.</summary>
