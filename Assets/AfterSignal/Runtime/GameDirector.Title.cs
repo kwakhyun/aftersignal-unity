@@ -24,7 +24,8 @@ namespace AfterSignal
             StageId destination;
             if(resume)
             {
-                destination=StageId.Residence;
+                // An unserved sentence resumes inside the prison cell instead of at home.
+                PrisonSystem.SaveSentence();destination=PrisonSystem.Sentenced?StageId.UrbanCity:StageId.Residence;
                 CivicWorld.ClearArrival();ResidentialWorld.VisitHome=-1;RespawnNetwork.ResetHome();
             }
             else

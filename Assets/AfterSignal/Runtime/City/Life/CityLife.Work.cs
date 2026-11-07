@@ -59,7 +59,7 @@ namespace AfterSignal
         {
             if(!carrying||selectedTable<0)return;
             if(table!=selectedTable){game.Toast("다른 손님의 주문입니다. 테이블 번호를 확인하세요.");return;}
-            int pay=(cafeShift?40:55)+quality;
+            int pay=Mathf.RoundToInt(((cafeShift?40:55)+quality)*DifficultySettings.Payout);
             LifeState.Earn(pay);wage+=pay;served++;
             LifeState.Hours+=.25f;LifeState.Save();
             patience[table]=110;orders[table]=(orders[table]+1)%3;selectedTable=-1;carrying=false;

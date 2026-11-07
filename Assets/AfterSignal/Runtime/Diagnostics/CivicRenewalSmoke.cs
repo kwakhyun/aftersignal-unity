@@ -64,7 +64,7 @@ namespace AfterSignal
             Check(BlastDamage.Detonations>blasts&&ArmoryInventory.Rounds(10)==0,"Thrown grenade uses its fuse and consumes the purchased grenade");
             WantedSystem.Clear("verification");g.Player.Respawn(p+new Vector3(230,0,0));money=LifeState.Credits;
             bool work=FacilityOperation.Begin("repair-essential",240,1);Check(work&&LifeState.Credits==money,"Facility work starts without paying a reward before the work is done");
-            if(work)for(int i=0;i<3;i++){var op=FacilityOperation.Current;g.Player.Respawn(op.Target+Vector3.back);yield return null;FindObjectsByType<FacilityWorkPoint>().First(n=>n.owner==op).Use();yield return null;}
+            if(work)for(int i=0;i<40&&FacilityOperation.Current;i++){var op=FacilityOperation.Current;g.Player.Respawn(op.Target+Vector3.back);yield return null;FindObjectsByType<FacilityWorkPoint>().First(n=>n.owner==op).Use();yield return new WaitForSeconds(op.Holding?.5f:.05f);}
             int pay=PlayerPrefs.GetInt("AFTERSIGNAL.Unity.CivicPermit",0)>0?264:240;
             Check(!FacilityOperation.Current&&LifeState.Credits==money+pay&&!FacilityOperation.Begin("repair-essential",240,1),"Three physical work stations pay once and prevent same-day reward farming");
             foreach(var a in WorldActor.All.ToArray())if(a&&a.transform.position.y>170)Destroy(a.gameObject);Destroy(deck);g.Player.Equipment.Select(0);WantedSystem.Clear("verification");

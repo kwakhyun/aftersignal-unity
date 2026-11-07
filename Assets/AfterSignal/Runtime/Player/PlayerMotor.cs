@@ -216,7 +216,10 @@ namespace AfterSignal
             if (position.y < (Director.stage==StageId.UrbanCity&&FourCityCatalog.Dry(position)?-125:-9))
             {
                 ReceiveDamage(20, Vector3.zero, true);
-                Respawn(Director.checkpoint, false);
+                // Exploration returns to the last safe ground in this scene, not a checkpoint that may be
+                // another city; authored campaign stages keep their checkpoints.
+                Respawn(CivicWorld.Exploration(Director.stage) ? RecoveryPoint : Director.checkpoint, false);
+                Director.CameraRig.Snap();
             }
 
             if (resolving)

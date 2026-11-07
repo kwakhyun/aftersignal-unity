@@ -149,7 +149,8 @@ namespace AfterSignal
         public void DamageNumber(Vector3 position,int amount,bool critical){if(Hud)Hud.AddDamage(position,amount,critical);}
         public void EnemyDied(EnemyBrain enemy){Kills++;LifeState.Earn(enemy.boss?350:25);Player.Heal(enemy.boss?30:3);if(enemy.boss){Toast("컨덕터 정지 · 기억 코어를 회수하세요",6);ExposeTimer=WaveWarning=0;}else if(Cleared)Toast("구역 확보 · 다음 목표로 이동하세요");}
         public void GlassBroken(){BrokenGlass=true;Toast("유리 격벽 파괴 · 다음 객실로 진입하세요");}
-        public void Die(){WantedSystem.Clear("");CrimeObservation.Forget();Dead=true;Player.Rope.Release();Time.timeScale=0;}
+        // Death ends the pursuit, but the hospital charges a share of the credits Seoha carried (see RespawnNetwork).
+        public void Die(){if(Dead)return;RespawnNetwork.ChargeHospital(this);WantedSystem.Clear("");CrimeObservation.Forget();Dead=true;Player.Rope.Release();Time.timeScale=0;}
         public void Retry()=>Retry(0);
         public void Retry(int city){Time.timeScale=1;SkipTitle=true;Dead=false;CloseDialogue();RespawnNetwork.Respawn(this,city);}
         public void Restart(){Time.timeScale=1;SkipTitle=false;PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Stage",0);PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Memories",0);ResetExpansion();SceneManager.LoadScene(CampaignRules.Scene(StageId.Station));}

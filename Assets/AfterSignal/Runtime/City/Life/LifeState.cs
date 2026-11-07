@@ -15,6 +15,8 @@ namespace AfterSignal
 
         public static float Hours = 8;
         public static float Heat, HiddenSeconds;
+        // In-game hour of the last wake-up this session (sleep gating); not persisted.
+        public static float LastWake = -999;
         public static HiddenErrand Errand;
         public static int Day => Mathf.FloorToInt(Hours / 24) + 1;
         public static float Hour => Mathf.Repeat(Hours, 24);
@@ -32,6 +34,8 @@ namespace AfterSignal
             Hours = PlayerPrefs.GetFloat(Prefix + "Hours", 8);
             Heat = PlayerPrefs.GetFloat(Prefix + "Heat", 0);
             HiddenSeconds = PlayerPrefs.GetFloat(Prefix + "Hidden", 0);
+            // Older saves start accruing from the current day instead of paying back-interest.
+            InterestDay = PlayerPrefs.GetInt(Prefix + "InterestDay", Day);
             string json = PlayerPrefs.GetString(Prefix + "Errand", "");
             if (!string.IsNullOrEmpty(json))
             {
@@ -80,6 +84,35 @@ namespace AfterSignal
             Savings -= amount;
             Earn(amount);
             return true;
+        }
+
+        // Savings earn a small capped daily interest when the in-game day changes (clock, sleep, work).
+        // Carried credits are what the hospital fee takes on death, so banking protects money.
+        public static int InterestDay { get; private set; }
+        public static int LastInterest { get; private set; }
+        public static int DailyInterest => Mathf.Min(GameTuning.Active.savingsInterestCap, Mathf.FloorToInt(Savings * GameTuning.Active.savingsInterest * DifficultySettings.Payout));
+        public static void SettleDay()
+        {
+            Load();
+            int day = Day;
+            if (day <= InterestDay)
+            {
+                if (day < InterestDay) InterestDay = day;
+                return;
+            }
+            int days = Mathf.Min(day - InterestDay, 7), paid = 0;
+            InterestDay = day;
+            for (int i = 0; i < days; i++)
+            {
+                int interest = Mathf.Max(0, DailyInterest);
+                if (Savings > 9999999 - interest) break;
+                Savings += interest;
+                paid += interest;
+            }
+            LastInterest = paid;
+            Save();
+            if (paid > 0)
+                GameDirector.Instance?.Toast("예금 이자 +" + paid.ToString("N0") + " C · 예금 " + Savings.ToString("N0") + " C", 4);
         }
 
         public static bool StoreHomeCash(int amount)
@@ -133,6 +166,7 @@ namespace AfterSignal
             PlayerPrefs.SetFloat(Prefix + "Hours", Hours);
             PlayerPrefs.SetFloat(Prefix + "Heat", Heat);
             PlayerPrefs.SetFloat(Prefix + "Hidden", HiddenSeconds);
+            PlayerPrefs.SetInt(Prefix + "InterestDay", InterestDay);
             PlayerPrefs.SetString(Prefix + "Errand", Errand == null ? "" : JsonUtility.ToJson(Errand));
             PlayerPrefs.Save();
         }
@@ -146,7 +180,10 @@ namespace AfterSignal
             Outfits = 3;
             Hours = 8;
             Heat = HiddenSeconds = 0;
+            InterestDay = Day;
+            LastWake = -999;
             Errand = null;
+            PrisonSystem.ResetSentence();
             PlayerPrefs.SetInt(Prefix + "CampaignSerial", PlayerPrefs.GetInt(Prefix + "CampaignSerial", 0) + 1);
             Save();
         }

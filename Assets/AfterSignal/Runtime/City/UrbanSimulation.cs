@@ -11,7 +11,11 @@ namespace AfterSignal
         public CityVehicle[] vehiclePrefabs;
         public CityVehicle Current { get; private set; }
         public int SeatIndex { get; private set; }
+        // The registered car: the starting car, or one registered at the Motor Lab. Driving another
+        // vehicle no longer transfers ownership; that vehicle is only "borrowed" until the next one.
         public CityVehicle Owned { get; private set; }
+        public CityVehicle Borrowed => borrowed;
+        CityVehicle borrowed;
 
         public readonly List<CityVehicle> Cars = new List<CityVehicle>();
         public bool Driving => Current;
@@ -39,6 +43,7 @@ namespace AfterSignal
         System.Collections.IEnumerator Start()
         {
             game = GameDirector.Instance;
+            LastRide = null;
             while (!game.Ready)
                 yield return null;
             Cars.AddRange(FindObjectsByType<CityVehicle>());
@@ -59,7 +64,14 @@ namespace AfterSignal
             if (game.stage == StageId.UrbanCity)
             {
                 var parking = new Vector3(73, .02f, -254);
-                if (!Owned || Vector3.Distance(Owned.transform.position, parking) > 8)
+                if (!Owned && PlayerPrefs.GetInt(UrbanCatalog.Prefix + "Car", 0) == 0)
+                {
+                    // First visit: the car parked by the home exit is Seoha's starting car.
+                    Owned = Spawn(parking, false);
+                    Owned.owned = true;
+                    SaveCar();
+                }
+                else if (!Owned || Vector3.Distance(Owned.transform.position, parking) > 8)
                     Spawn(parking, false);
                 for (int i = 0; i < 32; i++)
                 {SpawnTraffic();yield return null;}
@@ -244,7 +256,7 @@ namespace AfterSignal
                         continue;
                     }
 
-                    if (c != Owned && !c.GetComponent<CityBusLine>() && !c.GetComponent<EmergencyAmbulance>() && !VehicleFleet.Persistent(c) && Vector3.Distance(c.transform.position, game.Player.transform.position) > 420)
+                    if (c != Owned && c != Current && c != PersonalBike && !c.GetComponent<CityBusLine>() && !c.GetComponent<EmergencyAmbulance>() && !VehicleFleet.Persistent(c) && Vector3.Distance(c.transform.position, game.Player.transform.position) > 420)
                     {
                         Destroy(c.gameObject);
                         Cars.RemoveAt(i);
@@ -314,7 +326,14 @@ namespace AfterSignal
 
             SeatIndex=Mathf.Clamp(seat,0,VehicleSeats.Count(car)-1);
             Current=car;
-            if(SeatIndex==0){if(Owned)Owned.owned=false;Owned=car;car.owned=car.occupied=true;}
+            if(SeatIndex==0)
+            {
+                // Player vehicles (registered car, personal bikes, world-placed bikes) stay owned; any other
+                // car is borrowed and loses its protection when Seoha takes a different one.
+                bool mine=car==Owned||car==PersonalBike||car.owned&&car!=borrowed;
+                if(borrowed&&borrowed!=car)borrowed.owned=false;
+                borrowed=mine?null:car;car.owned=car.occupied=true;
+            }
             car.ApplyCustomization();
             if(SeatIndex==0){car.traffic = false;car.speed = 0;}
             Entries++;
@@ -399,6 +418,7 @@ namespace AfterSignal
 
         public void SaveCar()
         {
+            RememberRide();
             if (LifeState.SuppressSave || !Owned || !game || Owned.IsSpecial)
                 return;
             string p = UrbanCatalog.Prefix;
@@ -413,6 +433,53 @@ namespace AfterSignal
             PlayerPrefs.SetInt(p+"CarDesign",Owned.designVariant);
             PlayerPrefs.SetInt(p + "CarType", (int)Owned.type);
             PlayerPrefs.Save();
+        }
+
+        public sealed class VehicleRecord { public CityVehicleType type; public int design; public Vector3 position; public float yaw, fuel, health; public StageId stage; public string title; }
+        // Snapshot of the last borrowed vehicle, kept across the scene change into the Motor Lab interior.
+        public static VehicleRecord LastRide { get; private set; }
+        public static bool Registrable(CityVehicle c) => c && !c.Wrecked && !c.IsSpecial && c.type != CityVehicleType.Tank && !c.GetComponent<PoliceCar>() && !c.GetComponent<EmergencyAmbulance>() && !c.GetComponent<FireEngine>() && !c.GetComponent<CityBusLine>() && !c.GetComponent<CityTaxiService>() && !c.GetComponent<IntercityService>() && !c.GetComponent<TacticalTransport>() && !c.GetComponent<MilitaryGunTruck>() && !c.GetComponent<PersonalMotorcycle>();
+        void RememberRide()
+        {
+            if (ReferenceEquals(borrowed, null) || !game)
+                return;
+            if (!borrowed || !Registrable(borrowed)) { LastRide = null; return; }
+            LastRide = new VehicleRecord { type = borrowed.type, design = borrowed.designVariant, position = borrowed.transform.position, yaw = borrowed.transform.eulerAngles.y, fuel = borrowed.fuel, health = borrowed.health, stage = game.stage, title = FleetDesign.Title(borrowed) };
+        }
+        // Garage candidate: the borrowed vehicle Seoha is driving or arrived in.
+        public static string RegistrationCandidate
+        {
+            get
+            {
+                var sim = Instance;
+                if (sim && sim.borrowed && Registrable(sim.borrowed)) return FleetDesign.Title(sim.borrowed);
+                return LastRide != null ? LastRide.title : null;
+            }
+        }
+        public static bool RegisterCandidate()
+        {
+            var sim = Instance;string p = UrbanCatalog.Prefix;
+            bool live = sim && sim.borrowed && Registrable(sim.borrowed);
+            if (!live && LastRide == null) return false;
+            // Paid cosmetics belong to the previous car and are not transferred.
+            PlayerPrefs.DeleteKey(p + "CarColor");PlayerPrefs.SetInt(p + "CarWheels", 0);PlayerPrefs.SetInt(p + "CarSpoiler", 0);
+            if (live)
+            {
+                var old = sim.Owned;sim.Owned = sim.borrowed;sim.borrowed = null;sim.Owned.owned = true;
+                if (old && old != sim.Owned) { old.owned = old == sim.Current; old.ApplyCustomization(); }
+                sim.Owned.ApplyCustomization();
+                sim.SaveCar();
+            }
+            else if (!LifeState.SuppressSave)
+            {
+                var r = LastRide;
+                PlayerPrefs.SetInt(p + "Car", 1);PlayerPrefs.SetInt(p + "CarStage", (int)r.stage);
+                PlayerPrefs.SetFloat(p + "CarX", r.position.x);PlayerPrefs.SetFloat(p + "CarZ", r.position.z);PlayerPrefs.SetFloat(p + "CarYaw", r.yaw);
+                PlayerPrefs.SetFloat(p + "CarFuel", r.fuel);PlayerPrefs.SetFloat(p + "CarHealth", r.health);PlayerPrefs.SetInt(p + "CarDurabilityVersion", 1);
+                PlayerPrefs.SetInt(p + "CarDesign", r.design);PlayerPrefs.SetInt(p + "CarType", (int)r.type);
+            }
+            LastRide = null;PlayerPrefs.Save();
+            return true;
         }
 
         public void EmergencyExit(CityVehicle car)

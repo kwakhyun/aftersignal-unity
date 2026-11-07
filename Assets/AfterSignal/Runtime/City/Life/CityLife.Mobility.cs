@@ -19,7 +19,7 @@ namespace AfterSignal
         {
             bool jailed=PrisonSystem.Instance&&PrisonSystem.Instance.Jailed;
             Panel("service","애프터라이트 교도소",jailed?"남은 수감 시간 "+Mathf.CeilToInt(PrisonSystem.Instance.Remaining)+"초 · 형기가 끝나면 정문으로 안내합니다.":"접견 안내 · 교정 직원이 상주하는 시설입니다.");
-            if(jailed)Option("보석금 납부 / 450 C",()=>{Dismiss();PrisonSystem.Instance.Release(true);});
+            if(jailed)Option("보석금 납부 / "+PrisonSystem.Instance.Bail.ToString("N0")+" C",()=>{Dismiss();PrisonSystem.Instance.Release(true);});
         }
     }
 }

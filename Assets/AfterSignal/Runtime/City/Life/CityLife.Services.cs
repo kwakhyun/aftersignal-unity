@@ -19,15 +19,16 @@ namespace AfterSignal
                     Option("보관 의상 갈아입기", Wardrobe);
                     break;
                 case 1:
-                    Option("분실물 찾아주기 / 하루 보상 100 C", () => Daily("lost", 100, "분실물을 주인에게 돌려주었습니다."));
-                    Option("출석 및 벌금 납부 / " + (Mathf.Max(1, WantedSystem.Level) * 180) + " C", () => Purchase(Mathf.Max(1, WantedSystem.Level) * 180, () => WantedSystem.Clear("사건 정리 · 수배 해제")));
+                    Option("분실물 찾아주기 / 하루 보상 " + Pay(100) + " C", () => Daily("lost", 100, "분실물을 주인에게 돌려주었습니다."));
+                    int fine = WantedSystem.Fine;
+                    Option("출석 및 벌금 납부 / " + fine.ToString("N0") + " C", () => Purchase(fine, () => WantedSystem.Clear("사건 정리 · 수배 해제")));
                     break;
                 case 2:
                     Option("안전 물자 분류 / 2시간 · 180 C", () => Work("fire", 180, 2));
                     Option("응급 처치 / 60 C", () => Purchase(60, () => game.Player.Heal(35)));
                     break;
                 case 3:
-                    Body += "\n예금 " + LifeState.Savings.ToString("N0") + " C";
+                    Body += "\n예금 " + LifeState.Savings.ToString("N0") + " C · 하루 이자 " + LifeState.DailyInterest.ToString("N0") + " C (" + (GameTuning.Active.savingsInterest * 100).ToString("0.#") + "%, 최대 " + GameTuning.Active.savingsInterestCap + " C)\n예금과 집 금고의 돈은 사망 치료비에서 제외됩니다.";
                     Option("500 C 예금", () => Bank(true));
                     Option("500 C 인출", () => Bank(false));
                     break;
@@ -94,7 +95,7 @@ namespace AfterSignal
                     Option("물류 정리 / 2시간 · 240 C", () => Work("logistics", 240, 2));
                     break;
                 case 14:
-                    Option("신호 복원 활동 수당 / 하루 120 C", () => Daily("signal", 120, "도시 신호 복원 활동 수당을 받았습니다."));
+                    Option("신호 복원 활동 수당 / 하루 " + Pay(120) + " C", () => Daily("signal", 120, "도시 신호 복원 활동 수당을 받았습니다."));
                     break;
                 case 15:
                     Option("\uBC14\uB9AC\uC2A4\uD0C0 \uC544\uB974\uBC14\uC774\uD2B8 \uC2DC\uC791", () => BeginShift(true));
@@ -151,10 +152,13 @@ namespace AfterSignal
                 return;
             }
 
+            reward = Pay(reward);
             bool ok = LifeState.RewardOnce(LifeState.CampaignSerial + "-" + id + "-" + LifeState.Day, reward);
             Body = ok ? message + " +" + reward + " C" : "오늘의 업무는 이미 마쳤습니다.";
             Revision++;
         }
+
+        static int Pay(int amount) => Mathf.RoundToInt(amount * DifficultySettings.Payout);
 
         void Work(string id, int reward, float hours)
         {
