@@ -11,6 +11,7 @@ namespace AfterSignal
             var q = LifeState.Errand;
             if (q == null || !q.accepted || q.completed)
                 return;
+            q.title = Trim(NpcText.Clean(q.title, 64), 64); // Errands saved by older builds may hold unfiltered model markup.
             var old = GameObject.Find("Hidden errand destination");
             if (old)
                 Destroy(old);

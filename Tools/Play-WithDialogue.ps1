@@ -12,7 +12,7 @@ if (Test-Path -LiteralPath $activePlayer) {
 if (-not (Test-Path -LiteralPath $gamePath)) { throw 'Build the Unity Windows player first: Tools/Build-Windows.ps1 -Release' }
 $gatewayProcess=$null
 $running=$false
-try { $health=Invoke-RestMethod -Uri 'http://127.0.0.1:8766/health' -TimeoutSec 2; $running=$health.model -eq 'gpt-5.6-luna' } catch {}
+try { $health=Invoke-RestMethod -Uri 'http://127.0.0.1:8766/health' -TimeoutSec 2; $running=$health.service -eq 'aftersignal-npc' -or $health.model -eq 'gpt-5.6-luna' } catch {}
 if (-not $running) {
     if (-not $Python) {
         $candidates=@((Join-Path $taskRoot '.venv/Scripts/python.exe'),(Join-Path $env:USERPROFILE '.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe'))
