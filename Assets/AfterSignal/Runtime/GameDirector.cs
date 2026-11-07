@@ -102,6 +102,8 @@ namespace AfterSignal
         {
             if(!Ready)return;
             var control=Input.Read();
+            // The shared settings panel owns ESC/back while it is open (and on the frame it closes).
+            if(SettingsPanel.IsOpen||SettingsPanel.ClosedFrame==Time.frameCount){Audio.SetPaused(Paused||Dead||Title);return;}
             if(control.pause&&UrbanSimulation.Instance&&UrbanSimulation.Instance.MapOpen){UrbanSimulation.Instance.CloseMap();return;}
             if(control.journal&&(!Blocked||CityLife.Instance.Mode=="journal")){if(CityLife.Instance.Mode=="journal")CityLife.Instance.Dismiss();else CityLife.Instance.StoryJournal();return;}
             if(control.pause&&!Title&&!Dead&&!Transition&&!CityCinematic.Active){if(CityLife.Instance&&CityLife.Instance.Mode=="sleeping")return;if(Dialogue)CloseDialogue();else SetPaused(!Paused);}

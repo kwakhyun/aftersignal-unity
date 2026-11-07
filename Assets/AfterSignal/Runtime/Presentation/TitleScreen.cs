@@ -10,18 +10,18 @@ namespace AfterSignal
     public sealed class TitleScreen : MonoBehaviour
     {
         public static TitleScreen Instance { get; private set; }
-        public bool SettingsOpen => settings && settings.activeSelf;
+        public bool SettingsOpen => SettingsPanel.IsOpen;
         public bool ConfirmationOpen => confirmation && confirmation.activeSelf;
         public bool Visible => screen && screen.activeSelf;
         public Button ContinueButton { get; private set; }
         public Button NewGameButton { get; private set; }
         public bool ArtworkLoaded => artwork && artwork.texture;
         GameDirector game;
-        GameObject screen, menu, settings, confirmation, loading;
+        GameObject screen, menu, confirmation, loading;
         CanvasGroup entrance;
         RawImage artwork;
         RectTransform artRect, progressFill;
-        Text saveInfo, loadingText, motionText, effectsText, displayText;
+        Text saveInfo, loadingText;
         Button settingsButton;
         Font font;
         float age;
@@ -47,19 +47,19 @@ namespace AfterSignal
             age+=Time.unscaledDeltaTime;
             entrance.alpha=Mathf.SmoothStep(0,1,age/.65f);
             Cursor.lockState=CursorLockMode.None;Cursor.visible=true;
-            if(SettingsOpen)RefreshSettings();
             bool busy=game.Transition;
             loading.SetActive(busy);menu.SetActive(!busy);
             if (busy)
             {
-                settings.SetActive(false);confirmation.SetActive(false);
+                if(SettingsOpen)SettingsPanel.Instance.Close();confirmation.SetActive(false);
                 float p=game.LoadProgress;
                 progressFill.anchorMax=new Vector2(p,1);
                 loadingText.text=$"도시와 연결 중   {p*100:0}%";
                 return;
             }
-            if (Keyboard.current!=null && Keyboard.current.escapeKey.wasPressedThisFrame)
-            { if (SettingsOpen||ConfirmationOpen) { ClosePanels();SelectDefault(); } }
+            bool back=Keyboard.current!=null&&Keyboard.current.escapeKey.wasPressedThisFrame||Gamepad.current!=null&&Gamepad.current.buttonEast.wasPressedThisFrame;
+            if (back&&ConfirmationOpen&&SettingsPanel.ClosedFrame!=Time.frameCount) { ClosePanels();SelectDefault(); }
+            if (!SettingsOpen&&!ConfirmationOpen&&EventSystem.current&&!EventSystem.current.currentSelectedGameObject&&Gamepad.current!=null&&Gamepad.current.leftStick.ReadValue().sqrMagnitude>.25f) SelectDefault();
         }
         void Build()
         {
@@ -67,7 +67,7 @@ namespace AfterSignal
             screen=new GameObject("TITLE / AFTERSIGNAL",typeof(Canvas),typeof(CanvasScaler),typeof(GraphicRaycaster),typeof(CanvasGroup));
             var canvas=screen.GetComponent<Canvas>();canvas.renderMode=RenderMode.ScreenSpaceOverlay;canvas.sortingOrder=100;
             var scaler=screen.GetComponent<CanvasScaler>();scaler.uiScaleMode=CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution=new Vector2(1600,900);scaler.screenMatchMode=CanvasScaler.ScreenMatchMode.Expand;
+            scaler.referenceResolution=PresentationSettings.CanvasReference;scaler.screenMatchMode=CanvasScaler.ScreenMatchMode.Expand;
             entrance=screen.GetComponent<CanvasGroup>();entrance.alpha=0;
             var canvasRoot=screen.transform;
             var surround=Box(canvasRoot,0,0,1600,900,new Color(.006f,.018f,.028f));Stretch(surround.rectTransform);
@@ -92,7 +92,7 @@ namespace AfterSignal
             settingsButton=MenuButton(menu.transform,"Settings","설정","SETTINGS",134,OpenSettings);
             MenuButton(menu.transform,"Exit","게임 종료","EXIT",201,Quit);
             saveInfo=Label(body.transform,"",86,814,550,48,13,Muted);
-            var footer=Label(root,"© AFTERSIGNAL STUDIO   /   "+Application.version,0,0,390,25,11,Muted);
+            var footer=Label(root,"© AFTERSIGNAL STUDIO   /   "+Application.version,0,0,390,25,12,Muted);
             var f=footer.rectTransform;f.anchorMin=f.anchorMax=f.pivot=new Vector2(1,0);f.anchoredPosition=new Vector2(-38,24);
             var audioCredit=Resources.Load<TextAsset>("Audio/Generated/attribution");
             if(audioCredit)
@@ -100,9 +100,9 @@ namespace AfterSignal
                 var credit=Label(root,audioCredit.text.Trim(),0,0,470,25,12,Muted);
                 var cr=credit.rectTransform;cr.anchorMin=cr.anchorMax=cr.pivot=new Vector2(1,0);cr.anchoredPosition=new Vector2(-38,52);
             }
-            var hint=Label(root,"↑ ↓  메뉴 선택     ENTER  확인     ESC  뒤로",0,0,450,24,12,Muted);
+            var hint=Label(root,"↑ ↓  메뉴 선택     ENTER · [A]  확인     ESC · [B]  뒤로",0,0,520,24,13,Muted);
             var hr=hint.rectTransform;hr.anchorMin=hr.anchorMax=hr.pivot=new Vector2(0,0);hr.anchoredPosition=new Vector2(84,22);
-            BuildSettings(root);BuildConfirmation(root);
+            BuildConfirmation(root);
             loading=Box(root,0,0,1600,900,new Color(.015f,.035f,.055f,.78f)).gameObject;loading.name="Connecting";Stretch(loading.GetComponent<RectTransform>());loading.GetComponent<Image>().raycastTarget=true;
             var loadCard=CenterPanel(loading.transform,580,160);
             Label(loadCard,"AFTERSIGNAL",0,8,580,55,34,Paper,FontStyle.Bold).alignment=TextAnchor.MiddleCenter;
@@ -123,7 +123,7 @@ namespace AfterSignal
             saveInfo.text=saved?$"DAY {Mathf.FloorToInt(hours/24)+1:00}   ·   {place}\n마지막으로 저장된 구역 입구에서 이어집니다.":"서하의 집에서 이야기를 시작하세요.";
         }
         void SelectDefault(){if(EventSystem.current)EventSystem.current.SetSelectedGameObject((GameDirector.HasSavedGame?ContinueButton:NewGameButton).gameObject);}
-        void ClosePanels(){PlayerPrefs.Save();settings.SetActive(false);confirmation.SetActive(false);menu.GetComponent<CanvasGroup>().interactable=true;menu.GetComponent<CanvasGroup>().blocksRaycasts=true;}
+        void ClosePanels(){PlayerPrefs.Save();if(SettingsOpen)SettingsPanel.Instance.Close();confirmation.SetActive(false);menu.GetComponent<CanvasGroup>().interactable=true;menu.GetComponent<CanvasGroup>().blocksRaycasts=true;}
         void BlockMenu(){var g=menu.GetComponent<CanvasGroup>();g.interactable=false;g.blocksRaycasts=false;}
         public void RequestNewGame()
         {
@@ -141,43 +141,8 @@ namespace AfterSignal
         }
         public void OpenSettings()
         {
-            settings.SetActive(true);confirmation.SetActive(false);BlockMenu();RefreshSettings();
-            EventSystem.current?.SetSelectedGameObject(settings.GetComponentInChildren<Slider>().gameObject);
-        }
-        void BuildSettings(Transform root)
-        {
-            settings=Box(root,0,0,1600,900,new Color(.01f,.025f,.04f,.86f)).gameObject;settings.name="Title settings";Stretch(settings.GetComponent<RectTransform>());settings.GetComponent<Image>().raycastTarget=true;
-            var card=CenterPanel(settings.transform,670,720);
-            Box(card,0,0,670,720,new Color(.025f,.055f,.075f,.98f));
-            Label(card,"SETTINGS  /  설정",42,34,580,52,32,Paper,FontStyle.Bold);
-            Label(card,"소리와 화면 설정은 게임에도 함께 적용됩니다.",42,94,580,30,16,Muted);
-            SettingSlider(card,"전체 음량",154,game.Audio.Volume,v=>game.Audio.SetVolume(v));
-            SettingSlider(card,"효과음",238,game.Audio.SfxVolume,v=>game.Audio.SetSfxVolume(v));
-            SettingSlider(card,"배경음악",322,SignalMusic.Instance.MusicLevel,v=>SignalMusic.Instance.SetMusicVolume(v));
-            var m=PlainButton(card,"Motion","",42,416,286,52,()=>{PresentationSettings.Motion=PresentationSettings.Motion>0?0:.65f;PresentationSettings.Save();RefreshSettings();});motionText=m.GetComponentInChildren<Text>();
-            var e=PlainButton(card,"Effects","",342,416,286,52,()=>{PresentationSettings.Post=!PresentationSettings.Post;PresentationSettings.Save();RefreshSettings();});effectsText=e.GetComponentInChildren<Text>();
-            var d=PlainButton(card,"Display","",42,484,586,52,()=>{bool fullscreen=!Screen.fullScreen;Screen.fullScreenMode=fullscreen?FullScreenMode.FullScreenWindow:FullScreenMode.Windowed;PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Fullscreen",fullscreen?1:0);RefreshSettings();});displayText=d.GetComponentInChildren<Text>();
-            Label(card,"ESC로 돌아갈 수 있습니다. 변경 사항은 자동 저장됩니다.",42,558,590,30,14,Muted);
-            PlainButton(card,"Back","돌아가기",42,626,586,52,()=>{PlayerPrefs.Save();ClosePanels();SelectDefault();});
-        }
-        void SettingSlider(Transform parent,string title,float y,float value,UnityEngine.Events.UnityAction<float> changed)
-        {
-            var label=Label(parent,title,42,y,350,30,18,Paper);
-            var number=Label(parent,$"{value*100:0}%",536,y,92,30,16,Mint);number.alignment=TextAnchor.MiddleRight;
-            var go=new GameObject(title,typeof(RectTransform),typeof(Slider));go.transform.SetParent(parent,false);Place(go.GetComponent<RectTransform>(),42,y+39,586,22);
-            Box(go.transform,0,7,586,5,new Color(.12f,.23f,.27f));
-            var area=new GameObject("Fill area",typeof(RectTransform));area.transform.SetParent(go.transform,false);Stretch(area.GetComponent<RectTransform>());area.GetComponent<RectTransform>().offsetMin=new Vector2(8,7);area.GetComponent<RectTransform>().offsetMax=new Vector2(-8,-10);
-            var fill=Box(area.transform,0,0,570,5,Mint);Stretch(fill.rectTransform);
-            var handles=new GameObject("Handle area",typeof(RectTransform));handles.transform.SetParent(go.transform,false);Stretch(handles.GetComponent<RectTransform>());handles.GetComponent<RectTransform>().offsetMin=new Vector2(8,0);handles.GetComponent<RectTransform>().offsetMax=new Vector2(-8,0);
-            var handle=Box(handles.transform,0,0,14,22,Paper);handle.raycastTarget=true;
-            var slider=go.GetComponent<Slider>();slider.fillRect=fill.rectTransform;slider.handleRect=handle.rectTransform;slider.targetGraphic=handle;slider.minValue=0;slider.maxValue=1;slider.value=value;
-            slider.onValueChanged.AddListener(v=>{number.text=$"{v*100:0}%";changed(v);});
-        }
-        void RefreshSettings()
-        {
-            motionText.text=PresentationSettings.Motion>0?"화면 흔들림  켜짐":"화면 흔들림  꺼짐";
-            effectsText.text=PresentationSettings.Post?"후처리 효과  켜짐":"후처리 효과  꺼짐";
-            displayText.text=Screen.fullScreen?"화면 모드  전체 화면":"화면 모드  창 모드";
+            confirmation.SetActive(false);BlockMenu();
+            SettingsPanel.Open(game,()=>{ClosePanels();SelectDefault();});
         }
         void BuildConfirmation(Transform root)
         {
