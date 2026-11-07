@@ -6,7 +6,9 @@ namespace AfterSignal
     {
         RectTransform interactionCard,travelStatus;
         Text traversalReadout,contextKeys,basicGuide;
-        const string BasicGuideText="WASD 달리기 · E 상호작용 · 마우스 시점 · 휠 줌 · J 일지 · M 지도 · ESC 메뉴";
+        // The city atlas exists only in UrbanCity, so the map key is advertised only there.
+        const string BasicGuideText="WASD 달리기 · E 상호작용 · 마우스 시점 · 휠 줌 · J 일지 · M 지도 · ESC 메뉴",BasicGuideNoMap="WASD 달리기 · E 상호작용 · 마우스 시점 · 휠 줌 · J 일지 · ESC 메뉴";
+        const string RopeKeys="W 빠르게 / S 풀기  ·  SPACE 도약  ·  우클릭 해제";
         bool experienceBuilt;MovingLift statusLift;float liftSearch,hintClock,boardedAt;CityVehicle boardedVehicle;
         void BuildClientExperience()
         {
@@ -29,7 +31,7 @@ namespace AfterSignal
             // Count play time for the "first ten minutes" hint mode without writing PlayerPrefs every frame.
             if(playing){hintClock+=Time.unscaledDeltaTime;if(hintClock>5){PresentationSettings.HintSeconds+=hintClock;hintClock=0;}}
             bool hints=PresentationSettings.ShowBasicHints;
-            if(basicGuide){basicGuide.gameObject.SetActive(playing&&!driving&&hints);basicGuide.text=KeyHints.Apply(BasicGuideText);}
+            if(basicGuide){basicGuide.gameObject.SetActive(playing&&!driving&&hints);basicGuide.text=KeyHints.Apply(game.stage==StageId.UrbanCity?BasicGuideText:BasicGuideNoMap);}
             // Full vehicle controls for the first eight seconds after boarding (and while stopped), then a compact line.
             var vehicle=UrbanSimulation.Instance?UrbanSimulation.Instance.Current:null;
             if(vehicle!=boardedVehicle){boardedVehicle=vehicle;boardedAt=Time.unscaledTime;}
@@ -44,9 +46,9 @@ namespace AfterSignal
             else if(PrisonSystem.Instance&&PrisonSystem.Instance.Jailed){traversalReadout.text="수감 중 · 남은 시간 "+Mathf.CeilToInt(PrisonSystem.Instance.Remaining)+"초";contextKeys.text="E 교정 안내 · 보석금 / 형기 종료 후 출소";}
             else if(WantedSystem.Level>0){traversalReadout.text="경찰 수배 · "+WantedSystem.Level+"단계";contextKeys.text="경찰 근처에서 H 길게 · 투항 / 체포";}
             else if(p.WallClimbing){traversalReadout.text="외벽 등반  ·  에너지 "+Mathf.CeilToInt(p.Energy);contextKeys.text="W 위로  ·  A/D 옆으로  ·  SPACE 벽 차기  ·  S 놓기";}
-            else if(p.Rope.Attached){traversalReadout.text="로프 자동 감기";contextKeys.text="W 빠르게 / S 풀기  ·  SPACE 도약  ·  우클릭 해제";}
+            else if(p.Rope.Attached){traversalReadout.text="로프 자동 감기";contextKeys.text=RopeKeys;}
             else if(!p.Grounded){traversalReadout.text=p.JumpsUsed<2?"공중  ·  추가 점프 가능":"공중  ·  착지 대기";contextKeys.text="SPACE 추가 점프  ·  벽을 향해 W 등반";}
-            else{traversalReadout.text=p.Running?"달리는 중":"탐색";contextKeys.text="WASD 달리기  ·  SPACE 두 번 더블 점프";if(!hints)travelStatus.gameObject.SetActive(false);}
+            else{traversalReadout.text=p.Running?"달리는 중":"탐색";contextKeys.text="SPACE 두 번 더블 점프";if(!hints)travelStatus.gameObject.SetActive(false);}
             Bottom(travelStatus,38,ShowsArchive?112:43,330,54);
             if(Time.unscaledTime>liftSearch){statusLift=Object.FindAnyObjectByType<MovingLift>();liftSearch=Time.unscaledTime+1;}
             var lift=statusLift;
@@ -55,6 +57,8 @@ namespace AfterSignal
             {travelStatus.gameObject.SetActive(false);interactionCard.gameObject.SetActive(false);}
             if(playing&&FacilityOperation.Current){travelStatus.gameObject.SetActive(true);traversalReadout.text="현장 업무 · "+FacilityOperation.Current.Completed+" / 3";contextKeys.text=FacilityOperation.Current.Label+" · "+Vector3.Distance(p.transform.position,FacilityOperation.Current.Target).ToString("0")+" m / E";}
             else if(playing&&RiftIncursion.Instance&&RiftIncursion.Instance.Active&&!driving){travelStatus.gameObject.SetActive(true);traversalReadout.text="신호 균열 · 국방대응부 출동";contextKeys.text="잔향체 출몰 지역 · "+Vector3.Distance(p.transform.position,RiftIncursion.Instance.Position).ToString("0")+" m";}
+            // The rope keys sit in this card; the line above the prompt keeps them only when the card shows something else.
+            if(travelStatus.gameObject.activeSelf&&contextKeys.text==RopeKeys)anchorHint.text="";
             contextKeys.text=KeyHints.Apply(contextKeys.text);
         }
     }

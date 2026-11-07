@@ -16,7 +16,7 @@ namespace AfterSignal
         GameDirector game;
         Text health,objective,area,weapon,notice,prompt,rail,bossText,anchorHint,modalTitle,modalBody,dialogueName,dialogueText;
         Image hpBar,energyBar,bossBar,fade;
-        GameObject modal,dialogueBox,bossPanel;
+        GameObject modal,dialogueBox,bossPanel;CanvasGroup modalGroup;
         RectTransform cursor,candidate,safeMarker;
         Button primary,secondary,third,homeButton,bikeButton,dialogueContinue;
         Button settingsButton,unstuckButton;
@@ -35,7 +35,7 @@ namespace AfterSignal
             root=go.GetComponent<RectTransform>();
             var events=new GameObject("EventSystem",typeof(EventSystem),typeof(InputSystemUIInputModule));
             BuildReferenceHud();
-            modal=Panel(root,"Modal shade",0,0,1600,900,new Color(.025f,.045f,.07f,.82f)).gameObject;Stretch(modal.GetComponent<RectTransform>());
+            modal=Panel(root,"Modal shade",0,0,1600,900,new Color(.025f,.045f,.07f,.82f)).gameObject;Stretch(modal.GetComponent<RectTransform>());modalGroup=modal.AddComponent<CanvasGroup>();
             var card=Panel(modal.transform,"Menu",0,0,610,750,ink).rectTransform;Center(card,610,750);
             Label(card,"AFTERSIGNAL  /  NIGHT LINE",40,30,530,24,13,mint,FontStyle.Bold);
             Panel(card,"Accent",40,74,64,3,mint);
@@ -47,7 +47,9 @@ namespace AfterSignal
             third=MakeButton(card,"",40,486,190,44,()=>Third());
             homeButton=MakeButton(card,"집으로 복귀",240,486,155,44,CashLocations.ReturnHome);
             bikeButton=MakeButton(card,"V · 바이크 호출",405,486,165,44,()=>{game.SetPaused(false);UrbanSimulation.RequestBike();});
-            settingsButton=MakeButton(card,"설정  ·  소리 / 화면 / 조작 / 키 설정 / 난이도",40,541,530,48,()=>SettingsPanel.Open(game,()=>{if(EventSystem.current)EventSystem.current.SetSelectedGameObject(settingsButton.gameObject);}));
+            settingsButton=MakeButton(card,"설정  ·  소리 / 화면 / 조작 / 키 설정 / 난이도",40,541,530,48,()=>{
+                // Block the pause card while settings is open, or uGUI navigation can wander onto its hidden buttons. On close, rebuild it: keys, volume and cooldown may have changed.
+                modalGroup.interactable=false;SettingsPanel.Open(game,()=>{modalGroup.interactable=true;ConfigureModal(modalMode);if(EventSystem.current)EventSystem.current.SetSelectedGameObject(settingsButton.gameObject);});});
             unstuckButton=MakeButton(card,"끼임 해제  ·  마지막 안전 지점으로 이동",40,600,530,44,()=>{game.SetPaused(false);Unstuck();});
             unstuckButton.GetComponentInChildren<Text>().fontSize=16;
             menuFooter=Label(card,"ESC  메뉴 닫기     ·     설정은 타이틀 화면과 공유됩니다",40,716,530,22,13,muted);
@@ -86,7 +88,9 @@ namespace AfterSignal
             for(int i=numbers.Count-1;i>=0;i--){var n=numbers[i];float age=Time.time-n.born;if(age>.85f){Destroy(n.text.gameObject);numbers.RemoveAt(i);}else{PlaceWorld(n.text.rectTransform,n.world+Vector3.up*age,new Vector2(40,20));}}
             string mode=game.Dead?"dead":game.Paused?"pause":"";
             modal.SetActive(mode!="");if(mode!=modalMode){if(mode=="dead")respawnCity=0;modalMode=mode;ConfigureModal(mode);if(mode!=""&&EventSystem.current)EventSystem.current.SetSelectedGameObject(primary.gameObject);}
+            if(modalMode=="pause")RefreshUnstuck();
             dialogueBox.SetActive(game.Dialogue);if(game.Dialogue){ButtonText(dialogueContinue,KeyHints.Apply("대화 계속  [ E ]"));dialogueName.text=game.DialogueTitle;dialogueText.text=Reveal(game.DialogueText,ref lineReveal);AutoAdvance();if(storyPortrait){storyPortrait.sprite=StoryPortraits.Bust(game.DialogueTitle);storyPortrait.gameObject.SetActive(storyPortrait.sprite);}}
+            else lineReveal=default;// The next line types out again even when its text repeats, and auto-advance starts its timer fresh.
             UpdateUrbanHud();UpdateQuestHud();UpdateLifeHud();UpdateClientExperience();
             UpdateNoaRadio();
             fade.gameObject.SetActive(game.Transition);fade.color=new Color(0,0,0,game.Fade);
@@ -96,7 +100,7 @@ namespace AfterSignal
             if(mode=="")return;menuFooter.gameObject.SetActive(mode=="pause");
             homeButton.gameObject.SetActive(mode=="pause");bikeButton.gameObject.SetActive(mode=="pause");
             settingsButton.gameObject.SetActive(mode=="pause");unstuckButton.gameObject.SetActive(mode=="pause"&&UnstuckAvailable);
-            float wait=PlayerRecovery.Cooldown;ButtonText(unstuckButton,wait>0?$"끼임 해제  ·  {Mathf.CeilToInt(wait)}초 후 다시 사용 가능":"끼임 해제  ·  마지막 안전 지점으로 이동");unstuckButton.interactable=wait<=0;
+            RefreshUnstuck(true);
             for(int i=0;i<4;i++){respawnChoices[i].gameObject.SetActive(mode=="dead");ButtonText(respawnChoices[i],(i==respawnCity?"● ":"○ ")+FourCityCatalog.CityNames[i]+"\n"+(i==0?"서하의 집":i==1?"응급의료센터":i==2?"전진기지 의무실":"생명지원센터"));respawnChoices[i].GetComponent<Image>().color=i==respawnCity?new Color(.13f,.43f,.42f):new Color(.08f,.16f,.19f);}
             Rect(primary.GetComponent<RectTransform>(),40,mode=="dead"?424:350,530,58);Rect(secondary.GetComponent<RectTransform>(),40,mode=="dead"?500:423,530,48);Rect(third.GetComponent<RectTransform>(),40,mode=="dead"?566:486,190,44);
             Rect(modalBody.rectTransform,40,mode=="dead"?207:218,530,mode=="dead"?40:120);modalBody.fontSize=mode=="dead"?18:15;
@@ -132,10 +136,12 @@ namespace AfterSignal
             if(Time.unscaledTime-lineReveal.completedAt>2.2f+lineReveal.source.Length/16f)game.CloseDialogue();
         }
         static bool UnstuckAvailable=>true;
+        int unstuckSeconds=-1;
+        /// <summary>The unstuck cooldown runs on unscaled time, so the open pause menu counts down and re-enables the button itself.</summary>
+        void RefreshUnstuck(bool force=false){int wait=Mathf.CeilToInt(PlayerRecovery.Cooldown);if(!force&&wait==unstuckSeconds)return;unstuckSeconds=wait;ButtonText(unstuckButton,wait>0?$"끼임 해제  ·  {wait}초 후 다시 사용 가능":"끼임 해제  ·  마지막 안전 지점으로 이동");unstuckButton.interactable=wait<=0;}
         void Unstuck(){PlayerRecovery.Unstuck(game);}
         void Primary(){if(game.Title)game.Begin();else if(game.Dead)game.Retry(respawnCity);else game.SetPaused(false);}
-        float volumeBeforeMute=.45f;
-        void Secondary(){if(game.Title)game.Begin(true);else if(game.Dead)game.ReturnToTitle();else{if(game.Audio.Volume>.01f){volumeBeforeMute=game.Audio.Volume;game.Audio.SetVolume(0);}else game.Audio.SetVolume(Mathf.Max(.05f,volumeBeforeMute));ConfigureModal("pause");}}
+        void Secondary(){if(game.Title)game.Begin(true);else if(game.Dead)game.ReturnToTitle();else{if(game.Audio.Volume>.01f)game.Audio.Mute();else game.Audio.Unmute();ConfigureModal("pause");}}
         void Third(){if(game.Paused){game.ReturnToTitle();}else Application.Quit();}
         public void AddDamage(Vector3 position,int damage,bool critical)
         {
@@ -147,7 +153,7 @@ namespace AfterSignal
         void PlaceWorld(RectTransform rect,Vector3 position,Vector2 offset){var cam=Camera.main;var p=cam?cam.WorldToScreenPoint(position):new Vector3(0,0,-1);if(p.z<=.05f){rect.anchorMin=rect.anchorMax=new Vector2(.5f,.5f);rect.anchoredPosition=new Vector2(-100000,-100000);return;}PlaceScreen(rect,p,offset);}
         Image Panel(Transform parent,string name,float x,float y,float w,float h,Color color){var go=new GameObject(name,typeof(RectTransform),typeof(Image));go.transform.SetParent(parent,false);var img=go.GetComponent<Image>();img.color=color;img.raycastTarget=false;Rect(img.rectTransform,x,y,w,h);return img;}
         Text Label(Transform parent,string content,float x,float y,float w,float h,int size,Color color,FontStyle style=FontStyle.Normal){var go=new GameObject("Text",typeof(RectTransform),typeof(Text));go.transform.SetParent(parent,false);var text=go.GetComponent<Text>();text.font=font;text.text=content;text.fontSize=size;text.fontStyle=style;text.color=color;text.raycastTarget=false;text.horizontalOverflow=HorizontalWrapMode.Wrap;text.verticalOverflow=VerticalWrapMode.Overflow;text.lineSpacing=.9f;Rect(text.rectTransform,x,y,w,h);return text;}
-        Button MakeButton(Transform parent,string title,float x,float y,float w,float h,UnityEngine.Events.UnityAction click){var panel=Panel(parent,"Button",x,y,w,h,new Color(.16f,.29f,.3f));panel.raycastTarget=true;var button=panel.gameObject.AddComponent<Button>();var colors=button.colors;colors.highlightedColor=new Color(.66f,.95f,.86f);colors.pressedColor=new Color(.45f,.75f,.68f);button.colors=colors;button.onClick.AddListener(click);var label=Label(panel.transform,title,16,7,w-32,h-12,18,white);label.alignment=TextAnchor.MiddleLeft;return button;}
+        Button MakeButton(Transform parent,string title,float x,float y,float w,float h,UnityEngine.Events.UnityAction click){var panel=Panel(parent,"Button",x,y,w,h,new Color(.16f,.29f,.3f));panel.raycastTarget=true;var button=panel.gameObject.AddComponent<Button>();var colors=button.colors;colors.highlightedColor=new Color(.66f,.95f,.86f);colors.selectedColor=new Color(.62f,.95f,.85f);colors.pressedColor=new Color(.45f,.75f,.68f);button.colors=colors;button.onClick.AddListener(click);var label=Label(panel.transform,title,16,7,w-32,h-12,18,white);label.alignment=TextAnchor.MiddleLeft;return button;}
         void ButtonText(Button button,string text){button.GetComponentInChildren<Text>().text=text;}
         /// <summary>Drop shadow for text that floats over the 3D scene without a backing panel.</summary>
         static Text Legible(Text t){if(t&&!t.GetComponent<Shadow>()){var s=t.gameObject.AddComponent<Shadow>();s.effectColor=new Color(0,0,0,.85f);s.effectDistance=new Vector2(1.6f,-1.6f);}return t;}

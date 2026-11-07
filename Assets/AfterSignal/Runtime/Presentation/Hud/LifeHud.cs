@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 namespace AfterSignal
@@ -35,7 +36,8 @@ namespace AfterSignal
                 lifeOptions[i] = MakeButton(lifePanel.transform, "", 36 + (i % 2) * 492, 420 + (i / 2) * 52, 474, 44, () =>
                 {
                     var life = CityLife.Instance;
-                    if (life && selected < life.Options.Count)
+                    // Like E, the first press on a story line that is still typing only completes it.
+                    if (life && selected < life.Options.Count && !(life.Mode == "story" && RevealDialogue()))
                         life.Options[selected].action();
                 });
                 lifeOptions[i].GetComponentInChildren<Text>().fontSize = 16;
@@ -69,8 +71,14 @@ namespace AfterSignal
         void LifeSendClicked()
         {
             var life = CityLife.Instance;
-            if (life && life.Sending && life.CanCancelReply) life.CancelReply();
-            else SendLifeText();
+            if (life && life.Sending)
+            {
+                // A mouse click leaves this button selected, so Enter arrives here as a UI submit; it must not drop the pending reply.
+                var keyboard = Keyboard.current;
+                if (life.CanCancelReply && !(keyboard != null && (keyboard.enterKey.wasPressedThisFrame || keyboard.numpadEnterKey.wasPressedThisFrame))) life.CancelReply();
+                return;
+            }
+            SendLifeText();
         }
 
         void SendLifeText()
@@ -116,7 +124,7 @@ namespace AfterSignal
             if (life.Panorama)
             {
                 lifeStatus.gameObject.SetActive(false);
-                lifeQuest.text = "도시 전망 · ← → 회전 / ↑ ↓ 높이 / V 돌아가기";
+                lifeQuest.text = KeyHints.Apply("도시 전망 · ← → 회전 / ↑ ↓ 높이 / P 돌아가기");
                 CenterBottom(lifeQuest.rectTransform, 65, 900, 30);
                 lifeQuest.alignment = TextAnchor.MiddleCenter;
                 mainRouteText.gameObject.SetActive(false);
@@ -138,9 +146,12 @@ namespace AfterSignal
             {
                 dialogueBox.SetActive(false);
                 life.TextFocused = lifeInput.isFocused;
-                if (lifeRevision != life.Revision)
+                ButtonText(lifeClose, KeyHints.Apply("닫기  ESC"));
+                bool changed = lifeRevision != life.Revision;
+                if (changed)
                 {
                     lifeRevision = life.Revision;
+                    storyReveal = default; // every story panel is a new line, even when its text repeats
                     lifeTitle.text = life.Heading;
                     lifeBody.text = life.Body;
                     bool illustrated = life.Options.Exists(option => ShopItemArt.Get(option.image));
@@ -187,11 +198,38 @@ namespace AfterSignal
                 lifeInput.interactable = !life.Sending;
                 if (talk && Keyboard.current != null && Keyboard.current.enterKey.wasPressedThisFrame)
                     SendLifeText();
+                // Talk mode keeps keyboard focus free for the reply field unless a gamepad is in use.
+                SelectLifeOption(changed && (!talk || KeyHints.UsingGamepad));
+                if (!lifeInput.isFocused && Gamepad.current != null && Gamepad.current.buttonEast.wasPressedThisFrame)
+                    life.Dismiss();
             }
             else
+            {
                 life.TextFocused = false;
+                storyReveal = default;
+            }
             sleepShade.gameObject.SetActive(life.SleepFade > 0);
             sleepShade.color = new Color(.005f, .012f, .025f, life.SleepFade);
+        }
+
+        /// <summary>Gives gamepad and keyboard navigation a starting point: the first option, unless the selection is already a live control in this panel.</summary>
+        void SelectLifeOption(bool force)
+        {
+            var events = EventSystem.current;
+            if (!events)
+                return;
+            var current = events.currentSelectedGameObject;
+            if (current && current.activeInHierarchy && current.transform.IsChildOf(lifePanel.transform))
+                return;
+            var pad = Gamepad.current;
+            if (!force && !(pad != null && (pad.leftStick.ReadValue().sqrMagnitude > .25f || pad.dpad.ReadValue().sqrMagnitude > .25f)))
+                return;
+            foreach (var option in lifeOptions)
+                if (option.gameObject.activeInHierarchy && option.interactable)
+                {
+                    events.SetSelectedGameObject(option.gameObject);
+                    return;
+                }
         }
 
         static void PlaceLifeElement(RectTransform rect, float x, float y, float width, float height)
