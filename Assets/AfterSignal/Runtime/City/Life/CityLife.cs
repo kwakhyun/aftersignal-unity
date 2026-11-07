@@ -207,7 +207,7 @@ namespace AfterSignal
         public void Close()
         {
             if(storyVoice)storyVoice.StopSpeech();
-            conversation?.Cancel();
+            conversation?.Cancel(); // a reply still queued before dispatch gives its budget unit back
             Mode = "";
             Speaker = null;
             Sending = false;
