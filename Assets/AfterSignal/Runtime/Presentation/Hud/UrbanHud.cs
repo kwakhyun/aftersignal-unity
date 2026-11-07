@@ -72,6 +72,7 @@ namespace AfterSignal
             if(cityMapOverlay)
             {
                 bool open=sim.MapOpen&&active;cityMapOverlay.SetActive(open);
+                if(open){var size=root.rect.size;cityMapOverlay.transform.localScale=Vector3.one*Mathf.Min(1,(size.x-24)/1450f,(size.y-24)/820f);}
                 if(open)
                 {
                     if(!wasMapOpen){atlas.Recenter();if(FourCityAtlasSelection.Venue!=null)atlas.Focus(FourCityAtlasSelection.Venue.position,700);}UpdateAtlasExplorer();Cursor.visible=true;cursor.gameObject.SetActive(false);

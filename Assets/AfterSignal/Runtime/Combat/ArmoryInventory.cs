@@ -20,7 +20,22 @@ namespace AfterSignal
             new("AR-7 돌격소총",3,1600,"연사 · 30발 탄창 / 예비탄 90발 포함",24,.11f,30,90),new("MR-12 지정사수 소총",3,2400,"정밀 사격 · 12발 탄창 / 예비탄 36발",65,.44f,12,36),
             new("파편 수류탄",4,120,"투척 후 2.4초 폭발 · 1개",125,.8f,1,0),new("LANCER 바주카",5,2800,"직격 시 범위 폭발 · 로켓 4발 포함",210,1.2f,1,3),new("S12 산탄총",6,1450,"근거리 7펠릿 · 6발 탄창 / 예비탄 24발",15,.78f,6,24)
         };
-        static void Load(){if(state!=null)return;try{state=JsonUtility.FromJson<State>(PlayerPrefs.GetString(Key,""));}catch{}if(state==null||state.equipped==null||state.equipped.Length!=7||state.rounds==null||state.rounds.Length!=Items.Length||state.reserve==null||state.reserve.Length!=Items.Length)state=new State();}
+        static void Load(){if(state!=null)return;string json=PlayerPrefs.GetString(Key,"");try{state=string.IsNullOrEmpty(json)?null:JsonUtility.FromJson<State>(json);}catch{state=null;}state=Migrate(state);}
+        /// <summary>
+        /// Adding or removing armory items in a patch used to reset every purchase (array lengths no longer matched).
+        /// Resize the per-item arrays instead, drop ownership bits for items that no longer exist and repair equipped slots.
+        /// </summary>
+        public static string MigrateJson(string json){State s=null;try{s=string.IsNullOrEmpty(json)?null:JsonUtility.FromJson<State>(json);}catch{}return JsonUtility.ToJson(Migrate(s));}
+        static State Migrate(State s)
+        {
+            var fresh=new State();if(s==null)return fresh;
+            s.rounds=Resize(s.rounds,Items.Length);s.reserve=Resize(s.reserve,Items.Length);
+            s.owned&=Items.Length>=31?~0:(1<<Items.Length)-1;s.owned|=fresh.owned;
+            var equipped=fresh.equipped;
+            if(s.equipped!=null)for(int slot=0;slot<Mathf.Min(equipped.Length,s.equipped.Length);slot++){int id=s.equipped[slot];if(id>=0&&id<Items.Length&&Items[id].slot==slot&&(s.owned&(1<<id))!=0)equipped[slot]=id;}
+            s.equipped=equipped;return s;
+        }
+        static int[] Resize(int[] values,int length){var result=new int[length];if(values!=null)System.Array.Copy(values,result,Mathf.Min(length,values.Length));for(int i=0;i<length;i++)result[i]=Mathf.Max(0,result[i]);return result;}
         public static void Save(){if(LifeState.SuppressSave)return;PlayerPrefs.SetString(Key,JsonUtility.ToJson(state));PlayerPrefs.Save();}
         public static void Reset(){state=new State();Save();}
         public static bool Owns(int id){Load();return id>=0&&id<Items.Length&&(state.owned&(1<<id))!=0;}

@@ -54,7 +54,7 @@ namespace AfterSignal
             dialogueBox=Panel(root,"Dialogue",0,0,1020,230,ink).gameObject;CenterBottom(dialogueBox.GetComponent<RectTransform>(),90,1020,230);
             dialogueName=Label(dialogueBox.transform,"",30,23,920,28,14,mint,FontStyle.Bold);
             dialogueText=Label(dialogueBox.transform,"",30,67,952,95,23,white);
-            dialogueContinue=MakeButton(dialogueBox.transform,"대화 계속  [ E ]",754,177,230,35,()=>game.CloseDialogue());
+            dialogueContinue=MakeButton(dialogueBox.transform,"대화 계속  [ E ]",754,177,230,35,()=>{if(!RevealDialogue())game.CloseDialogue();});
             fade=Panel(root,"Transition",0,0,1600,900,Color.black);Stretch(fade.rectTransform);fade.raycastTarget=false;
             foreach(var e in game.Enemies){var txt=Legible(Label(root,"",0,0,160,42,17,SignalEffects.Red,FontStyle.Bold));txt.alignment=TextAnchor.MiddleCenter;warnings.Add(e,txt);}
         }
@@ -86,7 +86,7 @@ namespace AfterSignal
             for(int i=numbers.Count-1;i>=0;i--){var n=numbers[i];float age=Time.time-n.born;if(age>.85f){Destroy(n.text.gameObject);numbers.RemoveAt(i);}else{PlaceWorld(n.text.rectTransform,n.world+Vector3.up*age,new Vector2(40,20));}}
             string mode=game.Dead?"dead":game.Paused?"pause":"";
             modal.SetActive(mode!="");if(mode!=modalMode){if(mode=="dead")respawnCity=0;modalMode=mode;ConfigureModal(mode);if(mode!=""&&EventSystem.current)EventSystem.current.SetSelectedGameObject(primary.gameObject);}
-            dialogueBox.SetActive(game.Dialogue);if(game.Dialogue){ButtonText(dialogueContinue,KeyHints.Apply("대화 계속  [ E ]"));dialogueName.text=game.DialogueTitle;dialogueText.text=game.DialogueText;if(storyPortrait){storyPortrait.sprite=StoryPortraits.Bust(game.DialogueTitle);storyPortrait.gameObject.SetActive(storyPortrait.sprite);}}
+            dialogueBox.SetActive(game.Dialogue);if(game.Dialogue){ButtonText(dialogueContinue,KeyHints.Apply("대화 계속  [ E ]"));dialogueName.text=game.DialogueTitle;dialogueText.text=Reveal(game.DialogueText,ref lineReveal);AutoAdvance();if(storyPortrait){storyPortrait.sprite=StoryPortraits.Bust(game.DialogueTitle);storyPortrait.gameObject.SetActive(storyPortrait.sprite);}}
             UpdateUrbanHud();UpdateQuestHud();UpdateLifeHud();UpdateClientExperience();
             UpdateNoaRadio();
             fade.gameObject.SetActive(game.Transition);fade.color=new Color(0,0,0,game.Fade);
@@ -104,6 +104,31 @@ namespace AfterSignal
             }else{
                 modalTitle.text="잠시 멈춘 밤";modalBody.text=KeyHints.Apply("WASD 이동 · 좌클릭 공격 · 우클릭 로프 · 1–7 무기 · R 장전 · Q 기술\nSPACE 두 번 더블 점프 · 벽으로 W 등반 · SHIFT 대시 · CTRL 방어\nE 상호작용 · F 하차 · G 승객 탑승 · V 바이크 · M 지도 · J 일지\nH 길게 투항 · F6 구조 신고 · HOME 시점 초기화 · 키 변경은 설정에서");ButtonText(primary,"계속하기   →");ButtonText(secondary,game.Audio.Volume>.01f?"소리 끄기":"소리 켜기");ButtonText(third,"저장하고 타이틀로");secondary.interactable=true;
             }
+        }
+        /// <summary>Typewriter state for one line of text.</summary>
+        struct LineReveal{public string source;public float start,completedAt;public bool done;}
+        LineReveal lineReveal,storyReveal;
+        static string Reveal(string text,ref LineReveal r)
+        {
+            text??="";
+            if(text!=r.source){r.source=text;r.start=Time.unscaledTime;r.done=PresentationSettings.CharactersPerSecond<=0;r.completedAt=r.done?Time.unscaledTime:-1;}
+            if(r.done)return text;
+            int shown=Mathf.FloorToInt((Time.unscaledTime-r.start)*PresentationSettings.CharactersPerSecond);
+            if(shown>=text.Length){r.done=true;r.completedAt=Time.unscaledTime;return text;}
+            return text.Substring(0,Mathf.Max(0,shown));
+        }
+        /// <summary>Completes a line that is still typing. Returns true when the press was used for that.</summary>
+        public bool RevealDialogue()
+        {
+            var life=CityLife.Instance;bool lifeOpen=life&&life.Mode.Length>0;
+            if(!lifeOpen&&game.Dialogue&&!lineReveal.done&&lineReveal.source==game.DialogueText){lineReveal.done=true;lineReveal.completedAt=Time.unscaledTime;return true;}
+            if(lifeOpen&&life.Mode=="story"&&!storyReveal.done&&storyReveal.source==life.Body){storyReveal.done=true;storyReveal.completedAt=Time.unscaledTime;return true;}
+            return false;
+        }
+        void AutoAdvance()
+        {
+            if(!PresentationSettings.AutoAdvance||!lineReveal.done||CityLife.Instance&&CityLife.Instance.Mode.Length>0)return;
+            if(Time.unscaledTime-lineReveal.completedAt>2.2f+lineReveal.source.Length/16f)game.CloseDialogue();
         }
         static bool UnstuckAvailable=>false;
         void Unstuck(){}

@@ -107,7 +107,14 @@ namespace AfterSignal
             if(control.pause&&UrbanSimulation.Instance&&UrbanSimulation.Instance.MapOpen){UrbanSimulation.Instance.CloseMap();return;}
             if(control.journal&&(!Blocked||CityLife.Instance.Mode=="journal")){if(CityLife.Instance.Mode=="journal")CityLife.Instance.Dismiss();else CityLife.Instance.StoryJournal();return;}
             if(control.pause&&!Title&&!Dead&&!Transition&&!CityCinematic.Active){if(CityLife.Instance&&CityLife.Instance.Mode=="sleeping")return;if(Dialogue)CloseDialogue();else SetPaused(!Paused);}
-            if(Dialogue&&control.interact&&!(CityLife.Instance&&CityLife.Instance.Mode.Length>0)){CloseDialogue();return;}
+            if(Dialogue&&control.interact)
+            {
+                // First press finishes a line that is still typing; the next one advances.
+                if(Hud&&Hud.RevealDialogue())return;
+                var life=CityLife.Instance;
+                if(!(life&&life.Mode.Length>0)){CloseDialogue();return;}
+                if(life.Mode=="story"&&life.Options.Count==1){life.Options[0].action();return;}
+            }
             if(Blocked){Audio.SetPaused(Paused||Dead);return;}
             if(control.summonBike){UrbanSimulation.RequestBike();control.summonBike=false;}
             float dt=Mathf.Min(Time.deltaTime,.1f);Audio.SetPaused(false);inputSuppress-=dt;
@@ -152,7 +159,14 @@ namespace AfterSignal
             }
         }
         public void SetPaused(bool value){if(value==Paused)return;if(value){prePauseScale=Time.timeScale;Time.timeScale=0;}else Time.timeScale=prePauseScale;Paused=value;inputSuppress=.16f;Player.Rope.Release();}
-        public void ShowDialogue(string title,string text){DialogueTitle=title;DialogueText=text;Player.Rope.Release();}
+        /// <summary>Recent story/dialogue lines for the history view (shops and menus are not recorded).</summary>
+        public static readonly List<(string title,string text)> DialogueLog=new();
+        public void ShowDialogue(string title,string text)
+        {
+            DialogueTitle=title;DialogueText=text;Player.Rope.Release();
+            var mode=CityLife.Instance?CityLife.Instance.Mode:"";
+            if((mode.Length==0||mode=="story")&&!string.IsNullOrWhiteSpace(text)&&(DialogueLog.Count==0||DialogueLog[DialogueLog.Count-1].text!=text)){DialogueLog.Add((title,text));if(DialogueLog.Count>60)DialogueLog.RemoveAt(0);}
+        }
         public void CloseDialogue(){CityLife.Instance?.Close();DialogueText=null;inputSuppress=.18f;if(Audio)Audio.Play("ui_cancel",Player.Shoulder,.12f,1);}
         public void Toast(string text,float duration=3.2f){Notice=text;NoticeTimer=duration;noticeRadius=0;}
         public void ToastNear(string text,Vector3 location,float radius=180,float duration=4){if(Player&&(Player.transform.position-location).sqrMagnitude<=radius*radius){Toast(text,duration);noticeOrigin=location;noticeRadius=radius;}}

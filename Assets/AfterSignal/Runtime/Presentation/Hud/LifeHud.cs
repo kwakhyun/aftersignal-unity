@@ -171,6 +171,7 @@ namespace AfterSignal
                 }
 
                 ConversationLayout(life);
+                if (life.Mode == "story") lifeBody.text = Reveal(life.Body, ref storyReveal);
                 bool talk = life.Mode == "talk";
                 lifeInput.gameObject.SetActive(talk);
                 lifeSend.gameObject.SetActive(talk);

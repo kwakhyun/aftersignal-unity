@@ -75,6 +75,8 @@ namespace AfterSignal
         {
             if (!IsOpen) return;
             scaler.referenceResolution = PresentationSettings.CanvasReference;
+            var size = ((RectTransform)root.transform).rect.size;
+            card.localScale = Vector3.one * Mathf.Min(1, (size.y - 30) / 820f, (size.x - 30) / 800f);
             if (rebinding != null) return;
             bool back = Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame || Gamepad.current != null && Gamepad.current.buttonEast.wasPressedThisFrame;
             if (back) { if (keysPage.activeSelf) ShowPage(false); else Close(); return; }

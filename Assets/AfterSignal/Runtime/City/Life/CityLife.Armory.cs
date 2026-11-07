@@ -14,9 +14,20 @@ namespace AfterSignal
             {int id=i;var item=ArmoryInventory.Items[id];Option(item.name+" · "+(ArmoryInventory.Owns(id)&&category!=4?"보유":item.price+" C"),()=>ArmoryDetails(id));}
             Option("다른 종류 보기",()=>Armory());
         }
+        /// <summary>Stats of the item next to whatever is equipped in the same slot, so purchases are an informed choice.</summary>
+        static string Comparison(int id)
+        {
+            var item=ArmoryInventory.Items[id];int current=ArmoryInventory.Equipped(item.slot);
+            var other=current>=0&&current!=id&&current<ArmoryInventory.Items.Length?ArmoryInventory.Items[current]:null;
+            string Stats(ArmoryItem i)=>i.slot<=2&&i.damage<=0?$"피해 배율 ×{i.multiplier:0.00}":i.slot==4?$"폭발 피해 {i.damage:0}":$"피해 {i.damage:0} · 초당 {(i.interval>0?i.damage/i.interval:i.damage):0}"+(i.magazine>0?$" · 탄창 {i.magazine}":"");
+            float Power(ArmoryItem i)=>i.slot<=2&&i.damage<=0?i.multiplier:i.interval>0?i.damage/i.interval:i.damage;
+            if(other==null)return "성능 · "+Stats(item)+(current==id?"  (장착 중)":"");
+            float delta=Power(other)>0?Power(item)/Power(other)-1:0;
+            return "성능 · "+Stats(item)+"\n현재 장착 · "+other.name+" / "+Stats(other)+"   →   "+(UnityEngine.Mathf.Abs(delta)<.005f?"비슷함":(delta>0?"+":"")+(delta*100).ToString("0")+"%");
+        }
         void ArmoryDetails(int id)
         {
-            var item=ArmoryInventory.Items[id];Panel("service",item.name,item.description+"\n잔액 "+LifeState.Credits.ToString("N0")+" C"+(item.slot>=3?"\n보유 탄약 "+ArmoryInventory.Rounds(id)+" / 예비탄 "+ArmoryInventory.Reserve(id):""));
+            var item=ArmoryInventory.Items[id];Panel("service",item.name,item.description+"\n"+Comparison(id)+"\n잔액 "+LifeState.Credits.ToString("N0")+" C"+(item.slot>=3?"  ·  보유 탄약 "+ArmoryInventory.Rounds(id)+" / 예비탄 "+ArmoryInventory.Reserve(id):""));
             Option(ArmoryInventory.Owns(id)&&item.slot!=4?"장착":"구매 / "+item.price+" C",()=>
             {
                 if(!ArmoryInventory.Buy(id)){Body="잔액이 부족합니다.";Revision++;return;}
