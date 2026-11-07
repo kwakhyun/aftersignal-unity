@@ -8,7 +8,7 @@ namespace AfterSignal
         public Vector2 move, pointer, lookDelta;
         public float zoom, vertical;
         public bool boost, passenger, surrender, vehicleView, secondaryFire, horn, summonBike;
-        public bool journal;
+        public bool journal, rescueReport;
         public bool look, cameraReset, run;
         public bool attack, grapple, jump, interact, dash, skill, guard, pause, reload, map, exit;
         public int weapon, weaponCycle;
@@ -18,12 +18,21 @@ namespace AfterSignal
         };
     }
 
+    /// <summary>
+    /// Reads every gameplay control through the Controls input-action asset (keyboard/mouse and gamepad), so all
+    /// keys can be rebound. Binding overrides are stored in PlayerPrefs and shared by every scene.
+    /// </summary>
     public sealed class PlayerInputReader : MonoBehaviour
     {
+        public const string BindingsKey = "AFTERSIGNAL.Unity.Bindings";
+        /// <summary>Gamepad right-stick look speed in "mouse pixels" per second at full deflection.</summary>
+        const float StickLookSpeed = 900;
         InputActionAsset asset;
-        InputAction move, pointer, attack, grapple, jump, interact, dash, skill, guard, pause, one, two, three;
+        InputAction move, pointer, attack, grapple, jump, interact, dash, skill, guard, pause, look, lookStick, zoom, boost, ascend, descend, vehicleView, horn, summonBike, secondaryFire, passenger, surrender, cameraReset, journal, reload, map, exit, weaponNext, rescueReport;
+        readonly InputAction[] weapons = new InputAction[7];
         bool captured;
         Vector2 savedPointer;
+        public InputActionAsset Actions => asset;
 
         void ReleaseLook()
         {
@@ -47,6 +56,12 @@ namespace AfterSignal
         void Awake()
         {
             asset = Instantiate(Resources.Load<InputActionAsset>("Controls"));
+            var overrides = PlayerPrefs.GetString(BindingsKey, "");
+            if (!string.IsNullOrEmpty(overrides))
+            {
+                try { asset.LoadBindingOverridesFromJson(overrides); }
+                catch (System.Exception error) { Debug.LogWarning("AFTERSIGNAL: ignored invalid key bindings · " + error.Message); }
+            }
             move = asset.FindAction("Move", true);
             pointer = asset.FindAction("Point", true);
             attack = asset.FindAction("Attack", true);
@@ -57,9 +72,31 @@ namespace AfterSignal
             skill = asset.FindAction("Skill", true);
             guard = asset.FindAction("Guard", true);
             pause = asset.FindAction("Pause", true);
-            one = asset.FindAction("Katana", true);
-            two = asset.FindAction("Greatsword", true);
-            three = asset.FindAction("Pistol", true);
+            weapons[0] = asset.FindAction("Katana", true);
+            weapons[1] = asset.FindAction("Greatsword", true);
+            weapons[2] = asset.FindAction("Pistol", true);
+            for (int i = 3; i < weapons.Length; i++)
+                weapons[i] = asset.FindAction("Weapon" + (i + 1), true);
+            look = asset.FindAction("Look", true);
+            lookStick = asset.FindAction("LookStick", true);
+            zoom = asset.FindAction("Zoom", true);
+            boost = asset.FindAction("Boost", true);
+            ascend = asset.FindAction("Ascend", true);
+            descend = asset.FindAction("Descend", true);
+            vehicleView = asset.FindAction("VehicleView", true);
+            horn = asset.FindAction("Horn", true);
+            summonBike = asset.FindAction("SummonBike", true);
+            secondaryFire = asset.FindAction("SecondaryFire", true);
+            passenger = asset.FindAction("Passenger", true);
+            surrender = asset.FindAction("Surrender", true);
+            cameraReset = asset.FindAction("CameraReset", true);
+            journal = asset.FindAction("Journal", true);
+            reload = asset.FindAction("Reload", true);
+            map = asset.FindAction("Map", true);
+            exit = asset.FindAction("Exit", true);
+            weaponNext = asset.FindAction("WeaponNext", true);
+            rescueReport = asset.FindAction("RescueReport", true);
+            KeyHints.Attach(asset);
             Frame = ControlFrame.Empty;
         }
 
@@ -79,8 +116,17 @@ namespace AfterSignal
 
         void OnDestroy()
         {
+            KeyHints.Detach(asset);
             if (asset)
                 Destroy(asset);
+        }
+
+        /// <summary>Persists the current binding overrides (called by the settings panel after a rebind or reset).</summary>
+        public void SaveBindings()
+        {
+            PlayerPrefs.SetString(BindingsKey, asset.SaveBindingOverridesAsJson());
+            PlayerPrefs.Save();
+            KeyHints.Refresh();
         }
 
         public ControlFrame Read()
@@ -88,28 +134,38 @@ namespace AfterSignal
             if (ExternalControl)
             { ReleaseLook(); return Frame = ExternalFrame; }
             var game = GameDirector.Instance;
-            bool held = Application.isFocused && Mouse.current != null  && game && game.CameraRig && game.CameraRig.CanLook;
+            bool canLook = Application.isFocused && game && game.CameraRig && game.CameraRig.CanLook;
+            bool held = canLook && Mouse.current != null;
             bool starting = held && !captured;
             if (starting) { savedPointer = pointer.ReadValue<Vector2>(); captured = true; Cursor.lockState = CursorLockMode.Locked; }
             if (!held) ReleaseLook();
+            Vector2 stick = canLook ? lookStick.ReadValue<Vector2>() : Vector2.zero;
+            Vector2 mouseDelta = held && !starting ? Vector2.ClampMagnitude(look.ReadValue<Vector2>(), 2000) : Vector2.zero;
+            Vector2 stickDelta = stick.sqrMagnitude > .01f ? stick * StickLookSpeed * Time.unscaledDeltaTime : Vector2.zero;
+            int weapon = -1;
+            for (int i = 0; i < weapons.Length && weapon < 0; i++)
+                if (weapons[i].WasPressedThisFrame()) weapon = i;
+            Vector2 moveValue = move.ReadValue<Vector2>();
+            KeyHints.Observe();
             Frame = new ControlFrame
             {
-                boost = Keyboard.current != null && (Keyboard.current.leftShiftKey.isPressed || Keyboard.current.rightShiftKey.isPressed),
-                vehicleView = Keyboard.current != null && Keyboard.current.cKey.wasPressedThisFrame,
-                horn = Keyboard.current != null && Keyboard.current.bKey.wasPressedThisFrame,
-                summonBike = Keyboard.current != null && Keyboard.current.vKey.wasPressedThisFrame,
-                secondaryFire = Mouse.current != null && Mouse.current.rightButton.isPressed,
-                passenger = Keyboard.current != null && Keyboard.current.gKey.wasPressedThisFrame,
-                surrender = Keyboard.current != null && Keyboard.current.hKey.isPressed,
-                vertical = Keyboard.current == null ? 0 : (Keyboard.current.spaceKey.isPressed ? 1 : 0) - (Keyboard.current.leftCtrlKey.isPressed ? 1 : 0),
-                run = move.ReadValue<Vector2>().sqrMagnitude > .04f,
-                look = held,
-                lookDelta = held && !starting ? Vector2.ClampMagnitude(Mouse.current.delta.ReadValue(), 2000) : Vector2.zero,
-                cameraReset = Keyboard.current != null && Keyboard.current.homeKey.wasPressedThisFrame,
-                move = move.ReadValue<Vector2>(),
-                pointer = new Vector2(Screen.width*.5f,Screen.height*.5f),
-                zoom = held ? Mouse.current.scroll.ReadValue().y : 0,
-                journal = Keyboard.current != null && Keyboard.current.jKey.wasPressedThisFrame,
+                boost = boost.IsPressed(),
+                vehicleView = vehicleView.WasPressedThisFrame(),
+                horn = horn.WasPressedThisFrame(),
+                summonBike = summonBike.WasPressedThisFrame(),
+                secondaryFire = secondaryFire.IsPressed(),
+                passenger = passenger.WasPressedThisFrame(),
+                surrender = surrender.IsPressed(),
+                vertical = (ascend.IsPressed() ? 1 : 0) - (descend.IsPressed() ? 1 : 0),
+                run = moveValue.sqrMagnitude > .04f,
+                look = held || canLook && stickDelta != Vector2.zero,
+                lookDelta = mouseDelta + stickDelta,
+                cameraReset = cameraReset.WasPressedThisFrame(),
+                move = moveValue,
+                pointer = new Vector2(Screen.width * .5f, Screen.height * .5f),
+                zoom = held ? zoom.ReadValue<Vector2>().y : 0,
+                journal = journal.WasPressedThisFrame(),
+                rescueReport = rescueReport.WasPressedThisFrame(),
                 attack = attack.IsPressed(),
                 grapple = grapple.IsPressed(),
                 jump = jump.WasPressedThisFrame(),
@@ -118,11 +174,11 @@ namespace AfterSignal
                 skill = skill.WasPressedThisFrame(),
                 guard = guard.IsPressed(),
                 pause = pause.WasPressedThisFrame(),
-                reload = Keyboard.current != null && Keyboard.current.rKey.wasPressedThisFrame,
-                map = Keyboard.current != null && Keyboard.current.mKey.wasPressedThisFrame,
-                exit = Keyboard.current != null && Keyboard.current.fKey.wasPressedThisFrame,
-                weaponCycle = 0,
-                weapon = one.WasPressedThisFrame() ? 0 : two.WasPressedThisFrame() ? 1 : three.WasPressedThisFrame() ? 2 : Keyboard.current==null?-1:Keyboard.current.digit4Key.wasPressedThisFrame?3:Keyboard.current.digit5Key.wasPressedThisFrame?4:Keyboard.current.digit6Key.wasPressedThisFrame?5:Keyboard.current.digit7Key.wasPressedThisFrame?6:-1
+                reload = reload.WasPressedThisFrame(),
+                map = map.WasPressedThisFrame(),
+                exit = exit.WasPressedThisFrame(),
+                weaponCycle = weaponNext.WasPressedThisFrame() ? 1 : 0,
+                weapon = weapon
             };
             return Frame;
         }

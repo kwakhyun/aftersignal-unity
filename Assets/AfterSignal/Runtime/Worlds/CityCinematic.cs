@@ -68,7 +68,7 @@ namespace AfterSignal
             for(int i=0;i<2;i++){var go=new GameObject("Projected witness",typeof(SpriteRenderer));go.transform.position=at+new Vector3(i==0?-1.8f:1.8f,.06f,.8f);go.transform.SetParent(transform);var sr=go.GetComponent<SpriteRenderer>();sr.sprite=PeopleArt.Get(i==0?"AbyssEngineer":"AbyssCitizen",0,3);sr.sharedMaterial=Resources.Load<Material>("Materials/PixelActor");sr.color=new Color(.24f,.82f,1,.82f);apparitions.Add(go);}
         }
         public void Skip()=>skip=true;
-        void Update(){if(Keyboard.current!=null&&(Keyboard.current.escapeKey.wasPressedThisFrame||Keyboard.current.spaceKey.wasPressedThisFrame))Skip();}
+        void Update(){if(Keyboard.current!=null&&(Keyboard.current.escapeKey.wasPressedThisFrame||Keyboard.current.spaceKey.wasPressedThisFrame)||Gamepad.current!=null&&(Gamepad.current.startButton.wasPressedThisFrame||Gamepad.current.buttonSouth.wasPressedThisFrame))Skip();}
         void Finish()
         {if(finished)return;finished=true;var g=GameDirector.Instance;if(g&&g.CameraRig){g.CameraRig.enabled=cameraEnabled;Camera.main.fieldOfView=fov;Camera.main.transform.SetPositionAndRotation(restorePosition,restoreRotation);g.CameraRig.Snap();}FindAnyObjectByType<SignalHud>()?.CinematicVisibility(true);Active=false;Completed++;var callback=done;done=null;Destroy(gameObject);callback?.Invoke();}
         void OnDestroy(){Active=false;if(!finished){FindAnyObjectByType<SignalHud>()?.CinematicVisibility(true);var g=GameDirector.Instance;if(g&&g.CameraRig){g.CameraRig.enabled=cameraEnabled;if(Camera.main)Camera.main.fieldOfView=fov;}}}

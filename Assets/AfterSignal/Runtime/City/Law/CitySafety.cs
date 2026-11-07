@@ -84,7 +84,7 @@ namespace AfterSignal
         void Update()
         {
             if(!game||!game.Ready||game.Blocked)return;
-            if(UnityEngine.InputSystem.Keyboard.current!=null&&UnityEngine.InputSystem.Keyboard.current.f6Key.wasPressedThisFrame)PlayerReport();
+            if(game.Input&&game.Input.Frame.rescueReport)PlayerReport();
             if(Time.time<next)return;next=Time.time+1;
             if(game.stage!=StageId.UrbanCity||!UrbanSimulation.Instance)return;
             const int capacity=5;int launched=0;

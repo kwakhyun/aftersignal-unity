@@ -41,6 +41,7 @@ namespace AfterSignal
             var shadow = Style(Mathf.RoundToInt(style.fontSize / Scale), new Color(0, 0, 0, .85f), style.alignment);
             shadow.fontSize = style.fontSize;
             float offset = Mathf.Max(1, style.fontSize / 14f);
+            text = KeyHints.Apply(text);
             GUI.Label(new Rect(rect.x + offset, rect.y + offset, rect.width, rect.height), text, shadow);
             GUI.Label(rect, text, style);
         }

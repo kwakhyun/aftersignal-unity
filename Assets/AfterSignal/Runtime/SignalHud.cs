@@ -80,15 +80,15 @@ namespace AfterSignal
             displayedHealth=Mathf.MoveTowards(displayedHealth,game.Player.Health,Time.unscaledDeltaTime*30);hpTrail.rectTransform.sizeDelta=new Vector2(278*displayedHealth/100,9);
             hpBar.rectTransform.sizeDelta=new Vector2(278*game.Player.Health/100,9);energyBar.rectTransform.sizeDelta=new Vector2(174*game.Player.Energy/100,3);
             if(Time.unscaledTime>=nextText){nextText=Time.unscaledTime+.08f;UpdateReferenceHud();health.text=$"{Mathf.CeilToInt(game.Player.Health)} / 100";weapon.text=game.Player.EquippedName;
-            area.text=(int)game.stage<4?stageNames[(int)game.stage]:CampaignCatalog.Title(game.stage);objective.text=game.Objective;if(game.stage==StageId.UrbanCity)area.text=FourCityCatalog.CityNames[FourCityCatalog.CityAt(game.Player.transform.position)];
+            area.text=(int)game.stage<4?stageNames[(int)game.stage]:CampaignCatalog.Title(game.stage);objective.text=KeyHints.Apply(game.Objective);if(game.stage==StageId.UrbanCity)area.text=FourCityCatalog.CityNames[FourCityCatalog.CityAt(game.Player.transform.position)];
             rail.text=game.Speed>0?$"NIGHT LINE    {game.Speed*3.6f:0} KM/H    ·    {game.LivingGuards} HOSTILES":$"ARCHIVE  {game.Memories:00}     /     {game.LivingGuards} HOSTILES";
             if(game.stage==StageId.Haven){int jobs=((CampaignCatalog.Jobs&4)!=0?1:0)+((CampaignCatalog.Jobs&16)!=0?1:0);rail.text=$"주민 의뢰  {jobs} / 2     ·     기록  {game.Memories:00}";}
             var district=CampaignCatalog.Get(game.stage);if(district!=null&&district.chapter>0){int first=district.chapter==5?22:district.chapter==2?4:district.chapter==3?11:14,count=district.chapter==5?1:district.chapter==2?7:3;area.text=$"CH {district.chapter:00}  ·  {(int)game.stage-first+1}/{count}  /  {district.title}";}
             }
-            notice.text=game.NoticeTimer>0&&game.NoticeInRange&&!game.Blocked?game.Notice:"";
+            notice.text=game.NoticeTimer>0&&game.NoticeInRange&&!game.Blocked?KeyHints.Apply(game.Notice):"";
             notice.rectTransform.anchoredPosition=new Vector2(0,CampaignBattle.Active?-96:-200);
             prompt.text=!game.Blocked&&game.Nearby?$"[ E ]   {game.Nearby.title}":"";
-            anchorHint.text=game.Blocked?"":game.Player.Rope.Attached?"로프 자동 감기 · W 빠르게 / S 풀기 · SPACE 도약 · 우클릭 해제":game.Player.Rope.Candidate?$"우클릭 · 갈고리 연결  {Vector3.Distance(game.Player.Shoulder,game.Player.Rope.Candidate.transform.position):0}m"+(game.Player.Rope.AimAssisted?" · 조준 보조":""):"";
+            anchorHint.text=game.Blocked?"":KeyHints.Apply(game.Player.Rope.Attached?"로프 자동 감기 · W 빠르게 / S 풀기 · SPACE 도약 · 우클릭 해제":game.Player.Rope.Candidate?$"우클릭 · 갈고리 연결  {Vector3.Distance(game.Player.Shoulder,game.Player.Rope.Candidate.transform.position):0}m"+(game.Player.Rope.AimAssisted?" · 조준 보조":""):"");
             Cursor.visible=!game.CameraRig.CanLook;cursor.gameObject.SetActive(game.CameraRig.CanLook);
             PlaceScreen(cursor,new Vector2(Screen.width*.5f,Screen.height*.5f),new Vector2(15,15));
             var anchor=game.Player.Rope.Candidate;candidate.gameObject.SetActive(anchor&&!game.Blocked);
@@ -102,7 +102,7 @@ namespace AfterSignal
             for(int i=numbers.Count-1;i>=0;i--){var n=numbers[i];float age=Time.time-n.born;if(age>.85f){Destroy(n.text.gameObject);numbers.RemoveAt(i);}else{PlaceWorld(n.text.rectTransform,n.world+Vector3.up*age,new Vector2(40,20));}}
             string mode=game.Dead?"dead":game.Paused?"pause":"";
             modal.SetActive(mode!="");if(mode!=modalMode){if(mode=="dead")respawnCity=0;modalMode=mode;ConfigureModal(mode);}
-            dialogueBox.SetActive(game.Dialogue);if(game.Dialogue){dialogueName.text=game.DialogueTitle;dialogueText.text=game.DialogueText;if(storyPortrait){storyPortrait.sprite=StoryPortraits.Bust(game.DialogueTitle);storyPortrait.gameObject.SetActive(storyPortrait.sprite);}}
+            dialogueBox.SetActive(game.Dialogue);if(game.Dialogue){ButtonText(dialogueContinue,KeyHints.Apply("대화 계속  [ E ]"));dialogueName.text=game.DialogueTitle;dialogueText.text=game.DialogueText;if(storyPortrait){storyPortrait.sprite=StoryPortraits.Bust(game.DialogueTitle);storyPortrait.gameObject.SetActive(storyPortrait.sprite);}}
             UpdateUrbanHud();UpdateQuestHud();UpdateLifeHud();UpdateClientExperience();
             UpdateNoaRadio();
             fade.gameObject.SetActive(game.Transition);fade.color=new Color(0,0,0,game.Fade);

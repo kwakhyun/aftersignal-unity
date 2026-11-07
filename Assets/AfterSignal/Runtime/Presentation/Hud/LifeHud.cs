@@ -101,6 +101,7 @@ namespace AfterSignal
                 }
             }
 
+            lifeQuest.text = KeyHints.Apply(lifeQuest.text);
             civicMap.SetActive(!life.Panorama && !game.Title);
             area.transform.parent.gameObject.SetActive(!life.Panorama);
             weapon.transform.parent.gameObject.SetActive(!life.Panorama && !(UrbanSimulation.Instance && UrbanSimulation.Instance.Driving));
