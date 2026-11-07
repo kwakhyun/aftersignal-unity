@@ -110,6 +110,7 @@ namespace AfterSignal
                 if (Instance.Helicopter)
                     Instance.Helicopter.Withdraw();
                 foreach(var t in FindObjectsByType<TacticalTransport>())t.Withdraw();
+                CombatRobot.WithdrawPolice(false);
                 var military=Instance.GetComponent<MilitaryResponse>();if(military)military.Withdraw();
                 Instance.Officers.Clear();
                 Instance.Cars.Clear();
@@ -179,9 +180,12 @@ namespace AfterSignal
             bool aircraftAlive = Helicopter && Helicopter.Body.Alive;
             // Defeating the responders never clears the record: heat only ends by staying unseen,
             // surrendering, paying the fine or Noa's support. A fresh squad follows after a delay.
-            if (engaged && deployed >= Strength[Level] && ActiveOfficers == 0 && !aircraftAlive && !TacticalTransport.Pending && !GetComponent<MilitaryResponse>())
+            // A police robot still in the fight counts as an active responder; robots never reset the escape timer,
+            // and one that is stuck or left behind stops counting (CombatRobot.Engaged) and is withdrawn with the empty vans.
+            if (engaged && deployed >= Strength[Level] && ActiveOfficers == 0 && !aircraftAlive && !TacticalTransport.Pending && !CombatRobot.PoliceEngaged && !GetComponent<MilitaryResponse>())
             {
                 Officers.RemoveAll(o => !o || !o.Body.Alive);
+                CombatRobot.WithdrawPolice(true);TacticalTransport.WithdrawUnloaded();
                 deployed = carCount = 0;
                 dispatchClock = GameTuning.Active.reinforcementDelay;
                 game.Toast("출동 병력 무력화 · 수배는 유지되며 지원 병력이 추가로 출동합니다", 5);

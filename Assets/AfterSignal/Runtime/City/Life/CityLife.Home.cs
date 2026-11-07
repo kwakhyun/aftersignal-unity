@@ -29,6 +29,14 @@ namespace AfterSignal
             Option("다음 아침 7시까지", () => Rest(Mathf.Repeat(7 - LifeState.Hour + 23.999f, 24) + .001f, 0));
         }
 
+        // Chained sleeps used to fast-forward every daily reset; Seoha needs to be awake a while first.
+        // Shared by home/hotel Rest and the four-city hotel rooms (CityLife.Venues).
+        static string SleepBlocked()
+        {
+            float awake = LifeState.Hours - LifeState.LastWake, need = GameTuning.Active.minAwakeHours;
+            return awake >= 0 && awake < need ? "아직 잠이 오지 않습니다 · " + Mathf.CeilToInt(need - awake) + "시간 더 활동한 뒤 잠들 수 있습니다." : null;
+        }
+
         void Rest(float hours, int cost)
         {
             if (WantedSystem.Level > 0)
@@ -38,11 +46,10 @@ namespace AfterSignal
                 return;
             }
 
-            // Chained sleeps used to fast-forward every daily reset; Seoha needs to be awake a while first.
-            float awake = LifeState.Hours - LifeState.LastWake, need = GameTuning.Active.minAwakeHours;
-            if (awake >= 0 && awake < need)
+            string blocked = SleepBlocked();
+            if (blocked != null)
             {
-                Body = "아직 잠이 오지 않습니다 · " + Mathf.CeilToInt(need - awake) + "시간 더 활동한 뒤 잠들 수 있습니다.";
+                Body = blocked;
                 Revision++;
                 return;
             }

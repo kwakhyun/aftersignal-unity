@@ -14,7 +14,8 @@ namespace AfterSignal
                 if(candidate!=null)Option("이 차량을 내 차로 등록 · "+fee+" C / "+candidate,()=>RegisterCar(fee));
                 Option("닫기",Dismiss);return;
             }
-            Option("차체 수리 · 150 C",()=>GarageBuy(150,()=>{SaveStore.SetFloat(UrbanCatalog.Prefix+"CarHealth",100);if(UrbanSimulation.Instance&&UrbanSimulation.Instance.Owned)UrbanSimulation.Instance.Owned.Repair();}));
+            // Version 0 marks CarHealth as a percentage, so 100 loads as full health; a live car's Repair() re-saves it as an absolute value.
+            Option("차체 수리 · 150 C",()=>GarageBuy(150,()=>{SaveStore.SetInt(UrbanCatalog.Prefix+"CarDurabilityVersion",0);SaveStore.SetFloat(UrbanCatalog.Prefix+"CarHealth",100);if(UrbanSimulation.Instance&&UrbanSimulation.Instance.Owned)UrbanSimulation.Instance.Owned.Repair();}));
             Option("차체 도색 · 200 C",GaragePaint);
             Option("스포츠 휠 · 350 C",()=>GarageBuy(350,()=>SaveStore.SetInt(UrbanCatalog.Prefix+"CarWheels",1)));
             Option("스포일러 장착 · 450 C",()=>GarageBuy(450,()=>SaveStore.SetInt(UrbanCatalog.Prefix+"CarSpoiler",1)));

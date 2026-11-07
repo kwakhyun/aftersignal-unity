@@ -47,8 +47,11 @@ namespace AfterSignal
                 report.errors.Add(message);
         }
 
+        // GameDirector.Start reloads presentation settings from PlayerPrefs, so the neutral camera response is re-applied every frame.
+        // Look checks assume the default response; the player's sensitivity / invert-Y preference is never changed or saved.
         void Update()
         {
+            PresentationSettings.MouseSensitivity = 1; PresentationSettings.InvertY = false;
             if (!finished && Time.realtimeSinceStartup > 60)
             {
                 report.errors.Add("Gang sprite / camera verification timed out");

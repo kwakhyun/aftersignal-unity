@@ -7,10 +7,18 @@ namespace AfterSignal
         public WorldActor Body{get;private set;}public int Shots{get;private set;}
         CharacterController motor;Transform form;Vector3 home;readonly PursuitPath path=new();
         readonly List<Transform> joints=new();readonly List<Quaternion> rests=new();float scan,shot,clock,gravity,dead;WorldActor target;bool army;WorldActor attacker;float retaliate;
-        public static CombatRobot Create(Vector3 at,bool military)
+        static readonly List<CombatRobot> all=new();
+        // Wanted-response police robots (not incident units). Engaged = recently had a clear shot or closed in on its goal,
+        // so a robot stuck or left far behind stops holding back reinforcements after 20 s and is withdrawn instead.
+        public bool Wanted{get;private set;}float contact,leave;bool withdrawing;
+        public bool Engaged=>Body&&Body.Alive&&!withdrawing&&Time.time-contact<20;
+        public static bool PoliceEngaged=>all.Exists(r=>r&&r.Wanted&&r.Engaged);
+        public static void WithdrawPolice(bool idleOnly){if(IncidentCommand.Emergency)return;foreach(var r in all)if(r&&r.Wanted&&!r.withdrawing&&r.Body&&r.Body.Alive&&(!idleOnly||!r.Engaged)){r.withdrawing=true;r.target=r.attacker=null;}}
+        void OnEnable()=>all.Add(this);void OnDisable()=>all.Remove(this);
+        public static CombatRobot Create(Vector3 at,bool military,bool wanted=false)
         {
             var go=new GameObject(military?"국방 전투 로봇 / ATLAS":"경찰 진압 로봇 / SENTINEL",typeof(CharacterController),typeof(WorldActor),typeof(CombatRobot));go.layer=9;go.transform.position=at;
-            var r=go.GetComponent<CombatRobot>();r.army=military;r.home=at;r.Body=go.GetComponent<WorldActor>();r.Body.robot=true;r.Body.military=military;r.Body.police=!military;r.Body.health=military?12000:6500;
+            var r=go.GetComponent<CombatRobot>();r.army=military;r.home=at;r.Body=go.GetComponent<WorldActor>();r.Body.robot=true;r.Body.military=military;r.Body.police=!military;r.Body.health=military?12000:6500;r.Wanted=wanted&&!military;r.contact=Time.time;
             r.motor=go.GetComponent<CharacterController>();r.motor.height=military?3.6f:3;r.motor.center=Vector3.up*r.motor.height*.5f;r.motor.radius=.6f;r.motor.stepOffset=.45f;
             r.form=new GameObject("Robot heading").transform;r.form.SetParent(go.transform,false);var prefab=Resources.Load<GameObject>("Security/"+(military?"MilitaryRobot":"PoliceRobot"));
             if(prefab){var model=Instantiate(prefab,r.form);model.transform.localRotation=Quaternion.Euler(0,180,0)*model.transform.localRotation;SecurityMaterials.Apply(model);}
@@ -22,11 +30,12 @@ namespace AfterSignal
         {
             var g=GameDirector.Instance;if(!g||g.Blocked)return;float dt=Mathf.Min(.06f,Time.deltaTime);clock+=dt;shot-=dt;scan-=dt;
             if(!Body.Alive){motor.enabled=false;dead+=dt;form.localRotation=Quaternion.Slerp(form.localRotation,Quaternion.Euler(80,0,0),dt*2);if(dead>2){VehicleExplosion.Create(transform.position+Vector3.up,3);BlastDamage.Create(transform.position+Vector3.up,7,110,Body);WreckFragments.Shatter(gameObject,7);Destroy(gameObject);}return;}
+            if(withdrawing){leave+=dt;target=null;if(leave>45||leave>1&&ResponseDispatch.Hidden(transform.position,4)){Destroy(gameObject);return;}}
             if(!LocalSimulation.Combat(transform.position)){target=null;return;}
-            if(scan<=0||target&&!TacticalJudgment.Opponent(Body,target)){scan=.45f;target=TacticalJudgment.Opponent(Body,attacker)&&Time.time<retaliate?attacker:FactionCombat.NearestOpponent(Body,180);}
-            bool player=!target&&!IncidentCommand.Emergency&&WantedSystem.Level>0&&g.Player.Health>0&&(Time.time<retaliate&&!attacker||WantedSystem.Level>=3);
+            if(!withdrawing&&(scan<=0||target&&!TacticalJudgment.Opponent(Body,target))){scan=.45f;target=TacticalJudgment.Opponent(Body,attacker)&&Time.time<retaliate?attacker:FactionCombat.NearestOpponent(Body,180);}
+            bool player=!withdrawing&&!target&&!IncidentCommand.Emergency&&WantedSystem.Level>0&&g.Player.Health>0&&(Time.time<retaliate&&!attacker||WantedSystem.Level>=3);
             Vector3 goal=target?target.Center:player?g.Player.Shoulder:IncidentCommand.Emergency?IncidentCommand.Position:home;
-            var d=Vector3.ProjectOnPlane(goal-transform.position,Vector3.up);bool visible=(target||player)&&TacticalJudgment.ClearShot(Body,target,goal,player,150);bool move=d.magnitude>(visible?army?34:24:3);
+            var d=Vector3.ProjectOnPlane(goal-transform.position,Vector3.up);bool visible=(target||player)&&TacticalJudgment.ClearShot(Body,target,goal,player,150);bool move=d.magnitude>(visible?army?34:24:3);if((target||player)&&(visible||d.magnitude<30))contact=Time.time;
             gravity=motor.isGrounded?-2:Mathf.Max(-35,gravity-dt*24);motor.Move((move?path.Direction(transform.position,goal)*(army?3.6f:4.2f):Vector3.zero)*dt+Vector3.up*gravity*dt);
             if(d.sqrMagnitude>1)form.rotation=Quaternion.Slerp(form.rotation,Quaternion.LookRotation(d),dt*5);
             for(int i=0;i<joints.Count;i++){var t=joints[i];float side=t.name.EndsWith("-1")?-1:1;float swing=move?Mathf.Sin(clock*7)*side*25:0;t.localRotation=rests[i]*Quaternion.Euler(t.name.StartsWith("Thigh")?swing:t.name.StartsWith("Shin")?Mathf.Max(0,-swing):t.name.StartsWith("Arm")&&visible?-25:0,0,0);}

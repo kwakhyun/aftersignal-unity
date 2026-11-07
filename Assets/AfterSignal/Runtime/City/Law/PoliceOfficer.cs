@@ -221,8 +221,8 @@ namespace AfterSignal
             int pellets = Weapon == PoliceWeapon.Shotgun ? 5 : 1;
             float distance = Weapon == PoliceWeapon.Shotgun ? 22 : 100;
             var tuning = GameTuning.Active;
-            // Difficulty only scales shots aimed at Seoha; gang firefights keep their balance.
-            float damage = (Weapon == PoliceWeapon.Shotgun ? tuning.shotgunPellet : Weapon == PoliceWeapon.Rifle ? tuning.rifleShot : tuning.pistolShot) * (playerTarget ? DifficultySettings.PoliceDamage : 1);
+            // Difficulty scales only the damage Seoha receives, once, in FactionCombat.Fire; gang firefights keep their balance.
+            float damage = Weapon == PoliceWeapon.Shotgun ? tuning.shotgunPellet : Weapon == PoliceWeapon.Rifle ? tuning.rifleShot : tuning.pistolShot;
             for (int i = 0; i < pellets; i++)
             {
                 Vector3 aim = Quaternion.Euler(0, (i - (pellets - 1) * .5f) * 2.6f, 0) * direction;

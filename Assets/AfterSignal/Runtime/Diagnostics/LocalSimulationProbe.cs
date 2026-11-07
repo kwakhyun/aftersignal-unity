@@ -110,7 +110,8 @@ namespace AfterSignal
             RenderTexture.active=target;texture.ReadPixels(new Rect(0,0,1600,900),0,0);texture.Apply();File.WriteAllBytes(Path.Combine(Output,name+".png"),texture.EncodeToPNG());
             RenderTexture.active=previous;RenderTexture.ReleaseTemporary(target);Destroy(texture);
         }
-        void Update(){if(!finished&&Time.realtimeSinceStartup-began>160){report.errors.Add("Local simulation probe timed out");Finish();}}
+        // Neutral camera response for the look check, re-applied every frame because GameDirector.Start reloads PlayerPrefs; never saved.
+        void Update(){PresentationSettings.MouseSensitivity=1;PresentationSettings.InvertY=false;if(!finished&&Time.realtimeSinceStartup-began>160){report.errors.Add("Local simulation probe timed out");Finish();}}
         void Finish(){if(finished)return;finished=true;report.completed=report.errors.Count==0;Save();Application.Quit(report.completed?0:1);}
         void OnDestroy()=>Application.logMessageReceived-=Log;
     }

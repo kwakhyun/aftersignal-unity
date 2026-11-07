@@ -156,7 +156,7 @@ namespace AfterSignal
             {
                 end = hit.point;
                 if (!IncidentCommand.Emergency && hit.collider.GetComponentInParent<PlayerMotor>())
-                    g.Player.ReceiveDamage(16, transform.position);
+                    g.Player.ReceiveDamage(Mathf.RoundToInt(16 * DifficultySettings.PoliceDamage), transform.position);
                 var car = hit.collider.GetComponentInParent<CityVehicle>();
                 var civilian=hit.collider.GetComponentInParent<WorldActor>();
                 if(civilian&&!civilian.police)civilian.Damage(16,direction*3,Body);
