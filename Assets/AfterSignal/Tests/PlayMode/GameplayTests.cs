@@ -11,56 +11,24 @@ namespace AfterSignal.Tests
     public partial class GameplayTests
     {
         GameDirector game;
-        int savedStage, savedMemories, savedCompleted;
-        bool hadStage, hadMemories, hadCompleted;
+        const int TestSlot = 2; // slot 1 (index 0) would import the developer's legacy PlayerPrefs
+        string saveDirectory;
+        int previousSlot;
         readonly string[] expansionKeys =
         {
             "AFTERSIGNAL.Unity.Expansion.Chapters",
             "AFTERSIGNAL.Unity.Expansion.Accepted",
             "AFTERSIGNAL.Unity.Expansion.Jobs"
         };
-        readonly int[] expansionValues = new int[3];
-        readonly bool[] expansionExists = new bool[3];
-        readonly System.Collections.Generic.Dictionary<string, float> urbanValues = new System.Collections.Generic.Dictionary<string, float>();
-        readonly System.Collections.Generic.HashSet<string> urbanExists = new System.Collections.Generic.HashSet<string>();
         [UnitySetUp]
         public IEnumerator Setup()
         {
-            urbanValues.Clear();
-            urbanExists.Clear();
-            foreach (string s in new[]
-            {
-                "Site",
-                "Car",
-                "CarX",
-                "CarZ",
-                "CarYaw",
-                "CarFuel",
-                "CarStage",
-                "CarHealth",
-                "CarType"
-            }
-
-            )
-            {
-                string k = UrbanCatalog.Prefix + s;
-                if (PlayerPrefs.HasKey(k))
-                    urbanExists.Add(k);
-                urbanValues[k] = s == "Site" || s == "Car" || s == "CarStage" || s == "CarType" ? PlayerPrefs.GetInt(k) : PlayerPrefs.GetFloat(k);
-            }
-
-            for (int i = 0; i < 3; i++)
-            {
-                expansionExists[i] = PlayerPrefs.HasKey(expansionKeys[i]);
-                expansionValues[i] = PlayerPrefs.GetInt(expansionKeys[i]);
-            }
-
-            hadStage = PlayerPrefs.HasKey("AFTERSIGNAL.Unity.Stage");
-            hadMemories = PlayerPrefs.HasKey("AFTERSIGNAL.Unity.Memories");
-            hadCompleted = PlayerPrefs.HasKey("AFTERSIGNAL.Unity.Completed");
-            savedStage = PlayerPrefs.GetInt("AFTERSIGNAL.Unity.Stage");
-            savedMemories = PlayerPrefs.GetInt("AFTERSIGNAL.Unity.Memories");
-            savedCompleted = PlayerPrefs.GetInt("AFTERSIGNAL.Unity.Completed");
+            // Progress lives in SaveStore slots: every test plays an empty slot in a temporary folder, so the
+            // developer's saves are neither read nor written.
+            previousSlot = SaveStore.ActiveSlot;
+            saveDirectory = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "aftersignal-playmode-tests-" + System.Guid.NewGuid().ToString("N"));
+            SaveStore.Directory = saveDirectory;
+            SaveStore.ActiveSlot = TestSlot;
             GameDirector.SkipTitle = true;
             yield return SceneManager.LoadSceneAsync(CampaignRules.Scene(StageId.Station));
             yield return null;
@@ -76,31 +44,22 @@ namespace AfterSignal.Tests
         {
             if (UrbanSimulation.Instance)
                 UrbanSimulation.Instance.enabled = false;
-            foreach (var kv in urbanValues)
+            Time.timeScale = 1;
+            // Unload the test scene while the temporary slot is still active, so nothing writes to the real slot afterwards.
+            var empty = SceneManager.CreateScene("Gameplay test cleanup " + System.Guid.NewGuid().ToString("N"));
+            SceneManager.SetActiveScene(empty);
+            for (int i = SceneManager.sceneCount - 1; i >= 0; i--)
             {
-                if (!urbanExists.Contains(kv.Key))
-                    PlayerPrefs.DeleteKey(kv.Key);
-                else if (kv.Key.EndsWith("X") || kv.Key.EndsWith("Z") || kv.Key.EndsWith("Yaw") || kv.Key.EndsWith("Fuel") || kv.Key.EndsWith("Health"))
-                    PlayerPrefs.SetFloat(kv.Key, kv.Value);
-                else
-                    PlayerPrefs.SetInt(kv.Key, (int)kv.Value);
+                var scene = SceneManager.GetSceneAt(i);
+                if (scene != empty)
+                    yield return SceneManager.UnloadSceneAsync(scene);
             }
 
-            for (int i = 0; i < 3; i++)
-                Restore(expansionKeys[i], expansionValues[i], expansionExists[i]);
-            Time.timeScale = 1;
-            Restore("AFTERSIGNAL.Unity.Stage", savedStage, hadStage);
-            Restore("AFTERSIGNAL.Unity.Memories", savedMemories, hadMemories);
-            Restore("AFTERSIGNAL.Unity.Completed", savedCompleted, hadCompleted);
+            SaveStore.Directory = null;
+            SaveStore.ActiveSlot = previousSlot;
+            if (System.IO.Directory.Exists(saveDirectory))
+                System.IO.Directory.Delete(saveDirectory, true);
             yield return null;
-        }
-
-        void Restore(string key, int value, bool exists)
-        {
-            if (exists)
-                PlayerPrefs.SetInt(key, value);
-            else
-                PlayerPrefs.DeleteKey(key);
         }
 
         ControlFrame Controls(Vector3 aim)
@@ -384,15 +343,15 @@ namespace AfterSignal.Tests
         public IEnumerator NewChapterGateNeedsQuestAndSideRewardsCannotDuplicate()
         {
             yield return LoadDistrict(StageId.Haven);
-            PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Completed", 1);
-            PlayerPrefs.DeleteKey(expansionKeys[0]);
-            PlayerPrefs.DeleteKey(expansionKeys[1]);
+            SaveStore.SetInt("AFTERSIGNAL.Unity.Completed", 1);
+            SaveStore.DeleteKey(expansionKeys[0]);
+            SaveStore.DeleteKey(expansionKeys[1]);
             CampaignCatalog.Jobs = 0;
             var points = Object.FindObjectsByType<InteractionPoint>();
             System.Array.Find(points, p => p.kind == InteractionKind.MissionBoard).Interact(game);
             Assert.IsFalse(game.Transition);
             System.Array.Find(points, p => p.kind == InteractionKind.QuestGiver).Interact(game);
-            Assert.AreEqual(2, PlayerPrefs.GetInt(expansionKeys[1]));
+            Assert.AreEqual(2, SaveStore.GetInt(expansionKeys[1]));
             game.CloseDialogue();
             var min = System.Array.Find(points, p => p.kind == InteractionKind.MinJob);
             CampaignCatalog.Jobs = 2;

@@ -159,7 +159,7 @@ namespace AfterSignal.Tests
         [UnityTest]
         public IEnumerator HeadquartersMainQuestStartsRailWithoutGrantingCompletion()
         {
-            PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Completed", 0);
+            SaveStore.SetInt("AFTERSIGNAL.Unity.Completed", 0);
             yield return LoadDistrict(StageId.Headquarters);
             game.Player.Respawn(new Vector3(35, .15f, -4));
             yield return new WaitForSeconds(.2f);
@@ -172,7 +172,7 @@ namespace AfterSignal.Tests
             yield return new WaitForSeconds(1.5f);
             game = GameDirector.Instance;
             Assert.AreEqual(StageId.Station, game.stage);
-            Assert.AreEqual(0, PlayerPrefs.GetInt("AFTERSIGNAL.Unity.Completed"));
+            Assert.AreEqual(0, SaveStore.GetInt("AFTERSIGNAL.Unity.Completed"));
         }
     }
 }

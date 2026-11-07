@@ -14,11 +14,13 @@ namespace AfterSignal
         public bool Carrying=>carrying;public bool Holding=>holding;public float HoldProgress=>holding?Mathf.Clamp01(held/HoldSeconds):0;
         string id,stamp,step;int reward;float hours,held;bool carrying,holding;GameObject node;readonly List<Vector3> stations=new();readonly Task[] plan=new Task[3];
         // One key per job id holding "campaignSerial:day" (bounded) instead of one key per job per day.
-        static readonly Dictionary<string,string> done=new();
+        // The in-memory copy (the only record while saving is suppressed) belongs to one slot generation: another slot or a New Game starts clean.
+        static readonly Dictionary<string,string> done=new();static int doneGeneration=-1;
+        static Dictionary<string,string> Done{get{if(doneGeneration!=SaveStore.Generation){done.Clear();doneGeneration=SaveStore.Generation;}return done;}}
         static string Key(string id)=>"AFTERSIGNAL.Unity.FacilityJobDay."+id;
         static bool DoneToday(string id,string stamp)
         {
-            if(done.TryGetValue(id,out var day)&&day==stamp)return true;
+            if(Done.TryGetValue(id,out var day)&&day==stamp)return true;
             return SaveStore.GetString(Key(id),"")==stamp||SaveStore.GetInt("AFTERSIGNAL.Unity.FacilityJob."+LifeState.CampaignSerial+"-"+id+"-"+LifeState.Day,0)>0;
         }
         public static bool Begin(string id,int reward,float hours)
@@ -46,7 +48,7 @@ namespace AfterSignal
             if(node)Destroy(node);carrying=holding=false;held=0;
             if(Completed>=3)
             {
-                done[id]=stamp;if(!LifeState.SuppressSave){SaveStore.SetString(Key(id),stamp);SaveStore.Save();}
+                Done[id]=stamp;if(!LifeState.SuppressSave){SaveStore.SetString(Key(id),stamp);SaveStore.Save();}
                 int pay=SaveStore.GetInt("AFTERSIGNAL.Unity.CivicPermit",0)>0?Mathf.RoundToInt(reward*1.1f):reward;LifeState.Hours+=hours;LifeState.Earn(pay);GameDirector.Instance.Toast("현장 업무 완료 · +"+pay+" C",5);Destroy(gameObject);return;
             }
             step=ActionName(id,Completed);

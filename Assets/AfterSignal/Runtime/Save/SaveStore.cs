@@ -7,17 +7,25 @@ namespace AfterSignal
 {
     /// <summary>
     /// Versioned save slots for story progress. Replaces scattered PlayerPrefs keys: each slot is one JSON file in
-    /// persistentDataPath/saves, written atomically with a .bak copy of the previous good file, and throttled so that
-    /// frequent Save() calls (money, ammo, quest steps) cost at most one disk write every couple of seconds.
+    /// persistentDataPath/saves (saves-editor in the Editor, whose PlayerPrefs are separate too), written atomically with a
+    /// .bak copy of the previous good file, and throttled so that frequent Save() calls (money, ammo, quest steps) cost at
+    /// most one disk write every couple of seconds; writes made while the application quits go to disk at once.
     /// Settings (volume, graphics, bindings…) stay in PlayerPrefs because they belong to the machine, not the story.
     /// The API mirrors PlayerPrefs so call sites read the same.
     /// </summary>
     public static class SaveStore
     {
         public const int Version = 1, SlotCount = 3;
-        const string ActiveSlotKey = "AFTERSIGNAL.Unity.ActiveSlot", MigratedKey = "AFTERSIGNAL.Unity.SaveMigrated";
+#if UNITY_EDITOR
+        // The Editor and the built player share persistentDataPath, so the Editor keeps its own folder and active slot.
+        const string Folder = "saves-editor", ActiveSlotKey = "AFTERSIGNAL.Unity.ActiveSlot.Editor";
+#else
+        const string Folder = "saves", ActiveSlotKey = "AFTERSIGNAL.Unity.ActiveSlot";
+#endif
         const float FlushInterval = 2f;
         const string LegacyFlag = "AFTERSIGNAL.Unity.LegacyImported";
+        // Written next to the slots once the legacy import is on disk, so the marker can never get out of step with the folder.
+        const string MigratedFile = "legacy-import.done";
 
         [Serializable] sealed class Entry { public string key; public int type; public int i; public float f; public string s; }
         [Serializable] sealed class SlotFile { public int version; public long savedAt; public List<Entry> entries = new(); }
@@ -25,15 +33,16 @@ namespace AfterSignal
 
         static readonly Dictionary<string, Entry> values = new();
         static int loadedSlot = -1;
-        static bool dirty;
+        static bool dirty, quitting;
         static float lastFlush = -999;
+        static long lastSavedTicks;
         static string directoryOverride;
         /// <summary>Changes whenever the active slot is switched or reset; static caches reload when it differs.</summary>
         public static int Generation { get { Ensure(); return generation; } }
         static int generation;
 
-        /// <summary>Directory for slot files (tests may redirect it).</summary>
-        public static string Directory { get => directoryOverride ?? Path.Combine(Application.persistentDataPath, "saves"); set { directoryOverride = value; loadedSlot = -1; values.Clear(); } }
+        /// <summary>Directory for slot files (tests and smokes redirect it). Pending changes are written to the old one first.</summary>
+        public static string Directory { get => directoryOverride ?? Path.Combine(Application.persistentDataPath, Folder); set { Flush(); directoryOverride = value; loadedSlot = -1; values.Clear(); dirty = false; } }
         public static int ActiveSlot
         {
             get => Mathf.Clamp(PlayerPrefs.GetInt(ActiveSlotKey, 0), 0, SlotCount - 1);
@@ -47,18 +56,36 @@ namespace AfterSignal
         static void Ensure()
         {
             if (loadedSlot == ActiveSlot) return;
-            values.Clear(); dirty = false; LastLoadWarning = null;
+            values.Clear(); dirty = false; LastLoadWarning = null; lastSavedTicks = 0;
             loadedSlot = ActiveSlot; generation++;
-            if (!TryRead(PathFor(loadedSlot), out var file) && File.Exists(PathFor(loadedSlot)))
+            string main = PathFor(loadedSlot);
+            var file = ReadSlot(loadedSlot, out bool fallback);
+#if !UNITY_EDITOR
+            if (loadedSlot == 0 && directoryOverride == null) ClaimSlot1(ref file, ref fallback, main);
+#endif
+            if (fallback || file == null && File.Exists(main))
             {
-                // Keep the unreadable file for inspection and fall back to the last good copy.
-                try { File.Copy(PathFor(loadedSlot), PathFor(loadedSlot) + ".corrupt", true); } catch (Exception) { }
-                if (TryRead(PathFor(loadedSlot) + ".bak", out file)) LastLoadWarning = "저장 파일이 손상되어 직전 백업에서 복원했습니다.";
-                else LastLoadWarning = "저장 파일을 읽을 수 없어 새 기록으로 시작합니다. 손상된 파일은 .corrupt로 보관했습니다.";
-                if (file != null) dirty = true;
+                // Keep an unreadable file for inspection. A missing one (interrupted replace) also falls back to the last good copy.
+                bool corrupt = File.Exists(main);
+                if (corrupt) try { File.Copy(main, main + ".corrupt", true); } catch (Exception) { }
+                LastLoadWarning = file == null ? "저장 파일을 읽을 수 없어 새 기록으로 시작합니다. 손상된 파일은 .corrupt로 보관했습니다." : corrupt ? "저장 파일이 손상되어 직전 백업에서 복원했습니다." : "저장 파일이 없어 직전 백업에서 복원했습니다.";
             }
-            if (file != null) foreach (var e in file.entries) if (!string.IsNullOrEmpty(e.key)) values[e.key] = e;
-            if (file == null && loadedSlot == 0 && PlayerPrefs.GetInt(MigratedKey, 0) == 0) ImportLegacy();
+            if (file != null) { foreach (var e in file.entries) if (!string.IsNullOrEmpty(e.key)) values[e.key] = e; lastSavedTicks = file.savedAt; }
+            // Write the recovered copy back as the main file (only now that its values are loaded).
+            if (fallback) { dirty = true; Runner.Wake(); }
+            if (file == null && loadedSlot == 0 && !File.Exists(Path.Combine(Directory, MigratedFile))) ImportLegacy();
+        }
+
+        /// <summary>The main slot file, else the newer readable one of its .bak and a .tmp left by an interrupted write.</summary>
+        static SlotFile ReadSlot(int slot, out bool fallback)
+        {
+            fallback = false;
+            string main = PathFor(slot);
+            if (TryRead(main, out var file)) return file;
+            foreach (var path in new[] { main + ".bak", main + ".tmp" })
+                if (TryRead(path, out var copy) && (file == null || copy.savedAt > file.savedAt)) file = copy;
+            fallback = file != null;
+            return file;
         }
 
         static bool TryRead(string path, out SlotFile file)
@@ -75,13 +102,35 @@ namespace AfterSignal
             catch (Exception error) { Debug.LogWarning("AFTERSIGNAL save read failed · " + path + " · " + error.Message); return false; }
         }
 
+#if !UNITY_EDITOR
+        // Earlier builds kept the Editor's slots in this same folder too, while on Windows the Editor and the player have separate
+        // PlayerPrefs. Every player build sets MigratedKey in its own PlayerPrefs once it opens slot 1 with no file, so a slot 1
+        // file with no import marker, no MigratedKey and this player's own legacy progress waiting was written by the Editor:
+        // it is kept as *.editor and the player's progress is imported in its place.
+        const string MigratedKey = "AFTERSIGNAL.Unity.SaveMigrated";
+        static void ClaimSlot1(ref SlotFile file, ref bool fallback, string main)
+        {
+            if (file != null && !LifeState.SuppressSave && !PlayerPrefs.HasKey(MigratedKey) && !File.Exists(Path.Combine(Directory, MigratedFile)) && Array.Exists(LegacyKeys.Progress, PlayerPrefs.HasKey))
+            {
+                // Main file last: if anything fails, slot 1 is still there and nothing is imported over it.
+                try { foreach (var path in new[] { main + ".tmp", main + ".bak", main }) if (File.Exists(path)) { File.Copy(path, path + ".editor", true); File.Delete(path); } }
+                catch (Exception error) { Debug.LogWarning("AFTERSIGNAL save: could not set aside the Editor's slot 1 · " + error.Message); return; }
+                Debug.LogWarning("AFTERSIGNAL save: slot 1 was written by the Editor; kept as " + Path.GetFileName(main) + ".editor and importing this player's progress");
+                file = null; fallback = false;
+            }
+            if (file == null && !PlayerPrefs.HasKey(MigratedKey)) { PlayerPrefs.SetInt(MigratedKey, 1); PlayerPrefs.Save(); }
+        }
+#endif
+
         /// <summary>Hook for future format changes: migrate older slot files step by step.</summary>
         static SlotFile Upgrade(SlotFile file) { file.version = Version; return file; }
 
-        /// <summary>One-time import of the pre-slot PlayerPrefs progress into slot 1 (legacy keys are left untouched).</summary>
+        /// <summary>
+        /// One-time import of the pre-slot PlayerPrefs progress into slot 1 (legacy keys are left untouched). It only counts as
+        /// done once slot 1 is on disk: while diagnostics suppress saving, or if the write fails, the next launch imports again.
+        /// </summary>
         static void ImportLegacy()
         {
-            PlayerPrefs.SetInt(MigratedKey, 1);
             int imported = 0;
             foreach (var key in LegacyKeys.Progress)
             {
@@ -89,12 +138,21 @@ namespace AfterSignal
                 // PlayerPrefs has no type query: reading a key as the wrong type returns the fallback sentinel.
                 const string none = "\u0001";
                 string text = PlayerPrefs.GetString(key, none);
-                if (text != none) Put(key, 2, 0, 0, text);
-                else if (PlayerPrefs.GetInt(key, int.MinValue) != int.MinValue) Put(key, 0, PlayerPrefs.GetInt(key, 0), 0, null);
-                else Put(key, 1, 0, PlayerPrefs.GetFloat(key, 0), null);
+                // Straight into the slot, not through Put: while quitting every Put flushes (and a suppressed flush clears dirty),
+                // so the Flush below would report "nothing to write" although slot 1 was never written.
+                values[key] = text != none ? new Entry { key = key, type = 2, s = text }
+                    : PlayerPrefs.GetInt(key, int.MinValue) != int.MinValue ? new Entry { key = key, type = 0, i = PlayerPrefs.GetInt(key, 0) }
+                    : new Entry { key = key, type = 1, f = PlayerPrefs.GetFloat(key, 0) };
                 imported++;
             }
-            if (imported > 0) { Put(LegacyFlag, 0, 1, 0, null); dirty = true; Flush(); Debug.Log($"AFTERSIGNAL: imported {imported} legacy progress keys into save slot 1"); }
+            if (imported == 0) return;
+            values[LegacyFlag] = new Entry { key = LegacyFlag, type = 0, i = 1 };
+            // dirty is set here, so true means this call wrote slot 1; a failed write is retried by the runner, not marked done.
+            dirty = true;
+            if (!Flush()) { Save(); return; }
+            try { File.WriteAllText(Path.Combine(Directory, MigratedFile), DateTime.UtcNow.ToString("o")); }
+            catch (Exception error) { Debug.LogWarning("AFTERSIGNAL save migration marker failed · " + error.Message); }
+            Debug.Log($"AFTERSIGNAL: imported {imported} legacy progress keys into save slot 1");
         }
 
         static void Put(string key, int type, int i, float f, string s) { values[key] = new Entry { key = key, type = type, i = i, f = f, s = s }; dirty = true; Runner.Wake(); }
@@ -118,11 +176,15 @@ namespace AfterSignal
         /// <summary>Requests a write; actual disk writes are throttled (see <see cref="Flush"/>).</summary>
         public static void Save() { if (dirty) Runner.Wake(); }
 
-        /// <summary>Writes the active slot now if anything changed. Skipped while diagnostics suppress saving.</summary>
-        public static void Flush()
+        /// <summary>
+        /// Writes the active slot now if anything changed. Skipped while diagnostics suppress saving.
+        /// Returns false when no slot is loaded or pending changes were suppressed or could not be written.
+        /// </summary>
+        public static bool Flush()
         {
-            if (!dirty || loadedSlot < 0) return;
-            if (LifeState.SuppressSave) { dirty = false; return; }
+            if (loadedSlot < 0) return false;
+            if (!dirty) return true;
+            if (LifeState.SuppressSave) { dirty = false; return false; }
             try
             {
                 System.IO.Directory.CreateDirectory(Directory);
@@ -131,9 +193,10 @@ namespace AfterSignal
                 File.WriteAllText(temp, JsonUtility.ToJson(file));
                 if (File.Exists(path)) File.Replace(temp, path, path + ".bak");
                 else File.Move(temp, path);
-                dirty = false; lastFlush = Time.realtimeSinceStartup;
+                dirty = false; lastFlush = Time.realtimeSinceStartup; lastSavedTicks = file.savedAt;
+                return true;
             }
-            catch (Exception error) { Debug.LogError("AFTERSIGNAL save write failed · " + error.Message); }
+            catch (Exception error) { Debug.LogError("AFTERSIGNAL save write failed · " + error.Message); return false; }
         }
 
         /// <summary>Clears the active slot completely (New Game). Every progress key goes, including ones added later.</summary>
@@ -143,13 +206,14 @@ namespace AfterSignal
             values.Clear(); dirty = true; Flush(); generation++;
         }
 
-        public static bool SlotExists(int slot) => File.Exists(PathFor(slot)) || File.Exists(PathFor(slot) + ".bak");
+        public static bool SlotExists(int slot) => slot == loadedSlot && values.Count > 0 || ReadSlot(slot, out _) != null;
 
         public static SlotSummary Summary(int slot)
         {
             var summary = new SlotSummary();
-            if (slot == loadedSlot && values.Count > 0) { summary.exists = values.ContainsKey(LegacyKeys.Stage); summary.savedAt = DateTime.Now; }
-            else if (TryRead(PathFor(slot), out var file) || TryRead(PathFor(slot) + ".bak", out file))
+            // The loaded slot reports its last write; only changes still waiting for the throttled write read as "now".
+            if (slot == loadedSlot && values.Count > 0) { summary.exists = values.ContainsKey(LegacyKeys.Stage); summary.savedAt = dirty || lastSavedTicks <= 0 ? DateTime.Now : new DateTime(lastSavedTicks, DateTimeKind.Utc).ToLocalTime(); }
+            else if (ReadSlot(slot, out _) is SlotFile file)
             {
                 var map = new Dictionary<string, Entry>(); foreach (var e in file.entries) if (e.key != null) map[e.key] = e;
                 summary.exists = map.ContainsKey(LegacyKeys.Stage); summary.savedAt = new DateTime(file.savedAt, DateTimeKind.Utc).ToLocalTime();
@@ -166,8 +230,14 @@ namespace AfterSignal
         public static void DeleteSlot(int slot)
         {
             foreach (var suffix in new[] { "", ".bak", ".tmp" }) try { File.Delete(PathFor(slot) + suffix); } catch (Exception) { }
-            if (slot == loadedSlot) { values.Clear(); dirty = false; loadedSlot = -1; }
+            if (slot == loadedSlot) { values.Clear(); dirty = false; loadedSlot = -1; lastSavedTicks = 0; }
         }
+
+        // Play sessions without a domain reload start from the real folder again. OnApplicationQuit runs in no fixed order and
+        // OnDestroy saves come after it, so once the application quits every write goes to disk at once.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetSession() { quitting = dirty = false; directoryOverride = null; loadedSlot = -1; values.Clear(); Application.quitting -= OnQuitting; Application.quitting += OnQuitting; }
+        static void OnQuitting() { quitting = true; Flush(); }
 
         /// <summary>Hidden runner that performs throttled flushes and a final flush on quit / focus loss.</summary>
         sealed class Runner : MonoBehaviour
@@ -175,7 +245,9 @@ namespace AfterSignal
             static Runner instance;
             public static void Wake()
             {
-                if (instance || !Application.isPlaying) return;
+                if (!Application.isPlaying) return;
+                if (quitting) { Flush(); return; }
+                if (instance) return;
                 var go = new GameObject("AFTERSIGNAL save writer") { hideFlags = HideFlags.HideAndDontSave };
                 DontDestroyOnLoad(go); instance = go.AddComponent<Runner>();
             }
