@@ -42,7 +42,7 @@ namespace AfterSignal
             string text=q.arc+"\n"+q.summary+"\n\n선행 의뢰: "+prerequisite+" · 보상 "+q.reward+" C\n";
             for(int i=0;i<q.steps.Length;i++){var s=q.steps[i];text+=(i<e.step?"✓ ":i==e.step?"→ ":"· ")+"["+StoryKind(s)+"] "+s.label+" / "+(s.world?FourCityCatalog.CityNames[FourCityCatalog.CityAt(s.position)]:UrbanCatalog.Name(s.site))+"\n";}
             if(e.choice!=0){var decision=q.steps.FirstOrDefault(s=>s.kind=="choice");text+="결정: "+(decision!=null?CityChronicle.ChoiceLabel(decision,e.choice):e.choice==1?"공개와 공동 감독":"당사자 동의와 보호")+"\n";}
-            if(c.Done(q))text+="\n"+(q.finale?c.Ending(q):q.steps[q.steps.Length-1].line);
+            var last=q.steps[q.steps.Length-1];if(c.Done(q))text+="\n"+(q.finale?c.Ending(q):last.kind=="battle"&&!string.IsNullOrEmpty(last.outro)?last.outro:last.line);
             Panel("journal",q.title,text);
             if(!c.Done(q)&&c.Available(q))Option(e.accepted?"이 의뢰 추적":"수락하고 추적",()=>{c.Track(q);Dismiss();});
             Option("목록",()=>

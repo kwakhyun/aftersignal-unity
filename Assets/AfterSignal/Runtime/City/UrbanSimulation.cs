@@ -47,6 +47,7 @@ namespace AfterSignal
             while (!game.Ready)
                 yield return null;
             Cars.AddRange(FindObjectsByType<CityVehicle>());
+            saveGeneration = SaveStore.Generation;
             if(game.stage==StageId.UrbanCity&&!GetComponent<FacilityParking>())gameObject.AddComponent<FacilityParking>();
             foreach (var c in Cars)
                 c.occupied = false;
@@ -416,10 +417,11 @@ namespace AfterSignal
             return false;
         }
 
+        int saveGeneration = -1;
         public void SaveCar()
         {
             RememberRide();
-            if (LifeState.SuppressSave || !Owned || !game || Owned.IsSpecial)
+            if (LifeState.SuppressSave || !Owned || !game || Owned.IsSpecial || saveGeneration != SaveStore.Generation)
                 return;
             string p = UrbanCatalog.Prefix;
             SaveStore.SetInt(p + "Car", 1);

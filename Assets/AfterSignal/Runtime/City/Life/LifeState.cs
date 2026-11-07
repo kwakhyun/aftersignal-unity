@@ -167,7 +167,8 @@ namespace AfterSignal
 
         public static void Save()
         {
-            if (!loaded || SuppressSave)
+            // Values loaded from another slot (title switched slots before the old scene unloaded) must not be written into the new one.
+            if (!loaded || SuppressSave || loadedGeneration != SaveStore.Generation)
                 return;
             SaveStore.SetInt(Prefix + "Credits", Credits);
             SaveStore.SetInt(Prefix + "Savings", Savings);

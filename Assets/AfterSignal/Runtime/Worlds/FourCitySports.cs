@@ -25,7 +25,7 @@ namespace AfterSignal
             for(int i=0;i<league.matches.Count;i++){var m=league.matches[i];if(m.phase==MatchPhase.Final&&m.finalSeconds>90){var v=Array.Find(FourCityCatalog.Venues,v=>v.id==m.venue);var next=new SportsMatch(v){round=m.round+1,random=m.random,wait=90};for(int car=0;car<6;car++)next.racePace[car]=(next.Roll()-.5f)*4;if(v.kind==VenueKind.Baseball)next.battingTeam=1;league.matches[i]=next;}}
             if(Time.unscaledTime>saveTime){saveTime=Time.unscaledTime+10;Save();}
         }
-        public void Save(){if(LifeState.SuppressSave)return;SaveStore.SetString(Key,JsonUtility.ToJson(league));SaveStore.Save();}
+        public void Save(){if(LifeState.SuppressSave||leagueGeneration!=SaveStore.Generation)return;SaveStore.SetString(Key,JsonUtility.ToJson(league));SaveStore.Save();}
         void OnApplicationQuit()=>Save();
         void OnDestroy(){Save();if(Instance==this)Instance=null;}
     }

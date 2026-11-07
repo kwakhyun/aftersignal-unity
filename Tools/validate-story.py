@@ -28,7 +28,7 @@ SAVED_STEP_COUNT = 3                                # released saves store step 
 PEOPLE_ART = {"OfficeMan", "OfficeWoman", "Worker", "Police", "CivilianWoman", "CivilianMan", "ElderWoman", "ElderMan", "Bartender",
               "Nurse", "Doctor", "TeacherWoman", "TeacherMan", "StudentGirl", "StudentBoy", "Soldier"}
 FACILITY_SHEETS = ["Aircrew", "Travellers", "Harbour", "Coast", "NightMarket", "Utilities", "Pelagic", "NeonTrade", "Arcology", "CanalLife", "CivicFuture", "SkyWard"]
-CHOICE_LABEL_MAX = 24                               # journal/dialogue buttons are 474 px wide at 16 px
+CHOICE_LABEL_MAX = 24                               # story choice buttons are 440 px wide at 16 px (journal buttons 474 px)
 
 # Field names must match FourCityCampaign.Chapter in Runtime/Worlds/FourCityCampaign.cs.
 CHAPTER_KEYS = {"id", "title", "speaker", "line", "objective", "prompt", "choiceA", "choiceB", "resultA", "resultB",

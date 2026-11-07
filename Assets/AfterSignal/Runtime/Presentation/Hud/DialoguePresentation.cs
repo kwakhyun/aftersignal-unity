@@ -68,8 +68,16 @@ namespace AfterSignal
                 PlaceLifeElement(lifeInput.textComponent.rectTransform,13,9,682,28);
                 PlaceLifeElement(((Text)lifeInput.placeholder).rectTransform,13,9,682,28);
                 PlaceLifeElement(lifeSend.GetComponent<RectTransform>(),1104,320,176,44);
-                for(int i=0;i<lifeOptions.Length;i++)
-                    if(lifeOptions[i].gameObject.activeSelf) PlaceLifeElement(lifeOptions[i].GetComponent<RectTransform>(),380+i*300,story?320:266,290,40);
+                // Two story choices get wide buttons so per-quest labels fit; labels are re-fitted to their button.
+                int active=0;for(int i=0;i<lifeOptions.Length;i++)if(lifeOptions[i].gameObject.activeSelf)active++;
+                float width=active<=2?440:290;
+                for(int i=0,slot=0;i<lifeOptions.Length;i++)
+                    if(lifeOptions[i].gameObject.activeSelf)
+                    {
+                        PlaceLifeElement(lifeOptions[i].GetComponent<RectTransform>(),380+slot*(width+10),story?320:266,width,40);
+                        var label=lifeOptions[i].GetComponentInChildren<Text>();PlaceLifeElement(label.rectTransform,10,0,width-20,40);label.alignment=TextAnchor.MiddleCenter;label.fontSize=16;
+                        slot++;
+                    }
                 PlaceLifeElement(conversationLoading.rectTransform,380,248,900,24);
                 float age=Time.unscaledTime-life.SendingStarted;
                 conversationLoading.text=life.Sending ? (age>10 ? "답변을 정리하고 있어요" : "이야기를 생각하고 있어요") + new string('.',1+(int)(Time.unscaledTime*2)%3) + "   "+age.ToString("0")+"초" : "";

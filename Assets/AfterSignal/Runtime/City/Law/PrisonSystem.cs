@@ -39,8 +39,9 @@ namespace AfterSignal
         public static void SaveSentence(){if(Instance&&Instance.Jailed)Instance.Persist();}
         public static void ResetSentence(){if(Instance){Instance.remaining=0;Instance.confined=false;}Forget();}
         static void Forget(){if(!LifeState.SuppressSave){SaveStore.DeleteKey(SaveKey);SaveStore.DeleteKey(BailKey);}}
-        void Persist(){if(!LifeState.SuppressSave){SaveStore.SetFloat(SaveKey,remaining);SaveStore.SetInt(BailKey,bailAmount);}}
-        void Awake(){Instance=this;game=GameDirector.Instance;remaining=LifeState.SuppressSave?0:SaveStore.GetFloat(SaveKey,0);bailAmount=SaveStore.GetInt(BailKey,0);if(bailAmount<=0)bailAmount=DefaultBail;}
+        void Persist(){if(!LifeState.SuppressSave&&saveGeneration==SaveStore.Generation){SaveStore.SetFloat(SaveKey,remaining);SaveStore.SetInt(BailKey,bailAmount);}}
+        int saveGeneration=-1;
+        void Awake(){Instance=this;game=GameDirector.Instance;remaining=LifeState.SuppressSave?0:SaveStore.GetFloat(SaveKey,0);bailAmount=SaveStore.GetInt(BailKey,0);saveGeneration=SaveStore.Generation;if(bailAmount<=0)bailAmount=DefaultBail;}
         void Start(){if(Jailed&&game&&game.stage==StageId.UrbanCity&&!game.Title)Seat();}
         void Seat(){game.Player.Rope.Release();game.Player.Respawn(Cell);game.CameraRig.Snap();confined=true;}
         public static void BeforeInput(ref ControlFrame input,float dt)

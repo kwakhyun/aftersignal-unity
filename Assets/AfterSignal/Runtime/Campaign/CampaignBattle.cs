@@ -23,7 +23,7 @@ namespace AfterSignal
             target=at;label="";if(!current||current.finishing||current.Completed)return false;
             var c=current;target=c.step.position;label="메인 전투 · "+(c.Objective??c.step.label);
             if(c.Evacuating)
-            { target=c.survivor&&c.survivor.GetComponent<WorldActor>().Downed?c.survivor.transform.position:c.extraction;return true; }
+            { var follower=c.survivor?c.survivor.GetComponent<EscortFollower>():null;target=c.survivor&&(c.survivor.GetComponent<WorldActor>().Downed||follower&&!follower.Following)?c.survivor.transform.position:c.extraction;return true; }
             float best=float.MaxValue;
             foreach(var actor in c.enemies){if(!actor||!actor.Alive||actor.Downed)continue;float d=(actor.Center-at).sqrMagnitude;if(d<best){best=d;target=actor.Center;}}
             if(best==float.MaxValue)foreach(var device in c.devices)if(device&&device.Alive){target=device.Center;break;}
@@ -78,7 +78,7 @@ namespace AfterSignal
             if(step.battleMode=="rescue")
             {
                 var go=new GameObject("구출 대상 / 기억 실험 생존자",typeof(SpriteRenderer),typeof(CityNpc),typeof(EscortFollower));go.transform.position=CrowdFlow.Place(step.position+Vector3.right*10,expected,out var safeSurvivor,18)?safeSurvivor:extraction;
-                go.GetComponent<SpriteRenderer>().sharedMaterial=Resources.Load<Material>("Materials/PixelActor");survivor=go.GetComponent<CityNpc>();survivor.fixedQuest=true;survivor.Configure(9800+expected,"구조 대상","실종 주민","저 사람들을 막아 줘요. 같이 빠져나가요!");PeopleArt.Attach(go,"CivilianWoman");props.Add(go);survivor.GetComponent<WorldActor>().health=200;
+                go.GetComponent<SpriteRenderer>().sharedMaterial=Resources.Load<Material>("Materials/PixelActor");survivor=go.GetComponent<CityNpc>();survivor.fixedQuest=true;survivor.Configure(9800+expected,"구조 대상","실종 주민","저 사람들을 막아 줘요. 같이 빠져나가요!");PeopleArt.Attach(go,"CivilianWoman");props.Add(go);var survivorBody=survivor.GetComponent<WorldActor>();survivorBody.protectedResident=false;survivorBody.health=200;
             }
             if(step.battleMode=="boss")
             {
@@ -123,7 +123,7 @@ namespace AfterSignal
             if(age>nextPulse&&(step.battleMode=="rescue"||step.battleMode=="escape")){nextPulse=age+4;SignalEffects.Ring(extraction+Vector3.up*.13f,SignalEffects.Cyan,4,5);}
             if(radio)radio.transform.parent.gameObject.SetActive(age<=speechUntil&&!(WantedSystem.Instance?.NoaSupport.Visible??false));
             if(finishing){if(age>speechUntil){Completed=true;chronicle.Advance(quest,expected);Destroy(gameObject);}return;}
-            if(Vector3.Distance(game.Player.transform.position,step.position)>180){Say("노아: 작전 구역을 벗어났어. 현장으로 돌아오면 다시 진입하자.");Destroy(gameObject);return;}
+            if(Vector3.Distance(game.Player.transform.position,step.position)>180){game.Toast("작전 구역 이탈 · 현장으로 돌아오면 작전을 다시 시작합니다",5);Destroy(gameObject);return;}
             if(survivor&&!survivor.GetComponent<WorldActor>().Alive){Fail("노아: 구조 대상이 쓰러졌다. 진입 지점에서 다시 시도하자.","작전 실패 · 구조 대상 피격 — 단계를 처음부터 다시 시작합니다");survivor=null;}
             if(failedUntil>0){if(age>failedUntil)Destroy(gameObject);return;}
             int waves=step.battleMode=="boss"?1:Mathf.Max(1,step.waves);
@@ -170,7 +170,7 @@ namespace AfterSignal
             else Objective=$"기억 회수대 돌파 · {Wave}/{waves}차 공격\n남은 적 {Remaining}명 · 엄폐물과 측면 통로 활용";
             if(Intro&&Wave==0)Objective="전투 준비 · "+Mathf.CeilToInt(Mathf.Max(0,nextWave-age))+"초\n빨간 ▼가 적입니다 · 마우스 조준 / 좌클릭 공격 / 숫자키 무기 전환";
             goalLabel.text=chronicle.Tracked.title+"  /  "+(expected+1)+"단계\n"+Objective;
-            if(defeated){finishing=true;game.Player.Heal(28);Say(step.outro??"노아: 현장 확보. 잘했어, 서하. 다음 목표로 가자.");}
+            if(defeated){finishing=true;if(step.battleMode=="escape"||step.battleMode=="rescue"){foreach(var a in enemies)if(a)Destroy(a.gameObject);enemies.Clear();}game.Player.Heal(28);Say(step.outro??"노아: 현장 확보. 잘했어, 서하. 다음 목표로 가자.");}
         }
         void OnDestroy(){if(current==this)current=null;foreach(var a in enemies)if(a)Destroy(a.gameObject);foreach(var go in props)if(go)Destroy(go);}
     }
