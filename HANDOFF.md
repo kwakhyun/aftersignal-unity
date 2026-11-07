@@ -1,3 +1,10 @@
+# Current handoff · 2026-11-07 · feature and UI/UX improvement pass
+
+- Full summary, verification and the Unity checklist: [Documentation/Improvements/README.md](Documentation/Improvements/README.md). Sections below this one are history.
+- Not run in Unity. Runtime C# compiled against reference DLLs with Input System/URP stubs; NPC gateway tests, story validator and public-asset check pass.
+- New systems: SaveStore save slots (progress) vs PlayerPrefs (settings), SettingsPanel shared by title/pause, KeyHints + rebindable Controls.inputactions with gamepad, DifficultySettings + GameTuning balance fields, data-driven campaign flags and validator.
+- First thing to do in the editor: run EditMode/PlayMode tests and the smoke probes; update smoke expectations that encode old behaviour (car ownership, wanted clearing, quest kinds).
+
 # Current handoff · 2026-10-16 · ArtCraft local toolchain and map art
 
 - User asked to use the recent open-source ArtCraft and its AI CLI to improve the project. This pass installed and USED official PhotoCraft 0.9.0 + VectorCraft 0.11.0 portable CLIs. Archives are SHA-256 pinned. No cloud requests, account changes, purchases, commit or push.
