@@ -6,7 +6,21 @@ namespace AfterSignal
     public sealed class WantedSystem : MonoBehaviour
     {
         public static WantedSystem Instance { get; private set; }
-        public static int Level => LifeState.Heat <= 0 ? 0 : LifeState.Heat < 20 ? 1 : LifeState.Heat < 45 ? 2 : LifeState.Heat < 80 ? 3 : LifeState.Heat < 130 ? 4 : 5;
+        public static int Level
+        {
+            get
+            {
+                float heat = LifeState.Heat;
+                if (heat <= 0)
+                    return 0;
+                var steps = GameTuning.Active.wantedHeat;int level = 1;
+                if (steps != null)
+                    for (int i = 0; i < steps.Length && i < 4; i++)
+                        if (heat >= steps[i])
+                            level = i + 2;
+                return level;
+            }
+        }
 
         public static readonly int[] Strength =
         {
@@ -23,7 +37,9 @@ namespace AfterSignal
         public Vector3 LastSeen { get; private set; }
         public bool Seen { get; private set; }
         public NoaWantedSupport NoaSupport { get; } = new NoaWantedSupport();
-        public float EscapeTime => 36 + Level * 10;
+        public float EscapeTime => GameTuning.Active.escapeBase + Level * GameTuning.Active.escapePerLevel;
+        // Paying at the police desk scales with the current heat and difficulty.
+        public static int Fine => Mathf.RoundToInt((GameTuning.Active.fineBase + LifeState.Heat * GameTuning.Active.finePerHeat) * DifficultySettings.Penalty);
 
         public int ActiveOfficers
         {
@@ -56,7 +72,7 @@ namespace AfterSignal
         {
             LifeState.Load();
             int old = Level;
-            LifeState.Heat = Mathf.Clamp(LifeState.Heat + severity, 0, 170);
+            LifeState.Heat = Mathf.Clamp(LifeState.Heat + Mathf.Max(0, severity) * DifficultySettings.HeatGain, 0, GameTuning.Active.heatCap);
             LifeState.HiddenSeconds = 0;
             if (Instance)
             {
@@ -161,9 +177,14 @@ namespace AfterSignal
             if (Level >= 4 && responseAge>32 && !Helicopter && game.stage == StageId.UrbanCity && ResponseDispatch.TryOrigin(LastSeen,false,true,0,out var helipad))
                 Helicopter = PoliceHelicopter.Create(this,helipad);
             bool aircraftAlive = Helicopter && Helicopter.Body.Alive;
+            // Defeating the responders never clears the record: heat only ends by staying unseen,
+            // surrendering, paying the fine or Noa's support. A fresh squad follows after a delay.
             if (engaged && deployed >= Strength[Level] && ActiveOfficers == 0 && !aircraftAlive && !TacticalTransport.Pending && !GetComponent<MilitaryResponse>())
             {
-                Clear("출동한 경찰 병력을 모두 제압했습니다 · 수배 해제");
+                Officers.RemoveAll(o => !o || !o.Body.Alive);
+                deployed = carCount = 0;
+                dispatchClock = GameTuning.Active.reinforcementDelay;
+                game.Toast("출동 병력 무력화 · 수배는 유지되며 지원 병력이 추가로 출동합니다", 5);
             }
         }
 

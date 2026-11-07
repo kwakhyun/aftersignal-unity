@@ -3,18 +3,26 @@ namespace AfterSignal
 {
     public sealed partial class CityVehicle
     {
-        int customColor=-1;
+        int customColor=-1;Material stockWheel;
         static readonly Color[] colors={new Color(.06f,.16f,.3f),new Color(.64f,.06f,.32f),new Color(.12f,.54f,.46f),new Color(.68f,.5f,.23f),new Color(.8f,.83f,.8f),new Color(.04f,.045f,.05f)};
+        // Paid Motor Lab cosmetics belong to the registered car only; any other car shows its stock look.
+        public bool Registered=>UrbanSimulation.Instance&&UrbanSimulation.Instance.Owned==this;
         public void Repair(){if(Wrecked)return;InitializeDurability();health=MaxHealth;exploded=false;ApplyDamageLook();UrbanSimulation.Instance?.SaveCar();}
         public void ApplyCustomization()
         {
-            if(!owned||IsSpecial||type==CityVehicleType.Tank||type==CityVehicleType.Motorcycle)return;
-            customColor=PlayerPrefs.GetInt(UrbanCatalog.Prefix+"CarColor",-1);
+            if(IsSpecial||type==CityVehicleType.Tank||type==CityVehicleType.Motorcycle)return;
+            bool mine=Registered;
+            customColor=mine?PlayerPrefs.GetInt(UrbanCatalog.Prefix+"CarColor",-1):-1;
             ApplyDamageLook();
-            if(PlayerPrefs.GetInt(UrbanCatalog.Prefix+"CarWheels",0)>0)
-                foreach(var mesh in GetComponentsInChildren<MeshRenderer>())if(mesh.name=="Wheel alloy")mesh.sharedMaterial=Resources.Load<Material>("Materials/Gold");
+            bool wheels=mine&&PlayerPrefs.GetInt(UrbanCatalog.Prefix+"CarWheels",0)>0;
+            foreach(var mesh in GetComponentsInChildren<MeshRenderer>())
+                if(mesh.name=="Wheel alloy")
+                {
+                    if(wheels){if(!stockWheel)stockWheel=mesh.sharedMaterial;mesh.sharedMaterial=Resources.Load<Material>("Materials/Gold");}
+                    else if(stockWheel)mesh.sharedMaterial=stockWheel;
+                }
             var spoiler=transform.Find("Custom spoiler");
-            bool show=PlayerPrefs.GetInt(UrbanCatalog.Prefix+"CarSpoiler",0)>0;
+            bool show=mine&&PlayerPrefs.GetInt(UrbanCatalog.Prefix+"CarSpoiler",0)>0;
             if(show&&!spoiler)
             {
                 var part=new GameObject("Custom spoiler");part.transform.SetParent(transform,false);spoiler=part.transform;

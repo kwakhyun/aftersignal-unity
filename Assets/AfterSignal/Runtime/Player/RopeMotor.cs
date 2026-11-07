@@ -9,7 +9,8 @@ namespace AfterSignal
         public bool Attached=>Target&&Target.Valid;
         public float Length {get;private set;}
         public int AttachCount {get;private set;}
-        public float Range=>player&&CivicWorld.Exploration(player.Director.stage)?160:player?player.Tuning.ropeRange:24;
+        // Exploration uses the long city rope, shortened while wanted so it cannot outrun police sight.
+        public float Range=>!player?24:CivicWorld.Exploration(player.Director.stage)?(WantedSystem.Level>0?player.Tuning.ropeRangeWanted:player.Tuning.ropeRangeExploration):player.Tuning.ropeRange;
         public bool AimAssisted {get;private set;}
         PlayerMotor player;LineRenderer line;bool previousHeld;int selectionFrame=-1;float nextSelection,pressBuffer,blockedFor;
         GrappleAnchor surfacePreview,surfaceLatch;

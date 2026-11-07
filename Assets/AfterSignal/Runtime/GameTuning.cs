@@ -52,6 +52,44 @@ namespace AfterSignal
         public AttackTiming heavyReturn=new AttackTiming(.62f,.28f,.39f,.065f,.34f),heavyFinish=new AttackTiming(.78f,.38f,.50f,.08f,.4f);
         public AttackTiming katanaDash=new AttackTiming(.34f,.08f,.18f,.045f,.26f),heavyDash=new AttackTiming(.54f,.19f,.31f,.07f,.35f),pistolDash=new AttackTiming(.34f,.04f,.22f,.014f,.12f);
         public AttackTiming katanaSkill=new AttackTiming(.60f,.22f,.30f,.04f,.3f),heavySkill=new AttackTiming(.82f,.40f,.50f,.075f,.5f),pistolSkill=new AttackTiming(.65f,.10f,.48f,.014f,.15f);
+        // Fields below were inline literals. Unity keeps these initializers for the existing
+        // Resources/GameTuning.asset until a designer overrides them in the inspector.
+        [Header("Law / heat needed for wanted levels 2-5 (level 1 starts above 0)")]
+        public float[] wantedHeat={20,45,80,130};
+        public float heatCap=170;
+        [Header("Law / seconds unseen before the search ends: base + level x step")]
+        public float escapeBase=36,escapePerLevel=10;
+        public float reinforcementDelay=15;
+        [Header("Law / police officers")]
+        public float officerHealthBase=65,officerHealthPerLevel=18;
+        public float policeSight=42;
+        public float pistolShot=11,shotgunPellet=18,rifleShot=9;
+        public float pistolCooldown=1.35f,shotgunCooldown=2.3f,rifleCooldown=1.7f,burstInterval=.15f;
+        public float pistolAim=.65f,shotgunAim=.85f;
+        [Header("Law / sentence seconds, bail and fines (x DifficultySettings.Penalty)")]
+        public float jailBase=45,jailPerLevel=8;
+        public int bailBase=450;public float bailPerHeat=15;
+        public int fineBase=180;public float finePerHeat=14;
+        [Header("Economy / robbery (payout x DifficultySettings.Payout)")]
+        public int vaultMin=2500,vaultMax=5000,vaultCooldownDays=7;
+        public float vaultSeconds=12,vaultReportHeat=45,vaultAlarmHeat=40;
+        public int registerMin=300,registerMax=900,registerCooldownDays=2;
+        public float registerSeconds=4,registerReportHeat=20,registerAlarmHeat=0;
+        [Header("Economy / hospital, terminals, savings, vehicles")]
+        public float hospitalFeeRate=.1f;public int hospitalFeeMin=100,hospitalFeeMax=2500;
+        public int terminalHealFee=40;
+        public float savingsInterest=.01f;public int savingsInterestCap=250;
+        public int carRegistrationFee=300;
+        public float minAwakeHours=6;
+        [Header("Recovery / natural regeneration stops at cap x max health")]
+        public float recoveryDelay=8,recoveryPerSecond=2.5f,recoveryCap=.6f;
+        [Header("Traversal / exploration rope range and recovery")]
+        public float ropeRangeExploration=160,ropeRangeWanted=60,unstuckCooldown=10;
+        [Header("Vehicle collisions / restitution and wall slide")]
+        public float crashRestitution=.25f,crashFriction=.9f,crashImpactSpeed=4,crashAlign=.6f;
+        static GameTuning fallback;
+        // Static systems (wanted level, economy) read this instead of a director reference.
+        public static GameTuning Active{get{var g=GameDirector.Instance;if(g&&g.tuning)return g.tuning;if(!fallback)fallback=Resources.Load<GameTuning>("GameTuning");if(!fallback)fallback=CreateInstance<GameTuning>();return fallback;}}
     }
     public static class CampaignRules
     {

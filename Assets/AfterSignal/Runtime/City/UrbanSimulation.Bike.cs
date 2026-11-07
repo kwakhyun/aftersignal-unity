@@ -30,9 +30,10 @@ namespace AfterSignal
             }
             if(!found){BikeDeliveryPending=true;game.Toast("바이크가 접근 중입니다 · 가까운 평지에 도착하면 배달됩니다.",4);bikeCooldown=Time.unscaledTime+2;return false;}
             if(PersonalBike&&PersonalBike.occupied&&!PersonalBike.owned){game.Toast("바이크가 사용 중입니다.");return false;}
-            if(PersonalBike){Cars.Remove(PersonalBike);if(Owned==PersonalBike)Owned=null;Destroy(PersonalBike.gameObject);}
+            // The bike is always Seoha's but never replaces the registered car (saved separately).
+            if(PersonalBike){Cars.Remove(PersonalBike);Destroy(PersonalBike.gameObject);}
             PersonalBike=Spawn(safe,false,(int)CityVehicleType.Motorcycle);PersonalBike.name="서하의 루멘 바이크";PersonalBike.owned=true;PersonalBike.gameObject.AddComponent<PersonalMotorcycle>();
-            PersonalBike.transform.rotation=Quaternion.Euler(0,game.Player.transform.eulerAngles.y,0);PersonalBike.InitializeDurability();PersonalBike.health=PersonalBike.MaxHealth;PersonalBike.fuel=CityVehicle.Capacity;Owned=PersonalBike;
+            PersonalBike.transform.rotation=Quaternion.Euler(0,game.Player.transform.eulerAngles.y,0);PersonalBike.InitializeDurability();PersonalBike.health=PersonalBike.MaxHealth;PersonalBike.fuel=CityVehicle.Capacity;
             BikeDeliveryPending=false;bikeCooldown=Time.unscaledTime+3;SaveCar();game.Toast("서하의 바이크 도착 · "+Mathf.RoundToInt(Vector3.Distance(from,safe))+" m · E 탑승",5);return true;
         }
     }

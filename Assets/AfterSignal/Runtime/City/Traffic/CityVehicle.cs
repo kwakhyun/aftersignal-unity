@@ -204,6 +204,7 @@ namespace AfterSignal
                 int n = Physics.BoxCastNonAlloc(old + Vector3.up * .9f, new Vector3(HalfLength - .08f, .5f, HalfWidth - .08f), delta.normalized, hits, transform.rotation, length + .12f, 1, QueryTriggerInteraction.Ignore);
                 float allowed = length;
                 Collider hit = null;
+                Vector3 hitNormal = Vector3.zero;
                 for (int i = 0; i < n; i++)
                 {
                     var h = hits[i];
@@ -216,6 +217,7 @@ namespace AfterSignal
                     {
                         allowed = Mathf.Min(allowed, Mathf.Max(0, h.distance - .08f));
                         hit = h.collider;
+                        hitNormal = h.normal;
                     }
                 }
 
@@ -238,7 +240,9 @@ namespace AfterSignal
                 CityPopulation.Instance?.VehicleSweep(this, old, transform.position, speed);
                 if (hit)
                 {
-                    if (Mathf.Abs(speed) > 4 && impactCooldown <= 0)
+                    float approach = Mathf.Abs(speed);
+                    bool impact = approach > GameTuning.Active.crashImpactSpeed && impactCooldown <= 0;
+                    if (impact)
                     {
                         Collisions++;
                         impactCooldown = .6f;
@@ -259,11 +263,42 @@ namespace AfterSignal
                             g?.CameraRig.Kick(.09f);
                     }
 
-                    speed = 0;
+                    // AI traffic still stops dead; a driven vehicle keeps its damage but bounces or slides.
+                    if (ai || Wrecked || Tumbling || hitNormal.sqrMagnitude < .01f)
+                        speed = 0;
+                    else
+                        Rebound(delta, hitNormal, impact);
                 }
             }
 
             AudioLevel();
+        }
+
+        // Splits the velocity at the contact into wall-normal and tangential parts: the normal part is
+        // reflected by the restitution (head-on hits bounce back), the tangential part keeps most of its
+        // speed (glancing hits scrape along) and the heading turns partly into the wall direction.
+        void Rebound(Vector3 delta, Vector3 normal, bool impact)
+        {
+            var t = GameTuning.Active;
+            normal.y = 0;
+            if (normal.sqrMagnitude < .0001f) { speed = 0; return; }
+            normal.Normalize();
+            Vector3 motion = new Vector3(delta.x, 0, delta.z);
+            motion = motion.sqrMagnitude > .000001f ? motion.normalized : Forward * Mathf.Sign(speed);
+            Vector3 velocity = motion * Mathf.Abs(speed);
+            float into = Vector3.Dot(velocity, normal);
+            if (into >= 0) return;
+            Vector3 tangent = velocity - normal * into;
+            Vector3 after = tangent * (impact ? t.crashFriction : .985f) - normal * into * (impact ? t.crashRestitution : 0);
+            float glancing = tangent.magnitude / Mathf.Max(.001f, velocity.magnitude);
+            if (glancing > .5f && tangent.sqrMagnitude > .01f)
+            {
+                Vector3 travel = Forward * (speed >= 0 ? 1 : -1);
+                float angle = Vector3.SignedAngle(travel, tangent.normalized, Vector3.up) * Mathf.Clamp01(t.crashAlign) * (impact ? 1 : .5f);
+                transform.Rotate(0, angle, 0, Space.World);
+            }
+            speed = Vector3.Dot(after, Forward);
+            roadVelocity = after;
         }
 
         public void Damage(float amount, Vector3 contact, WorldActor source = null, bool alertOccupants=true)

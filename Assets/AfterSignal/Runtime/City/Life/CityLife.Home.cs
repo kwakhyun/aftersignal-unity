@@ -38,6 +38,15 @@ namespace AfterSignal
                 return;
             }
 
+            // Chained sleeps used to fast-forward every daily reset; Seoha needs to be awake a while first.
+            float awake = LifeState.Hours - LifeState.LastWake, need = GameTuning.Active.minAwakeHours;
+            if (awake >= 0 && awake < need)
+            {
+                Body = "아직 잠이 오지 않습니다 · " + Mathf.CeilToInt(need - awake) + "시간 더 활동한 뒤 잠들 수 있습니다.";
+                Revision++;
+                return;
+            }
+
             if (!LifeState.Spend(cost))
             {
                 Body = "숙박료가 부족합니다.";
@@ -70,6 +79,7 @@ namespace AfterSignal
 
             SleepFade = 1;
             LifeState.Hours += Mathf.Clamp(hours, .1f, 24);
+            LifeState.LastWake = LifeState.Hours;
             game.Player.Heal(100);
             game.Player.RestoreEnergy(100);
             LifeState.Save();

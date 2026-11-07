@@ -43,7 +43,8 @@ namespace AfterSignal
             p.game = GameDirector.Instance;
             p.Body = go.GetComponent<WorldActor>();
             p.Body.police = true;
-            p.Body.health = 65 + level * 18;
+            var tuning = GameTuning.Active;
+            p.Body.health = (tuning.officerHealthBase + level * tuning.officerHealthPerLevel) * DifficultySettings.EnemyHealth;
             p.Weapon = level >= 3 && (index % 2 == 0 || level >= 4) ? PoliceWeapon.Rifle : level >= 2 && index % 2 == 1 ? PoliceWeapon.Shotgun : PoliceWeapon.Pistol;
             go.name = p.Weapon == PoliceWeapon.Rifle ? "특수대응팀 / 소총" : p.Weapon == PoliceWeapon.Shotgun ? "도시 경찰 / 샷건" : "도시 경찰 / 권총";
             p.motor = go.GetComponent<CharacterController>();
@@ -68,7 +69,7 @@ namespace AfterSignal
             if (!game || !Body.Alive)
                 return false;
             Vector3 start = transform.position + Vector3.up * 1.65f, end = game.Player.Shoulder;
-            if (Vector3.Distance(start, end) > 42)
+            if (Vector3.Distance(start, end) > GameTuning.Active.policeSight)
                 return false;
             if (!Physics.Linecast(start, end, out var hit, 1, QueryTriggerInteraction.Ignore))
                 return true;
@@ -171,11 +172,12 @@ namespace AfterSignal
                 if (safeShot){shotTarget=targetCenter;Fire();}
                 burst--;
                 recoil = .18f;
-                cooldown = burst > 0 ? .15f : Weapon == PoliceWeapon.Shotgun ? 2.3f : Weapon == PoliceWeapon.Rifle ? 1.7f : 1.35f;
+                var tuning = GameTuning.Active;
+                cooldown = burst > 0 ? tuning.burstInterval : Weapon == PoliceWeapon.Shotgun ? tuning.shotgunCooldown : Weapon == PoliceWeapon.Rifle ? tuning.rifleCooldown : tuning.pistolCooldown;
             }
             else if (safeShot && delta.magnitude < range && cooldown <= 0 && hurt <= 0)
             {
-                aimTime = Weapon == PoliceWeapon.Shotgun ? .85f : .65f;
+                aimTime = Weapon == PoliceWeapon.Shotgun ? GameTuning.Active.shotgunAim : GameTuning.Active.pistolAim;
                 shotTarget = targetCenter;
                 frame = 3;
             }
@@ -218,11 +220,13 @@ namespace AfterSignal
             var direction = (shotTarget - start).normalized;
             int pellets = Weapon == PoliceWeapon.Shotgun ? 5 : 1;
             float distance = Weapon == PoliceWeapon.Shotgun ? 22 : 100;
+            var tuning = GameTuning.Active;
+            // Difficulty only scales shots aimed at Seoha; gang firefights keep their balance.
+            float damage = (Weapon == PoliceWeapon.Shotgun ? tuning.shotgunPellet : Weapon == PoliceWeapon.Rifle ? tuning.rifleShot : tuning.pistolShot) * (playerTarget ? DifficultySettings.PoliceDamage : 1);
             for (int i = 0; i < pellets; i++)
             {
                 Vector3 aim = Quaternion.Euler(0, (i - (pellets - 1) * .5f) * 2.6f, 0) * direction;
-                FactionCombat.Fire(Body, start, start + aim * distance, distance,
-                    Weapon == PoliceWeapon.Shotgun ? 18 : Weapon == PoliceWeapon.Rifle ? 9 : 11,
+                FactionCombat.Fire(Body, start, start + aim * distance, distance, damage,
                     SignalEffects.Gold, playerTarget && WantedSystem.Level > 0);
             }
 

@@ -13,14 +13,42 @@ namespace AfterSignal
         public static int Selected=>Mathf.Clamp(SuppressSave?transient:PlayerPrefs.GetInt(Key,-1),-1,3);
         public static string Destination=>"서하의 집";
         public static void ResetHome(){if(SuppressSave)transient=-1;else PlayerPrefs.DeleteKey(Key);}
-        public static void Register(int city){city=Mathf.Clamp(city,0,3);ResetHome();GameDirector.Instance?.Player.Heal(100);GameDirector.Instance?.Toast(Names[city]+" · 체력 회복 / 사망 화면에서 리스폰 도시 선택",5);}
+        static string notice;
+        public static int LastFee{get;private set;}
+        // Hospital fee for dying: a share of carried credits only. Savings and the home safe are never charged.
+        public static int HospitalFee{get{LifeState.Load();var t=GameTuning.Active;int fee=Mathf.RoundToInt(Mathf.Clamp(LifeState.Credits*t.hospitalFeeRate,t.hospitalFeeMin,t.hospitalFeeMax)*DifficultySettings.Penalty);return Mathf.Clamp(fee,0,LifeState.Credits);}}
+        public static void ChargeHospital(GameDirector game)
+        {
+            LastFee=0;if(!game||!CivicWorld.Exploration(game.stage))return;
+            int fee=HospitalFee;if(fee>0&&LifeState.Spend(fee))LastFee=fee;
+        }
+        public static void Register(int city)
+        {
+            city=Mathf.Clamp(city,0,3);ResetHome();var g=GameDirector.Instance;if(!g)return;
+            var p=g.Player;int fee=GameTuning.Active.terminalHealFee;string where=Names[city]+" · 사망 화면에서 리스폰 도시 선택";
+            if(p.Health>=p.Tuning.maxHealth-.5f){g.Toast(where,5);return;}
+            // Full treatment costs a small fee; without it the terminal only stabilizes to the natural recovery cap.
+            if(LifeState.Spend(fee)){p.Heal(p.Tuning.maxHealth);g.Toast(where+" · 체력 완전 회복 / "+fee+" C",5);}
+            else{p.HealTo(p.RecoveryCap);g.Toast(where+" · 잔액 부족 · 응급 안정 처치만 받았습니다 (완전 회복 "+fee+" C)",6);}
+        }
         public static void Respawn(GameDirector game)=>Respawn(game,0);
         public static void Respawn(GameDirector game,int city)
         {
             ResetHome();ResidentialWorld.VisitHome=-1;CivicWorld.ClearArrival();
+            notice=LastFee>0?"응급 이송 · 치료비 "+LastFee.ToString("N0")+" C 청구 · 예금과 집 금고의 돈은 안전합니다":null;LastFee=0;
+            // An unserved sentence continues: the clinic hands Seoha back to the prison cell.
+            if(PrisonSystem.Sentenced){pendingCity=-1;notice=(notice!=null?notice+" · ":"")+"남은 형기를 교도소에서 이어갑니다";CivicWorld.Travel(game,StageId.UrbanCity,PrisonSystem.Cell);return;}
             city=Mathf.Clamp(city,0,3);pendingCity=city==0?-1:city;
             if(city==0)CivicWorld.Travel(game,StageId.Residence,CompactHome.Spawn);
             else{Resolve();CivicWorld.Travel(game,StageId.UrbanCity,Points[city]);}
+        }
+        IEnumerator ShowNotice()
+        {
+            var game=GameDirector.Instance;
+            while(game&&(!game.Ready||game.Blocked))yield return null;
+            yield return new WaitForSeconds(1.2f);
+            if(game&&notice!=null)game.Toast(notice,6);
+            notice=null;
         }
         public static void Resolve()
         {
@@ -38,6 +66,7 @@ namespace AfterSignal
         }
         IEnumerator Start()
         {
+            if(notice!=null)StartCoroutine(ShowNotice());
             var game=GameDirector.Instance;if(!game||game.stage!=StageId.UrbanCity)yield break;
             if(Arriving)
             {
