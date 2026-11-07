@@ -11,9 +11,9 @@ namespace AfterSignal
             target = game.Player.transform.position;
             label = game.Objective;
             InteractionKind kind = InteractionKind.MissionBoard;
-            bool first = PlayerPrefs.GetInt("AFTERSIGNAL.Unity.Completed", 0) == 0;
+            bool first = SaveStore.GetInt("AFTERSIGNAL.Unity.Completed", 0) == 0;
             int chapter = CampaignCatalog.NextChapter;
-            bool needNoa = !first && chapter > 0 && PlayerPrefs.GetInt("AFTERSIGNAL.Unity.Expansion.Accepted", 0) != chapter;
+            bool needNoa = !first && chapter > 0 && SaveStore.GetInt("AFTERSIGNAL.Unity.Expansion.Accepted", 0) != chapter;
             if (game.stage == StageId.UrbanCity)
             {
                 if (needNoa)

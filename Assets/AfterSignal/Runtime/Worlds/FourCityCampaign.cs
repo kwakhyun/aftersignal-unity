@@ -32,7 +32,7 @@ namespace AfterSignal
         readonly List<WorldActor> encounter=new();readonly List<VenueService> objectives=new();
         int encounterStep=-1,synchronized;float next;
         public static bool Contains(int index){foreach(var c in Chapters)if(c.facility==index)return true;return false;}
-        void Awake(){Instance=this;Step=Mathf.Clamp(PlayerPrefs.GetInt("AFTERSIGNAL.Unity.FourCities.Chapter",0),0,Chapters.Length);Choice=PlayerPrefs.GetInt("AFTERSIGNAL.Unity.FourCities.Choice",0);}
+        void Awake(){Instance=this;Step=Mathf.Clamp(SaveStore.GetInt("AFTERSIGNAL.Unity.FourCities.Chapter",0),0,Chapters.Length);Choice=SaveStore.GetInt("AFTERSIGNAL.Unity.FourCities.Choice",0);}
         public void BuildObjectives()
         {
             var witnesses=new HashSet<string>();
@@ -82,7 +82,7 @@ namespace AfterSignal
         }
         void Advance()
         {
-            int completed=Step;Step++;if(!LifeState.SuppressSave){PlayerPrefs.SetInt("AFTERSIGNAL.Unity.FourCities.Chapter",Step);PlayerPrefs.SetInt("AFTERSIGNAL.Unity.FourCities.Choice",Choice);PlayerPrefs.Save();}
+            int completed=Step;Step++;if(!LifeState.SuppressSave){SaveStore.SetInt("AFTERSIGNAL.Unity.FourCities.Chapter",Step);SaveStore.SetInt("AFTERSIGNAL.Unity.FourCities.Choice",Choice);SaveStore.Save();}
             LifeState.Earn(250+completed*45);GameDirector.Instance.Toast("기록 복원 · "+(250+completed*45)+" C\n"+(Complete?"네 도시의 증언을 모두 확보했습니다.":Current.title),7);SetDestination();
         }
         void Update()

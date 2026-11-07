@@ -71,7 +71,7 @@ namespace AfterSignal
             {
                 var desired=step.position+new Vector3((i-1)*9,0,6);if(!CrowdFlow.Place(desired,i,out var support,12))support=extraction+Vector3.right*(i-1)*3;
                 var go=new GameObject("N-17 기억 소거 증폭기");go.transform.position=support;props.Add(go);
-                var body=go.AddComponent<WorldActor>();body.gang=true;body.helicopter=true;body.health=Intro?75:180+ordinal*4;devices.Add(body);
+                var body=go.AddComponent<WorldActor>();body.gang=true;body.helicopter=true;body.health=Intro?75:(180+ordinal*4)*DifficultySettings.EnemyHealth;devices.Add(body);
                 var box=CommunityWorld.Box(go.transform,"Power housing",Vector3.up,new Vector3(1.5f,2,1.1f),"Metal");
                 CommunityWorld.Box(go.transform,"Exposed coupler",new Vector3(0,1.4f,-.61f),new Vector3(.65f,.5f,.12f),"NeonAzure",false);
             }
@@ -83,7 +83,7 @@ namespace AfterSignal
             if(step.battleMode=="boss")
             {
                 var at=step.position+Vector3.forward*38;if(!CrowdFlow.Place(at,expected,out var floor,30))floor=extraction;
-                var boss=RiftCreature.Create(floor,Mathf.Abs((quest??"").GetHashCode()%3));boss.Campaign=true;boss.Body.health=step.enemyHealth>0?step.enemyHealth:4800+ordinal*100;enemies.Add(boss.Body);Wave=1;
+                var boss=RiftCreature.Create(floor,Mathf.Abs((quest??"").GetHashCode()%3));boss.Campaign=true;boss.Body.health=(step.enemyHealth>0?step.enemyHealth:4800+ordinal*100)*DifficultySettings.EnemyHealth;enemies.Add(boss.Body);Wave=1;
             }
             SignalEffects.Ring(extraction+Vector3.up*.13f,SignalEffects.Cyan,4,60);
         }
@@ -92,7 +92,7 @@ namespace AfterSignal
         GangMember Recruit(Vector3 at,int i)
         {
             var enemy=GangMember.Create(at,i%3,i);enemy.name=i%3==0?"N-17 기억 회수대 / 돌격병":i%3==1?"N-17 기억 회수대 / 산탄병":"N-17 기억 회수대 / 소총수";enemy.CampaignUnit=true;enemy.CampaignWeapon=Intro?0:i%3==1?1:0;enemy.IntroUnit=Intro;
-            enemy.Body.health=Intro?48:step.enemyHealth>0?step.enemyHealth:95+ordinal*3+expected*12;enemies.Add(enemy.Body);return enemy;
+            enemy.Body.health=Intro?48:(step.enemyHealth>0?step.enemyHealth:95+ordinal*3+expected*12)*DifficultySettings.EnemyHealth;enemies.Add(enemy.Body);return enemy;
         }
         bool SpawnWave()
         {

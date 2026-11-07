@@ -219,7 +219,7 @@ namespace AfterSignal
         }
         public void Quit()
         {
-            PlayerPrefs.Save();
+            PlayerPrefs.Save();SaveStore.Flush();
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying=false;
 #else

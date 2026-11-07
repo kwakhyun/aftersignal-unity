@@ -19,6 +19,7 @@ namespace AfterSignal
             Option("메인 이야기",()=>StoryList(true,0));Option("주민 연계 의뢰",()=>StoryList(false,0));
             if(FourCityCampaign.Instance)Option("네 도시의 증언 · 시설 내부 캠페인",FourCityJournal);
             if(c.Tracked!=null)Option("현재 의뢰 상세",()=>StoryDetails(c.Tracked,-1));
+            Option("최근 대화 기록",()=>DialogueHistory());
             Option("닫기",Dismiss);
         }
         bool StoryShown(CityChronicle c,StoryQuest q)=>storyFilter==1?c.Available(q)&&!c.Done(q):storyFilter!=2||c.Done(q);

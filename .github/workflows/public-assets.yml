@@ -11,3 +11,5 @@ jobs:
       - run: node Tools/public-assets.cjs
       - name: Validate story data
         run: python3 Tools/validate-story.py
+      - name: NPC gateway tests
+        run: python3 -m unittest Tools/test_npc_gateway.py

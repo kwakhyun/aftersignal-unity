@@ -74,7 +74,7 @@ namespace AfterSignal
         {
             get
             {
-                int bits = PlayerPrefs.GetInt("AFTERSIGNAL.Unity.Expansion.Chapters", 0);
+                int bits = SaveStore.GetInt("AFTERSIGNAL.Unity.Expansion.Chapters", 0);
                 return (bits & 4) == 0 ? 2 : (bits & 8) == 0 ? 3 : (bits & 16) == 0 ? 4 : 0;
             }
         }
@@ -83,17 +83,17 @@ namespace AfterSignal
         public static void Complete(int chapter)
         {
             string key = "AFTERSIGNAL.Unity.Expansion.Chapters";
-            PlayerPrefs.SetInt(key, PlayerPrefs.GetInt(key, 0) | (1 << chapter));
-            PlayerPrefs.Save();
+            SaveStore.SetInt(key, SaveStore.GetInt(key, 0) | (1 << chapter));
+            SaveStore.Save();
         }
 
         public static int Jobs
         {
-            get => PlayerPrefs.GetInt("AFTERSIGNAL.Unity.Expansion.Jobs", 0);
+            get => SaveStore.GetInt("AFTERSIGNAL.Unity.Expansion.Jobs", 0);
             set
             {
-                PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Expansion.Jobs", value);
-                PlayerPrefs.Save();
+                SaveStore.SetInt("AFTERSIGNAL.Unity.Expansion.Jobs", value);
+                SaveStore.Save();
             }
         }
     }

@@ -61,7 +61,7 @@ namespace AfterSignal
             foreach(var quest in Quests)foreach(var step in quest.steps)if(step.world)step.position=CompactCityLayout.Migrate(step.position);
             Opening=Quests.FirstOrDefault(q=>q.tutorial)??Quests[0];Finale=Quests.FirstOrDefault(q=>q.finale);
             for(var p=Finale;p!=null&&mainLine.Add(p.id);)p=Find(p.after);
-            try{Progress=JsonUtility.FromJson<StorySave>(PlayerPrefs.GetString(SaveKey,""));}catch{Progress=null;}
+            try{Progress=JsonUtility.FromJson<StorySave>(SaveStore.GetString(SaveKey,""));}catch{Progress=null;}
             if(Progress==null)Progress=new StorySave();if(Progress.entries==null)Progress.entries=new List<StoryEntry>();
             foreach(var q in Quests){var e=Entry(q);e.step=Mathf.Clamp(e.step,0,q.steps.Length);}
             Entry(Opening).accepted=true;
@@ -78,7 +78,7 @@ namespace AfterSignal
         }
         public void Track(StoryQuest q){if(!Available(q)||Done(q))return;Entry(q).accepted=true;Progress.tracked=q.id;Save();Refresh();}
         public void ResetProgress(){Progress=new StorySave{tracked=Opening.id};Entry(Opening).accepted=true;Save();Refresh();}
-        public void Save(){if(!SuppressSave){PlayerPrefs.SetString(SaveKey,JsonUtility.ToJson(Progress));PlayerPrefs.Save();}}
+        public void Save(){if(!SuppressSave){SaveStore.SetString(SaveKey,JsonUtility.ToJson(Progress));SaveStore.Save();}}
         public void Refresh(){if(marker)Destroy(marker);marker=null;markerKey=null;scanning=false;combatStarted=false;foreach(var g in guards)if(g)Destroy(g.gameObject);guards.Clear();}
         bool AtSite(StoryStep step)
         {
