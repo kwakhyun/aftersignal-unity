@@ -66,6 +66,13 @@ namespace AfterSignal
             if(!LifeState.Spend(price))return false;
             if(Items[id].slot==4)state.rounds[id]++;else state.reserve[id]+=Items[id].slot==5?1:Mathf.Max(12,Items[id].magazine*2);Save();return true;
         }
+        /// <summary>Removes reserve ammunition of owned firearms (rifle, launcher, shotgun slots); loaded rounds stay. Returns rounds seized.</summary>
+        public static int ConfiscateReserve()
+        {
+            Load();int seized=0;
+            for(int id=0;id<Items.Length;id++){var item=Items[id];if(item.slot<3||item.slot==4||!Owns(id))continue;seized+=state.reserve[id];state.reserve[id]=0;}
+            if(seized>0)Save();return seized;
+        }
         public static bool Consume(int id){Load();if(state.rounds[id]<=0)return false;state.rounds[id]--;Save();return true;}
         public static bool Reload(int id){Load();int amount=Mathf.Min(Items[id].magazine-state.rounds[id],state.reserve[id]);if(amount<=0)return false;state.rounds[id]+=amount;state.reserve[id]-=amount;Save();return true;}
     }

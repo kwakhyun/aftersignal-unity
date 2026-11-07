@@ -35,29 +35,7 @@ namespace AfterSignal
             return true;
         }
         // Booking seizes firearm reserve ammunition (rifles, launcher, shotgun); the loaded magazine stays.
-        // ArmoryInventory has no direct API for this, so it is composed from Consume/Reload with one save.
-        static int ConfiscateReserve()
-        {
-            int seized=0;bool suppress=LifeState.SuppressSave;LifeState.SuppressSave=true;
-            try
-            {
-                for(int id=0;id<ArmoryInventory.Items.Length;id++)
-                {
-                    var item=ArmoryInventory.Items[id];if(item.slot<3||item.slot==4||item.magazine<=0||!ArmoryInventory.Owns(id))continue;
-                    int keep=Mathf.Min(ArmoryInventory.Rounds(id),item.magazine),before=ArmoryInventory.Reserve(id);
-                    for(int guard=0;ArmoryInventory.Reserve(id)>0&&guard<100000;guard++)
-                    {
-                        if(ArmoryInventory.Rounds(id)>=item.magazine)ArmoryInventory.Consume(id);
-                        if(!ArmoryInventory.Reload(id))break;
-                        while(ArmoryInventory.Rounds(id)>keep&&ArmoryInventory.Consume(id)){}
-                    }
-                    seized+=Mathf.Max(0,before-ArmoryInventory.Reserve(id));
-                }
-            }
-            finally{LifeState.SuppressSave=suppress;}
-            if(seized>0)ArmoryInventory.Save();
-            return seized;
-        }
+        static int ConfiscateReserve()=>ArmoryInventory.ConfiscateReserve();
         public static void SaveSentence(){if(Instance&&Instance.Jailed)Instance.Persist();}
         public static void ResetSentence(){if(Instance){Instance.remaining=0;Instance.confined=false;}Forget();}
         static void Forget(){if(!LifeState.SuppressSave){PlayerPrefs.DeleteKey(SaveKey);PlayerPrefs.DeleteKey(BailKey);}}
