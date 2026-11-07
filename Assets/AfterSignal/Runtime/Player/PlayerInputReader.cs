@@ -8,7 +8,7 @@ namespace AfterSignal
         public Vector2 move, pointer, lookDelta;
         public float zoom, vertical;
         public bool boost, passenger, surrender, vehicleView, secondaryFire, horn, summonBike;
-        public bool journal, rescueReport;
+        public bool journal, rescueReport, panorama;
         public bool look, cameraReset, run;
         public bool attack, grapple, jump, interact, dash, skill, guard, pause, reload, map, exit;
         public int weapon, weaponCycle;
@@ -28,7 +28,7 @@ namespace AfterSignal
         /// <summary>Gamepad right-stick look speed in "mouse pixels" per second at full deflection.</summary>
         const float StickLookSpeed = 900;
         InputActionAsset asset;
-        InputAction move, pointer, attack, grapple, jump, interact, dash, skill, guard, pause, look, lookStick, zoom, boost, ascend, descend, vehicleView, horn, summonBike, secondaryFire, passenger, surrender, cameraReset, journal, reload, map, exit, weaponNext, rescueReport;
+        InputAction move, pointer, attack, grapple, jump, interact, dash, skill, guard, pause, look, lookStick, zoom, boost, ascend, descend, vehicleView, horn, summonBike, secondaryFire, passenger, surrender, cameraReset, journal, reload, map, exit, weaponNext, rescueReport, panorama;
         readonly InputAction[] weapons = new InputAction[7];
         bool captured;
         Vector2 savedPointer;
@@ -96,6 +96,7 @@ namespace AfterSignal
             exit = asset.FindAction("Exit", true);
             weaponNext = asset.FindAction("WeaponNext", true);
             rescueReport = asset.FindAction("RescueReport", true);
+            panorama = asset.FindAction("Panorama", true);
             KeyHints.Attach(asset);
             Frame = ControlFrame.Empty;
         }
@@ -160,12 +161,14 @@ namespace AfterSignal
                 run = moveValue.sqrMagnitude > .04f,
                 look = held || canLook && stickDelta != Vector2.zero,
                 lookDelta = mouseDelta + stickDelta,
-                cameraReset = cameraReset.WasPressedThisFrame(),
+                // R3 is both CameraReset and VehicleView: in a vehicle a shared press belongs to VehicleView; HOME alone still resets.
+                cameraReset = cameraReset.WasPressedThisFrame() && !(vehicleView.WasPressedThisFrame() && UrbanSimulation.Instance && UrbanSimulation.Instance.Driving),
                 move = moveValue,
                 pointer = new Vector2(Screen.width * .5f, Screen.height * .5f),
                 zoom = held ? zoom.ReadValue<Vector2>().y : 0,
                 journal = journal.WasPressedThisFrame(),
                 rescueReport = rescueReport.WasPressedThisFrame(),
+                panorama = panorama.WasPressedThisFrame(),
                 attack = attack.IsPressed(),
                 grapple = grapple.IsPressed(),
                 jump = jump.WasPressedThisFrame(),

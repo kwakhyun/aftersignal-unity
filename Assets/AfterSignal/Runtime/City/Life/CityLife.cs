@@ -156,8 +156,11 @@ namespace AfterSignal
         public void BeforeInput(ref ControlFrame control, float dt)
         {
             var keyboard = Keyboard.current;
-            if (keyboard != null && keyboard.pKey.wasPressedThisFrame && game.stage == StageId.UrbanCity && game.Player.Grounded && game.Player.transform.position.y > 10)
-                Panorama = !Panorama;
+            // Panorama action (P) toggles the rooftop view; Exit (F / gamepad [Y]) also leaves it, since the pad has no P.
+            if (Panorama && (control.panorama || control.exit))
+            { Panorama = false; control.panorama = control.exit = false; }
+            else if (control.panorama && game.stage == StageId.UrbanCity && game.Player.Grounded && game.Player.transform.position.y > 10)
+                Panorama = true;
             if (!Panorama)
                 return;
             if (keyboard != null)

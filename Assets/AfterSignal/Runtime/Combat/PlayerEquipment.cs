@@ -14,6 +14,8 @@ namespace AfterSignal
         public string Readout=>Reloading?"장전 중  "+(ReloadProgress*100).ToString("0")+"%":Slot==4?"수류탄 "+ArmoryInventory.Rounds(ItemId)+"개 · LMB 투척":ArmoryInventory.Rounds(ItemId)+" / "+ArmoryInventory.Reserve(ItemId)+"   R 장전";
         public int Shots {get;private set;}
         public void Initialize(PlayerMotor owner){player=owner;if(!GetComponent<HeldArmory>())gameObject.AddComponent<HeldArmory>();}
+        /// <summary>Next slot after <paramref name="from"/> in direction <paramref name="dir"/> whose equipped item is owned, or -1 if there is none.</summary>
+        public static int NextOwnedSlot(int from,int dir){int step=dir<0?-1:1;for(int k=1;k<7;k++){int s=((from+k*step)%7+7)%7;int id=ArmoryInventory.Equipped(s);if(id>=0&&ArmoryInventory.Owns(id))return s;}return -1;}
         public bool Select(int slot)
         {
             int id=ArmoryInventory.Equipped(slot);if(id<0||!ArmoryInventory.Owns(id)){player.Director.Toast("무기 상점에서 먼저 구매하세요.",1.4f);return false;}

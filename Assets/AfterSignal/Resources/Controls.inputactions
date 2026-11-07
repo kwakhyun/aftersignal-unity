@@ -329,6 +329,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Panorama",
+                    "type": "Button",
+                    "id": "6dab78c0-0216-4f4e-9655-5f51d37b1602",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -851,11 +860,33 @@
                 },
                 {
                     "name": "",
+                    "id": "05a92e1b-7440-4c4b-809a-e9cd7bb28a89",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Surrender",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "653241fb-6351-4608-ac1e-c71c94842d71",
                     "path": "<Keyboard>/home",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
+                    "action": "CameraReset",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7d47ea58-1b50-4677-91f2-fca01fce26ec",
+                    "path": "<Gamepad>/rightStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
                     "action": "CameraReset",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -1011,6 +1042,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "RescueReport",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5360838c-a473-400c-8ed8-f162a8881d2a",
+                    "path": "<Keyboard>/p",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Panorama",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
