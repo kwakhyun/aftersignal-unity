@@ -36,6 +36,10 @@ namespace AfterSignal
             HiddenSeconds = SaveStore.GetFloat(Prefix + "Hidden", 0);
             // Older saves start accruing from the current day instead of paying back-interest.
             InterestDay = SaveStore.GetInt(Prefix + "InterestDay", Day);
+            // Session-only values and the errand belong to the slot that was loaded before (another slot or a reset one).
+            LastWake = -999;
+            LastInterest = 0;
+            Errand = null;
             string json = SaveStore.GetString(Prefix + "Errand", "");
             if (!string.IsNullOrEmpty(json))
             {
@@ -183,7 +187,8 @@ namespace AfterSignal
             SaveStore.Save();
         }
 
-        public static void Reset()
+        /// <summary>Fresh life state for a New Game. Pass the serial read before the slot was wiped so it keeps increasing.</summary>
+        public static void Reset(int previousSerial = 0)
         {
             ArmoryInventory.Reset();
             loaded = true;loadedGeneration = SaveStore.Generation;
@@ -194,9 +199,10 @@ namespace AfterSignal
             Heat = HiddenSeconds = 0;
             InterestDay = Day;
             LastWake = -999;
+            LastInterest = 0;
             Errand = null;
             PrisonSystem.ResetSentence();
-            SaveStore.SetInt(Prefix + "CampaignSerial", SaveStore.GetInt(Prefix + "CampaignSerial", 0) + 1);
+            SaveStore.SetInt(Prefix + "CampaignSerial", Mathf.Max(previousSerial, SaveStore.GetInt(Prefix + "CampaignSerial", 0)) + 1);
             Save();
         }
 

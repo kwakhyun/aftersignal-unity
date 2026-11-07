@@ -7,17 +7,19 @@ namespace AfterSignal
         public string locationId;public bool Home,Bank;public Transform Door,Cash;
         public bool Opening{get;private set;}public int LastLoot{get;private set;}
         // One key per location holding "campaignSerial:dayLastOpened" (bounded), replacing the per-day keys.
-        static readonly Dictionary<string,string> session=new();float remaining,next;
+        // The in-memory copy (the only record while saving is suppressed) belongs to one slot generation: another slot or a New Game starts clean.
+        static readonly Dictionary<string,string> session=new();static int sessionGeneration=-1;float remaining,next;
+        static Dictionary<string,string> Session{get{if(sessionGeneration!=SaveStore.Generation){session.Clear();sessionGeneration=SaveStore.Generation;}return session;}}
         string Location=>GameDirector.Instance.stage+"."+(string.IsNullOrEmpty(locationId)?UrbanCatalog.Current.ToString():locationId);
         string Key=>"AFTERSIGNAL.Unity.CashLoot."+Location;
         string LegacyKey=>"AFTERSIGNAL.CashLoot."+LifeState.CampaignSerial+"."+Location+"."+LifeState.Day;
-        bool cached;int openedDay;
+        bool cached;int openedDay,cachedGeneration;
         int OpenedDay
         {
             get
             {
-                if(cached)return openedDay;cached=true;openedDay=int.MinValue/2;
-                string value=session.TryGetValue(Key,out var v)?v:SaveStore.GetString(Key,"");int split=value.IndexOf(':');
+                if(cached&&cachedGeneration==SaveStore.Generation)return openedDay;cached=true;cachedGeneration=SaveStore.Generation;openedDay=int.MinValue/2;
+                string value=Session.TryGetValue(Key,out var v)?v:SaveStore.GetString(Key,"");int split=value.IndexOf(':');
                 if(split>0&&int.TryParse(value.Substring(0,split),out int serial)&&serial==LifeState.CampaignSerial&&int.TryParse(value.Substring(split+1),out int day))openedDay=day;
                 else if(SaveStore.GetInt(LegacyKey,0)>0)openedDay=LifeState.Day;
                 return openedDay;
@@ -28,7 +30,7 @@ namespace AfterSignal
         public bool Empty=>DaysUntilRefill>0;
         void MarkOpened()
         {
-            string value=LifeState.CampaignSerial+":"+LifeState.Day;openedDay=LifeState.Day;cached=true;session[Key]=value;
+            string value=LifeState.CampaignSerial+":"+LifeState.Day;openedDay=LifeState.Day;cached=true;cachedGeneration=SaveStore.Generation;Session[Key]=value;
             if(!LifeState.SuppressSave){SaveStore.SetString(Key,value);SaveStore.DeleteKey(LegacyKey);SaveStore.Save();}
         }
         public void Open()=>CityLife.Instance.CashMenu(this);

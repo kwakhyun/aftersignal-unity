@@ -11,13 +11,11 @@ using UnityEngine.UI;
 
 namespace AfterSignal
 {
-    // Opt-in start-flow check; all touched save keys are restored before exit.
+    // Opt-in start-flow check; it saves into a fresh scratch folder next to its report, so real save slots are never touched.
     public sealed class TitleSmoke : MonoBehaviour
     {
         [Serializable] sealed class Report { public bool completed;public List<string> passed=new List<string>(),errors=new List<string>(); }
-        [Serializable] sealed class Preference { public string key,text;public int kind,integer;public float number;public bool exists; }
-        [Serializable] sealed class Backup { public List<Preference> values=new List<Preference>(); }
-        readonly Report report=new Report();readonly Backup backup=new Backup();
+        readonly Report report=new Report();
         string output;bool finished;float began;
         bool ArtworkOnly => Environment.GetCommandLineArgs().Contains("-title-artwork-only");
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -27,13 +25,12 @@ namespace AfterSignal
             DontDestroyOnLoad(gameObject);Application.runInBackground=true;began=Time.realtimeSinceStartup;
             output=Path.GetFullPath(QualitySession.Arg("-quality-output","Artifacts/Title/Final"));Directory.CreateDirectory(output);
             if(ArtworkOnly){LifeState.SuppressSave=CityChronicle.SuppressSave=RespawnNetwork.SuppressSave=true;Application.logMessageReceived+=Log;return;}
-            foreach(string k in new[]{"Stage","Memories","Completed","Expansion.Chapters","Expansion.Accepted","Expansion.Jobs","Life.CampaignSerial","Life.Credits","Life.Savings","Life.Outfit","Life.Outfits","Urban.Site","Urban.Car","Urban.CarStage","Urban.CarType","Post","Fullscreen"})Save("AFTERSIGNAL.Unity."+k,0);
-            foreach(string k in new[]{"Life.Hours","Life.Heat","Life.Hidden","Urban.CarX","Urban.CarZ","Urban.CarYaw","Urban.CarFuel","Urban.CarHealth","Volume","MusicVolume","Motion","Effects"})Save("AFTERSIGNAL.Unity."+k,1);
-            Save("AFTERSIGNAL.Unity.Life.Errand",2);Save(CityChronicle.SaveKey,2);
-            File.WriteAllText(Path.Combine(output,"save-backup.json"),JsonUtility.ToJson(backup,true));
+            // New Game, Continue and the pause-menu save all really write (and flush on quit), so they go to a scratch folder.
+            // The reset leaves an empty slot even when slot 1 would import the machine's legacy PlayerPrefs progress.
+            string saves=Path.Combine(output,"saves");if(Directory.Exists(saves))Directory.Delete(saves,true);
+            SaveStore.Directory=saves;SaveStore.ResetActiveSlot();
             Application.logMessageReceived+=Log;
         }
-        void Save(string key,int kind){backup.values.Add(new Preference{key=key,kind=kind,exists=SaveStore.HasKey(key),integer=kind==0?SaveStore.GetInt(key):0,number=kind==1?SaveStore.GetFloat(key):0,text=kind==2?SaveStore.GetString(key):null});}
         void Log(string message,string trace,LogType type){if(type==LogType.Error||type==LogType.Exception||type==LogType.Assert)report.errors.Add(message+"\n"+trace);}
         void Check(bool condition,string label){(condition?report.passed:report.errors).Add(label);}
         void Update(){if(!finished&&(report.errors.Count>0||Time.realtimeSinceStartup-began>100)){if(report.errors.Count==0)Check(false,"Timed out");Finish();}}
@@ -84,9 +81,7 @@ namespace AfterSignal
         }
         void Finish()
         {
-            if(finished)return;finished=true;LifeState.SuppressSave=true;CityChronicle.SuppressSave=true;
-            foreach(var p in backup.values){if(!p.exists)SaveStore.DeleteKey(p.key);else if(p.kind==0)SaveStore.SetInt(p.key,p.integer);else if(p.kind==1)SaveStore.SetFloat(p.key,p.number);else SaveStore.SetString(p.key,p.text);}
-            if(!ArtworkOnly)SaveStore.Save();report.completed=report.errors.Count==0;
+            if(finished)return;finished=true;report.completed=report.errors.Count==0;
             File.WriteAllText(Path.Combine(output,"title.json"),JsonUtility.ToJson(report,true));Application.Quit(report.completed?0:1);
         }
         void OnDestroy(){Application.logMessageReceived-=Log;}

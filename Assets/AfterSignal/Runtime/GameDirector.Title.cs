@@ -10,7 +10,10 @@ namespace AfterSignal
         public static bool HasSavedGame => SaveStore.HasKey(StageKey)&&SaveStore.GetInt(StageKey,-1)>=0&&SaveStore.GetInt(StageKey,-1)<CampaignRules.Scenes.Length;
         public float LoadProgress { get; private set; }
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        static void ResetTitleSession(){SkipTitle=false;}
+        static void ResetTitleSession(){SkipTitle=false;sessionGeneration=-1;}
+        // Dialogue history and a requested bike delivery belong to the save they happened in (SaveStore.Generation).
+        static int sessionGeneration=-1;
+        static void ForgetSession(){DialogueLog.Clear();UrbanSimulation.BikeDeliveryPending=false;sessionGeneration=SaveStore.Generation;}
         public void Begin(bool resume=false)
         {
             if(Transition || resume&&!HasSavedGame)return;
@@ -27,12 +30,14 @@ namespace AfterSignal
                 // An unserved sentence resumes inside the prison cell instead of at home.
                 PrisonSystem.SaveSentence();destination=PrisonSystem.Sentenced?StageId.UrbanCity:StageId.Residence;
                 CivicWorld.ClearArrival();ResidentialWorld.VisitHome=-1;RespawnNetwork.ResetHome();
+                if(sessionGeneration!=SaveStore.Generation)ForgetSession();
             }
             else
             {
-                // New Game wipes the whole slot first, so keys added by any system are cleared too.
-                SaveStore.ResetActiveSlot();
-                LifeState.Reset();RespawnNetwork.ResetHome();Memories=0;
+                // New Game wipes the whole slot first, so keys added by any system are cleared too. The campaign serial
+                // keeps increasing so "serial:day" stamps of the previous run never match the new one.
+                int serial=LifeState.CampaignSerial;SaveStore.ResetActiveSlot();ForgetSession();
+                LifeState.Reset(serial);RespawnNetwork.ResetHome();Memories=0;
                 SaveStore.SetInt("AFTERSIGNAL.Unity.Memories",0);SaveStore.SetInt("AFTERSIGNAL.Unity.Completed",0);
                 ResetExpansion();CivicWorld.ClearArrival();UrbanCatalog.Reset();ResidentialWorld.VisitHome=-1;
                 var args=System.Environment.GetCommandLineArgs();
@@ -56,7 +61,7 @@ namespace AfterSignal
         {
             if(Transition)return;
             UrbanSimulation.Instance?.SaveCar();LifeState.Save();CityChronicle.Instance?.Save();
-            SaveStore.SetInt(StageKey,(int)stage);SaveStore.SetInt("AFTERSIGNAL.Unity.Memories",Memories);SaveStore.Save();
+            SaveStore.SetInt(StageKey,(int)stage);SaveStore.SetInt("AFTERSIGNAL.Unity.Memories",Memories);SaveStore.Save();sessionGeneration=SaveStore.Generation;
             CloseDialogue();if(Paused)SetPaused(false);Dead=false;Player.Rope.Release();
             Title=true;Time.timeScale=0;Audio.SetPaused(false);Cursor.lockState=CursorLockMode.None;Cursor.visible=true;
         }

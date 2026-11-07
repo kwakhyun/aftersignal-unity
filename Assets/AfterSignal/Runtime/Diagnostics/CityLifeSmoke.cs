@@ -18,15 +18,6 @@ namespace AfterSignal
             public List<string> passed = new List<string>(), errors = new List<string>();
         }
 
-        sealed class Saved
-        {
-            public string key, text;
-            public float value;
-            public int type;
-            public bool present;
-        }
-
-        static readonly List<Saved> saved = new List<Saved>();
         static readonly Result result = new Result();
         static bool initialized, finished;
         static int phase;
@@ -68,7 +59,13 @@ namespace AfterSignal
             {
                 initialized = true;
                 started = Time.realtimeSinceStartup;
-                Snapshot();
+                // The run spends credits, sleeps and saves the car for real, so it saves into a fresh scratch folder next to
+                // its report and real save slots are never touched. The reset also skips any legacy PlayerPrefs import.
+                string saves = Path.Combine(output, "saves");
+                if (Directory.Exists(saves))
+                    Directory.Delete(saves, true);
+                SaveStore.Directory = saves;
+                SaveStore.ResetActiveSlot();
                 LifeState.Heat = LifeState.HiddenSeconds = 0;
                 GameDirector.SkipTitle = true;
                 yield return SceneManager.LoadSceneAsync(CampaignRules.Scene(StageId.UrbanCity));
@@ -156,7 +153,9 @@ namespace AfterSignal
                 if (wanted.Helicopter)
                     wanted.Helicopter.Body.Damage(1000, Vector3.right);
                 yield return Hold(.2f, ControlFrame.Empty);
-                Check(WantedSystem.Level == 0, "Defeating dispatched force clears wanted status");
+                // Defeating the responders no longer clears the record; only hiding, surrender, the fine or Noa end it.
+                Check(WantedSystem.Level > 0, "Defeating dispatched force keeps wanted status and schedules reinforcements");
+                WantedSystem.Clear("");
                 phase = 1;
                 UrbanCatalog.Enter(game, 9);
                 yield break;
@@ -255,79 +254,14 @@ namespace AfterSignal
             Debug.Log("CITY LIFE / " + ok + " / " + message);
         }
 
-        static void Snapshot()
-        {
-            foreach (string suffix in new[]
-            {
-                "Credits",
-                "Savings",
-                "Outfit",
-                "Outfits",
-                "Hours",
-                "Heat",
-                "Hidden",
-                "Errand"
-            }
-
-            )
-                Keep("AFTERSIGNAL.Unity.Life." + suffix, suffix == "Errand" ? 2 : suffix == "Hours" || suffix == "Heat" || suffix == "Hidden" ? 1 : 0);
-            foreach (string suffix in new[]
-            {
-                "Site",
-                "Car",
-                "CarX",
-                "CarZ",
-                "CarYaw",
-                "CarFuel",
-                "CarStage",
-                "CarHealth",
-                "CarType"
-            }
-
-            )
-                Keep(UrbanCatalog.Prefix + suffix, suffix == "Site" || suffix == "Car" || suffix == "CarStage" || suffix == "CarType" ? 0 : 1);
-            Keep("AFTERSIGNAL.Unity.Stage", 0);
-            Keep("AFTERSIGNAL.Unity.Memories", 0);
-        }
-
-        static void Keep(string key, int type)
-        {
-            saved.Add(new Saved { key = key, type = type, present = SaveStore.HasKey(key), text = type == 2 ? SaveStore.GetString(key) : "", value = type == 1 ? SaveStore.GetFloat(key) : type == 0 ? SaveStore.GetInt(key) : 0 });
-        }
-
-        static void Restore()
-        {
-            LifeState.SuppressSave = true;
-            foreach (var s in saved)
-            {
-                if (!s.present)
-                    SaveStore.DeleteKey(s.key);
-                else if (s.type == 2)
-                    SaveStore.SetString(s.key, s.text);
-                else if (s.type == 1)
-                    SaveStore.SetFloat(s.key, s.value);
-                else
-                    SaveStore.SetInt(s.key, (int)s.value);
-            }
-
-            SaveStore.Save();
-        }
-
         void Finish()
         {
             if (finished)
                 return;
             finished = true;
-            Restore();
             result.completed = result.errors.Count == 0;
             File.WriteAllText(Path.Combine(output, "life-smoke.json"), JsonUtility.ToJson(result, true));
             Application.Quit(result.completed ? 0 : 1);
-        }
-
-        void OnApplicationQuit()
-        {
-            if (initialized)
-                Restore();
         }
     }
 }
