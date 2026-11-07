@@ -204,6 +204,19 @@ namespace AfterSignal
             Options.Add(new LifeOption { label = label, action = action, image = image });
         }
 
+        /// <summary>Buttons LifeHud has for options; later options are not shown.</summary>
+        public const int ShownOptions = 7;
+        /// <summary>Position of option <paramref name="index"/> in LifeHud's layout (image cards first, then plain buttons, each in list order), or -1 when it is not shown. Keys 1–7 follow this order.</summary>
+        public int OptionSlot(int index)
+        {
+            int shown = Mathf.Min(Options.Count, ShownOptions);if(index<0||index>=shown)return -1;
+            bool card = ShopItemArt.Get(Options[index].image);int slot = 0;
+            for(int i=0;i<shown;i++){bool other=ShopItemArt.Get(Options[i].image);if(card?other&&i<index:other||i<index)slot++;}
+            return slot;
+        }
+        /// <summary>Option index whose button is at layout position <paramref name="slot"/>, or -1.</summary>
+        public int DisplayedOption(int slot){for(int i=0;i<Mathf.Min(Options.Count,ShownOptions);i++)if(OptionSlot(i)==slot)return i;return -1;}
+
         public void Close()
         {
             if(storyVoice)storyVoice.StopSpeech();
