@@ -19,8 +19,11 @@ namespace AfterSignal
         {
             var item=ArmoryInventory.Items[id];int current=ArmoryInventory.Equipped(item.slot);
             var other=current>=0&&current!=id&&current<ArmoryInventory.Items.Length?ArmoryInventory.Items[current]:null;
-            string Stats(ArmoryItem i)=>i.slot<=2&&i.damage<=0?$"피해 배율 ×{i.multiplier:0.00}":i.slot==4?$"폭발 피해 {i.damage:0}":$"피해 {i.damage:0} · 초당 {(i.interval>0?i.damage/i.interval:i.damage):0}"+(i.magazine>0?$" · 탄창 {i.magazine}":"");
-            float Power(ArmoryItem i)=>i.slot<=2&&i.damage<=0?i.multiplier:i.interval>0?i.damage/i.interval:i.damage;
+            // The shotgun (slot 6) fires 7 pellets of item.damage per shot (PlayerEquipment.Attack), so a shot and its DPS count them all.
+            int Pellets(ArmoryItem i)=>i.slot==6?7:1;
+            float Shot(ArmoryItem i)=>i.damage*Pellets(i);
+            string Stats(ArmoryItem i)=>i.slot<=2&&i.damage<=0?$"피해 배율 ×{i.multiplier:0.00}":i.slot==4?$"폭발 피해 {i.damage:0}":$"피해 {i.damage:0}"+(Pellets(i)>1?$"×{Pellets(i)}":"")+$" · 초당 {(i.interval>0?Shot(i)/i.interval:Shot(i)):0}"+(i.magazine>0?$" · 탄창 {i.magazine}":"");
+            float Power(ArmoryItem i)=>i.slot<=2&&i.damage<=0?i.multiplier:i.interval>0?Shot(i)/i.interval:Shot(i);
             if(other==null)return "성능 · "+Stats(item)+(current==id?"  (장착 중)":"");
             float delta=Power(other)>0?Power(item)/Power(other)-1:0;
             return "성능 · "+Stats(item)+"\n현재 장착 · "+other.name+" / "+Stats(other)+"   →   "+(UnityEngine.Mathf.Abs(delta)<.005f?"비슷함":(delta>0?"+":"")+(delta*100).ToString("0")+"%");

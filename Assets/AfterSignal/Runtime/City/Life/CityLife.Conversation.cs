@@ -18,7 +18,7 @@ namespace AfterSignal
         public void Talk(CityNpc npc)
         {
             npc.GetComponent<NeighborBond>()?.Greet();
-            conversation.Cancel();
+            conversation.Cancel(); // refunds a reply that was still queued (see NpcConversation.Cancel)
             Speaker = npc;
             history.Clear();
             conversationReplies = 0;
@@ -45,8 +45,7 @@ namespace AfterSignal
         {
             if (!Sending)
                 return;
-            if (!conversation.Cancel())
-                Refund();
+            conversation.Cancel(); // a request that never reached the gateway is refunded through the unsent hook
             Sending = false;
             Body = bodyBeforeSending ?? "";
             Revision++;
@@ -63,7 +62,8 @@ namespace AfterSignal
         {
             var speaker = Speaker;
             string said = "서하: " + text + "\n\n";
-            if (RepliesLeft <= 0)
+            // Facility how-to answers are local and free (NpcConversation.Request), so the budget never blocks them.
+            if (RepliesLeft <= 0 && !FacilityGuide.TryAnswer(speaker, text, out _))
             {
                 Options.Clear();
                 Body = said + NpcText.Clean(NpcOpening.Reply(speaker, "budget"), 600) + "\n\n" + (sessionReplies >= SessionReplyBudget
@@ -131,7 +131,7 @@ namespace AfterSignal
                 }
 
                 Revision++;
-            });
+            }, Refund);
         }
 
         static string Trim(string s, int max) => string.IsNullOrEmpty(s) ? "도시의 작은 부탁" : s.Length > max ? s.Substring(0, max) : s;

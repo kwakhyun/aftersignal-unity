@@ -107,6 +107,8 @@ namespace AfterSignal
             if(control.pause&&UrbanSimulation.Instance&&UrbanSimulation.Instance.MapOpen){UrbanSimulation.Instance.CloseMap();return;}
             if(control.journal&&(!Blocked||CityLife.Instance.Mode=="journal")){if(CityLife.Instance.Mode=="journal")CityLife.Instance.Dismiss();else CityLife.Instance.StoryJournal();return;}
             if(control.pause&&!Title&&!Dead&&!Transition&&!CityCinematic.Active){if(CityLife.Instance&&CityLife.Instance.Mode=="sleeping")return;if(Dialogue)CloseDialogue();else SetPaused(!Paused);}
+            // Keys 1–7 pick the matching option of an open CityLife panel in on-screen order (image cards first), exactly like clicking it.
+            if(Dialogue&&!Paused&&control.weapon>=0&&CityLife.Instance){var menu=CityLife.Instance;int pick=MenuOption(menu.Mode,menu.Options.Count,control.weapon,menu.TextFocused);if(pick>=0)pick=menu.DisplayedOption(pick);if(pick>=0){menu.Options[pick].action();return;}}
             if(Dialogue&&control.interact)
             {
                 // First press finishes a line that is still typing; the next one advances.
@@ -116,9 +118,11 @@ namespace AfterSignal
                 if(life.Mode=="story"&&life.Options.Count==1){life.Options[0].action();return;}
             }
             if(Blocked){Audio.SetPaused(Paused||Dead);return;}
-            if(control.summonBike){UrbanSimulation.RequestBike();control.summonBike=false;}
+            // Gamepad L3 is both Horn and SummonBike: in a vehicle the shared press only honks, on foot it summons the bike.
+            if(control.summonBike){if(!(control.horn&&UrbanSimulation.Instance&&UrbanSimulation.Instance.Driving))UrbanSimulation.RequestBike();control.summonBike=false;}
             float dt=Mathf.Min(Time.deltaTime,.1f);Audio.SetPaused(false);inputSuppress-=dt;
-            if(inputSuppress>0){control.attack=control.grapple=control.interact=false;}
+            // The press that confirmed a menu or closed a dialogue must not also act in the world (A / Space would jump).
+            if(inputSuppress>0){control.attack=control.grapple=control.interact=control.jump=false;}
             Elapsed+=dt;NoticeTimer=Mathf.Max(0,NoticeTimer-dt);coreCooldown-=dt;
             Player.TickRecovery(dt);
             VenueRide.BeforeInput(ref control);
@@ -158,6 +162,8 @@ namespace AfterSignal
                 return CampaignCatalog.NextChapter>0?"노아의 메인 의뢰 · 광장 아래 노선 단말":"도시 노선 복구 완료 · 주민 의뢰와 선착장 탐색";
             }
         }
+        /// <summary>Option index that a 1–7 key (weapon slot 0–6) picks in an open CityLife panel, or -1. The AI talk panel and a focused text field keep the digits.</summary>
+        public static int MenuOption(string mode,int options,int key,bool typing)=>!string.IsNullOrEmpty(mode)&&mode!="talk"&&!typing&&key>=0&&key<7&&key<options?key:-1;
         public void SetPaused(bool value){if(value==Paused)return;if(value){prePauseScale=Time.timeScale;Time.timeScale=0;}else Time.timeScale=prePauseScale;Paused=value;inputSuppress=.16f;Player.Rope.Release();}
         /// <summary>Recent story/dialogue lines for the history view (shops and menus are not recorded).</summary>
         public static readonly List<(string title,string text)> DialogueLog=new();

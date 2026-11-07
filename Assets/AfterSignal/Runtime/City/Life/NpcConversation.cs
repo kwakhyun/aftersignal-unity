@@ -39,12 +39,17 @@ namespace AfterSignal
         UnityWebRequest active;
         Coroutine pending;
         bool charged;
+        Action unsent;
         public bool Pending => pending != null;
 
-        // Stops the pending reply without calling back. Returns true when the aborted request may already have reached the provider.
+        // Stops the pending reply without calling back. A request that never reached the provider runs its unsent hook (the
+        // caller's budget refund), whoever cancels it: a new Talk, closing the panel or the scene unloading.
+        // Returns true when the aborted request may already have reached the provider.
         public bool Cancel()
         {
             bool sent = charged;
+            var refund = pending != null && !sent ? unsent : null;
+            unsent = null;
             charged = false;
             if (pending != null)
                 StopCoroutine(pending);
@@ -55,14 +60,16 @@ namespace AfterSignal
                 active.Dispose();
             }
             active = null;
+            refund?.Invoke();
             return sent;
         }
 
-        public void Request(CityNpc npc, NpcLine[] history, Action<Reply> done)
+        public void Request(CityNpc npc, NpcLine[] history, Action<Reply> done, Action unsent = null)
         {
             Cancel();
             if(history!=null&&history.Length>0&&FacilityGuide.TryAnswer(npc,history[history.Length-1].content,out var guide))
             {done(new Reply{reply=NpcText.Clean(guide,1300),status="시설 이용 안내"});return;}
+            this.unsent = unsent;
             pending = StartCoroutine(Send(npc, history, done));
         }
 
@@ -148,6 +155,7 @@ namespace AfterSignal
             }
             pending = null;
             charged = false;
+            unsent = null;
             done(result);
         }
 
