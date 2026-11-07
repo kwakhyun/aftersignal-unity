@@ -96,11 +96,12 @@ namespace AfterSignal
             if(mode=="")return;menuFooter.gameObject.SetActive(mode=="pause");
             homeButton.gameObject.SetActive(mode=="pause");bikeButton.gameObject.SetActive(mode=="pause");
             settingsButton.gameObject.SetActive(mode=="pause");unstuckButton.gameObject.SetActive(mode=="pause"&&UnstuckAvailable);
+            float wait=PlayerRecovery.Cooldown;ButtonText(unstuckButton,wait>0?$"끼임 해제  ·  {Mathf.CeilToInt(wait)}초 후 다시 사용 가능":"끼임 해제  ·  마지막 안전 지점으로 이동");unstuckButton.interactable=wait<=0;
             for(int i=0;i<4;i++){respawnChoices[i].gameObject.SetActive(mode=="dead");ButtonText(respawnChoices[i],(i==respawnCity?"● ":"○ ")+FourCityCatalog.CityNames[i]+"\n"+(i==0?"서하의 집":i==1?"응급의료센터":i==2?"전진기지 의무실":"생명지원센터"));respawnChoices[i].GetComponent<Image>().color=i==respawnCity?new Color(.13f,.43f,.42f):new Color(.08f,.16f,.19f);}
             Rect(primary.GetComponent<RectTransform>(),40,mode=="dead"?424:350,530,58);Rect(secondary.GetComponent<RectTransform>(),40,mode=="dead"?500:423,530,48);Rect(third.GetComponent<RectTransform>(),40,mode=="dead"?566:486,190,44);
             Rect(modalBody.rectTransform,40,mode=="dead"?207:218,530,mode=="dead"?40:120);modalBody.fontSize=mode=="dead"?18:15;
             if(mode=="dead"){
-                modalTitle.text="SIGNAL LOST";modalBody.text="다시 시작할 도시를 선택하세요.";ButtonText(primary,FourCityCatalog.CityNames[respawnCity]+"에서 다시 시작   →");ButtonText(secondary,"타이틀로 돌아가기");ButtonText(third,"게임 종료");secondary.interactable=true;
+                modalTitle.text="SIGNAL LOST";int fee=RespawnNetwork.LastFee;modalBody.text="다시 시작할 도시를 선택하세요."+(fee>0?$"  ·  치료비 {fee:N0} C 청구 (예금은 안전)":"");ButtonText(primary,FourCityCatalog.CityNames[respawnCity]+"에서 다시 시작   →");ButtonText(secondary,"타이틀로 돌아가기");ButtonText(third,"게임 종료");secondary.interactable=true;
             }else{
                 modalTitle.text="잠시 멈춘 밤";modalBody.text=KeyHints.Apply("WASD 이동 · 좌클릭 공격 · 우클릭 로프 · 1–7 무기 · R 장전 · Q 기술\nSPACE 두 번 더블 점프 · 벽으로 W 등반 · SHIFT 대시 · CTRL 방어\nE 상호작용 · F 하차 · G 승객 탑승 · V 바이크 · M 지도 · J 일지\nH 길게 투항 · F6 구조 신고 · HOME 시점 초기화 · 키 변경은 설정에서");ButtonText(primary,"계속하기   →");ButtonText(secondary,game.Audio.Volume>.01f?"소리 끄기":"소리 켜기");ButtonText(third,"저장하고 타이틀로");secondary.interactable=true;
             }
@@ -130,8 +131,8 @@ namespace AfterSignal
             if(!PresentationSettings.AutoAdvance||!lineReveal.done||CityLife.Instance&&CityLife.Instance.Mode.Length>0)return;
             if(Time.unscaledTime-lineReveal.completedAt>2.2f+lineReveal.source.Length/16f)game.CloseDialogue();
         }
-        static bool UnstuckAvailable=>false;
-        void Unstuck(){}
+        static bool UnstuckAvailable=>true;
+        void Unstuck(){PlayerRecovery.Unstuck(game);}
         void Primary(){if(game.Title)game.Begin();else if(game.Dead)game.Retry(respawnCity);else game.SetPaused(false);}
         float volumeBeforeMute=.45f;
         void Secondary(){if(game.Title)game.Begin(true);else if(game.Dead)game.ReturnToTitle();else{if(game.Audio.Volume>.01f){volumeBeforeMute=game.Audio.Volume;game.Audio.SetVolume(0);}else game.Audio.SetVolume(Mathf.Max(.05f,volumeBeforeMute));ConfigureModal("pause");}}

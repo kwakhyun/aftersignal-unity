@@ -122,7 +122,7 @@ namespace AfterSignal
                 end=hit.point;var vehicle=hit.collider.GetComponentInParent<CityVehicle>();var actor=hit.collider.GetComponentInParent<WorldActor>();
                 if(vehicle)vehicle.Damage(WarheadDamage.Against(vehicle,BlastPayload.Missile,1400),end,Body);
                 if(actor&&!actor.monster)actor.Damage(actor.helicopter?2800:Mathf.Max(220,actor.MaxHealth*2),ray.normalized*10,Body);
-                hit.collider.GetComponentInParent<PlayerMotor>()?.ReceiveDamage(36,from);
+                hit.collider.GetComponentInParent<PlayerMotor>()?.ReceiveDamage(Mathf.RoundToInt(36*DifficultySettings.EnemyDamage),from);
             }
             SignalEffects.Beam(from,end,new Color(.58f,.17f,1),.52f,.65f);SignalEffects.Beam(from,end,new Color(.88f,.7f,1),.17f,.65f);VehicleExplosion.Create(end,2.3f);TitanImpact.Create(end,9);TitanDemolition.Strike(end,12,Body);GameDirector.Instance.Audio.Play("urban_explosion",end,.38f,3);
         }

@@ -39,6 +39,7 @@ namespace AfterSignal
         public void Initialize(GameDirector owner)
         {
             director = owner;
+            maxHealth *= DifficultySettings.EnemyHealth;
             Health = maxHealth;
             actor = GetComponent<PixelActor>();
             actor.Initialize();
@@ -95,12 +96,12 @@ namespace AfterSignal
                             director.Audio.PlayGun(GunshotKind.Rifle, start);
                             var shot = (end - start).normalized;
                             if (Physics.Raycast(start, shot, out var contact, 16, (1 << 0) | (1 << 8), QueryTriggerInteraction.Ignore) && contact.collider.GetComponentInParent<PlayerMotor>())
-                                player.ReceiveDamage(10, transform.position);
+                                player.ReceiveDamage(Mathf.RoundToInt(10 * DifficultySettings.EnemyDamage), transform.position);
                         }
                         else if (Mathf.Abs(delta.x) < 2.3f && Mathf.Abs(delta.z) < 1.2f && Mathf.Abs(delta.y) < 2.6f)
                         {
                             SignalEffects.Slash(transform.position + Vector3.up, Facing, 1.5f, SignalEffects.Red, 0);
-                            player.ReceiveDamage(12, transform.position);
+                            player.ReceiveDamage(Mathf.RoundToInt(12 * DifficultySettings.EnemyDamage), transform.position);
                         }
                     }
                 }

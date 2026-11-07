@@ -36,7 +36,7 @@ namespace AfterSignal
                 {next.y=floor+.08f;transform.position=next;}
             }
             else if(Time.time>hit&&!Physics.Linecast(transform.position+Vector3.up,aim,1,QueryTriggerInteraction.Ignore))
-            {hit=Time.time+(large?1.4f:1.1f);if(opponent)opponent.Damage(large?26:13,dir*3,Body);else player.ReceiveDamage(large?18:7,transform.position);GetComponent<DirectionalPerson>()?.Face(target,.5f);SignalEffects.Impact(aim,-dir,SignalEffects.Cyan,.5f);game.Audio.Play("urban_impact",aim,.3f,2);}
+            {hit=Time.time+(large?1.4f:1.1f);if(opponent)opponent.Damage(large?26:13,dir*3,Body);else player.ReceiveDamage(Mathf.RoundToInt((large?18:7)*DifficultySettings.EnemyDamage),transform.position);GetComponent<DirectionalPerson>()?.Face(target,.5f);SignalEffects.Impact(aim,-dir,SignalEffects.Cyan,.5f);game.Audio.Play("urban_impact",aim,.3f,2);}
             if(large){head.localPosition=Vector3.up*(3+Mathf.Sin(Time.time*2+phase)*.25f);head.Rotate(0,Time.deltaTime*28,0);for(int i=0;i<legs.Count;i++)legs[i].localRotation=Quaternion.Euler(0,Mathf.Sin(Time.time*4+i)*8,0);}
         }
     }
