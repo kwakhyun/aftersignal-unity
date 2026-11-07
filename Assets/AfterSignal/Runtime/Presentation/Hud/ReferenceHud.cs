@@ -24,16 +24,16 @@ namespace AfterSignal
         {
             var red = new Color(.95f, .35f, .29f);
             var pale = new Color(.93f, .86f, .62f);
-            health = Label(root, "100 / 100", 42, 27, 220, 35, 25, pale);
-            Label(root, "SEO / LINK", 235, 44, 110, 18, 10, muted);
+            health = Legible(Label(root, "100 / 100", 42, 27, 220, 35, 25, pale));
+            Legible(Label(root, "SEO / LINK", 225, 42, 120, 20, 12, muted));
             Wedge(root, "Health backing", 33, 67, 296, 13, new Color(.02f, .05f, .065f, .9f));
             hpTrail = Wedge(root, "Damage lag", 39, 69, 278, 9, pale);
             hpBar = Wedge(root, "Vital signal", 39, 69, 278, 9, red);
-            energyReadout = Label(root, "◇ 100", 42, 91, 115, 27, 18, new Color(.28f, .78f, .92f));
+            energyReadout = Legible(Label(root, "◇ 100", 42, 91, 115, 27, 18, new Color(.28f, .78f, .92f)));
             Panel(root, "Energy track", 144, 107, 174, 3, new Color(.02f, .07f, .09f));
             energyBar = Panel(root, "Energy", 144, 107, 174, 3, new Color(.27f, .76f, .89f));
-            chainText = Label(root, "", 42, 139, 240, 58, 34, pale, FontStyle.Italic);
-            Label(root, "AFTER / SIGNAL", 42, 121, 240, 15, 9, muted);
+            chainText = Legible(Label(root, "", 42, 139, 240, 58, 34, pale, FontStyle.Italic));
+            Legible(Label(root, "AFTER / SIGNAL", 42, 120, 240, 16, 11, muted));
             var inventory = Panel(root, "Record ledger", 0, 0, 240, 54, new Color(.02f, .055f, .07f, .38f));
             Bottom(inventory.rectTransform, 38, 43, 240, 54);
             archiveReadout = Label(inventory.transform, "", 12, 10, 216, 32, 16, pale);
@@ -53,25 +53,25 @@ namespace AfterSignal
             Rect(weaponGlyph.rectTransform, 192, 4, 85, 29);
             var objectivePanel = Panel(root, "Route objective", 0, 0, 282, 92, new Color(.025f, .06f, .075f, .48f)).rectTransform;
             Right(objectivePanel, 28, 202, 282, 92);
-            area = Label(objectivePanel, "", 11, 6, 260, 17, 10, muted, FontStyle.Bold);
+            area = Label(objectivePanel, "", 11, 5, 260, 18, 12, muted, FontStyle.Bold);
             objective = Label(objectivePanel, "", 11, 28, 260, 52, 14, white);
             rail = Label(root, "", 0, 0, 1, 1, 1, Color.clear);
-            var guide = Label(root, "WASD 달리기 · E 상호작용 · 마우스 시점 · 휠 줌 · J 일지 · ESC 설정", 0, 0, 650, 22, 11, muted);
-            CenterBottom(guide.rectTransform, 22, 650, 22);
+            var guide = Legible(Label(root, "WASD 달리기 · E 상호작용 · 마우스 시점 · 휠 줌 · J 일지 · ESC 설정", 0, 0, 760, 24, 13, muted));
+            CenterBottom(guide.rectTransform, 20, 760, 24);
             guide.alignment = TextAnchor.MiddleCenter;
             basicGuide=guide;
-            notice = Label(root, "", 0, 200, 850, 34, 17, mint, FontStyle.Bold);
+            notice = Legible(Label(root, "", 0, 200, 850, 34, 17, mint, FontStyle.Bold));
             CenterTop(notice.rectTransform, 200, 850, 34);
             notice.alignment = TextAnchor.MiddleCenter;
             prompt = Label(root, "", 0, 0, 820, 38, 18, pale, FontStyle.Bold);
             CenterBottom(prompt.rectTransform, 118, 820, 38);
             prompt.alignment = TextAnchor.MiddleCenter;
-            anchorHint = Label(root, "", 0, 0, 840, 26, 12, muted);
+            anchorHint = Legible(Label(root, "", 0, 0, 840, 26, 14, muted));
             CenterBottom(anchorHint.rectTransform, 88, 840, 26);
             anchorHint.alignment = TextAnchor.MiddleCenter;
-            cursor = Label(root, "+", 0, 0, 30, 30, 24, mint).rectTransform;
-            candidate = Label(root, "◇", 0, 0, 60, 60, 41, mint, FontStyle.Bold).rectTransform;
-            safeMarker = Label(root, "▼ SAFE", 0, 0, 150, 42, 22, pale, FontStyle.Bold).rectTransform;
+            cursor = Legible(Label(root, "+", 0, 0, 30, 30, 24, mint)).rectTransform;
+            candidate = Legible(Label(root, "◇", 0, 0, 60, 60, 41, mint, FontStyle.Bold)).rectTransform;
+            safeMarker = Legible(Label(root, "▼ SAFE", 0, 0, 150, 42, 22, pale, FontStyle.Bold)).rectTransform;
             bossPanel = Panel(root, "Conductor", 0, 0, 700, 66, new Color(.025f, .045f, .07f, .65f)).gameObject;
             CenterBottom(bossPanel.GetComponent<RectTransform>(), 180, 700, 66);
             bossText = Label(bossPanel.transform, "", 16, 7, 668, 32, 16, white, FontStyle.Bold);
@@ -90,6 +90,8 @@ namespace AfterSignal
             weaponGlyph.SetWeapon(p.Weapon);
             energyReadout.text = "◇ " + Mathf.CeilToInt(p.Energy);
             archiveReadout.text = "◇  ARCHIVE  " + game.Memories.ToString("00");
+            // The archive counter belongs to the train/district campaign; in the open city it would always read 00.
+            archiveReadout.transform.parent.gameObject.SetActive(ShowsArchive);
             if (p.ConfirmedHits > previousHits)
             {
                 chain += p.ConfirmedHits - previousHits;
@@ -101,6 +103,8 @@ namespace AfterSignal
                 chain = 0;
             chainText.text = chain > 1 ? chain + "  CHAIN" : "";
         }
+
+        bool ShowsArchive => (int)game.stage < (int)StageId.Haven || CampaignCatalog.Get(game.stage) != null;
 
         void BuildRouteMinimap(Transform map)
         {

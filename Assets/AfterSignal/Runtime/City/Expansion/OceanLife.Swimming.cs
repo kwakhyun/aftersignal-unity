@@ -61,9 +61,9 @@ namespace AfterSignal
         }
         void OnGUI()
         {
-            var g=GameDirector.Instance;if(!Swimming||!g||g.Blocked)return;
-            var style=new GUIStyle(GUI.skin.label){font=Resources.Load<Font>("Fonts/NotoSansKR"),fontSize=16,alignment=TextAnchor.MiddleCenter,normal={textColor=Oxygen<20?new Color(1,.4f,.3f):new Color(.6f,1,.95f)}};
-            GUI.Label(new Rect(Screen.width*.25f,Screen.height*.81f,Screen.width*.5f,65),$"수심 {Mathf.Max(0,Surface-g.Player.transform.position.y):0.0} m · 호흡 {Oxygen:0}초\nWASD 수영 · SHIFT 빠르게 · SPACE 상승 / 턱 오르기 · CTRL 잠수",style);
+            var g=GameDirector.Instance;if(!Swimming||!g||g.OverlayHidden)return;
+            var style=OverlayText.Style(16,Oxygen<20?new Color(1,.4f,.3f):new Color(.6f,1,.95f),TextAnchor.MiddleCenter);
+            OverlayText.Label(new Rect(Screen.width*.2f,Screen.height*.8f,Screen.width*.6f,70*OverlayText.Scale),$"수심 {Mathf.Max(0,Surface-g.Player.transform.position.y):0.0} m · 호흡 {Oxygen:0}초\nWASD 수영 · SHIFT 빠르게 · SPACE 상승 / 턱 오르기 · CTRL 잠수",style);
         }
     }
 }

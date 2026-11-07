@@ -29,6 +29,8 @@ namespace AfterSignal
         public bool Transition { get; private set; }
         public bool Dialogue => !string.IsNullOrEmpty(DialogueText);
         public bool Blocked => RespawnNetwork.Arriving&&stage==StageId.UrbanCity||Title||Paused||Dead||Transition||Dialogue||CityCinematic.Active;
+        /// <summary>World-space overlays (IMGUI readouts, reticles) hide whenever gameplay is blocked or a full-screen panel covers the view.</summary>
+        public bool OverlayHidden => Blocked||UrbanSimulation.Instance&&UrbanSimulation.Instance.MapOpen||CityLife.Instance&&(CityLife.Instance.Panorama||CityLife.Instance.Mode.Length>0);
         public bool Cleared => LivingGuards==0;
         public int LivingGuards { get {int n=0;foreach(var e in Enemies)if(e&&e.Alive&&!e.boss)n++;return n;} }
         public int Kills { get; private set; }
@@ -126,7 +128,13 @@ namespace AfterSignal
         public string Objective
         {
             get {
-                if(stage==StageId.UrbanCity)return "M 지도 / ESC 닫기 · E 탑승 / 출입 · V 서하 바이크 호출";
+                if(stage==StageId.UrbanCity)
+                {
+                    // The objective card shows the tracked story step; key hints live in the context card instead.
+                    var chronicle=CityChronicle.Instance;var tracked=chronicle?chronicle.Tracked:null;var step=chronicle?chronicle.CurrentStep:null;
+                    if(tracked!=null&&step!=null)return (tracked.main?"메인":"서브")+" · "+tracked.title+"\n→ "+step.label;
+                    return "추적 중인 의뢰 없음 · J 일지에서 의뢰를 선택하거나 M 지도에서 목적지를 정하세요";
+                }
                 if(stage==StageId.UrbanInterior&&ResidentialWorld.VisitHome>=0)return ResidentialWorld.VisitTitle+" · E / ESC";
                 if(stage==StageId.UrbanInterior)return UrbanCatalog.Name(UrbanCatalog.Current)+" · 직원과 대화 / 출입문으로 돌아가기";
                 if(stage==StageId.Residence)return "새벽 골목의 작은 집 · 침대 / 옷장 / 금고 · 현관 E 외출";

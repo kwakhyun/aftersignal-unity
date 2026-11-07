@@ -9,7 +9,7 @@ namespace AfterSignal
     public sealed partial class SignalHud : MonoBehaviour
     {
         readonly Color ink=new Color(.035f,.07f,.095f,.94f),mint=new Color(.63f,.92f,.83f),muted=new Color(.48f,.64f,.66f),white=new Color(.88f,.94f,.92f);
-        Canvas canvas;
+        Canvas canvas;CanvasScaler hudScaler;
         public void CinematicVisibility(bool visible){if(canvas)canvas.enabled=visible;}
         RectTransform root;
         Font font;
@@ -31,7 +31,7 @@ namespace AfterSignal
             game=owner;font=Resources.Load<Font>("Fonts/NotoSansKR");
             var go=new GameObject("HUD · AFTERSIGNAL",typeof(Canvas),typeof(CanvasScaler),typeof(GraphicRaycaster));
             canvas=go.GetComponent<Canvas>();canvas.renderMode=RenderMode.ScreenSpaceOverlay;canvas.sortingOrder=20;
-            var scaler=go.GetComponent<CanvasScaler>();scaler.uiScaleMode=CanvasScaler.ScaleMode.ScaleWithScreenSize;scaler.referenceResolution=new Vector2(1600,900);scaler.screenMatchMode=CanvasScaler.ScreenMatchMode.Expand;
+            var scaler=go.GetComponent<CanvasScaler>();scaler.uiScaleMode=CanvasScaler.ScaleMode.ScaleWithScreenSize;PresentationSettings.EnsureLoaded();scaler.referenceResolution=PresentationSettings.CanvasReference;scaler.screenMatchMode=CanvasScaler.ScreenMatchMode.Expand;hudScaler=scaler;
             root=go.GetComponent<RectTransform>();
             var events=new GameObject("EventSystem",typeof(EventSystem),typeof(InputSystemUIInputModule));
             BuildReferenceHud();
@@ -72,11 +72,11 @@ namespace AfterSignal
             dialogueText=Label(dialogueBox.transform,"",30,67,952,95,23,white);
             dialogueContinue=MakeButton(dialogueBox.transform,"대화 계속  [ E ]",754,177,230,35,()=>game.CloseDialogue());
             fade=Panel(root,"Transition",0,0,1600,900,Color.black);Stretch(fade.rectTransform);fade.raycastTarget=false;
-            foreach(var e in game.Enemies){var txt=Label(root,"",0,0,160,42,17,SignalEffects.Red,FontStyle.Bold);txt.alignment=TextAnchor.MiddleCenter;warnings.Add(e,txt);}
+            foreach(var e in game.Enemies){var txt=Legible(Label(root,"",0,0,160,42,17,SignalEffects.Red,FontStyle.Bold));txt.alignment=TextAnchor.MiddleCenter;warnings.Add(e,txt);}
         }
         void Update()
         {
-            if(!game||!game.Ready)return;canvas.enabled=!game.Title&&!CityCinematic.Active&&!VenueRuntime.ViewingCinema;if(game.Title||CityCinematic.Active||VenueRuntime.ViewingCinema)return;UpdateCivicHud();
+            if(!game||!game.Ready)return;if(hudScaler)hudScaler.referenceResolution=PresentationSettings.CanvasReference;canvas.enabled=!game.Title&&!CityCinematic.Active&&!VenueRuntime.ViewingCinema;if(game.Title||CityCinematic.Active||VenueRuntime.ViewingCinema)return;UpdateCivicHud();
             displayedHealth=Mathf.MoveTowards(displayedHealth,game.Player.Health,Time.unscaledDeltaTime*30);hpTrail.rectTransform.sizeDelta=new Vector2(278*displayedHealth/100,9);
             hpBar.rectTransform.sizeDelta=new Vector2(278*game.Player.Health/100,9);energyBar.rectTransform.sizeDelta=new Vector2(174*game.Player.Energy/100,3);
             if(Time.unscaledTime>=nextText){nextText=Time.unscaledTime+.08f;UpdateReferenceHud();health.text=$"{Mathf.CeilToInt(game.Player.Health)} / 100";weapon.text=game.Player.EquippedName;
@@ -128,19 +128,23 @@ namespace AfterSignal
             }
         }
         void Primary(){if(game.Title)game.Begin();else if(game.Dead)game.Retry(respawnCity);else game.SetPaused(false);}
-        void Secondary(){if(game.Title)game.Begin(true);else if(game.Dead)game.ReturnToTitle();else{game.Audio.SetVolume(game.Audio.Volume>.01f?0:.45f);ConfigureModal("pause");}}
+        float volumeBeforeMute=.45f;
+        void Secondary(){if(game.Title)game.Begin(true);else if(game.Dead)game.ReturnToTitle();else{if(game.Audio.Volume>.01f){volumeBeforeMute=game.Audio.Volume;game.Audio.SetVolume(0);}else game.Audio.SetVolume(Mathf.Max(.05f,volumeBeforeMute));ConfigureModal("pause");}}
         void Third(){if(game.Paused){game.ReturnToTitle();}else Application.Quit();}
         public void AddDamage(Vector3 position,int damage,bool critical)
         {
             if(numbers.Count>=24){Destroy(numbers[0].text.gameObject);numbers.RemoveAt(0);}
-            var t=Label(root,damage.ToString(),0,0,120,48,critical?34:23,critical?SignalEffects.Gold:white,FontStyle.Bold);numbers.Add((t,position,Time.time));
+            var t=Legible(Label(root,damage.ToString(),0,0,120,48,critical?34:23,critical?SignalEffects.Gold:white,FontStyle.Bold));numbers.Add((t,position,Time.time));
         }
         void PlaceScreen(RectTransform rect,Vector2 screen,Vector2 offset){RectTransformUtility.ScreenPointToLocalPointInRectangle(root,screen,null,out var point);rect.anchorMin=rect.anchorMax=new Vector2(.5f,.5f);rect.anchoredPosition=point+new Vector2(-offset.x,offset.y);}
-        void PlaceWorld(RectTransform rect,Vector3 position,Vector2 offset){var p=Camera.main.WorldToScreenPoint(position);PlaceScreen(rect,p,offset);}
+        // Points behind the camera project mirrored into the view; park them off-screen instead of drawing them in front of the player.
+        void PlaceWorld(RectTransform rect,Vector3 position,Vector2 offset){var cam=Camera.main;var p=cam?cam.WorldToScreenPoint(position):new Vector3(0,0,-1);if(p.z<=.05f){rect.anchorMin=rect.anchorMax=new Vector2(.5f,.5f);rect.anchoredPosition=new Vector2(-100000,-100000);return;}PlaceScreen(rect,p,offset);}
         Image Panel(Transform parent,string name,float x,float y,float w,float h,Color color){var go=new GameObject(name,typeof(RectTransform),typeof(Image));go.transform.SetParent(parent,false);var img=go.GetComponent<Image>();img.color=color;img.raycastTarget=false;Rect(img.rectTransform,x,y,w,h);return img;}
         Text Label(Transform parent,string content,float x,float y,float w,float h,int size,Color color,FontStyle style=FontStyle.Normal){var go=new GameObject("Text",typeof(RectTransform),typeof(Text));go.transform.SetParent(parent,false);var text=go.GetComponent<Text>();text.font=font;text.text=content;text.fontSize=size;text.fontStyle=style;text.color=color;text.raycastTarget=false;text.horizontalOverflow=HorizontalWrapMode.Wrap;text.verticalOverflow=VerticalWrapMode.Overflow;text.lineSpacing=.9f;Rect(text.rectTransform,x,y,w,h);return text;}
         Button MakeButton(Transform parent,string title,float x,float y,float w,float h,UnityEngine.Events.UnityAction click){var panel=Panel(parent,"Button",x,y,w,h,new Color(.16f,.29f,.3f));panel.raycastTarget=true;var button=panel.gameObject.AddComponent<Button>();var colors=button.colors;colors.highlightedColor=new Color(.66f,.95f,.86f);colors.pressedColor=new Color(.45f,.75f,.68f);button.colors=colors;button.onClick.AddListener(click);var label=Label(panel.transform,title,16,7,w-32,h-12,18,white);label.alignment=TextAnchor.MiddleLeft;return button;}
         void ButtonText(Button button,string text){button.GetComponentInChildren<Text>().text=text;}
+        /// <summary>Drop shadow for text that floats over the 3D scene without a backing panel.</summary>
+        static Text Legible(Text t){if(t&&!t.GetComponent<Shadow>()){var s=t.gameObject.AddComponent<Shadow>();s.effectColor=new Color(0,0,0,.85f);s.effectDistance=new Vector2(1.6f,-1.6f);}return t;}
         static void Rect(RectTransform r,float x,float y,float w,float h){r.anchorMin=r.anchorMax=new Vector2(0,1);r.pivot=new Vector2(0,1);r.anchoredPosition=new Vector2(x,-y);r.sizeDelta=new Vector2(w,h);}
         static void Right(RectTransform r,float x,float y,float w,float h){r.anchorMin=r.anchorMax=new Vector2(1,1);r.pivot=new Vector2(1,1);r.anchoredPosition=new Vector2(-x,-y);r.sizeDelta=new Vector2(w,h);}
         static void Bottom(RectTransform r,float x,float y,float w,float h){r.anchorMin=r.anchorMax=Vector2.zero;r.pivot=Vector2.zero;r.anchoredPosition=new Vector2(x,y);r.sizeDelta=new Vector2(w,h);}

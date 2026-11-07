@@ -94,7 +94,7 @@ namespace AfterSignal
             CombatVfx.Tracer(Muzzle,end,SignalEffects.Gold);GameDirector.Instance.Audio.PlayGun(GunshotKind.Automatic,Muzzle,.75f);
         }
         public void Resupply()=>Ammunition=240;
-        void OnGUI(){if(!car||!UrbanSimulation.Instance||UrbanSimulation.Instance.Current!=car||GameDirector.Instance.Blocked)return;var style=new GUIStyle(GUI.skin.label){font=Resources.Load<Font>("Fonts/NotoSansKR"),fontSize=17,normal={textColor=Color.white}};GUI.Label(new Rect(26,Screen.height*.65f,480,45),reload>0?"기관총 재장전 "+reload.ToString("0.0"):"기관총 "+Ammunition+" / 240 · 좌클릭 발사 · R 재장전",style);}
+        void OnGUI(){if(!car||!UrbanSimulation.Instance||UrbanSimulation.Instance.Current!=car||!GameDirector.Instance||GameDirector.Instance.OverlayHidden)return;var style=OverlayText.Style(16,Color.white);OverlayText.Label(OverlayText.Left(26,.65f,500,48),reload>0?"기관총 재장전 "+reload.ToString("0.0"):"기관총 "+Ammunition+" / 240 · 좌클릭 발사 · R 재장전",style);}
         void OnDestroy(){if(ownedGlass)Destroy(ownedGlass);}
     }
     public sealed class GarrisonWheel:MonoBehaviour{public CityVehicle Car;public int Side;void Update(){if(Car&&GameDirector.Instance&&!GameDirector.Instance.Blocked&&LocalSimulation.Within(transform.position,180))transform.Rotate(Vector3.up,Car.speed*Time.deltaTime*82,Space.Self);}}

@@ -17,10 +17,10 @@ namespace AfterSignal
         int lifeRevision = -1;
         void BuildLifeHud()
         {
-            lifeStatus = Label(root, "", 0, 0, 440, 32, 17, white, FontStyle.Bold);
+            lifeStatus = Legible(Label(root, "", 0, 0, 440, 32, 17, white, FontStyle.Bold));
             Right(lifeStatus.rectTransform, 32, 312, 440, 32);
             lifeStatus.alignment = TextAnchor.MiddleRight;
-            lifeQuest = Label(root, "", 0, 0, 440, 88, 16, mint);
+            lifeQuest = Legible(Label(root, "", 0, 0, 440, 88, 16, mint));
             Right(lifeQuest.rectTransform, 32, 354, 440, 88);
             lifeQuest.alignment = TextAnchor.UpperRight;
             lifePanel = Panel(root, "City life", 0, 0, 1040, 690, new Color(.025f, .06f, .085f, 1)).gameObject;

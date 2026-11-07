@@ -24,8 +24,10 @@ namespace AfterSignal
                 mainRouteText = Label(root, "", 0, 0, 560, 54, 16, new Color(1, .84f, .5f));
                 CenterTop(mainRouteText.rectTransform, 30, 560, 54);
                 mainRouteText.alignment = TextAnchor.MiddleCenter;
+                Legible(mainRouteText);
                 mainRoutePin = Label(root, "◆", 0, 0, 200, 44, 18, new Color(1, .84f, .45f));
                 mainRoutePin.alignment = TextAnchor.MiddleCenter;
+                Legible(mainRoutePin);
                 questPoints = FindObjectsByType<InteractionPoint>();
                 if (game.stage == StageId.UrbanCity)
                 {
@@ -50,7 +52,7 @@ namespace AfterSignal
                 if (routeRibbon && hasGoal&&!navigationMuted)
                 {
                     var vehicle=UrbanSimulation.Instance?UrbanSimulation.Instance.Current:null;
-                    navigation.Update(game.Player.transform.position,mainGoal,vehicle?vehicle.Forward:game.CameraRig.LookForward);roadRoute=navigation.Route;
+                    navigation.Update(game.Player.transform.position,mainGoal,vehicle?vehicle.Forward:WalkingForward());roadRoute=navigation.Route;
                     routeRibbon.Draw(roadRoute,game.Player.transform.position,navigation.Connected&&!navigation.Arrived);
                     atlas?.SetRoute(roadRoute);miniAtlas?.SetRoute(roadRoute);
                 }
@@ -71,8 +73,9 @@ namespace AfterSignal
             if (!show)
                 return;
             Vector3 delta = mainGoal - game.Player.transform.position;
-            float distance = delta.magnitude;
-            string heading = Mathf.Abs(delta.y) > 6 && distance < 18 ? delta.y > 0 ? "위층 ↑" : "아래층 ↓" : Mathf.Abs(delta.x) > Mathf.Abs(delta.z) ? delta.x > 0 ? "동쪽" : "서쪽" : delta.z > 0 ? "북쪽" : "남쪽";
+            // One distance everywhere: the road distance when a route exists, otherwise the straight line.
+            float distance = roadRoute != null && navigation.Connected && !navigation.Arrived ? navigation.Remaining : delta.magnitude;
+            string heading = Mathf.Abs(delta.y) > 6 && delta.magnitude < 18 ? delta.y > 0 ? "위층 ↑" : "아래층 ↓" : RelativeDirection(delta);
             mainRouteText.text = mainLabel + "\n" + heading + "  ·  " + distance.ToString("0") + " m";
             Vector3 next = mainGoal;
             if (roadRoute != null && !navigation.Arrived)next=navigation.Next+Vector3.up*.8f;
@@ -88,6 +91,22 @@ namespace AfterSignal
             screen.y = Mathf.Clamp(screen.y, 190, Screen.height - 120);
             PlaceScreen(mainRoutePin.rectTransform, screen, new Vector2(100, 0));
             mainRoutePin.text = roadRoute != null ? navigation.Arrived?"◆  도착":navigation.Arrow+"  "+navigation.TurnDistance.ToString("0")+" m" : "◆  " + distance.ToString("0") + " m";
+        }
+
+        /// <summary>On foot the route instruction follows where Seo is actually moving, not where the camera happens to look.</summary>
+        Vector3 WalkingForward()
+        {
+            var v = game.Player.Velocity; v.y = 0;
+            return v.sqrMagnitude > 1f ? v.normalized : game.CameraRig.LookForward;
+        }
+
+        /// <summary>Direction to a target relative to the current view (앞/뒤/좌/우), which reads faster than compass words.</summary>
+        string RelativeDirection(Vector3 delta)
+        {
+            delta.y = 0;
+            if (delta.sqrMagnitude < .01f) return "현재 위치";
+            float angle = Vector3.SignedAngle(game.CameraRig.LookForward, delta, Vector3.up);
+            return Mathf.Abs(angle) <= 35 ? "앞쪽 ↑" : Mathf.Abs(angle) >= 145 ? "뒤쪽 ↓" : angle > 0 ? (angle < 80 ? "오른쪽 앞 ↗" : angle > 110 ? "오른쪽 뒤 ↘" : "오른쪽 →") : (angle > -80 ? "왼쪽 앞 ↖" : angle < -110 ? "왼쪽 뒤 ↙" : "왼쪽 ←");
         }
 
         void StartNavigation(){navigationMuted=false;navigation.Reset();nextQuest=0;}

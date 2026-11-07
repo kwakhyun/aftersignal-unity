@@ -54,10 +54,10 @@ namespace AfterSignal
         }
         void OnGUI()
         {
-            var g=GameDirector.Instance;if(!car||!g||g.Blocked||!UrbanSimulation.Instance||UrbanSimulation.Instance.Current!=car||UrbanSimulation.Instance.SeatIndex!=0)return;
-            var style=new GUIStyle(GUI.skin.label){font=Resources.Load<Font>("Fonts/NotoSansKR"),fontSize=Mathf.RoundToInt(Screen.height/60f),normal={textColor=new Color(.65f,1,.87f)}};
+            var g=GameDirector.Instance;if(!car||!g||g.OverlayHidden||!UrbanSimulation.Instance||UrbanSimulation.Instance.Current!=car||UrbanSimulation.Instance.SeatIndex!=0)return;
+            var style=OverlayText.Style(15,new Color(.65f,1,.87f));
             string text=car.type==CityVehicleType.Tank?$"120 mm  {Shells}  ·  {(cooldown>0?"장전 "+cooldown.ToString("0.0"):Aligned?"발사 준비":"포탑 조준 중")}\n좌클릭 주포 · 우클릭 기관총 · C 시점":$"기관포 · 미사일 {Missiles} / 예비 {reserve}\n{(reload>0?"재장전 "+reload.ToString("0.0"):LockedTarget?(lockTime>.85f?"표적 고정":"표적 추적 중"):"비유도 발사 가능")} · 우클릭 미사일 · R 장전 · C 시점";
-            GUI.Label(new Rect(25,Screen.height*.62f,440,85),text,style);
+            OverlayText.Label(OverlayText.Left(25,.62f,460,90),text,style);
         }
     }
 }

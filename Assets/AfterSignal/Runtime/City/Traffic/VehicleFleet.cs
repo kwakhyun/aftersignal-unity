@@ -80,6 +80,10 @@ namespace AfterSignal
         public static Vector3 Door(CityVehicle c) => c.type==CityVehicleType.Bomber?c.transform.TransformPoint(new Vector3(9,0,-4)): c.GetComponent<CityTaxiService>()&&c.IsAircraft?c.transform.TransformPoint(new Vector3(0,0,-5.2f)):c.GetComponent<AuthoredCraft>()?c.GetComponent<AuthoredCraft>().BoardingPoint:c.transform.TransformPoint(c.type==CityVehicleType.Airliner?new Vector3(8,0,-3.4f):c.type==CityVehicleType.Boat?new Vector3(0,1.4f,3.3f):new Vector3(0,0,-c.HalfWidth-1));
         public static string Name(CityVehicle c,int seat) => seat==0 ? c.IsAircraft ? "조종석" : c.IsWatercraft ? "선장석" : "운전석" : c.IsSpecial || c.type==CityVehicleType.Bus ? "승객석 "+seat : seat==1?"조수석":seat==2?"뒷좌석 왼쪽":"뒷좌석 오른쪽";
         public static string Title(CityVehicleType t) => new[]{"세단","택시","시내버스","트럭","루멘 바이크","오로라 스포츠카","블루워터 여객선","루멘 에어 여객기","레이븐 전투헬기","스펙터 전투기","아이언 전차","옵시디언 전략폭격기"}[(int)t];
-        public static string Controls(CityVehicle c) => c.type==CityVehicleType.Tank ? "W/S 전후진 · A/D 궤도 선회 · 마우스 포탑 · 좌/우클릭 주포/기관총 · C 시점" : c.IsAircraft ? "W/S 추력 · A/D 선회 · SPACE 상승 / CTRL 하강 · SHIFT 가속 · C 시점"+(c.type==CityVehicleType.Airliner?"":c.type==CityVehicleType.Bomber?" · 우클릭 24발 연속 투하 / 착륙 후 R 재보급":" · 우클릭 미사일 / R 장전")+" · F 하차" : c.IsWatercraft ? "W/S 추진 · A/D 키 · SHIFT 가속 · SPACE 제동 · C 시점 · F 하선" : "W/S 가속·후진 · A/D 조향 · SHIFT 가속 · SPACE+조향 드리프트 / 제동 · C 시점 · E 하차";
+        /// <summary>Set by the HUD: after the first seconds in a vehicle only the essentials stay on screen.</summary>
+        public static bool CompactControls;
+        public static string Controls(CityVehicle c) => CompactControls ? CompactHint(c) : FullControls(c);
+        static string CompactHint(CityVehicle c) => c.IsAircraft ? "SPACE/CTRL 고도 · C 시점 · F 하차" : c.IsWatercraft ? "C 시점 · F 하선" : "C 시점 · B 경적 · F 하차";
+        public static string FullControls(CityVehicle c) => c.type==CityVehicleType.Tank ? "W/S 전후진 · A/D 궤도 선회 · 마우스 포탑 · 좌/우클릭 주포/기관총 · C 시점 · F 하차" : c.IsAircraft ? "W/S 추력 · A/D 선회 · SPACE 상승 / CTRL 하강 · SHIFT 가속 · C 시점"+(c.type==CityVehicleType.Airliner?"":c.type==CityVehicleType.Bomber?" · 우클릭 24발 연속 투하 / 착륙 후 R 재보급":" · 우클릭 미사일 / R 장전")+" · F 하차" : c.IsWatercraft ? "W/S 추진 · A/D 키 · SHIFT 가속 · SPACE 제동 · C 시점 · F 하선" : "W/S 가속·후진 · A/D 조향 · SHIFT 가속 · SPACE+조향 드리프트 / 제동 · C 시점 · B 경적 · F 하차";
     }
 }

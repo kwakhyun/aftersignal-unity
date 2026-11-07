@@ -47,10 +47,12 @@ namespace AfterSignal
             if (input.cameraReset) { FreeOrbit = true; orbitYaw=-8;orbitPitch=15;orbitDistance=8.5f; velocity = Vector3.zero; if (Viewing) { CityLife.Instance.PanoramaYaw = -15; CityLife.Instance.PanoramaPitch = 14; } return; }
             if(Mathf.Abs(input.zoom)>.01f){orbitDistance=Mathf.Clamp(orbitDistance-Mathf.Sign(input.zoom)*.9f,3.5f,18);FreeOrbit=true;}
             if (!input.look || input.lookDelta.sqrMagnitude < .001f) return;
+            // Player look preferences: sensitivity multiplier and optional inverted vertical axis.
+            float lookX = input.lookDelta.x * .18f * PresentationSettings.MouseSensitivity, lookY = input.lookDelta.y * .18f * PresentationSettings.MouseSensitivity * (PresentationSettings.InvertY ? -1 : 1);
             if (Viewing)
             {
-                CityLife.Instance.PanoramaYaw += input.lookDelta.x * .18f;
-                CityLife.Instance.PanoramaPitch = Mathf.Clamp(CityLife.Instance.PanoramaPitch - input.lookDelta.y * .18f, -65, 78);
+                CityLife.Instance.PanoramaYaw += lookX;
+                CityLife.Instance.PanoramaPitch = Mathf.Clamp(CityLife.Instance.PanoramaPitch - lookY, -65, 78);
                 return;
             }
             if (!FreeOrbit)
@@ -62,8 +64,8 @@ namespace AfterSignal
                 orbitPitch = Mathf.DeltaAngle(0, angle.x);
                 FreeOrbit = true;
             }
-            orbitYaw = Mathf.Repeat(orbitYaw + input.lookDelta.x * .18f, 360);
-            orbitPitch = Mathf.Clamp(orbitPitch - input.lookDelta.y * .18f, -65, 78);
+            orbitYaw = Mathf.Repeat(orbitYaw + lookX, 360);
+            orbitPitch = Mathf.Clamp(orbitPitch - lookY, -65, 78);
         }
 
         Vector3 AvoidWalls(Vector3 desired)

@@ -60,9 +60,9 @@ namespace AfterSignal
         }
         void OnGUI()
         {
-            var g=GameDirector.Instance;var sim=UrbanSimulation.Instance;if(!g||g.Blocked||!sim||sim.Current!=car||sim.SeatIndex!=0)return;
-            var style=new GUIStyle(GUI.skin.label){font=Resources.Load<Font>("Fonts/NotoSansKR"),fontSize=Mathf.RoundToInt(Screen.height/55f),normal={textColor=new Color(.65f,1,.87f)}};
-            GUI.Label(new Rect(25,Screen.height*.62f,600,85),"OBSIDIAN · 폭탄 "+Bombs+" / 96\n"+(reload>0?"재보급 중 "+reload.ToString("0.0")+"초":Dropping?"연속 투하 중":"우클릭 · 24발 연속 투하 / 착륙 후 R 재보급"),style);
+            var g=GameDirector.Instance;var sim=UrbanSimulation.Instance;if(!g||g.OverlayHidden||!sim||sim.Current!=car||sim.SeatIndex!=0)return;
+            var style=OverlayText.Style(16,new Color(.65f,1,.87f));
+            OverlayText.Label(OverlayText.Left(25,.62f,600,90),"OBSIDIAN · 폭탄 "+Bombs+" / 96\n"+(reload>0?"재보급 중 "+reload.ToString("0.0")+"초":Dropping?"연속 투하 중":"우클릭 · 24발 연속 투하 / 착륙 후 R 재보급"),style);
         }
         void Update()
         {

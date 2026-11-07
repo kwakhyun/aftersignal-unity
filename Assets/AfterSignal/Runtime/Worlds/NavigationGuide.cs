@@ -34,7 +34,7 @@ namespace AfterSignal
                 var heading=Vector3.ProjectOnPlane(Next-at,Vector3.up);
                 float entryTurn=Vector3.SignedAngle(forward,heading,Vector3.up);
                 if(heading.sqrMagnitude>16&&Vector3.Dot(heading.normalized,forward.normalized)<-.6f){Arrow="↶";Instruction="반대 방향으로 돌아 이동";}
-                else if(heading.sqrMagnitude>16&&Mathf.Abs(entryTurn)>55){Arrow=entryTurn>0?"↱":"↰";Instruction=entryTurn>0?"오른쪽 경로로 진입":"왼쪽 경로로 진입";TurnDistance=0;}
+                else if(heading.sqrMagnitude>16&&Mathf.Abs(entryTurn)>55){Arrow=entryTurn>0?"↱":"↰";Instruction=entryTurn>0?"오른쪽 경로로 진입":"왼쪽 경로로 진입";}
                 else
                 {
                     float along=Vector3.Distance(at,Next);
