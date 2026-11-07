@@ -68,6 +68,8 @@ namespace AfterSignal
         {
             while (!GameDirector.Instance || !GameDirector.Instance.Ready) yield return null;
             var game = GameDirector.Instance;
+            // GameDirector.Start may have run this frame before any Update, so apply the neutral response before the first look injection too.
+            PresentationSettings.MouseSensitivity = 1; PresentationSettings.InvertY = false;
             game.Input.ExternalControl = true;
             game.Input.ExternalFrame = ControlFrame.Empty;
             if (game.Dialogue) game.CloseDialogue();

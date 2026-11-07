@@ -38,8 +38,8 @@ namespace AfterSignal
         {
             var game=GameDirector.Instance;if(!car||!game||game.Blocked)return;
             if(car.Wrecked){remaining=0;return;}
-            // Leave once off screen (or after 30 s) so a van withdrawn mid-fight does not vanish in view; a van Seoha took is kept.
-            if(withdrawing){if(car.owned){enabled=false;return;}leave+=Time.deltaTime;if(leave>30||leave>1&&ResponseDispatch.Hidden(transform.position,4))Destroy(gameObject);return;}
+            // Leave once off screen (or after 30 s) so a van withdrawn mid-fight does not vanish in view; a van Seoha took is kept, and one she rides in any seat waits until she is out.
+            if(withdrawing){if(car.owned){enabled=false;return;}if(UrbanSimulation.Instance&&UrbanSimulation.Instance.Current==car){leave=0;return;}leave+=Time.deltaTime;if(leave>30||leave>1&&ResponseDispatch.Hidden(transform.position,4))Destroy(gameObject);return;}
             if(UrbanSimulation.Instance.Current==car){remaining=0;return;}
             elapsed+=Time.deltaTime;
             if(incidentAssignment&&(!incidentTarget||!incidentTarget.Alive||incidentTarget.Downed)&&!IncidentCommand.Emergency){remaining=0;car.speed=0;if(elapsed>100&&ResponseDispatch.Hidden(transform.position))Destroy(gameObject);return;}
