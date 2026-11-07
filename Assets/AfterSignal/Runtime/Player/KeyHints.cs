@@ -18,9 +18,13 @@ namespace AfterSignal
         {
             ("WASD", "Move"), ("W/S", "Move"), ("A/D", "Move"), ("SHIFT", "Dash"), ("SPACE", "Jump"), ("CTRL", "Guard"), ("HOME", "CameraReset"), ("ESC", "Pause"),
             ("LMB", "Attack"), ("RMB", "Grapple"), ("좌클릭", "Attack"), ("우클릭", "Grapple"), ("F6", "RescueReport"),
-            ("E", "Interact"), ("F", "Exit"), ("G", "Passenger"), ("M", "Map"), ("J", "Journal"), ("R", "Reload"), ("Q", "Skill"), ("C", "VehicleView"), ("B", "Horn"), ("V", "SummonBike"), ("H", "Surrender"),
+            ("E", "Interact"), ("F", "Exit"), ("G", "Passenger"), ("M", "Map"), ("J", "Journal"), ("R", "Reload"), ("Q", "Skill"), ("C", "VehicleView"), ("B", "Horn"), ("V", "SummonBike"), ("H", "Surrender"), ("P", "Panorama"),
         };
-        static readonly Regex pattern = new Regex(@"(?<![A-Za-z0-9가-힣]|\d\s)(WASD|W/S|A/D|SHIFT|SPACE|CTRL|HOME|ESC|LMB|RMB|F6|[EFGMJRQCBVH])(?![A-Za-z0-9])|좌클릭|우클릭", RegexOptions.CultureInvariant);
+        static readonly Regex pattern = new Regex(@"(?<![A-Za-z0-9가-힣]|\d\s)(WASD|W/S|A/D|SHIFT|SPACE|CTRL|HOME|ESC|LMB|RMB|F6|[EFGMJRQCBVHP])(?![A-Za-z0-9])|좌클릭|우클릭", RegexOptions.CultureInvariant);
+        // "[ E ]" becomes "[ [X] ]" on a pad; keep a single pair of brackets.
+        static readonly Regex nested = new Regex(@"\[\s*(\[[^\[\]]+\])\s*\]", RegexOptions.CultureInvariant);
+        // Actions without a pad binding whose pad hint is another action's button (the rooftop view is left with Exit).
+        static readonly Dictionary<string, string> padFallback = new() { { "Panorama", "Exit" } };
         static readonly Dictionary<string, string> gamepadNames = new()
         {
             { "buttonSouth", "[A]" }, { "buttonEast", "[B]" }, { "buttonWest", "[X]" }, { "buttonNorth", "[Y]" },
@@ -28,7 +32,7 @@ namespace AfterSignal
             { "start", "[START]" }, { "select", "[VIEW]" }, { "leftStickPress", "[LS 누름]" }, { "rightStickPress", "[RS 누름]" },
             { "dpad/up", "[↑]" }, { "dpad/down", "[↓]" }, { "dpad/left", "[←]" }, { "dpad/right", "[→]" }, { "leftStick", "[LS]" }, { "rightStick", "[RS]" },
         };
-        static readonly Dictionary<string, string> cache = new();
+        static readonly Dictionary<string, string> cache = new(), padCache = new();
         static readonly Dictionary<string, string> replacements = new();
         static InputActionAsset asset;
         static bool customized;
@@ -41,7 +45,7 @@ namespace AfterSignal
 
         public static void Refresh()
         {
-            cache.Clear();
+            cache.Clear(); padCache.Clear();
             replacements.Clear();
             customized = false;
             if (!asset) return;
@@ -54,7 +58,9 @@ namespace AfterSignal
                     customized = true;
                 replacements[token + "|kb"] = string.IsNullOrEmpty(keyboard) || actionName == "Move" ? token : keyboard;
                 string pad = Display(action, GamepadGroup);
-                replacements[token + "|pad"] = string.IsNullOrEmpty(pad) ? token : pad;
+                if (string.IsNullOrEmpty(pad) && padFallback.TryGetValue(actionName, out var alt) && asset.FindAction(alt) is InputAction other) pad = Display(other, GamepadGroup);
+                // No pad button for this action: never show a keyboard key to a gamepad player.
+                replacements[token + "|pad"] = string.IsNullOrEmpty(pad) ? "—" : pad;
             }
         }
 
@@ -64,8 +70,8 @@ namespace AfterSignal
             var pad = Gamepad.current;
             bool padActive = pad != null && (pad.buttonSouth.wasPressedThisFrame || pad.buttonEast.wasPressedThisFrame || pad.buttonWest.wasPressedThisFrame || pad.buttonNorth.wasPressedThisFrame || pad.startButton.wasPressedThisFrame || pad.leftStick.ReadValue().sqrMagnitude > .25f || pad.rightStick.ReadValue().sqrMagnitude > .25f);
             bool keyboardActive = Keyboard.current != null && Keyboard.current.anyKey.wasPressedThisFrame || Mouse.current != null && (Mouse.current.leftButton.wasPressedThisFrame || Mouse.current.delta.ReadValue().sqrMagnitude > 25);
-            if (padActive && !UsingGamepad) { UsingGamepad = true; cache.Clear(); }
-            else if (keyboardActive && UsingGamepad) { UsingGamepad = false; cache.Clear(); }
+            if (padActive) UsingGamepad = true;
+            else if (keyboardActive) UsingGamepad = false;
         }
 
         /// <summary>Display name of the current binding for an action ("E", "[X]"…), for menus.</summary>
@@ -75,14 +81,19 @@ namespace AfterSignal
             return action == null ? "" : Display(action, gamepad ? GamepadGroup : KeyboardGroup);
         }
 
-        public static string Apply(string text)
+        public static string Apply(string text) => Apply(text, UsingGamepad);
+
+        /// <summary>Rewrites a hint for keyboard/mouse or for a gamepad, whichever device is in use.</summary>
+        public static string Apply(string text, bool gamepad)
         {
-            if (string.IsNullOrEmpty(text) || !asset || !customized && !UsingGamepad) return text;
-            if (cache.TryGetValue(text, out var done)) return done;
-            string suffix = UsingGamepad ? "|pad" : "|kb";
+            if (string.IsNullOrEmpty(text) || !asset || !customized && !gamepad) return text;
+            var store = gamepad ? padCache : cache;
+            if (store.TryGetValue(text, out var done)) return done;
+            string suffix = gamepad ? "|pad" : "|kb";
             done = pattern.Replace(text, m => replacements.TryGetValue(m.Value + suffix, out var r) ? r : m.Value);
-            if (cache.Count > 256) cache.Clear();
-            cache[text] = done;
+            if (gamepad) done = nested.Replace(done, "$1");
+            if (store.Count > 256) store.Clear();
+            store[text] = done;
             return done;
         }
 

@@ -71,7 +71,9 @@ namespace AfterSignal
             screen=new GameObject("TITLE / AFTERSIGNAL",typeof(Canvas),typeof(CanvasScaler),typeof(GraphicRaycaster),typeof(CanvasGroup));
             var canvas=screen.GetComponent<Canvas>();canvas.renderMode=RenderMode.ScreenSpaceOverlay;canvas.sortingOrder=100;
             var scaler=screen.GetComponent<CanvasScaler>();scaler.uiScaleMode=CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution=PresentationSettings.CanvasReference;scaler.screenMatchMode=CanvasScaler.ScreenMatchMode.Expand;
+            // The key art, logo and menu are one 1600×900 composition, so the title keeps that reference instead of the UI-size
+            // setting: a larger UI scale would crop the frame, and fitting the frame back would cancel the scale (or letterbox the art).
+            scaler.referenceResolution=new Vector2(1600,900);scaler.screenMatchMode=CanvasScaler.ScreenMatchMode.Expand;
             entrance=screen.GetComponent<CanvasGroup>();entrance.alpha=0;
             var canvasRoot=screen.transform;
             var surround=Box(canvasRoot,0,0,1600,900,new Color(.006f,.018f,.028f));Stretch(surround.rectTransform);

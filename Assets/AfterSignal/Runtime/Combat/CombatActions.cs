@@ -27,17 +27,21 @@ namespace AfterSignal
 
         AttackTiming currentTiming;
         float reloadRemaining, dashAttackWindow;
-        int pendingWeapon = -1, reloadPhase, shotsInAction;
+        int pendingWeapon = -1, pendingSlot = -1, reloadPhase, shotsInAction;
         readonly HashSet<WorldActor> worldStruck = new HashSet<WorldActor>();
         void UpdateArsenal(ControlFrame input, float dt)
         {
             Equipment?.Tick(input,dt);
+            // Weapon cycling (gamepad d-pad) walks all seven armory slots through Equipment.Select, so the slot, HUD name and
+            // damage multiplier follow; like before, the switch waits until the current attack has recovered.
+            if(input.weapon>=0)pendingSlot=-1;
+            if(input.weaponCycle!=0&&Equipment){int next=PlayerEquipment.NextOwnedSlot(pendingSlot>=0?pendingSlot:Equipment.Slot,input.weaponCycle);if(next>=0)pendingSlot=next;}
+            if(pendingSlot>=0&&Equipment&&AttackTime<=0){if(pendingSlot!=Equipment.Slot&&Equipment.Select(pendingSlot))WeaponChanges++;pendingSlot=-1;}
             if(Equipment&&Equipment.Extended){pendingWeapon=-1;return;}
             dashAttackWindow = Mathf.Max(0, dashAttackWindow - dt);
-            if (input.weapon >= 0)
+            // With equipment the number keys are handled by Equipment.Select; a failed select (item not owned) must not change the pose.
+            if (input.weapon >= 0 && !Equipment)
                 pendingWeapon = Mathf.Clamp(input.weapon, 0, 2);
-            if (input.weaponCycle != 0)
-                pendingWeapon = ((pendingWeapon >= 0 ? pendingWeapon : (int)Weapon) + (input.weaponCycle > 0 ? 1 : 2)) % 3;
             if (pendingWeapon >= 0 && AttackTime <= 0)
             {
                 if ((int)Weapon != pendingWeapon)
