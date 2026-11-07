@@ -28,7 +28,7 @@ namespace AfterSignal
         {
             DontDestroyOnLoad(gameObject);Application.runInBackground=true;LifeState.SuppressSave=true;
             output=Path.GetFullPath(QualitySession.Arg("-quality-output","Artifacts/CityLiving/Smoke"));Directory.CreateDirectory(output);
-            foreach(var key in keys)if(PlayerPrefs.HasKey(key))saved[key]=PlayerPrefs.GetInt(key);
+            foreach(var key in keys)if(SaveStore.HasKey(key))saved[key]=SaveStore.GetInt(key);
             Application.logMessageReceived+=Log;
         }
         void Log(string message,string stack,LogType type){if(type==LogType.Error||type==LogType.Exception||type==LogType.Assert)report.errors.Add(message+"\n"+stack);}
@@ -150,8 +150,8 @@ namespace AfterSignal
         void Finish()
         {
             finished=true;report.completed=report.errors.Count==0;
-            foreach(var key in keys)if(saved.TryGetValue(key,out var value))PlayerPrefs.SetInt(key,value);else PlayerPrefs.DeleteKey(key);
-            PlayerPrefs.Save();
+            foreach(var key in keys)if(saved.TryGetValue(key,out var value))SaveStore.SetInt(key,value);else SaveStore.DeleteKey(key);
+            SaveStore.Save();
             File.WriteAllText(Path.Combine(output,"city-living.json"),JsonUtility.ToJson(report,true));
             Application.Quit(report.completed?0:1);
         }

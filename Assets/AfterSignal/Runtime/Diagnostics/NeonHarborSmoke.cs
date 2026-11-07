@@ -15,7 +15,7 @@ namespace AfterSignal
         readonly Report report=new();string output;float began;bool done,hadJail;float jail;
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void Install(){if(Environment.GetCommandLineArgs().Contains("-neon-harbor-smoke")&&!FindAnyObjectByType<NeonHarborSmoke>()){GameDirector.SkipTitle=true;new GameObject("Nova essential verification").AddComponent<NeonHarborSmoke>();}}
-        void Awake(){DontDestroyOnLoad(gameObject);Application.runInBackground=true;LifeState.SuppressSave=CityChronicle.SuppressSave=true;hadJail=PlayerPrefs.HasKey("AFTERSIGNAL.Unity.JailSeconds");jail=PlayerPrefs.GetFloat("AFTERSIGNAL.Unity.JailSeconds");PlayerPrefs.DeleteKey("AFTERSIGNAL.Unity.JailSeconds");output=Path.GetFullPath(QualitySession.Arg("-quality-output","Artifacts/NeonHarbor"));Directory.CreateDirectory(output);began=Time.realtimeSinceStartup;Application.logMessageReceived+=Log;}
+        void Awake(){DontDestroyOnLoad(gameObject);Application.runInBackground=true;LifeState.SuppressSave=CityChronicle.SuppressSave=true;hadJail=SaveStore.HasKey("AFTERSIGNAL.Unity.JailSeconds");jail=SaveStore.GetFloat("AFTERSIGNAL.Unity.JailSeconds");SaveStore.DeleteKey("AFTERSIGNAL.Unity.JailSeconds");output=Path.GetFullPath(QualitySession.Arg("-quality-output","Artifacts/NeonHarbor"));Directory.CreateDirectory(output);began=Time.realtimeSinceStartup;Application.logMessageReceived+=Log;}
         void Log(string text,string stack,LogType type){if(type==LogType.Exception||type==LogType.Error||type==LogType.Assert){if(report.errors.Count<16)report.errors.Add(text+"\n"+stack);}}
         void Check(bool ok,string text){(ok?report.passed:report.errors).Add(text);Debug.Log("NOVA CHECK "+ok+" / "+text);}
         void Update(){if(!done&&Time.realtimeSinceStartup-began>290){Check(false,"Essential verification timed out");Finish();}}
@@ -99,6 +99,6 @@ namespace AfterSignal
             var cam=Camera.main;var rt=RenderTexture.GetTemporary(1600,900,24);var previous=RenderTexture.active;var texture=new Texture2D(1600,900,TextureFormat.RGBA32,false);
             RenderPipeline.SubmitRenderRequest(cam,new UniversalRenderPipeline.SingleCameraRequest{destination=rt});RenderTexture.active=rt;texture.ReadPixels(new Rect(0,0,1600,900),0,0);texture.Apply();File.WriteAllBytes(Path.Combine(output,name+".png"),texture.EncodeToPNG());RenderTexture.active=previous;RenderTexture.ReleaseTemporary(rt);Destroy(texture);
         }
-        void Finish(){if(done)return;done=true;Application.logMessageReceived-=Log;if(hadJail)PlayerPrefs.SetFloat("AFTERSIGNAL.Unity.JailSeconds",jail);else PlayerPrefs.DeleteKey("AFTERSIGNAL.Unity.JailSeconds");report.completed=report.errors.Count==0;File.WriteAllText(Path.Combine(output,"neon.json"),JsonUtility.ToJson(report,true));Application.Quit(report.completed?0:1);}
+        void Finish(){if(done)return;done=true;Application.logMessageReceived-=Log;if(hadJail)SaveStore.SetFloat("AFTERSIGNAL.Unity.JailSeconds",jail);else SaveStore.DeleteKey("AFTERSIGNAL.Unity.JailSeconds");report.completed=report.errors.Count==0;File.WriteAllText(Path.Combine(output,"neon.json"),JsonUtility.ToJson(report,true));Application.Quit(report.completed?0:1);}
     }
 }

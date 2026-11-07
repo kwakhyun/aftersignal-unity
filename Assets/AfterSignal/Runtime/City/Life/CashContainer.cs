@@ -17,9 +17,9 @@ namespace AfterSignal
             get
             {
                 if(cached)return openedDay;cached=true;openedDay=int.MinValue/2;
-                string value=session.TryGetValue(Key,out var v)?v:PlayerPrefs.GetString(Key,"");int split=value.IndexOf(':');
+                string value=session.TryGetValue(Key,out var v)?v:SaveStore.GetString(Key,"");int split=value.IndexOf(':');
                 if(split>0&&int.TryParse(value.Substring(0,split),out int serial)&&serial==LifeState.CampaignSerial&&int.TryParse(value.Substring(split+1),out int day))openedDay=day;
-                else if(PlayerPrefs.GetInt(LegacyKey,0)>0)openedDay=LifeState.Day;
+                else if(SaveStore.GetInt(LegacyKey,0)>0)openedDay=LifeState.Day;
                 return openedDay;
             }
         }
@@ -29,7 +29,7 @@ namespace AfterSignal
         void MarkOpened()
         {
             string value=LifeState.CampaignSerial+":"+LifeState.Day;openedDay=LifeState.Day;cached=true;session[Key]=value;
-            if(!LifeState.SuppressSave){PlayerPrefs.SetString(Key,value);PlayerPrefs.DeleteKey(LegacyKey);PlayerPrefs.Save();}
+            if(!LifeState.SuppressSave){SaveStore.SetString(Key,value);SaveStore.DeleteKey(LegacyKey);SaveStore.Save();}
         }
         public void Open()=>CityLife.Instance.CashMenu(this);
         public void StartRobbery()

@@ -14,14 +14,14 @@ namespace AfterSignal
         readonly Report report=new();bool hadStage;int savedStage;float began;string output;
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void Install(){if(Environment.GetCommandLineArgs().Contains("-home-return-probe"))new GameObject("Home return essentials").AddComponent<HomeReturnProbe>();}
-        void Awake(){DontDestroyOnLoad(gameObject);began=Time.realtimeSinceStartup;hadStage=PlayerPrefs.HasKey(StageKey);savedStage=PlayerPrefs.GetInt(StageKey);LifeState.SuppressSave=CityChronicle.SuppressSave=RespawnNetwork.SuppressSave=true;output=Path.GetFullPath("Artifacts/HomeReturn/result.json");Directory.CreateDirectory(Path.GetDirectoryName(output));Application.logMessageReceived+=Log;}
+        void Awake(){DontDestroyOnLoad(gameObject);began=Time.realtimeSinceStartup;hadStage=SaveStore.HasKey(StageKey);savedStage=SaveStore.GetInt(StageKey);LifeState.SuppressSave=CityChronicle.SuppressSave=RespawnNetwork.SuppressSave=true;output=Path.GetFullPath("Artifacts/HomeReturn/result.json");Directory.CreateDirectory(Path.GetDirectoryName(output));Application.logMessageReceived+=Log;}
         void Log(string message,string stack,LogType type){if(type==LogType.Error||type==LogType.Exception)report.errors.Add(message+"\n"+stack);}
         void Check(bool pass,string message){(pass?report.passed:report.errors).Add(message);}
         IEnumerator Ready(){while(!GameDirector.Instance||!GameDirector.Instance.Ready)yield return null;}
         IEnumerator Start()
         {
             yield return Ready();LifeState.Load();int credits=LifeState.Credits;
-            PlayerPrefs.SetInt(StageKey,(int)StageId.UrbanCity);var previous=GameDirector.Instance;previous.Begin(true);
+            SaveStore.SetInt(StageKey,(int)StageId.UrbanCity);var previous=GameDirector.Instance;previous.Begin(true);
             while(GameDirector.Instance==previous)yield return null;yield return Ready();var game=GameDirector.Instance;
             Check(game.stage==StageId.Residence&&Vector3.Distance(game.Player.transform.position,CompactHome.Spawn)<1,"Continue from an old city save starts inside Seoha's house");
             Check(LifeState.Credits==credits,"Continue preserves saved money");
@@ -35,7 +35,7 @@ namespace AfterSignal
         }
         void Update(){if(Time.realtimeSinceStartup-began>150){report.errors.Add("Home return probe timeout");Finish();}}
         void Finish(){Restore();File.WriteAllText(output,JsonUtility.ToJson(report,true));Application.Quit(report.errors.Count==0?0:1);}
-        void Restore(){if(hadStage)PlayerPrefs.SetInt(StageKey,savedStage);else PlayerPrefs.DeleteKey(StageKey);}
+        void Restore(){if(hadStage)SaveStore.SetInt(StageKey,savedStage);else SaveStore.DeleteKey(StageKey);}
         void OnDestroy(){Restore();Application.logMessageReceived-=Log;}
     }
 }

@@ -16,7 +16,7 @@ namespace AfterSignal
         string output; readonly List<string> log=new(); bool done,hadJail; float jail,start;
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void Install(){if(Environment.GetCommandLineArgs().Contains("-world-recovery-smoke")&&!FindAnyObjectByType<WorldRecoverySmoke>()){GameDirector.SkipTitle=true;new GameObject("World recovery capture").AddComponent<WorldRecoverySmoke>();}}
-        void Awake(){DontDestroyOnLoad(gameObject);Application.runInBackground=true;start=Time.realtimeSinceStartup;LifeState.SuppressSave=CityChronicle.SuppressSave=true;hadJail=PlayerPrefs.HasKey("AFTERSIGNAL.Unity.JailSeconds");jail=PlayerPrefs.GetFloat("AFTERSIGNAL.Unity.JailSeconds");PlayerPrefs.DeleteKey("AFTERSIGNAL.Unity.JailSeconds");output=Path.GetFullPath(QualitySession.Arg("-quality-output","Artifacts/WorldRecovery"));Directory.CreateDirectory(output);Application.logMessageReceived+=Log;}
+        void Awake(){DontDestroyOnLoad(gameObject);Application.runInBackground=true;start=Time.realtimeSinceStartup;LifeState.SuppressSave=CityChronicle.SuppressSave=true;hadJail=SaveStore.HasKey("AFTERSIGNAL.Unity.JailSeconds");jail=SaveStore.GetFloat("AFTERSIGNAL.Unity.JailSeconds");SaveStore.DeleteKey("AFTERSIGNAL.Unity.JailSeconds");output=Path.GetFullPath(QualitySession.Arg("-quality-output","Artifacts/WorldRecovery"));Directory.CreateDirectory(output);Application.logMessageReceived+=Log;}
         void Log(string m,string s,LogType t){if(t==LogType.Error||t==LogType.Exception||t==LogType.Assert)log.Add("ERROR "+m+"\n"+s);}
         void Update(){if(!done&&Time.realtimeSinceStartup-start>300){log.Add("ERROR timeout");Finish();}}
         IEnumerator Start()
@@ -85,6 +85,6 @@ namespace AfterSignal
             RenderTexture.active=previous;RenderTexture.ReleaseTemporary(rt);Destroy(texture);File.WriteAllLines(Path.Combine(output,"audit.txt"),log);Debug.Log("WORLD RECOVERY "+name);
         }
         void Finish(){if(done)return;done=true;File.WriteAllLines(Path.Combine(output,"audit.txt"),log);Application.Quit(log.Any(x=>x.StartsWith("ERROR"))?1:0);}
-        void OnDestroy(){Application.logMessageReceived-=Log;if(hadJail)PlayerPrefs.SetFloat("AFTERSIGNAL.Unity.JailSeconds",jail);else PlayerPrefs.DeleteKey("AFTERSIGNAL.Unity.JailSeconds");}
+        void OnDestroy(){Application.logMessageReceived-=Log;if(hadJail)SaveStore.SetFloat("AFTERSIGNAL.Unity.JailSeconds",jail);else SaveStore.DeleteKey("AFTERSIGNAL.Unity.JailSeconds");}
     }
 }

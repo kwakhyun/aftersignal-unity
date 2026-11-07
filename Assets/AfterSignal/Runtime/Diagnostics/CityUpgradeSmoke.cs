@@ -80,9 +80,9 @@ namespace AfterSignal
                 )
                 {
                     string k = UrbanCatalog.Prefix + suffix;
-                    if (PlayerPrefs.HasKey(k))
+                    if (SaveStore.HasKey(k))
                         present.Add(k);
-                    saved[k] = FloatKey(k) ? PlayerPrefs.GetFloat(k) : PlayerPrefs.GetInt(k);
+                    saved[k] = FloatKey(k) ? SaveStore.GetFloat(k) : SaveStore.GetInt(k);
                 }
 
                 UrbanCatalog.Reset();
@@ -245,14 +245,14 @@ namespace AfterSignal
             foreach (var kv in saved)
             {
                 if (!present.Contains(kv.Key))
-                    PlayerPrefs.DeleteKey(kv.Key);
+                    SaveStore.DeleteKey(kv.Key);
                 else if (FloatKey(kv.Key))
-                    PlayerPrefs.SetFloat(kv.Key, kv.Value);
+                    SaveStore.SetFloat(kv.Key, kv.Value);
                 else
-                    PlayerPrefs.SetInt(kv.Key, (int)kv.Value);
+                    SaveStore.SetInt(kv.Key, (int)kv.Value);
             }
 
-            PlayerPrefs.Save();
+            SaveStore.Save();
             report.completed = report.errors.Count == 0;
             File.WriteAllText(Path.Combine(output, "city-upgrade.json"), JsonUtility.ToJson(report, true));
             metrics?.Save();
@@ -265,14 +265,14 @@ namespace AfterSignal
                 foreach (var kv in saved)
                 {
                     if (!present.Contains(kv.Key))
-                        PlayerPrefs.DeleteKey(kv.Key);
+                        SaveStore.DeleteKey(kv.Key);
                     else if (FloatKey(kv.Key))
-                        PlayerPrefs.SetFloat(kv.Key, kv.Value);
+                        SaveStore.SetFloat(kv.Key, kv.Value);
                     else
-                        PlayerPrefs.SetInt(kv.Key, (int)kv.Value);
+                        SaveStore.SetInt(kv.Key, (int)kv.Value);
                 }
 
-            PlayerPrefs.Save();
+            SaveStore.Save();
         }
     }
 }

@@ -10,9 +10,9 @@ namespace AfterSignal
         public static bool SuppressSave;
         static int transient=-1,pendingCity=-1;
         public static bool Arriving=>pendingCity>=0;
-        public static int Selected=>Mathf.Clamp(SuppressSave?transient:PlayerPrefs.GetInt(Key,-1),-1,3);
+        public static int Selected=>Mathf.Clamp(SuppressSave?transient:SaveStore.GetInt(Key,-1),-1,3);
         public static string Destination=>"서하의 집";
-        public static void ResetHome(){if(SuppressSave)transient=-1;else PlayerPrefs.DeleteKey(Key);}
+        public static void ResetHome(){if(SuppressSave)transient=-1;else SaveStore.DeleteKey(Key);}
         static string notice;
         public static int LastFee{get;private set;}
         // Hospital fee for dying: a share of carried credits only. Savings and the home safe are never charged.

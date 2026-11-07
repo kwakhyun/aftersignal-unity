@@ -292,7 +292,7 @@ namespace AfterSignal
 
         static void Keep(string key, int type)
         {
-            saved.Add(new Saved { key = key, type = type, present = PlayerPrefs.HasKey(key), text = type == 2 ? PlayerPrefs.GetString(key) : "", value = type == 1 ? PlayerPrefs.GetFloat(key) : type == 0 ? PlayerPrefs.GetInt(key) : 0 });
+            saved.Add(new Saved { key = key, type = type, present = SaveStore.HasKey(key), text = type == 2 ? SaveStore.GetString(key) : "", value = type == 1 ? SaveStore.GetFloat(key) : type == 0 ? SaveStore.GetInt(key) : 0 });
         }
 
         static void Restore()
@@ -301,16 +301,16 @@ namespace AfterSignal
             foreach (var s in saved)
             {
                 if (!s.present)
-                    PlayerPrefs.DeleteKey(s.key);
+                    SaveStore.DeleteKey(s.key);
                 else if (s.type == 2)
-                    PlayerPrefs.SetString(s.key, s.text);
+                    SaveStore.SetString(s.key, s.text);
                 else if (s.type == 1)
-                    PlayerPrefs.SetFloat(s.key, s.value);
+                    SaveStore.SetFloat(s.key, s.value);
                 else
-                    PlayerPrefs.SetInt(s.key, (int)s.value);
+                    SaveStore.SetInt(s.key, (int)s.value);
             }
 
-            PlayerPrefs.Save();
+            SaveStore.Save();
         }
 
         void Finish()

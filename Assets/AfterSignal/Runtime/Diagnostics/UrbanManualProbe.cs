@@ -51,9 +51,9 @@ namespace AfterSignal
                 )
                 {
                     string key = UrbanCatalog.Prefix + suffix;
-                    if (PlayerPrefs.HasKey(key))
+                    if (SaveStore.HasKey(key))
                         existed.Add(key);
-                    saved[key] = suffix == "Site" || suffix == "Car" || suffix == "CarStage" || suffix == "CarType" ? PlayerPrefs.GetInt(key) : PlayerPrefs.GetFloat(key);
+                    saved[key] = suffix == "Site" || suffix == "Car" || suffix == "CarStage" || suffix == "CarType" ? SaveStore.GetInt(key) : SaveStore.GetFloat(key);
                 }
 
                 UrbanCatalog.Reset();
@@ -107,14 +107,14 @@ namespace AfterSignal
             foreach (var kv in saved)
             {
                 if (!existed.Contains(kv.Key))
-                    PlayerPrefs.DeleteKey(kv.Key);
+                    SaveStore.DeleteKey(kv.Key);
                 else if (kv.Key.EndsWith("X") || kv.Key.EndsWith("Z") || kv.Key.EndsWith("Yaw") || kv.Key.EndsWith("Fuel") || kv.Key.EndsWith("Health"))
-                    PlayerPrefs.SetFloat(kv.Key, kv.Value);
+                    SaveStore.SetFloat(kv.Key, kv.Value);
                 else
-                    PlayerPrefs.SetInt(kv.Key, (int)kv.Value);
+                    SaveStore.SetInt(kv.Key, (int)kv.Value);
             }
 
-            PlayerPrefs.Save();
+            SaveStore.Save();
         }
     }
 }

@@ -9,7 +9,7 @@ namespace AfterSignal
         const float CellRadius=6,EscapeRadius=24;
         public static PrisonSystem Instance{get;private set;}
         // A sentence from an earlier session or scene is still owed; Continue and respawn resume it in the cell.
-        public static bool Sentenced=>Instance&&Instance.Jailed||!LifeState.SuppressSave&&PlayerPrefs.GetFloat(SaveKey,0)>0;
+        public static bool Sentenced=>Instance&&Instance.Jailed||!LifeState.SuppressSave&&SaveStore.GetFloat(SaveKey,0)>0;
         public bool Jailed=>remaining>0;
         public float Remaining=>remaining;
         public int Bail=>bailAmount;
@@ -27,7 +27,7 @@ namespace AfterSignal
             int bail=Mathf.RoundToInt((t.bailBase+heat*t.bailPerHeat)*DifficultySettings.Penalty);
             WantedSystem.Clear("");
             int seized=ConfiscateReserve();
-            if(!LifeState.SuppressSave){PlayerPrefs.SetFloat(SaveKey,sentence);PlayerPrefs.SetInt(BailKey,bail);PlayerPrefs.Save();}
+            if(!LifeState.SuppressSave){SaveStore.SetFloat(SaveKey,sentence);SaveStore.SetInt(BailKey,bail);SaveStore.Save();}
             g.Player.Respawn(Cell,true);LifeState.Hours+=2;
             if(g.stage!=StageId.UrbanCity)CivicWorld.Travel(g,StageId.UrbanCity,Cell);
             else{if(!Instance)Instance=g.gameObject.AddComponent<PrisonSystem>();Instance.remaining=sentence;Instance.bailAmount=bail;Instance.confined=true;g.CameraRig.Snap();}
@@ -38,9 +38,9 @@ namespace AfterSignal
         static int ConfiscateReserve()=>ArmoryInventory.ConfiscateReserve();
         public static void SaveSentence(){if(Instance&&Instance.Jailed)Instance.Persist();}
         public static void ResetSentence(){if(Instance){Instance.remaining=0;Instance.confined=false;}Forget();}
-        static void Forget(){if(!LifeState.SuppressSave){PlayerPrefs.DeleteKey(SaveKey);PlayerPrefs.DeleteKey(BailKey);}}
-        void Persist(){if(!LifeState.SuppressSave){PlayerPrefs.SetFloat(SaveKey,remaining);PlayerPrefs.SetInt(BailKey,bailAmount);}}
-        void Awake(){Instance=this;game=GameDirector.Instance;remaining=LifeState.SuppressSave?0:PlayerPrefs.GetFloat(SaveKey,0);bailAmount=PlayerPrefs.GetInt(BailKey,0);if(bailAmount<=0)bailAmount=DefaultBail;}
+        static void Forget(){if(!LifeState.SuppressSave){SaveStore.DeleteKey(SaveKey);SaveStore.DeleteKey(BailKey);}}
+        void Persist(){if(!LifeState.SuppressSave){SaveStore.SetFloat(SaveKey,remaining);SaveStore.SetInt(BailKey,bailAmount);}}
+        void Awake(){Instance=this;game=GameDirector.Instance;remaining=LifeState.SuppressSave?0:SaveStore.GetFloat(SaveKey,0);bailAmount=SaveStore.GetInt(BailKey,0);if(bailAmount<=0)bailAmount=DefaultBail;}
         void Start(){if(Jailed&&game&&game.stage==StageId.UrbanCity&&!game.Title)Seat();}
         void Seat(){game.Player.Rope.Release();game.Player.Respawn(Cell);game.CameraRig.Snap();confined=true;}
         public static void BeforeInput(ref ControlFrame input,float dt)

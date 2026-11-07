@@ -15,7 +15,7 @@ namespace AfterSignal
         readonly Report report=new();string output;float began;bool finished,hadJail;float jail;
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void Install(){if(Environment.GetCommandLineArgs().Contains("-civic-renewal-smoke")&&!FindAnyObjectByType<CivicRenewalSmoke>()){GameDirector.SkipTitle=true;new GameObject("Civic renewal essential verification").AddComponent<CivicRenewalSmoke>();}}
-        void Awake(){DontDestroyOnLoad(gameObject);Application.runInBackground=true;LifeState.SuppressSave=CityChronicle.SuppressSave=true;hadJail=PlayerPrefs.HasKey("AFTERSIGNAL.Unity.JailSeconds");jail=PlayerPrefs.GetFloat("AFTERSIGNAL.Unity.JailSeconds");PlayerPrefs.DeleteKey("AFTERSIGNAL.Unity.JailSeconds");output=Path.GetFullPath(QualitySession.Arg("-quality-output","Artifacts/CivicRenewal/Essential"));Directory.CreateDirectory(output);began=Time.realtimeSinceStartup;Application.logMessageReceived+=Log;}
+        void Awake(){DontDestroyOnLoad(gameObject);Application.runInBackground=true;LifeState.SuppressSave=CityChronicle.SuppressSave=true;hadJail=SaveStore.HasKey("AFTERSIGNAL.Unity.JailSeconds");jail=SaveStore.GetFloat("AFTERSIGNAL.Unity.JailSeconds");SaveStore.DeleteKey("AFTERSIGNAL.Unity.JailSeconds");output=Path.GetFullPath(QualitySession.Arg("-quality-output","Artifacts/CivicRenewal/Essential"));Directory.CreateDirectory(output);began=Time.realtimeSinceStartup;Application.logMessageReceived+=Log;}
         void Log(string text,string stack,LogType type){if(type==LogType.Exception||type==LogType.Error||type==LogType.Assert)if(report.errors.Count<18)report.errors.Add(text+"\n"+stack);}
         void Check(bool ok,string text){(ok?report.passed:report.errors).Add(text);Debug.Log("CIVIC CHECK "+ok+" / "+text);}
         void Update(){if(!finished&&Time.realtimeSinceStartup-began>230){Check(false,"Essential verification timeout");Finish();}}
@@ -65,7 +65,7 @@ namespace AfterSignal
             WantedSystem.Clear("verification");g.Player.Respawn(p+new Vector3(230,0,0));money=LifeState.Credits;
             bool work=FacilityOperation.Begin("repair-essential",240,1);Check(work&&LifeState.Credits==money,"Facility work starts without paying a reward before the work is done");
             if(work)for(int i=0;i<40&&FacilityOperation.Current;i++){var op=FacilityOperation.Current;g.Player.Respawn(op.Target+Vector3.back);yield return null;FindObjectsByType<FacilityWorkPoint>().First(n=>n.owner==op).Use();yield return new WaitForSeconds(op.Holding?.5f:.05f);}
-            int pay=PlayerPrefs.GetInt("AFTERSIGNAL.Unity.CivicPermit",0)>0?264:240;
+            int pay=SaveStore.GetInt("AFTERSIGNAL.Unity.CivicPermit",0)>0?264:240;
             Check(!FacilityOperation.Current&&LifeState.Credits==money+pay&&!FacilityOperation.Begin("repair-essential",240,1),"Three physical work stations pay once and prevent same-day reward farming");
             foreach(var a in WorldActor.All.ToArray())if(a&&a.transform.position.y>170)Destroy(a.gameObject);Destroy(deck);g.Player.Equipment.Select(0);WantedSystem.Clear("verification");
             g.Player.Respawn(new Vector3(740,.1f,140));var lighting=FindAnyObjectByType<NightIllumination>();LifeState.Hours=23;yield return new WaitForSeconds(1);
@@ -107,6 +107,6 @@ namespace AfterSignal
             var rt=RenderTexture.GetTemporary(1600,900,24);var prior=RenderTexture.active;var tex=new Texture2D(1600,900,TextureFormat.RGBA32,false);var renderers=GameDirector.Instance.Player.GetComponentsInChildren<Renderer>();var states=renderers.Select(r=>r.enabled).ToArray();if(!hero)foreach(var r in renderers)r.enabled=false;
             RenderPipeline.SubmitRenderRequest(Camera.main,new UniversalRenderPipeline.SingleCameraRequest{destination=rt});for(int i=0;i<renderers.Length;i++)renderers[i].enabled=states[i];RenderTexture.active=rt;tex.ReadPixels(new Rect(0,0,1600,900),0,0);tex.Apply();File.WriteAllBytes(Path.Combine(output,file+".png"),tex.EncodeToPNG());RenderTexture.active=prior;RenderTexture.ReleaseTemporary(rt);Destroy(tex);
         }
-        void Finish(){if(finished)return;finished=true;Application.logMessageReceived-=Log;if(hadJail)PlayerPrefs.SetFloat("AFTERSIGNAL.Unity.JailSeconds",jail);else PlayerPrefs.DeleteKey("AFTERSIGNAL.Unity.JailSeconds");report.completed=report.errors.Count==0;File.WriteAllText(Path.Combine(output,"civic.json"),JsonUtility.ToJson(report,true));Application.Quit(report.completed?0:1);}
+        void Finish(){if(finished)return;finished=true;Application.logMessageReceived-=Log;if(hadJail)SaveStore.SetFloat("AFTERSIGNAL.Unity.JailSeconds",jail);else SaveStore.DeleteKey("AFTERSIGNAL.Unity.JailSeconds");report.completed=report.errors.Count==0;File.WriteAllText(Path.Combine(output,"civic.json"),JsonUtility.ToJson(report,true));Application.Quit(report.completed?0:1);}
     }
 }

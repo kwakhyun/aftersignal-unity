@@ -81,8 +81,8 @@ namespace AfterSignal
             if(Title)Time.timeScale=0;
             gameObject.AddComponent<TitleScreen>().Initialize(this);
             Speed=stage==StageId.Carriage?22:stage==StageId.Roof?34:0;
-            Memories=PlayerPrefs.GetInt("AFTERSIGNAL.Unity.Memories",0);
-            if(stage==StageId.Haven)Toast(PlayerPrefs.GetInt("AFTERSIGNAL.Unity.Completed",0)>0?"애프터라이트 · 노아와 이웃들의 소식을 확인하세요":"애프터라이트 · 북쪽 가로의 본부로 향하세요",6);
+            Memories=SaveStore.GetInt("AFTERSIGNAL.Unity.Memories",0);
+            if(stage==StageId.Haven)Toast(SaveStore.GetInt("AFTERSIGNAL.Unity.Completed",0)>0?"애프터라이트 · 노아와 이웃들의 소식을 확인하세요":"애프터라이트 · 북쪽 가로의 본부로 향하세요",6);
             var district=CampaignCatalog.Get(stage);if(district!=null){ShowDialogue(district.title,district.brief);gameObject.AddComponent<DistrictCheckpoint>();}
             gameObject.AddComponent<SceneLightBudget>();
             Ready=true;
@@ -150,7 +150,7 @@ namespace AfterSignal
                 if(stage==StageId.School)return "학교 도서실과 교실 탐색 · 교사와 대화 / 출입구 E";
                 if(stage==StageId.Clinic)return "접수와 진료실 · 의료진에게 치료받기 / 출입구 E";
                 if(stage==StageId.Headquarters)return "작전 단말 · 중앙역 조사 / 외벽 기록 회수 작전";
-                if(stage==StageId.Haven&&PlayerPrefs.GetInt("AFTERSIGNAL.Unity.Completed",0)==0)return "북쪽 본부의 작전 단말에서 중앙역 조사 시작 · W로 북쪽 가로 이동";
+                if(stage==StageId.Haven&&SaveStore.GetInt("AFTERSIGNAL.Unity.Completed",0)==0)return "북쪽 본부의 작전 단말에서 중앙역 조사 시작 · W로 북쪽 가로 이동";
                 if(stage==StageId.Station)return !Power?"상층 단말에서 승강장 전력 복구":!Cleared?$"승강장 경비병 제압 · {LivingGuards}명":Arrival<1?"유령 열차 진입 중 · 승차 지점으로 이동":"열린 문 앞에서 E · 열차에 탑승";
                 if(stage==StageId.Carriage)return !BrokenGlass?"경비병을 뚫고 유리 격벽 파괴":!Release?"객실 동쪽의 수동 잠금 장치 작동":!Cleared?$"남은 경비병 제압 · {LivingGuards}명":"사다리 앞에서 E · 열차 지붕으로";
                 if(stage==StageId.Roof)return Boss&&Boss.Alive?(Player.transform.position.x<46?"로프로 객차 사이를 건너 컨덕터에게 접근":ExposeTimer>0?"코어 노출 · 가까이서 왼쪽 클릭으로 검격":"양쪽 축전기를 오른쪽 클릭 · 로프로 과부하"):"동쪽의 기억 코어 회수 · E";
@@ -177,14 +177,14 @@ namespace AfterSignal
         public void Die(){if(Dead)return;RespawnNetwork.ChargeHospital(this);WantedSystem.Clear("");CrimeObservation.Forget();Dead=true;Player.Rope.Release();Time.timeScale=0;}
         public void Retry()=>Retry(0);
         public void Retry(int city){Time.timeScale=1;SkipTitle=true;Dead=false;CloseDialogue();RespawnNetwork.Respawn(this,city);}
-        public void Restart(){Time.timeScale=1;SkipTitle=false;PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Stage",0);PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Memories",0);ResetExpansion();SceneManager.LoadScene(CampaignRules.Scene(StageId.Station));}
-        static void ResetExpansion(){if(CityChronicle.Instance)CityChronicle.Instance.ResetProgress();else PlayerPrefs.DeleteKey(CityChronicle.SaveKey);foreach(string key in new[]{"Chapters","Accepted","Jobs"})PlayerPrefs.DeleteKey("AFTERSIGNAL.Unity.Expansion."+key);}
+        public void Restart(){Time.timeScale=1;SkipTitle=false;SaveStore.SetInt("AFTERSIGNAL.Unity.Stage",0);SaveStore.SetInt("AFTERSIGNAL.Unity.Memories",0);ResetExpansion();SceneManager.LoadScene(CampaignRules.Scene(StageId.Station));}
+        static void ResetExpansion(){if(CityChronicle.Instance)CityChronicle.Instance.ResetProgress();else SaveStore.DeleteKey(CityChronicle.SaveKey);foreach(string key in new[]{"Chapters","Accepted","Jobs"})SaveStore.DeleteKey("AFTERSIGNAL.Unity.Expansion."+key);}
         public void Travel(StageId next){if(Transition)return;if(next==StageId.Haven){CivicWorld.Travel(this,StageId.Haven,new Vector3(20,.15f,-10));return;}StartCoroutine(TravelRoutine(next));}
         IEnumerator TravelRoutine(StageId next)
         {
             Transition=true;Player.Rope.Release();UrbanSimulation.Instance?.SaveCar();LifeState.Save();
             for(float t=0;t<.8f;t+=Time.unscaledDeltaTime){Fade=t/.8f;yield return null;}
-            if(!LifeState.SuppressSave){PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Stage",(int)next);PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Memories",Memories);PlayerPrefs.Save();}
+            if(!LifeState.SuppressSave){SaveStore.SetInt("AFTERSIGNAL.Unity.Stage",(int)next);SaveStore.SetInt("AFTERSIGNAL.Unity.Memories",Memories);SaveStore.Save();}
             SceneManager.LoadScene(CampaignRules.Scene(next));
         }
         public void OnAnchor(GrappleAnchor anchor)

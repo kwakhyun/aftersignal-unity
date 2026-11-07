@@ -34,7 +34,7 @@ namespace AfterSignal
         {
             Application.runInBackground = true;
             LifeState.SuppressSave = true;
-            oldSitePresent = PlayerPrefs.HasKey(UrbanCatalog.Prefix + "Site");
+            oldSitePresent = SaveStore.HasKey(UrbanCatalog.Prefix + "Site");
             oldSite = UrbanCatalog.Current;
             output = Path.GetFullPath(QualitySession.Arg("-quality-output", "Artifacts/ShopItems/Smoke"));
             Directory.CreateDirectory(output);
@@ -64,7 +64,7 @@ namespace AfterSignal
             var used = new HashSet<string>();
             foreach (int site in new[] { 6, 7, 9, 15 })
             {
-                PlayerPrefs.SetInt(UrbanCatalog.Prefix + "Site", site);
+                SaveStore.SetInt(UrbanCatalog.Prefix + "Site", site);
                 CityLife.Instance.Services();
                 game.SetPaused(false);
                 yield return null;
@@ -78,7 +78,7 @@ namespace AfterSignal
             }
             Check(used.SetEquals(ShopItemArt.Keys), "Every purchasable item maps to its own illustration");
 
-            PlayerPrefs.SetInt(UrbanCatalog.Prefix + "Site", 7);
+            SaveStore.SetInt(UrbanCatalog.Prefix + "Site", 7);
             CityLife.Instance.Services();
             LifeState.Earn(100);
             yield return null;
@@ -91,7 +91,7 @@ namespace AfterSignal
             LifeState.Spend(LifeState.Credits);
             CityLife.Instance.Options[0].action();
             Check(LifeState.Credits == 0 && CityLife.Instance.Body.Contains("부족"), "Insufficient funds still prevents purchase");
-            PlayerPrefs.SetInt(UrbanCatalog.Prefix + "Site", 3);
+            SaveStore.SetInt(UrbanCatalog.Prefix + "Site", 3);
             CityLife.Instance.Services();
             yield return null;
             yield return null;
@@ -128,9 +128,9 @@ namespace AfterSignal
         }
         void Restore()
         {
-            if (oldSitePresent) PlayerPrefs.SetInt(UrbanCatalog.Prefix + "Site", oldSite);
-            else PlayerPrefs.DeleteKey(UrbanCatalog.Prefix + "Site");
-            PlayerPrefs.Save();
+            if (oldSitePresent) SaveStore.SetInt(UrbanCatalog.Prefix + "Site", oldSite);
+            else SaveStore.DeleteKey(UrbanCatalog.Prefix + "Site");
+            SaveStore.Save();
         }
         void OnApplicationQuit() => Restore();
         void Finish()

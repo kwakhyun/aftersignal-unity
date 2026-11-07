@@ -7,7 +7,7 @@ namespace AfterSignal
     public sealed partial class GameDirector
     {
         const string StageKey="AFTERSIGNAL.Unity.Stage";
-        public static bool HasSavedGame => PlayerPrefs.HasKey(StageKey)&&PlayerPrefs.GetInt(StageKey,-1)>=0&&PlayerPrefs.GetInt(StageKey,-1)<CampaignRules.Scenes.Length;
+        public static bool HasSavedGame => SaveStore.HasKey(StageKey)&&SaveStore.GetInt(StageKey,-1)>=0&&SaveStore.GetInt(StageKey,-1)<CampaignRules.Scenes.Length;
         public float LoadProgress { get; private set; }
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void ResetTitleSession(){SkipTitle=false;}
@@ -30,13 +30,15 @@ namespace AfterSignal
             }
             else
             {
+                // New Game wipes the whole slot first, so keys added by any system are cleared too.
+                SaveStore.ResetActiveSlot();
                 LifeState.Reset();RespawnNetwork.ResetHome();Memories=0;
-                PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Memories",0);PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Completed",0);
+                SaveStore.SetInt("AFTERSIGNAL.Unity.Memories",0);SaveStore.SetInt("AFTERSIGNAL.Unity.Completed",0);
                 ResetExpansion();CivicWorld.ClearArrival();UrbanCatalog.Reset();ResidentialWorld.VisitHome=-1;
                 var args=System.Environment.GetCommandLineArgs();
                 bool legacyProbe=System.Array.IndexOf(args,"-aftersignal-smoke")>=0||System.Array.IndexOf(args,"-expansion-smoke")>=0;
                 destination=legacyProbe?StageId.Station:StageId.Residence;
-                PlayerPrefs.SetInt(StageKey,(int)destination);PlayerPrefs.Save();
+                SaveStore.SetInt(StageKey,(int)destination);SaveStore.Save();
                 if(legacyProbe&&stage==destination){Title=Transition=false;Time.timeScale=1;yield break;}
             }
             yield return null;
@@ -54,7 +56,7 @@ namespace AfterSignal
         {
             if(Transition)return;
             UrbanSimulation.Instance?.SaveCar();LifeState.Save();CityChronicle.Instance?.Save();
-            PlayerPrefs.SetInt(StageKey,(int)stage);PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Memories",Memories);PlayerPrefs.Save();
+            SaveStore.SetInt(StageKey,(int)stage);SaveStore.SetInt("AFTERSIGNAL.Unity.Memories",Memories);SaveStore.Save();
             CloseDialogue();if(Paused)SetPaused(false);Dead=false;Player.Rope.Release();
             Title=true;Time.timeScale=0;Audio.SetPaused(false);Cursor.lockState=CursorLockMode.None;Cursor.visible=true;
         }

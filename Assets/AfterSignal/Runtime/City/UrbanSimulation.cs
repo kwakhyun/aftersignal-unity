@@ -50,21 +50,21 @@ namespace AfterSignal
             if(game.stage==StageId.UrbanCity&&!GetComponent<FacilityParking>())gameObject.AddComponent<FacilityParking>();
             foreach (var c in Cars)
                 c.occupied = false;
-            if (PlayerPrefs.GetInt(UrbanCatalog.Prefix + "Car", 0) > 0 && PlayerPrefs.GetInt(UrbanCatalog.Prefix + "CarStage", 23) == (int)game.stage)
+            if (SaveStore.GetInt(UrbanCatalog.Prefix + "Car", 0) > 0 && SaveStore.GetInt(UrbanCatalog.Prefix + "CarStage", 23) == (int)game.stage)
             {
-                Owned = Spawn(CompactCityLayout.Migrate(new Vector3(PlayerPrefs.GetFloat(UrbanCatalog.Prefix + "CarX"), .02f, PlayerPrefs.GetFloat(UrbanCatalog.Prefix + "CarZ"))), false, PlayerPrefs.GetInt(UrbanCatalog.Prefix + "CarType", 0));
-                Owned.transform.rotation = Quaternion.Euler(0, PlayerPrefs.GetFloat(UrbanCatalog.Prefix + "CarYaw"), 0);
-                Owned.fuel = PlayerPrefs.GetFloat(UrbanCatalog.Prefix + "CarFuel", 45);
-                Owned.designVariant=PlayerPrefs.GetInt(UrbanCatalog.Prefix+"CarDesign",Owned.designVariant);
+                Owned = Spawn(CompactCityLayout.Migrate(new Vector3(SaveStore.GetFloat(UrbanCatalog.Prefix + "CarX"), .02f, SaveStore.GetFloat(UrbanCatalog.Prefix + "CarZ"))), false, SaveStore.GetInt(UrbanCatalog.Prefix + "CarType", 0));
+                Owned.transform.rotation = Quaternion.Euler(0, SaveStore.GetFloat(UrbanCatalog.Prefix + "CarYaw"), 0);
+                Owned.fuel = SaveStore.GetFloat(UrbanCatalog.Prefix + "CarFuel", 45);
+                Owned.designVariant=SaveStore.GetInt(UrbanCatalog.Prefix+"CarDesign",Owned.designVariant);
                 Owned.InitializeDurability();
-                Owned.health = PlayerPrefs.GetInt(UrbanCatalog.Prefix+"CarDurabilityVersion",0)>0?Mathf.Clamp(PlayerPrefs.GetFloat(UrbanCatalog.Prefix+"CarHealth",Owned.MaxHealth),0,Owned.MaxHealth):Mathf.Clamp01(PlayerPrefs.GetFloat(UrbanCatalog.Prefix+"CarHealth",100)/100)*Owned.MaxHealth;
+                Owned.health = SaveStore.GetInt(UrbanCatalog.Prefix+"CarDurabilityVersion",0)>0?Mathf.Clamp(SaveStore.GetFloat(UrbanCatalog.Prefix+"CarHealth",Owned.MaxHealth),0,Owned.MaxHealth):Mathf.Clamp01(SaveStore.GetFloat(UrbanCatalog.Prefix+"CarHealth",100)/100)*Owned.MaxHealth;
                 Owned.owned = true;
             }
 
             if (game.stage == StageId.UrbanCity)
             {
                 var parking = new Vector3(73, .02f, -254);
-                if (!Owned && PlayerPrefs.GetInt(UrbanCatalog.Prefix + "Car", 0) == 0)
+                if (!Owned && SaveStore.GetInt(UrbanCatalog.Prefix + "Car", 0) == 0)
                 {
                     // First visit: the car parked by the home exit is Seoha's starting car.
                     Owned = Spawn(parking, false);
@@ -422,17 +422,17 @@ namespace AfterSignal
             if (LifeState.SuppressSave || !Owned || !game || Owned.IsSpecial)
                 return;
             string p = UrbanCatalog.Prefix;
-            PlayerPrefs.SetInt(p + "Car", 1);
-            PlayerPrefs.SetInt(p + "CarStage", (int)game.stage);
-            PlayerPrefs.SetFloat(p + "CarX", Owned.transform.position.x);
-            PlayerPrefs.SetFloat(p + "CarZ", Owned.transform.position.z);
-            PlayerPrefs.SetFloat(p + "CarYaw", Owned.transform.eulerAngles.y);
-            PlayerPrefs.SetFloat(p + "CarFuel", Owned.fuel);
-            PlayerPrefs.SetFloat(p + "CarHealth", Owned.health);
-            PlayerPrefs.SetInt(p + "CarDurabilityVersion",1);
-            PlayerPrefs.SetInt(p+"CarDesign",Owned.designVariant);
-            PlayerPrefs.SetInt(p + "CarType", (int)Owned.type);
-            PlayerPrefs.Save();
+            SaveStore.SetInt(p + "Car", 1);
+            SaveStore.SetInt(p + "CarStage", (int)game.stage);
+            SaveStore.SetFloat(p + "CarX", Owned.transform.position.x);
+            SaveStore.SetFloat(p + "CarZ", Owned.transform.position.z);
+            SaveStore.SetFloat(p + "CarYaw", Owned.transform.eulerAngles.y);
+            SaveStore.SetFloat(p + "CarFuel", Owned.fuel);
+            SaveStore.SetFloat(p + "CarHealth", Owned.health);
+            SaveStore.SetInt(p + "CarDurabilityVersion",1);
+            SaveStore.SetInt(p+"CarDesign",Owned.designVariant);
+            SaveStore.SetInt(p + "CarType", (int)Owned.type);
+            SaveStore.Save();
         }
 
         public sealed class VehicleRecord { public CityVehicleType type; public int design; public Vector3 position; public float yaw, fuel, health; public StageId stage; public string title; }
@@ -462,7 +462,7 @@ namespace AfterSignal
             bool live = sim && sim.borrowed && Registrable(sim.borrowed);
             if (!live && LastRide == null) return false;
             // Paid cosmetics belong to the previous car and are not transferred.
-            PlayerPrefs.DeleteKey(p + "CarColor");PlayerPrefs.SetInt(p + "CarWheels", 0);PlayerPrefs.SetInt(p + "CarSpoiler", 0);
+            SaveStore.DeleteKey(p + "CarColor");SaveStore.SetInt(p + "CarWheels", 0);SaveStore.SetInt(p + "CarSpoiler", 0);
             if (live)
             {
                 var old = sim.Owned;sim.Owned = sim.borrowed;sim.borrowed = null;sim.Owned.owned = true;
@@ -473,12 +473,12 @@ namespace AfterSignal
             else if (!LifeState.SuppressSave)
             {
                 var r = LastRide;
-                PlayerPrefs.SetInt(p + "Car", 1);PlayerPrefs.SetInt(p + "CarStage", (int)r.stage);
-                PlayerPrefs.SetFloat(p + "CarX", r.position.x);PlayerPrefs.SetFloat(p + "CarZ", r.position.z);PlayerPrefs.SetFloat(p + "CarYaw", r.yaw);
-                PlayerPrefs.SetFloat(p + "CarFuel", r.fuel);PlayerPrefs.SetFloat(p + "CarHealth", r.health);PlayerPrefs.SetInt(p + "CarDurabilityVersion", 1);
-                PlayerPrefs.SetInt(p + "CarDesign", r.design);PlayerPrefs.SetInt(p + "CarType", (int)r.type);
+                SaveStore.SetInt(p + "Car", 1);SaveStore.SetInt(p + "CarStage", (int)r.stage);
+                SaveStore.SetFloat(p + "CarX", r.position.x);SaveStore.SetFloat(p + "CarZ", r.position.z);SaveStore.SetFloat(p + "CarYaw", r.yaw);
+                SaveStore.SetFloat(p + "CarFuel", r.fuel);SaveStore.SetFloat(p + "CarHealth", r.health);SaveStore.SetInt(p + "CarDurabilityVersion", 1);
+                SaveStore.SetInt(p + "CarDesign", r.design);SaveStore.SetInt(p + "CarType", (int)r.type);
             }
-            LastRide = null;PlayerPrefs.Save();
+            LastRide = null;SaveStore.Save();
             return true;
         }
 

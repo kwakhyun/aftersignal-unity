@@ -12,9 +12,9 @@ namespace AfterSignal
         {
             if(IsSpecial||type==CityVehicleType.Tank||type==CityVehicleType.Motorcycle)return;
             bool mine=Registered;
-            customColor=mine?PlayerPrefs.GetInt(UrbanCatalog.Prefix+"CarColor",-1):-1;
+            customColor=mine?SaveStore.GetInt(UrbanCatalog.Prefix+"CarColor",-1):-1;
             ApplyDamageLook();
-            bool wheels=mine&&PlayerPrefs.GetInt(UrbanCatalog.Prefix+"CarWheels",0)>0;
+            bool wheels=mine&&SaveStore.GetInt(UrbanCatalog.Prefix+"CarWheels",0)>0;
             foreach(var mesh in GetComponentsInChildren<MeshRenderer>())
                 if(mesh.name=="Wheel alloy")
                 {
@@ -22,7 +22,7 @@ namespace AfterSignal
                     else if(stockWheel)mesh.sharedMaterial=stockWheel;
                 }
             var spoiler=transform.Find("Custom spoiler");
-            bool show=mine&&PlayerPrefs.GetInt(UrbanCatalog.Prefix+"CarSpoiler",0)>0;
+            bool show=mine&&SaveStore.GetInt(UrbanCatalog.Prefix+"CarSpoiler",0)>0;
             if(show&&!spoiler)
             {
                 var part=new GameObject("Custom spoiler");part.transform.SetParent(transform,false);spoiler=part.transform;

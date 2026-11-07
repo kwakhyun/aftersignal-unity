@@ -79,8 +79,8 @@ namespace AfterSignal
                 )
                 {
                     string k = "AFTERSIGNAL.Unity." + key;
-                    prefs[k] = PlayerPrefs.GetInt(k);
-                    if (PlayerPrefs.HasKey(k))
+                    prefs[k] = SaveStore.GetInt(k);
+                    if (SaveStore.HasKey(k))
                         had.Add(k);
                 }
 
@@ -92,12 +92,12 @@ namespace AfterSignal
                 }
 
                 )
-                    PlayerPrefs.DeleteKey("AFTERSIGNAL.Unity.Expansion." + key);
+                    SaveStore.DeleteKey("AFTERSIGNAL.Unity.Expansion." + key);
             }
 
             if (game.stage == StageId.Station)
             {
-                PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Completed", 1);
+                SaveStore.SetInt("AFTERSIGNAL.Unity.Completed", 1);
                 GameDirector.SkipTitle = true;
                 StageId start = Enum.TryParse(QualitySession.Arg("-expansion-only"), out StageId fixture) ? fixture : StageId.Haven;
                 if (start != StageId.Haven)
@@ -494,12 +494,12 @@ namespace AfterSignal
             foreach (var pair in prefs)
             {
                 if (had.Contains(pair.Key))
-                    PlayerPrefs.SetInt(pair.Key, pair.Value);
+                    SaveStore.SetInt(pair.Key, pair.Value);
                 else
-                    PlayerPrefs.DeleteKey(pair.Key);
+                    SaveStore.DeleteKey(pair.Key);
             }
 
-            PlayerPrefs.Save();
+            SaveStore.Save();
         }
 
         void OnApplicationQuit()

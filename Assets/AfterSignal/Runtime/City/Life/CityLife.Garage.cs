@@ -3,7 +3,7 @@ namespace AfterSignal
 {
     public sealed partial class CityLife
     {
-        bool HasRegisteredCar=>PlayerPrefs.GetInt(UrbanCatalog.Prefix+"Car",0)>0||UrbanSimulation.Instance&&UrbanSimulation.Instance.Owned;
+        bool HasRegisteredCar=>SaveStore.GetInt(UrbanCatalog.Prefix+"Car",0)>0||UrbanSimulation.Instance&&UrbanSimulation.Instance.Owned;
         public void Garage()
         {
             Panel("garage","애프터라이트 모터랩","차량 정비와 외형 커스텀 · 잔액 "+LifeState.Credits+" C\n정비와 커스텀은 등록된 내 차에만 적용됩니다.");
@@ -14,11 +14,11 @@ namespace AfterSignal
                 if(candidate!=null)Option("이 차량을 내 차로 등록 · "+fee+" C / "+candidate,()=>RegisterCar(fee));
                 Option("닫기",Dismiss);return;
             }
-            Option("차체 수리 · 150 C",()=>GarageBuy(150,()=>{PlayerPrefs.SetFloat(UrbanCatalog.Prefix+"CarHealth",100);if(UrbanSimulation.Instance&&UrbanSimulation.Instance.Owned)UrbanSimulation.Instance.Owned.Repair();}));
+            Option("차체 수리 · 150 C",()=>GarageBuy(150,()=>{SaveStore.SetFloat(UrbanCatalog.Prefix+"CarHealth",100);if(UrbanSimulation.Instance&&UrbanSimulation.Instance.Owned)UrbanSimulation.Instance.Owned.Repair();}));
             Option("차체 도색 · 200 C",GaragePaint);
-            Option("스포츠 휠 · 350 C",()=>GarageBuy(350,()=>PlayerPrefs.SetInt(UrbanCatalog.Prefix+"CarWheels",1)));
-            Option("스포일러 장착 · 450 C",()=>GarageBuy(450,()=>PlayerPrefs.SetInt(UrbanCatalog.Prefix+"CarSpoiler",1)));
-            Option("스포일러 제거 · 무료",()=>{PlayerPrefs.SetInt(UrbanCatalog.Prefix+"CarSpoiler",0);ApplyGarage();Garage();});
+            Option("스포츠 휠 · 350 C",()=>GarageBuy(350,()=>SaveStore.SetInt(UrbanCatalog.Prefix+"CarWheels",1)));
+            Option("스포일러 장착 · 450 C",()=>GarageBuy(450,()=>SaveStore.SetInt(UrbanCatalog.Prefix+"CarSpoiler",1)));
+            Option("스포일러 제거 · 무료",()=>{SaveStore.SetInt(UrbanCatalog.Prefix+"CarSpoiler",0);ApplyGarage();Garage();});
             if(candidate!=null)Option("이 차량을 내 차로 등록 · "+fee+" C / "+candidate,()=>RegisterCar(fee));
             Option("닫기",Dismiss);
         }
@@ -36,7 +36,7 @@ namespace AfterSignal
         {
             Panel("garage","차체 도색","색상을 고르면 200 C를 지불하고 도색합니다.");
             string[] labels={"미드나이트 블루","네온 핑크","민트","샴페인 골드","펄 화이트","카본 블랙"};
-            for(int i=0;i<labels.Length;i++){int color=i;Option(labels[i],()=>GarageBuy(200,()=>PlayerPrefs.SetInt(UrbanCatalog.Prefix+"CarColor",color)));}
+            for(int i=0;i<labels.Length;i++){int color=i;Option(labels[i],()=>GarageBuy(200,()=>SaveStore.SetInt(UrbanCatalog.Prefix+"CarColor",color)));}
             Option("돌아가기",Garage);
         }
         void GarageBuy(int price,System.Action effect)
@@ -46,7 +46,7 @@ namespace AfterSignal
         }
         void ApplyGarage()
         {
-            PlayerPrefs.Save();
+            SaveStore.Save();
             if(UrbanSimulation.Instance&&UrbanSimulation.Instance.Owned)UrbanSimulation.Instance.Owned.ApplyCustomization();
         }
     }

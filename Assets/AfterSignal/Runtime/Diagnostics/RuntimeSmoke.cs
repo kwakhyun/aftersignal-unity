@@ -93,8 +93,8 @@ namespace AfterSignal
 
                 )
                 {
-                    savedPrefs[key] = PlayerPrefs.GetInt(key);
-                    if (PlayerPrefs.HasKey(key))
+                    savedPrefs[key] = SaveStore.GetInt(key);
+                    if (SaveStore.HasKey(key))
                         existingPrefs.Add(key);
                 }
             }
@@ -231,7 +231,7 @@ namespace AfterSignal
                 yield return Go(8.2f, .5f, false);
                 yield return PressInteract();
                 yield return Capture("07-afterlight-dialogue");
-                Record(game.Dialogue && PlayerPrefs.GetInt("AFTERSIGNAL.Unity.Completed", 0) == 1, "Campaign ending, save and Noa epilogue");
+                Record(game.Dialogue && SaveStore.GetInt("AFTERSIGNAL.Unity.Completed", 0) == 1, "Campaign ending, save and Noa epilogue");
                 report.completed = !failed && report.errors.Count == 0;
                 Write();
                 RestorePrefs();
@@ -449,12 +449,12 @@ namespace AfterSignal
             foreach (var pair in savedPrefs)
             {
                 if (existingPrefs.Contains(pair.Key))
-                    PlayerPrefs.SetInt(pair.Key, pair.Value);
+                    SaveStore.SetInt(pair.Key, pair.Value);
                 else
-                    PlayerPrefs.DeleteKey(pair.Key);
+                    SaveStore.DeleteKey(pair.Key);
             }
 
-            PlayerPrefs.Save();
+            SaveStore.Save();
         }
 
         void Fail(string message)

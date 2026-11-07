@@ -25,7 +25,7 @@ namespace AfterSignal
         {
             DontDestroyOnLoad(gameObject);Application.runInBackground=true;began=Time.realtimeSinceStartup;
             LifeState.SuppressSave=CityChronicle.SuppressSave=true;
-            hadJail=PlayerPrefs.HasKey("AFTERSIGNAL.Unity.JailSeconds");jail=PlayerPrefs.GetFloat("AFTERSIGNAL.Unity.JailSeconds");PlayerPrefs.DeleteKey("AFTERSIGNAL.Unity.JailSeconds");
+            hadJail=SaveStore.HasKey("AFTERSIGNAL.Unity.JailSeconds");jail=SaveStore.GetFloat("AFTERSIGNAL.Unity.JailSeconds");SaveStore.DeleteKey("AFTERSIGNAL.Unity.JailSeconds");
             output=Path.GetFullPath(QualitySession.Arg("-quality-output","Artifacts/Fidelity"));Directory.CreateDirectory(output);
             report.device=SystemInfo.graphicsDeviceName;report.unity=Application.unityVersion;report.width=1600;report.height=900;Application.logMessageReceived+=Log;
         }
@@ -132,6 +132,6 @@ namespace AfterSignal
             File.WriteAllText(Path.Combine(output,"benchmark.json"),JsonUtility.ToJson(report,true));Debug.Log("FIDELITY VIEW "+name+" "+frames.Average().ToString("F2")+" ms");
         }
         void Finish(){if(done)return;done=true;report.completed=true;File.WriteAllText(Path.Combine(output,"benchmark.json"),JsonUtility.ToJson(report,true));Application.Quit(report.errors.Count==0?0:1);}
-        void OnDestroy(){Application.logMessageReceived-=Log;if(hadJail)PlayerPrefs.SetFloat("AFTERSIGNAL.Unity.JailSeconds",jail);else PlayerPrefs.DeleteKey("AFTERSIGNAL.Unity.JailSeconds");}
+        void OnDestroy(){Application.logMessageReceived-=Log;if(hadJail)SaveStore.SetFloat("AFTERSIGNAL.Unity.JailSeconds",jail);else SaveStore.DeleteKey("AFTERSIGNAL.Unity.JailSeconds");}
     }
 }

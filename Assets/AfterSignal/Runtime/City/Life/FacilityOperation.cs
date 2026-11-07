@@ -19,7 +19,7 @@ namespace AfterSignal
         static bool DoneToday(string id,string stamp)
         {
             if(done.TryGetValue(id,out var day)&&day==stamp)return true;
-            return PlayerPrefs.GetString(Key(id),"")==stamp||PlayerPrefs.GetInt("AFTERSIGNAL.Unity.FacilityJob."+LifeState.CampaignSerial+"-"+id+"-"+LifeState.Day,0)>0;
+            return SaveStore.GetString(Key(id),"")==stamp||SaveStore.GetInt("AFTERSIGNAL.Unity.FacilityJob."+LifeState.CampaignSerial+"-"+id+"-"+LifeState.Day,0)>0;
         }
         public static bool Begin(string id,int reward,float hours)
         {
@@ -46,8 +46,8 @@ namespace AfterSignal
             if(node)Destroy(node);carrying=holding=false;held=0;
             if(Completed>=3)
             {
-                done[id]=stamp;if(!LifeState.SuppressSave){PlayerPrefs.SetString(Key(id),stamp);PlayerPrefs.Save();}
-                int pay=PlayerPrefs.GetInt("AFTERSIGNAL.Unity.CivicPermit",0)>0?Mathf.RoundToInt(reward*1.1f):reward;LifeState.Hours+=hours;LifeState.Earn(pay);GameDirector.Instance.Toast("현장 업무 완료 · +"+pay+" C",5);Destroy(gameObject);return;
+                done[id]=stamp;if(!LifeState.SuppressSave){SaveStore.SetString(Key(id),stamp);SaveStore.Save();}
+                int pay=SaveStore.GetInt("AFTERSIGNAL.Unity.CivicPermit",0)>0?Mathf.RoundToInt(reward*1.1f):reward;LifeState.Hours+=hours;LifeState.Earn(pay);GameDirector.Instance.Toast("현장 업무 완료 · +"+pay+" C",5);Destroy(gameObject);return;
             }
             step=ActionName(id,Completed);
             Station(stations[Completed],plan[Completed]==Task.Carry?step+" · 물품 들기":plan[Completed]==Task.Hold?step+" · E 후 "+HoldSeconds.ToString("0")+"초 자리 유지":step);

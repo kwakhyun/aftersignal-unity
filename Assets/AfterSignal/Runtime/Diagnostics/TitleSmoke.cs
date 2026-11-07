@@ -33,7 +33,7 @@ namespace AfterSignal
             File.WriteAllText(Path.Combine(output,"save-backup.json"),JsonUtility.ToJson(backup,true));
             Application.logMessageReceived+=Log;
         }
-        void Save(string key,int kind){backup.values.Add(new Preference{key=key,kind=kind,exists=PlayerPrefs.HasKey(key),integer=kind==0?PlayerPrefs.GetInt(key):0,number=kind==1?PlayerPrefs.GetFloat(key):0,text=kind==2?PlayerPrefs.GetString(key):null});}
+        void Save(string key,int kind){backup.values.Add(new Preference{key=key,kind=kind,exists=SaveStore.HasKey(key),integer=kind==0?SaveStore.GetInt(key):0,number=kind==1?SaveStore.GetFloat(key):0,text=kind==2?SaveStore.GetString(key):null});}
         void Log(string message,string trace,LogType type){if(type==LogType.Error||type==LogType.Exception||type==LogType.Assert)report.errors.Add(message+"\n"+trace);}
         void Check(bool condition,string label){(condition?report.passed:report.errors).Add(label);}
         void Update(){if(!finished&&(report.errors.Count>0||Time.realtimeSinceStartup-began>100)){if(report.errors.Count==0)Check(false,"Timed out");Finish();}}
@@ -50,16 +50,16 @@ namespace AfterSignal
             Check(title.ArtworkLoaded,"Dedicated illustration loads at runtime");
             Check(FindObjectsByType<Canvas>().Where(c=>c.name.StartsWith("HUD")).All(c=>!c.enabled),"World HUD is hidden behind title");
             if(ArtworkOnly){Capture("title-composition");Finish();yield break;}
-            PlayerPrefs.DeleteKey("AFTERSIGNAL.Unity.Stage");title.Refresh();yield return null;
+            SaveStore.DeleteKey("AFTERSIGNAL.Unity.Stage");title.Refresh();yield return null;
             Check(!title.ContinueButton.interactable,"Continue is disabled without a save");
             Capture("title-new");
-            PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Stage",(int)StageId.Residence);title.Refresh();
+            SaveStore.SetInt("AFTERSIGNAL.Unity.Stage",(int)StageId.Residence);title.Refresh();
             title.OpenSettings();yield return null;
             Check(title.SettingsOpen&&Time.timeScale==0,"Settings opens without unpausing the world");Capture("title-settings");
             title.CancelNewGame();title.NewGameButton.onClick.Invoke();yield return null;if(title.SlotsOpen){title.SelectSlot(SaveStore.ActiveSlot);yield return null;}
             Check(title.ConfirmationOpen,"New game asks before replacing existing progress");Capture("title-confirm");
             title.CancelNewGame();
-            Check(!title.ConfirmationOpen&&PlayerPrefs.GetInt("AFTERSIGNAL.Unity.Stage")== (int)StageId.Residence,"Cancelling new game preserves the saved checkpoint");
+            Check(!title.ConfirmationOpen&&SaveStore.GetInt("AFTERSIGNAL.Unity.Stage")== (int)StageId.Residence,"Cancelling new game preserves the saved checkpoint");
             Capture("title-continue");
             title.ContinueButton.onClick.Invoke();yield return null;
             Check(g.Transition&&g.Title,"Continue shows loading state and blocks repeat activation");
@@ -85,8 +85,8 @@ namespace AfterSignal
         void Finish()
         {
             if(finished)return;finished=true;LifeState.SuppressSave=true;CityChronicle.SuppressSave=true;
-            foreach(var p in backup.values){if(!p.exists)PlayerPrefs.DeleteKey(p.key);else if(p.kind==0)PlayerPrefs.SetInt(p.key,p.integer);else if(p.kind==1)PlayerPrefs.SetFloat(p.key,p.number);else PlayerPrefs.SetString(p.key,p.text);}
-            if(!ArtworkOnly)PlayerPrefs.Save();report.completed=report.errors.Count==0;
+            foreach(var p in backup.values){if(!p.exists)SaveStore.DeleteKey(p.key);else if(p.kind==0)SaveStore.SetInt(p.key,p.integer);else if(p.kind==1)SaveStore.SetFloat(p.key,p.number);else SaveStore.SetString(p.key,p.text);}
+            if(!ArtworkOnly)SaveStore.Save();report.completed=report.errors.Count==0;
             File.WriteAllText(Path.Combine(output,"title.json"),JsonUtility.ToJson(report,true));Application.Quit(report.completed?0:1);
         }
         void OnDestroy(){Application.logMessageReceived-=Log;}

@@ -14,13 +14,13 @@ namespace AfterSignal
         readonly Report report=new();string output;float start,jail;int site;bool hadJail,done,protect;GameDirector game;
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void Install(){if(Environment.GetCommandLineArgs().Contains("-traffic-justice-smoke")&&!FindAnyObjectByType<TrafficJusticeSmoke>()){GameDirector.SkipTitle=true;new GameObject("Traffic and justice verification").AddComponent<TrafficJusticeSmoke>();}}
-        void Awake(){DontDestroyOnLoad(gameObject);Application.runInBackground=true;LifeState.SuppressSave=CityChronicle.SuppressSave=true;hadJail=PlayerPrefs.HasKey("AFTERSIGNAL.Unity.JailSeconds");jail=PlayerPrefs.GetFloat("AFTERSIGNAL.Unity.JailSeconds");site=UrbanCatalog.Current;PlayerPrefs.DeleteKey("AFTERSIGNAL.Unity.JailSeconds");start=Time.realtimeSinceStartup;output=Path.GetFullPath(QualitySession.Arg("-quality-output","Artifacts/TrafficJustice/Final"));Directory.CreateDirectory(output);Application.logMessageReceived+=Log;}
+        void Awake(){DontDestroyOnLoad(gameObject);Application.runInBackground=true;LifeState.SuppressSave=CityChronicle.SuppressSave=true;hadJail=SaveStore.HasKey("AFTERSIGNAL.Unity.JailSeconds");jail=SaveStore.GetFloat("AFTERSIGNAL.Unity.JailSeconds");site=UrbanCatalog.Current;SaveStore.DeleteKey("AFTERSIGNAL.Unity.JailSeconds");start=Time.realtimeSinceStartup;output=Path.GetFullPath(QualitySession.Arg("-quality-output","Artifacts/TrafficJustice/Final"));Directory.CreateDirectory(output);Application.logMessageReceived+=Log;}
         void Log(string message,string trace,LogType type){if(type==LogType.Error||type==LogType.Exception)report.errors.Add(message+"\n"+trace);}
         void Check(bool ok,string title){(ok?report.passed:report.errors).Add(title);Debug.Log("TRAFFIC JUSTICE "+ok+" / "+title);Save();}
         void Save()=>File.WriteAllText(Path.Combine(output,"result.json"),JsonUtility.ToJson(report,true));
         IEnumerator Load(StageId stage,int venue=0)
         {
-            Time.timeScale=1;PlayerPrefs.SetInt(UrbanCatalog.Prefix+"Site",venue);ResidentialWorld.VisitHome=-1;CivicWorld.ClearArrival();
+            Time.timeScale=1;SaveStore.SetInt(UrbanCatalog.Prefix+"Site",venue);ResidentialWorld.VisitHome=-1;CivicWorld.ClearArrival();
             yield return SceneManager.LoadSceneAsync(CampaignRules.Scene(stage));while(!GameDirector.Instance||!GameDirector.Instance.Ready)yield return null;
             game=GameDirector.Instance;game.CloseDialogue();game.SetPaused(false);game.Input.ExternalControl=true;game.Input.ExternalFrame=ControlFrame.Empty;game.CameraRig.enabled=false;game.enabled=false;
             WantedSystem.Clear("");WantedSystem.Instance.enabled=false;
@@ -96,7 +96,7 @@ namespace AfterSignal
         }
         void Update(){if(protect&&game&&game.Player)game.Player.ProtectVehicleImpact();if(!done&&Time.realtimeSinceStartup-start>480){report.errors.Add("Native verification timeout");Finish();}}
         void Finish(){if(done)return;done=true;Time.timeScale=1;report.completed=report.errors.Count==0;Save();Restore();Application.Quit(report.completed?0:1);}
-        void Restore(){PlayerPrefs.SetInt(UrbanCatalog.Prefix+"Site",site);if(hadJail)PlayerPrefs.SetFloat("AFTERSIGNAL.Unity.JailSeconds",jail);else PlayerPrefs.DeleteKey("AFTERSIGNAL.Unity.JailSeconds");}
+        void Restore(){SaveStore.SetInt(UrbanCatalog.Prefix+"Site",site);if(hadJail)SaveStore.SetFloat("AFTERSIGNAL.Unity.JailSeconds",jail);else SaveStore.DeleteKey("AFTERSIGNAL.Unity.JailSeconds");}
         void OnDestroy(){Application.logMessageReceived-=Log;Restore();}
     }
 }

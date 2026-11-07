@@ -78,13 +78,13 @@ namespace AfterSignal
                 )
                 {
                     string key = "AFTERSIGNAL.Unity." + name;
-                    saved[key] = PlayerPrefs.GetInt(key);
-                    if (PlayerPrefs.HasKey(key))
+                    saved[key] = SaveStore.GetInt(key);
+                    if (SaveStore.HasKey(key))
                         existed.Add(key);
                 }
 
                 GameDirector.SkipTitle = true;
-                PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Completed", 0);
+                SaveStore.SetInt("AFTERSIGNAL.Unity.Completed", 0);
                 var stage = Enum.TryParse(QualitySession.Arg("-residence-only"), out StageId fixture) ? fixture : StageId.Residence;
                 yield return SceneManager.LoadSceneAsync(CampaignRules.Scene(stage));
                 yield break;
@@ -252,7 +252,7 @@ namespace AfterSignal
         {
             if (phase >= 5)
             {
-                Record((PlayerPrefs.GetInt("AFTERSIGNAL.Unity.Expansion.Chapters") & (1 << 5)) != 0, "Breach completion saved and returned to town");
+                Record((SaveStore.GetInt("AFTERSIGNAL.Unity.Expansion.Chapters") & (1 << 5)) != 0, "Breach completion saved and returned to town");
                 metrics.Save();
                 Finish();
                 yield break;
@@ -342,7 +342,7 @@ namespace AfterSignal
                     yield break;
                 }
 
-                PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Completed", 1);
+                SaveStore.SetInt("AFTERSIGNAL.Unity.Completed", 1);
                 phase = 5;
                 yield return Use(InteractionKind.BreachMission);
                 yield break;
@@ -608,12 +608,12 @@ namespace AfterSignal
             foreach (var p in saved)
             {
                 if (existed.Contains(p.Key))
-                    PlayerPrefs.SetInt(p.Key, p.Value);
+                    SaveStore.SetInt(p.Key, p.Value);
                 else
-                    PlayerPrefs.DeleteKey(p.Key);
+                    SaveStore.DeleteKey(p.Key);
             }
 
-            PlayerPrefs.Save();
+            SaveStore.Save();
         }
 
         void OnApplicationQuit()

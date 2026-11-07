@@ -8,7 +8,7 @@ namespace AfterSignal
         readonly Report report=new();string output;float began,jail;bool done,hadJail;
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void Install(){if(Environment.GetCommandLineArgs().Contains("-four-city-smoke")&&!FindAnyObjectByType<FourCitySmoke>()){GameDirector.SkipTitle=true;new GameObject("Four-city essential checks").AddComponent<FourCitySmoke>();}}
-        void Awake(){DontDestroyOnLoad(gameObject);Application.runInBackground=true;LifeState.SuppressSave=CityChronicle.SuppressSave=true;hadJail=PlayerPrefs.HasKey("AFTERSIGNAL.Unity.JailSeconds");jail=PlayerPrefs.GetFloat("AFTERSIGNAL.Unity.JailSeconds");PlayerPrefs.DeleteKey("AFTERSIGNAL.Unity.JailSeconds");output=Path.GetFullPath(QualitySession.Arg("-quality-output","Artifacts/FourCities/Native"));Directory.CreateDirectory(output);began=Time.realtimeSinceStartup;Application.logMessageReceived+=Log;}
+        void Awake(){DontDestroyOnLoad(gameObject);Application.runInBackground=true;LifeState.SuppressSave=CityChronicle.SuppressSave=true;hadJail=SaveStore.HasKey("AFTERSIGNAL.Unity.JailSeconds");jail=SaveStore.GetFloat("AFTERSIGNAL.Unity.JailSeconds");SaveStore.DeleteKey("AFTERSIGNAL.Unity.JailSeconds");output=Path.GetFullPath(QualitySession.Arg("-quality-output","Artifacts/FourCities/Native"));Directory.CreateDirectory(output);began=Time.realtimeSinceStartup;Application.logMessageReceived+=Log;}
         void Log(string message,string stack,LogType type){if(type==LogType.Error||type==LogType.Exception||type==LogType.Assert)if(report.errors.Count<30)report.errors.Add(message+"\n"+stack);}
         void Check(bool ok,string message){(ok?report.passed:report.errors).Add(message);Debug.Log("FOUR CITY CHECK "+ok+" / "+message);}
         void Update(){if(!done&&Time.realtimeSinceStartup-began>300){Check(false,"Native essential checks timeout");Finish();}}
@@ -112,6 +112,6 @@ namespace AfterSignal
             }
             Check(story.Complete&&story.Choice==1,"Twelve-chapter campaign reaches selected ending without saving test progress");
         }
-        void Finish(){if(done)return;done=true;Application.logMessageReceived-=Log;if(hadJail)PlayerPrefs.SetFloat("AFTERSIGNAL.Unity.JailSeconds",jail);else PlayerPrefs.DeleteKey("AFTERSIGNAL.Unity.JailSeconds");report.completed=report.errors.Count==0;File.WriteAllText(Path.Combine(output,"four-cities.json"),JsonUtility.ToJson(report,true));Application.Quit(report.completed?0:1);}
+        void Finish(){if(done)return;done=true;Application.logMessageReceived-=Log;if(hadJail)SaveStore.SetFloat("AFTERSIGNAL.Unity.JailSeconds",jail);else SaveStore.DeleteKey("AFTERSIGNAL.Unity.JailSeconds");report.completed=report.errors.Count==0;File.WriteAllText(Path.Combine(output,"four-cities.json"),JsonUtility.ToJson(report,true));Application.Quit(report.completed?0:1);}
     }
 }

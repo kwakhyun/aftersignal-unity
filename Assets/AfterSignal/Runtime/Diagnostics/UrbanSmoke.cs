@@ -82,9 +82,9 @@ namespace AfterSignal
                 )
                 {
                     string k = UrbanCatalog.Prefix + suffix;
-                    if (PlayerPrefs.HasKey(k))
+                    if (SaveStore.HasKey(k))
                         present.Add(k);
-                    saves[k] = suffix == "Site" || suffix == "Car" || suffix == "CarStage" || suffix == "CarType" ? PlayerPrefs.GetInt(k) : PlayerPrefs.GetFloat(k);
+                    saves[k] = suffix == "Site" || suffix == "Car" || suffix == "CarStage" || suffix == "CarType" ? SaveStore.GetInt(k) : SaveStore.GetFloat(k);
                 }
 
                 foreach (string s in new[]
@@ -96,9 +96,9 @@ namespace AfterSignal
                 )
                 {
                     string k = "AFTERSIGNAL.Unity." + s;
-                    if (PlayerPrefs.HasKey(k))
+                    if (SaveStore.HasKey(k))
                         present.Add(k);
-                    saves[k] = PlayerPrefs.GetInt(k);
+                    saves[k] = SaveStore.GetInt(k);
                 }
 
                 UrbanCatalog.Reset();
@@ -304,14 +304,14 @@ namespace AfterSignal
             foreach (var kv in saves)
             {
                 if (!present.Contains(kv.Key))
-                    PlayerPrefs.DeleteKey(kv.Key);
+                    SaveStore.DeleteKey(kv.Key);
                 else if (kv.Key.EndsWith("X") || kv.Key.EndsWith("Z") || kv.Key.EndsWith("Yaw") || kv.Key.EndsWith("Fuel") || kv.Key.EndsWith("Health"))
-                    PlayerPrefs.SetFloat(kv.Key, kv.Value);
+                    SaveStore.SetFloat(kv.Key, kv.Value);
                 else
-                    PlayerPrefs.SetInt(kv.Key, (int)kv.Value);
+                    SaveStore.SetInt(kv.Key, (int)kv.Value);
             }
 
-            PlayerPrefs.Save();
+            SaveStore.Save();
             report.completed = !failed && report.errors.Count == 0;
             File.WriteAllText(Path.Combine(output, "urban.json"), JsonUtility.ToJson(report, true));
             metrics?.Save();

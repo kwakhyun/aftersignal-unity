@@ -28,6 +28,9 @@ namespace AfterSignal
         static bool dirty;
         static float lastFlush = -999;
         static string directoryOverride;
+        /// <summary>Changes whenever the active slot is switched or reset; static caches reload when it differs.</summary>
+        public static int Generation { get { Ensure(); return generation; } }
+        static int generation;
 
         /// <summary>Directory for slot files (tests may redirect it).</summary>
         public static string Directory { get => directoryOverride ?? Path.Combine(Application.persistentDataPath, "saves"); set { directoryOverride = value; loadedSlot = -1; values.Clear(); } }
@@ -45,7 +48,7 @@ namespace AfterSignal
         {
             if (loadedSlot == ActiveSlot) return;
             values.Clear(); dirty = false; LastLoadWarning = null;
-            loadedSlot = ActiveSlot;
+            loadedSlot = ActiveSlot; generation++;
             if (!TryRead(PathFor(loadedSlot), out var file) && File.Exists(PathFor(loadedSlot)))
             {
                 // Keep the unreadable file for inspection and fall back to the last good copy.
@@ -137,7 +140,7 @@ namespace AfterSignal
         public static void ResetActiveSlot()
         {
             Ensure();
-            values.Clear(); dirty = true; Flush();
+            values.Clear(); dirty = true; Flush(); generation++;
         }
 
         public static bool SlotExists(int slot) => File.Exists(PathFor(slot)) || File.Exists(PathFor(slot) + ".bak");

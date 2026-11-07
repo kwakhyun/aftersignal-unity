@@ -18,7 +18,7 @@ namespace AfterSignal
             {
                 case FacilityFunction.Registry:
                     Body+="\n시민 등록 · 복원 지원 · 기록공개 민원을 처리합니다.";
-                    if(PlayerPrefs.GetInt("AFTERSIGNAL.Unity.CivicPermit",0)==0)Buy("도시 복원 근무자 등록 / 100 C",100,()=>{if(!LifeState.SuppressSave)PlayerPrefs.SetInt("AFTERSIGNAL.Unity.CivicPermit",1);game.Toast("복원 근무자 등록 완료 · 현장 업무 보수 10% 가산");});
+                    if(SaveStore.GetInt("AFTERSIGNAL.Unity.CivicPermit",0)==0)Buy("도시 복원 근무자 등록 / 100 C",100,()=>{if(!LifeState.SuppressSave)SaveStore.SetInt("AFTERSIGNAL.Unity.CivicPermit",1);game.Toast("복원 근무자 등록 완료 · 현장 업무 보수 10% 가산");});
                     else Body+="\n복원 근무자 등록 완료 · 현장 업무 보수 10% 가산";
                     Job("민원 서류 접수 업무 / 220 C","registry",220,1);
                     Option("신호 균열 대응 기록 열람",()=>{Body="컨덕터의 기억 수집망에서 유출된 잔향이 시민 기억을 모방하고 있습니다. 국방대응부는 정부청사와 본부의 기록을 대조하며 균열을 봉쇄합니다.\n현재 도시 신호 이상: "+(RiftIncursion.Instance&&RiftIncursion.Instance.Active?"출몰 발생 · 군 출동 중":"감시 중");Revision++;});

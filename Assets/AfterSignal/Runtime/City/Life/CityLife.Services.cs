@@ -74,7 +74,7 @@ namespace AfterSignal
                 case 12:
                     Option("소유 차량 정비 / 150 C", () =>
                     {
-                        if (PlayerPrefs.GetInt(UrbanCatalog.Prefix + "Car", 0) == 0)
+                        if (SaveStore.GetInt(UrbanCatalog.Prefix + "Car", 0) == 0)
                         {
                             Body = "정비할 소유 차량이 없습니다.";
                             Revision++;
@@ -85,9 +85,9 @@ namespace AfterSignal
                         {
                             var current=UrbanSimulation.Instance?UrbanSimulation.Instance.Owned:null;
                             if(current)current.Repair();
-                            PlayerPrefs.SetInt(UrbanCatalog.Prefix+"CarDurabilityVersion",0);
-                            PlayerPrefs.SetFloat(UrbanCatalog.Prefix + "CarHealth", 100);
-                            PlayerPrefs.Save();
+                            SaveStore.SetInt(UrbanCatalog.Prefix+"CarDurabilityVersion",0);
+                            SaveStore.SetFloat(UrbanCatalog.Prefix + "CarHealth", 100);
+                            SaveStore.Save();
                         });
                     });
                     break;
@@ -153,7 +153,7 @@ namespace AfterSignal
             }
 
             reward = Pay(reward);
-            bool ok = LifeState.RewardOnce(LifeState.CampaignSerial + "-" + id + "-" + LifeState.Day, reward);
+            bool ok = LifeState.RewardDaily(id, reward);
             Body = ok ? message + " +" + reward + " C" : "오늘의 업무는 이미 마쳤습니다.";
             Revision++;
         }

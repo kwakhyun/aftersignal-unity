@@ -23,8 +23,8 @@ namespace AfterSignal
         {
             DontDestroyOnLoad(gameObject);Application.runInBackground=true;LifeState.SuppressSave=true;
             output=Path.GetFullPath(QualitySession.Arg("-quality-output","Artifacts/CityEvolution/Smoke"));Directory.CreateDirectory(output);
-            foreach(var k in new[]{"AFTERSIGNAL.Unity.Stage","AFTERSIGNAL.Unity.Memories",UrbanCatalog.Prefix+"Site",UrbanCatalog.Prefix+"Car",UrbanCatalog.Prefix+"CarStage",UrbanCatalog.Prefix+"CarType",UrbanCatalog.Prefix+"CarColor",UrbanCatalog.Prefix+"CarWheels",UrbanCatalog.Prefix+"CarSpoiler"}){if(PlayerPrefs.HasKey(k))ints[k]=PlayerPrefs.GetInt(k);else absent.Add(k);}
-            foreach(var name in new[]{"CarX","CarZ","CarYaw","CarFuel","CarHealth"}){string k=UrbanCatalog.Prefix+name;if(PlayerPrefs.HasKey(k))floats[k]=PlayerPrefs.GetFloat(k);else absent.Add(k);}
+            foreach(var k in new[]{"AFTERSIGNAL.Unity.Stage","AFTERSIGNAL.Unity.Memories",UrbanCatalog.Prefix+"Site",UrbanCatalog.Prefix+"Car",UrbanCatalog.Prefix+"CarStage",UrbanCatalog.Prefix+"CarType",UrbanCatalog.Prefix+"CarColor",UrbanCatalog.Prefix+"CarWheels",UrbanCatalog.Prefix+"CarSpoiler"}){if(SaveStore.HasKey(k))ints[k]=SaveStore.GetInt(k);else absent.Add(k);}
+            foreach(var name in new[]{"CarX","CarZ","CarYaw","CarFuel","CarHealth"}){string k=UrbanCatalog.Prefix+name;if(SaveStore.HasKey(k))floats[k]=SaveStore.GetFloat(k);else absent.Add(k);}
             Application.logMessageReceived+=Log;
         }
         void Log(string m,string s,LogType t){if(t==LogType.Error||t==LogType.Exception||t==LogType.Assert){report.errors.Add(m+"\n"+s);exception=true;}}
@@ -32,7 +32,7 @@ namespace AfterSignal
         void Update(){if(!finished&&exception){Finish();return;}if(!finished&&Time.realtimeSinceStartup>260){Check(false,"Integration timeout");Finish();}}
         IEnumerator Load(StageId stage,int site=0)
         {
-            LifeState.Heat=0;ResidentialWorld.VisitHome=-1;PlayerPrefs.SetInt(UrbanCatalog.Prefix+"Site",site);
+            LifeState.Heat=0;ResidentialWorld.VisitHome=-1;SaveStore.SetInt(UrbanCatalog.Prefix+"Site",site);
             yield return SceneManager.LoadSceneAsync(CampaignRules.Scene(stage));
             while(!GameDirector.Instance||!GameDirector.Instance.Ready)yield return null;
             var g=GameDirector.Instance;g.Input.ExternalControl=true;g.Input.ExternalFrame=ControlFrame.Empty;g.CloseDialogue();g.SetPaused(false);
@@ -96,10 +96,10 @@ namespace AfterSignal
                 if(site==1){Check(CommunityWorld.Instance.People.Count(p=>p.prisoner)==3,"Police holding cells contain three prisoners");Overview("custody",new Vector3(59,15,-17),new Vector3(61,1,17));}
             }
             yield return Load(StageId.UrbanInterior,38);
-            LifeState.Earn(5000);PlayerPrefs.SetInt(UrbanCatalog.Prefix+"Car",1);PlayerPrefs.SetFloat(UrbanCatalog.Prefix+"CarHealth",13);
+            LifeState.Earn(5000);SaveStore.SetInt(UrbanCatalog.Prefix+"Car",1);SaveStore.SetFloat(UrbanCatalog.Prefix+"CarHealth",13);
             var life=CityLife.Instance;life.Garage();int cash=LifeState.Credits;life.Options[0].action();
-            Check(PlayerPrefs.GetFloat(UrbanCatalog.Prefix+"CarHealth")==100&&LifeState.Credits==cash-150,"Garage repairs the saved owned vehicle and charges once");
-            life.Options[2].action();Check(PlayerPrefs.GetInt(UrbanCatalog.Prefix+"CarWheels")==1,"Wheel customization persists");life.Dismiss();
+            Check(SaveStore.GetFloat(UrbanCatalog.Prefix+"CarHealth")==100&&LifeState.Credits==cash-150,"Garage repairs the saved owned vehicle and charges once");
+            life.Options[2].action();Check(SaveStore.GetInt(UrbanCatalog.Prefix+"CarWheels")==1,"Wheel customization persists");life.Dismiss();
             Overview("garage",new Vector3(37,25,-39),new Vector3(37,0,8));
             yield return Load(StageId.UrbanInterior,39);
             Check(FindObjectsByType<CivicRoutine>().Any(p=>p.GetComponent<DirectionalPerson>().art=="Bartender"),"Neon bar includes bartenders and patrons");
@@ -163,7 +163,7 @@ namespace AfterSignal
         void Finish()
         {
             finished=true;report.completed=report.errors.Count==0;
-            foreach(var item in ints)PlayerPrefs.SetInt(item.Key,item.Value);foreach(var item in floats)PlayerPrefs.SetFloat(item.Key,item.Value);foreach(var key in absent)PlayerPrefs.DeleteKey(key);PlayerPrefs.Save();
+            foreach(var item in ints)SaveStore.SetInt(item.Key,item.Value);foreach(var item in floats)SaveStore.SetFloat(item.Key,item.Value);foreach(var key in absent)SaveStore.DeleteKey(key);SaveStore.Save();
             File.WriteAllText(Path.Combine(output,"city-evolution.json"),JsonUtility.ToJson(report,true));Application.Quit(report.completed?0:1);
         }
     }

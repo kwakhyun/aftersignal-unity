@@ -9,10 +9,10 @@ namespace AfterSignal
         [Serializable] sealed class League {public List<SportsMatch> matches=new();}
         const string Key="AFTERSIGNAL.Unity.FourCities.Sports";
         public static FourCitySports Instance{get;private set;}
-        static League league;
+        static League league;static int leagueGeneration=-1;
         float saveTime;
         public IReadOnlyList<SportsMatch> Matches=>league.matches;
-        void Awake(){Instance=this;if(league==null){try{league=JsonUtility.FromJson<League>(SaveStore.GetString(Key,""));}catch{}league??=new League();}foreach(var v in FourCityCatalog.Venues)if(v.Sport&&!league.matches.Exists(m=>m.venue==v.id)){var m=new SportsMatch(v);if(v.kind==VenueKind.Baseball)m.battingTeam=1;league.matches.Add(m);}}
+        void Awake(){Instance=this;if(league==null||leagueGeneration!=SaveStore.Generation){leagueGeneration=SaveStore.Generation;league=null;try{league=JsonUtility.FromJson<League>(SaveStore.GetString(Key,""));}catch{}league??=new League();}foreach(var v in FourCityCatalog.Venues)if(v.Sport&&!league.matches.Exists(m=>m.venue==v.id)){var m=new SportsMatch(v);if(v.kind==VenueKind.Baseball)m.battingTeam=1;league.matches.Add(m);}}
         public SportsMatch Get(string id)=>league.matches.Find(m=>m.venue==id);
         public bool Bet(SportsMatch m,int team,int amount)
         {if(m==null||!m.CanBet||team<0||team>1||amount<=0||amount>500||!LifeState.Spend(amount))return false;m.stake=amount;m.selection=team;m.settled=false;Save();return true;}

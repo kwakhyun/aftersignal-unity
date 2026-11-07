@@ -5,7 +5,7 @@ namespace AfterSignal
     public static class LifeState
     {
         const string Prefix = "AFTERSIGNAL.Unity.Life.";
-        static bool loaded;
+        static bool loaded;static int loadedGeneration=-1;
         public static bool SuppressSave;
         public static int Credits { get; private set; }
         public static int Savings { get; private set; }
@@ -23,20 +23,20 @@ namespace AfterSignal
 
         public static void Load()
         {
-            if (loaded)
+            if (loaded && loadedGeneration == SaveStore.Generation)
                 return;
-            loaded = true;
-            Credits = PlayerPrefs.GetInt(Prefix + "Credits", 1500);
-            Savings = PlayerPrefs.GetInt(Prefix + "Savings", 0);
-            HomeCash = PlayerPrefs.GetInt(Prefix + "HomeCash", 0);
-            Outfit = PlayerPrefs.GetInt(Prefix + "Outfit", 0);
-            Outfits = PlayerPrefs.GetInt(Prefix + "Outfits", 3);
-            Hours = PlayerPrefs.GetFloat(Prefix + "Hours", 8);
-            Heat = PlayerPrefs.GetFloat(Prefix + "Heat", 0);
-            HiddenSeconds = PlayerPrefs.GetFloat(Prefix + "Hidden", 0);
+            loaded = true;loadedGeneration = SaveStore.Generation;
+            Credits = SaveStore.GetInt(Prefix + "Credits", 1500);
+            Savings = SaveStore.GetInt(Prefix + "Savings", 0);
+            HomeCash = SaveStore.GetInt(Prefix + "HomeCash", 0);
+            Outfit = SaveStore.GetInt(Prefix + "Outfit", 0);
+            Outfits = SaveStore.GetInt(Prefix + "Outfits", 3);
+            Hours = SaveStore.GetFloat(Prefix + "Hours", 8);
+            Heat = SaveStore.GetFloat(Prefix + "Heat", 0);
+            HiddenSeconds = SaveStore.GetFloat(Prefix + "Hidden", 0);
             // Older saves start accruing from the current day instead of paying back-interest.
-            InterestDay = PlayerPrefs.GetInt(Prefix + "InterestDay", Day);
-            string json = PlayerPrefs.GetString(Prefix + "Errand", "");
+            InterestDay = SaveStore.GetInt(Prefix + "InterestDay", Day);
+            string json = SaveStore.GetString(Prefix + "Errand", "");
             if (!string.IsNullOrEmpty(json))
             {
                 try
@@ -144,12 +144,23 @@ namespace AfterSignal
             return true;
         }
 
+        /// <summary>Once-per-day reward stored as one "serial:day" entry per id (no new key per day).</summary>
+        public static bool RewardDaily(string id, int amount)
+        {
+            string key = Prefix + "RewardDay." + id, stamp = CampaignSerial + ":" + Day;
+            if (SaveStore.GetString(key, "") == stamp)
+                return false;
+            SaveStore.SetString(key, stamp);
+            Earn(amount);
+            return true;
+        }
+
         public static bool RewardOnce(string id, int amount)
         {
             string key = Prefix + "Reward." + id;
-            if (PlayerPrefs.GetInt(key, 0) > 0)
+            if (SaveStore.GetInt(key, 0) > 0)
                 return false;
-            PlayerPrefs.SetInt(key, 1);
+            SaveStore.SetInt(key, 1);
             Earn(amount);
             return true;
         }
@@ -158,23 +169,23 @@ namespace AfterSignal
         {
             if (!loaded || SuppressSave)
                 return;
-            PlayerPrefs.SetInt(Prefix + "Credits", Credits);
-            PlayerPrefs.SetInt(Prefix + "Savings", Savings);
-            PlayerPrefs.SetInt(Prefix + "HomeCash", HomeCash);
-            PlayerPrefs.SetInt(Prefix + "Outfit", Outfit);
-            PlayerPrefs.SetInt(Prefix + "Outfits", Outfits);
-            PlayerPrefs.SetFloat(Prefix + "Hours", Hours);
-            PlayerPrefs.SetFloat(Prefix + "Heat", Heat);
-            PlayerPrefs.SetFloat(Prefix + "Hidden", HiddenSeconds);
-            PlayerPrefs.SetInt(Prefix + "InterestDay", InterestDay);
-            PlayerPrefs.SetString(Prefix + "Errand", Errand == null ? "" : JsonUtility.ToJson(Errand));
-            PlayerPrefs.Save();
+            SaveStore.SetInt(Prefix + "Credits", Credits);
+            SaveStore.SetInt(Prefix + "Savings", Savings);
+            SaveStore.SetInt(Prefix + "HomeCash", HomeCash);
+            SaveStore.SetInt(Prefix + "Outfit", Outfit);
+            SaveStore.SetInt(Prefix + "Outfits", Outfits);
+            SaveStore.SetFloat(Prefix + "Hours", Hours);
+            SaveStore.SetFloat(Prefix + "Heat", Heat);
+            SaveStore.SetFloat(Prefix + "Hidden", HiddenSeconds);
+            SaveStore.SetInt(Prefix + "InterestDay", InterestDay);
+            SaveStore.SetString(Prefix + "Errand", Errand == null ? "" : JsonUtility.ToJson(Errand));
+            SaveStore.Save();
         }
 
         public static void Reset()
         {
             ArmoryInventory.Reset();
-            loaded = true;
+            loaded = true;loadedGeneration = SaveStore.Generation;
             Credits = 1500;
             HomeCash = Savings = Outfit = 0;
             Outfits = 3;
@@ -184,11 +195,11 @@ namespace AfterSignal
             LastWake = -999;
             Errand = null;
             PrisonSystem.ResetSentence();
-            PlayerPrefs.SetInt(Prefix + "CampaignSerial", PlayerPrefs.GetInt(Prefix + "CampaignSerial", 0) + 1);
+            SaveStore.SetInt(Prefix + "CampaignSerial", SaveStore.GetInt(Prefix + "CampaignSerial", 0) + 1);
             Save();
         }
 
-        public static int CampaignSerial => PlayerPrefs.GetInt(Prefix + "CampaignSerial", 0);
+        public static int CampaignSerial => SaveStore.GetInt(Prefix + "CampaignSerial", 0);
     }
 
     [System.Serializable]

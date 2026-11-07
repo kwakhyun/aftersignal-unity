@@ -20,9 +20,9 @@ namespace AfterSignal
         {
             DontDestroyOnLoad(gameObject);Application.runInBackground=true;began=Time.realtimeSinceStartup;LifeState.SuppressSave=true;CityChronicle.SuppressSave=true;
             output=Path.GetFullPath(QualitySession.Arg("-quality-output","Artifacts/Kinetic/Smoke"));Directory.CreateDirectory(output);
-            foreach(var k in new[]{"AFTERSIGNAL.Unity.Stage","AFTERSIGNAL.Unity.Memories",UrbanCatalog.Prefix+"Site",UrbanCatalog.Prefix+"Car",UrbanCatalog.Prefix+"CarStage",UrbanCatalog.Prefix+"CarType"}){if(PlayerPrefs.HasKey(k))ints[k]=PlayerPrefs.GetInt(k);else absent.Add(k);}
-            foreach(var n in new[]{"CarX","CarZ","CarYaw","CarFuel","CarHealth"}){string k=UrbanCatalog.Prefix+n;if(PlayerPrefs.HasKey(k))floats[k]=PlayerPrefs.GetFloat(k);else absent.Add(k);}
-            hadStory=PlayerPrefs.HasKey(CityChronicle.SaveKey);savedStory=PlayerPrefs.GetString(CityChronicle.SaveKey,"");
+            foreach(var k in new[]{"AFTERSIGNAL.Unity.Stage","AFTERSIGNAL.Unity.Memories",UrbanCatalog.Prefix+"Site",UrbanCatalog.Prefix+"Car",UrbanCatalog.Prefix+"CarStage",UrbanCatalog.Prefix+"CarType"}){if(SaveStore.HasKey(k))ints[k]=SaveStore.GetInt(k);else absent.Add(k);}
+            foreach(var n in new[]{"CarX","CarZ","CarYaw","CarFuel","CarHealth"}){string k=UrbanCatalog.Prefix+n;if(SaveStore.HasKey(k))floats[k]=SaveStore.GetFloat(k);else absent.Add(k);}
+            hadStory=SaveStore.HasKey(CityChronicle.SaveKey);savedStory=SaveStore.GetString(CityChronicle.SaveKey,"");
             Application.logMessageReceived+=Log;
         }
         void Log(string m,string s,LogType t){if(t==LogType.Exception||t==LogType.Error||t==LogType.Assert){report.errors.Add(m+"\n"+s);error=true;}}
@@ -136,8 +136,8 @@ namespace AfterSignal
         void Finish()
         {
             if(finished)return;finished=true;CityChronicle.SuppressSave=true;LifeState.SuppressSave=true;
-            if(hadStory)PlayerPrefs.SetString(CityChronicle.SaveKey,savedStory);else PlayerPrefs.DeleteKey(CityChronicle.SaveKey);
-            foreach(var p in ints)PlayerPrefs.SetInt(p.Key,p.Value);foreach(var p in floats)PlayerPrefs.SetFloat(p.Key,p.Value);foreach(var p in absent)PlayerPrefs.DeleteKey(p);PlayerPrefs.Save();
+            if(hadStory)SaveStore.SetString(CityChronicle.SaveKey,savedStory);else SaveStore.DeleteKey(CityChronicle.SaveKey);
+            foreach(var p in ints)SaveStore.SetInt(p.Key,p.Value);foreach(var p in floats)SaveStore.SetFloat(p.Key,p.Value);foreach(var p in absent)SaveStore.DeleteKey(p);SaveStore.Save();
             report.completed=report.errors.Count==0;File.WriteAllText(Path.Combine(output,"kinetic.json"),JsonUtility.ToJson(report,true));Application.Quit(report.completed?0:1);
         }
     }
