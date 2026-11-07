@@ -53,7 +53,7 @@ namespace AfterSignal
 
         public static Vector3 Door(int site) => Center(site) + new Vector3(0, .12f, -32);
         public static Vector3 Pump(int site) => Center(site) + new Vector3(0, .02f, -49);
-        public static int Current => Mathf.Clamp(PlayerPrefs.GetInt(Prefix + "Site", 0), 0, SiteCount - 1);
+        public static int Current => Mathf.Clamp(SaveStore.GetInt(Prefix + "Site", 0), 0, SiteCount - 1);
 
         public static bool IsGarage(int site)=>site==38;
         public static bool IsBar(int site)=>site==39;
@@ -62,7 +62,7 @@ namespace AfterSignal
         public static void Enter(GameDirector game, int site)
         {
             ResidentialWorld.VisitHome=-1;
-            PlayerPrefs.SetInt(Prefix + "Site", site);
+            SaveStore.SetInt(Prefix + "Site", site);
             UrbanSimulation.Instance?.SaveCar();
             game.Travel(StageId.UrbanInterior);
         }
@@ -88,7 +88,7 @@ namespace AfterSignal
             }
 
             )
-                PlayerPrefs.DeleteKey(Prefix + s);
+                SaveStore.DeleteKey(Prefix + s);
         }
     }
 }

@@ -17,6 +17,7 @@ namespace AfterSignal
         public const int Version = 1, SlotCount = 3;
         const string ActiveSlotKey = "AFTERSIGNAL.Unity.ActiveSlot", MigratedKey = "AFTERSIGNAL.Unity.SaveMigrated";
         const float FlushInterval = 2f;
+        const string LegacyFlag = "AFTERSIGNAL.Unity.LegacyImported";
 
         [Serializable] sealed class Entry { public string key; public int type; public int i; public float f; public string s; }
         [Serializable] sealed class SlotFile { public int version; public long savedAt; public List<Entry> entries = new(); }
@@ -90,12 +91,17 @@ namespace AfterSignal
                 else Put(key, 1, 0, PlayerPrefs.GetFloat(key, 0), null);
                 imported++;
             }
-            if (imported > 0) { dirty = true; Flush(); Debug.Log($"AFTERSIGNAL: imported {imported} legacy progress keys into save slot 1"); }
+            if (imported > 0) { Put(LegacyFlag, 0, 1, 0, null); dirty = true; Flush(); Debug.Log($"AFTERSIGNAL: imported {imported} legacy progress keys into save slot 1"); }
         }
 
         static void Put(string key, int type, int i, float f, string s) { values[key] = new Entry { key = key, type = type, i = i, f = f, s = s }; dirty = true; Runner.Wake(); }
 
         public static bool HasKey(string key) { Ensure(); return values.ContainsKey(key); }
+        /// <summary>
+        /// For keys that cannot be listed up front (e.g. one per neighbour): read the slot value, or — only in a slot that
+        /// was imported from legacy PlayerPrefs and never reset — the old PlayerPrefs value.
+        /// </summary>
+        public static int GetIntWithLegacy(string key, int fallback) { Ensure(); if (values.ContainsKey(key)) return GetInt(key, fallback); return values.ContainsKey(LegacyFlag) ? PlayerPrefs.GetInt(key, fallback) : fallback; }
         public static void DeleteKey(string key) { Ensure(); if (values.Remove(key)) { dirty = true; Runner.Wake(); } }
         public static int GetInt(string key, int fallback = 0) { Ensure(); return values.TryGetValue(key, out var e) ? e.type == 0 ? e.i : e.type == 1 ? (int)e.f : fallback : fallback; }
         public static float GetFloat(string key, float fallback = 0) { Ensure(); return values.TryGetValue(key, out var e) ? e.type == 1 ? e.f : e.type == 0 ? e.i : fallback : fallback; }

@@ -89,12 +89,12 @@ namespace AfterSignal
         public static void Attach(CityNpc person)
         {
             if(!person||person.GetComponent<NeighborBond>())return;
-            var bond=person.gameObject.AddComponent<NeighborBond>();bond.npc=person;bond.background=person.context;bond.Affinity=PlayerPrefs.GetInt(bond.Key,80);bond.Apply();bond.next=Time.time+12+person.variation;
+            var bond=person.gameObject.AddComponent<NeighborBond>();bond.npc=person;bond.background=person.context;bond.Affinity=SaveStore.GetIntWithLegacy(bond.Key,80);bond.Apply();bond.next=Time.time+12+person.variation;
         }
         void Apply()=>npc.context=background+" 서하는 새벽 저지대에서 함께 자란 이웃이다. 친밀도 "+Affinity+"/100. "+(Affinity>=60?"서하에게 격의 없이 안부를 묻고 어릴 적 함께 지낸 기억을 나눈다.":"폭력 때문에 신뢰가 흔들려 경계한다.");
         public void Greet(){Affinity=Mathf.Min(100,Affinity+1);Save();}
         public void Offended(){Affinity=Mathf.Max(0,Affinity-35);Save();}
-        void Save(){Apply();if(!LifeState.SuppressSave){PlayerPrefs.SetInt(Key,Affinity);PlayerPrefs.Save();}}
+        void Save(){Apply();if(!LifeState.SuppressSave){SaveStore.SetInt(Key,Affinity);SaveStore.Save();}}
         void Update(){var g=GameDirector.Instance;if(!g||g.Blocked||Time.time<next||!GetComponent<WorldActor>().Alive)return;if((g.Player.transform.position-transform.position).sqrMagnitude<11*11){next=Time.time+40;NpcSpeech.Say(npc,Affinity>=60?new[]{"서하야, 밥은 챙겨 먹었니?","우리 골목에서 보니까 반갑다. 집에 들렀어?","어릴 때 여기서 같이 놀았잖아. 아직 기억나?","필요한 거 있으면 말해. 우린 이웃이잖아."}[npc.variation%4]:"오늘은 조용히 지나가 줘.",4);}}
     }
 }

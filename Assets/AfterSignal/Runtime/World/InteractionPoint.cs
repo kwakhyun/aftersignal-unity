@@ -134,13 +134,13 @@ namespace AfterSignal
                     game.Travel(StageId.Station);
                     break;
                 case InteractionKind.BreachMission:
-                    if (PlayerPrefs.GetInt("AFTERSIGNAL.Unity.Completed", 0) == 0)
+                    if (SaveStore.GetInt("AFTERSIGNAL.Unity.Completed", 0) == 0)
                         game.ShowDialogue("구조대 작전 단말", "먼저 중앙역의 유령 열차를 조사하세요. 돌아오면 외벽 기록 회수 작전을 시작할 수 있습니다.");
                     else
                         game.Travel(StageId.Breach);
                     break;
                 case InteractionKind.QuestGiver:
-                    if (PlayerPrefs.GetInt("AFTERSIGNAL.Unity.Completed", 0) == 0)
+                    if (SaveStore.GetInt("AFTERSIGNAL.Unity.Completed", 0) == 0)
                     {
                         game.ShowDialogue(title, "좋은 아침이야, 서하. 북쪽 본부에서 유령 열차의 구조 신호를 접수했어. 중앙역으로 향하기 전에 학교와 병원도 둘러봐.");
                         break;
@@ -149,15 +149,15 @@ namespace AfterSignal
                     int chapter = CampaignCatalog.NextChapter;
                     if (chapter > 0)
                     {
-                        PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Expansion.Accepted", chapter);
-                        PlayerPrefs.Save();
+                        SaveStore.SetInt("AFTERSIGNAL.Unity.Expansion.Accepted", chapter);
+                        SaveStore.Save();
                         game.ShowDialogue(title, chapter == 2 ? "돌아왔구나, 서하. 열차 기록은 청계 시장으로 이어져. 광장 아래 의뢰 단말에서 새 노선을 선택해. 이번에는 도시 전체의 기억을 되찾자." : chapter == 3 ? "시장의 기억이 돌아왔어. 하지만 옥상 송신망이 신호를 가로채고 있어. 윤이 남긴 경로를 따라가 줘." : "전력은 되찾았지만 첫 기억이 아직 수로 아래에 남아 있어. 해진의 기록을 따라 도시의 기원을 찾아 줘.");
                     }
                     else
                         game.ShowDialogue(title, "이제 누구도 기억의 주인이 될 수 없어. 네가 되찾은 도시는 주민들이 함께 이어 갈 거야. 아직 만나지 못한 이웃도 찾아가 봐.");
                     break;
                 case InteractionKind.MissionBoard:
-                    if (PlayerPrefs.GetInt("AFTERSIGNAL.Unity.Completed", 0) == 0)
+                    if (SaveStore.GetInt("AFTERSIGNAL.Unity.Completed", 0) == 0)
                     {
                         game.Travel(StageId.Station);
                         break;
@@ -166,7 +166,7 @@ namespace AfterSignal
                     int next = CampaignCatalog.NextChapter;
                     if (next == 0)
                         game.ShowDialogue("도시 노선 복구 완료", "모든 주요 노선의 기억을 되찾았습니다. 선착장과 마을의 주민 의뢰를 마무리하세요.");
-                    else if (PlayerPrefs.GetInt("AFTERSIGNAL.Unity.Expansion.Accepted", 0) != next)
+                    else if (SaveStore.GetInt("AFTERSIGNAL.Unity.Expansion.Accepted", 0) != next)
                         game.Toast("노아와 대화해 다음 메인 의뢰를 먼저 받으세요");
                     else
                         game.Travel(CampaignCatalog.ChapterStart(next));
@@ -206,8 +206,8 @@ namespace AfterSignal
                     {
                         CampaignCatalog.Jobs |= 4;
                         game.Memories++;
-                        PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Memories", game.Memories);
-                        PlayerPrefs.Save();
+                        SaveStore.SetInt("AFTERSIGNAL.Unity.Memories", game.Memories);
+                        SaveStore.Save();
                         game.Player.Heal(100);
                         game.ShowDialogue(title, "보급품이 무사히 도착했구나. 오늘은 시장의 모두에게 따뜻한 식사를 나눌 수 있겠어. 고마워, 서하.");
                     }
@@ -232,8 +232,8 @@ namespace AfterSignal
                     {
                         CampaignCatalog.Jobs |= 16;
                         game.Memories++;
-                        PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Memories", game.Memories);
-                        PlayerPrefs.Save();
+                        SaveStore.SetInt("AFTERSIGNAL.Unity.Memories", game.Memories);
+                        SaveStore.Save();
                         game.ShowDialogue(title, "좋아, 이제 옥상에서 도시의 목소리가 들려. 첫 방송을 오래 기억할게.");
                     }
                     else
@@ -276,8 +276,8 @@ namespace AfterSignal
                         game.Toast("먼저 컨덕터의 축전기 두 개를 과부하시켜 제압하세요");
                     else
                     {
-                        PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Completed", 1);
-                        PlayerPrefs.Save();
+                        SaveStore.SetInt("AFTERSIGNAL.Unity.Completed", 1);
+                        SaveStore.Save();
                         game.Travel(StageId.Haven);
                     }
 
@@ -290,8 +290,8 @@ namespace AfterSignal
                     {
                         Used = true;
                         game.Memories++;
-                        PlayerPrefs.SetInt("AFTERSIGNAL.Unity.Memories", game.Memories);
-                        PlayerPrefs.Save();
+                        SaveStore.SetInt("AFTERSIGNAL.Unity.Memories", game.Memories);
+                        SaveStore.Save();
                         game.ShowDialogue("기억 파편 / ARCHIVE", dialogue);
                         game.Player.Heal(15);
                     }

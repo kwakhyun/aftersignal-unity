@@ -40,9 +40,9 @@ namespace AfterSignal
             if(car)
             {
                 continueDriving=true;
-                PlayerPrefs.SetInt(UrbanCatalog.Prefix+"CarStage",(int)StageId.UrbanCity);
-                PlayerPrefs.SetFloat(UrbanCatalog.Prefix+"CarX",73);
-                PlayerPrefs.SetFloat(UrbanCatalog.Prefix+"CarZ",-254);
+                SaveStore.SetInt(UrbanCatalog.Prefix+"CarStage",(int)StageId.UrbanCity);
+                SaveStore.SetFloat(UrbanCatalog.Prefix+"CarX",73);
+                SaveStore.SetFloat(UrbanCatalog.Prefix+"CarZ",-254);
             }
             game.Travel(StageId.UrbanCity);
         }
