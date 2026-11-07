@@ -75,8 +75,8 @@ namespace AfterSignal
                 var car=hit.collider.GetComponentInParent<CityVehicle>();
                 if(car)car.Damage(damage*.65f,hit.point,source);
                 if (hostilePlayer)
-                    // Police scale their own shots; soldiers use the law-enforcement multiplier, everyone else the enemy one.
-                    hit.collider.GetComponentInParent<PlayerMotor>()?.ReceiveDamage(Mathf.RoundToInt(damage*(source.police?1:source.military?DifficultySettings.PoliceDamage:DifficultySettings.EnemyDamage)), source.transform.position);
+                    // Difficulty is applied here exactly once: police and soldiers (officers, guards, robots, gunners) use the law-enforcement multiplier, everyone else the enemy one.
+                    hit.collider.GetComponentInParent<PlayerMotor>()?.ReceiveDamage(Mathf.RoundToInt(damage*(source.police||source.military?DifficultySettings.PoliceDamage:DifficultySettings.EnemyDamage)), source.transform.position);
             }
             CombatVfx.Tracer(muzzle,end,color);
         }

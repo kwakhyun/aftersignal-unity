@@ -24,7 +24,7 @@ namespace AfterSignal
                     Option("출석 및 벌금 납부 / " + fine.ToString("N0") + " C", () => Purchase(fine, () => WantedSystem.Clear("사건 정리 · 수배 해제")));
                     break;
                 case 2:
-                    Option("안전 물자 분류 / 2시간 · 180 C", () => Work("fire", 180, 2));
+                    Option("안전 물자 분류 / 2시간 · " + Pay(180) + " C", () => Work("fire", 180, 2));
                     Option("응급 처치 / 60 C", () => Purchase(60, () => game.Player.Heal(35)));
                     break;
                 case 3:
@@ -41,7 +41,7 @@ namespace AfterSignal
                     Option("외래 응급 처치 / 60 C", () => Purchase(60, () => game.Player.Heal(35)));
                     break;
                 case 5:
-                    Option("도서 정리 / 1시간 · 100 C", () => Work("school", 100, 1));
+                    Option("도서 정리 / 1시간 · " + Pay(100) + " C", () => Work("school", 100, 1));
                     break;
                 case 6:
                 case 8:
@@ -92,7 +92,7 @@ namespace AfterSignal
                     });
                     break;
                 case 13:
-                    Option("물류 정리 / 2시간 · 240 C", () => Work("logistics", 240, 2));
+                    Option("물류 정리 / 2시간 · " + Pay(240) + " C", () => Work("logistics", 240, 2));
                     break;
                 case 14:
                     Option("신호 복원 활동 수당 / 하루 " + Pay(120) + " C", () => Daily("signal", 120, "도시 신호 복원 활동 수당을 받았습니다."));

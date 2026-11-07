@@ -28,7 +28,8 @@ namespace AfterSignal
         }
         void Log(string m,string s,LogType t){if(t==LogType.Exception||t==LogType.Error||t==LogType.Assert){report.errors.Add(m+"\n"+s);error=true;}}
         void Check(bool ok,string name){(ok?report.passed:report.errors).Add(name);}
-        void Update(){if(!finished&&(error||Time.realtimeSinceStartup-began>180)){if(!error)Check(false,"Timeout");Finish();}}
+        // Neutral camera response for the look check, re-applied every frame because GameDirector.Start reloads PlayerPrefs; never saved.
+        void Update(){PresentationSettings.MouseSensitivity=1;PresentationSettings.InvertY=false;if(!finished&&(error||Time.realtimeSinceStartup-began>180)){if(!error)Check(false,"Timeout");Finish();}}
         IEnumerator Load(int site,bool city=false)
         {
             CityChronicle.SuppressSave=true;LifeState.Heat=0;ResidentialWorld.VisitHome=-1;SaveStore.SetInt(UrbanCatalog.Prefix+"Site",site);

@@ -138,7 +138,10 @@ namespace AfterSignal
         {
             if(MapOpen&&!input.map){input.move=Vector2.zero;input.attack=input.interact=input.passenger=input.exit=false;}
             CityBusService.Instance?.BeforeInput(ref input);
-            if (input.map)
+            // The city atlas overlay only exists in UrbanCity; elsewhere (Haven) M must not freeze Seoha behind an invisible map.
+            if (game.stage != StageId.UrbanCity)
+                MapOpen = false;
+            else if (input.map)
                 MapOpen = !MapOpen;
             if(BikeDeliveryPending&&game.stage==StageId.UrbanCity)SummonBike();
             nearest = null;
@@ -334,6 +337,8 @@ namespace AfterSignal
                 bool mine=car==Owned||car==PersonalBike||car.owned&&car!=borrowed;
                 if(borrowed&&borrowed!=car)borrowed.owned=false;
                 borrowed=mine?null:car;car.owned=car.occupied=true;
+                // Driving her own vehicle again makes any earlier borrowed ride stale for Motor Lab registration.
+                if(mine)LastRide=null;
             }
             car.ApplyCustomization();
             if(SeatIndex==0){car.traffic = false;car.speed = 0;}

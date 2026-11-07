@@ -11,7 +11,9 @@ namespace AfterSignal
         WorldActor incidentTarget;
         public void AssignIncident(WorldActor target){incidentTarget=target;incidentAssignment=true;}
         readonly ResponseDrive route=new();
-        CityVehicle car;WantedSystem owner;int remaining,rank=4;float elapsed,release;bool withdrawing,patrol,incidentAssignment;
+        CityVehicle car;WantedSystem owner;int remaining,rank=4;float elapsed,release,leave;bool withdrawing,patrol,incidentAssignment;
+        // Wanted-response vehicles that have dropped their whole squad leave before the next wave, so parked vans do not pile up near LastSeen.
+        public static void WithdrawUnloaded(){foreach(var t in all.ToArray())if(t&&t.remaining<=0&&!t.incidentAssignment&&!t.withdrawing)t.Withdraw();}
         public static TacticalTransport Create(WantedSystem system,Vector3 at,int count,int rank=4)
         {
             CityVehicle vehicle;
@@ -36,7 +38,8 @@ namespace AfterSignal
         {
             var game=GameDirector.Instance;if(!car||!game||game.Blocked)return;
             if(car.Wrecked){remaining=0;return;}
-            if(withdrawing){if(!car.owned)Destroy(gameObject,8);enabled=false;return;}
+            // Leave once off screen (or after 30 s) so a van withdrawn mid-fight does not vanish in view; a van Seoha took is kept, and one she rides in any seat waits until she is out.
+            if(withdrawing){if(car.owned){enabled=false;return;}if(UrbanSimulation.Instance&&UrbanSimulation.Instance.Current==car){leave=0;return;}leave+=Time.deltaTime;if(leave>30||leave>1&&ResponseDispatch.Hidden(transform.position,4))Destroy(gameObject);return;}
             if(UrbanSimulation.Instance.Current==car){remaining=0;return;}
             elapsed+=Time.deltaTime;
             if(incidentAssignment&&(!incidentTarget||!incidentTarget.Alive||incidentTarget.Downed)&&!IncidentCommand.Emergency){remaining=0;car.speed=0;if(elapsed>100&&ResponseDispatch.Hidden(transform.position))Destroy(gameObject);return;}
@@ -53,7 +56,7 @@ namespace AfterSignal
             if(!CityGangWar.FindGround(door,out var ground))return;
             var officer=PoliceOfficer.Create(owner,ground,rank,Deployed);
             if(incidentTarget){officer.Ambient=true;officer.Dispatch(incidentTarget);CitySafety.Instance?.Patrol.Add(officer);}else owner.Officers.Add(officer);
-            if(Deployed==0&&rank>=4)CombatRobot.Create(ground+transform.forward*2,false);
+            if(Deployed==0&&rank>=4)CombatRobot.Create(ground+transform.forward*2,false,!incidentAssignment);
             NpcSpeech.Say(officer,NpcDialogueBank.Line(officer.GetComponent<CityNpc>(),"deployment"),3);
             remaining--;Deployed++;car.GetComponent<VehicleCabin>()?.SetPassengers(remaining);
         }
