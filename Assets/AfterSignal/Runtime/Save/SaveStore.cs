@@ -60,6 +60,9 @@ namespace AfterSignal
             loadedSlot = ActiveSlot; generation++;
             string main = PathFor(loadedSlot);
             var file = ReadSlot(loadedSlot, out bool fallback);
+#if !UNITY_EDITOR
+            if (loadedSlot == 0 && directoryOverride == null) ClaimSlot1(ref file, ref fallback, main);
+#endif
             if (fallback || file == null && File.Exists(main))
             {
                 // Keep an unreadable file for inspection. A missing one (interrupted replace) also falls back to the last good copy.
@@ -99,6 +102,26 @@ namespace AfterSignal
             catch (Exception error) { Debug.LogWarning("AFTERSIGNAL save read failed · " + path + " · " + error.Message); return false; }
         }
 
+#if !UNITY_EDITOR
+        // Earlier builds kept the Editor's slots in this same folder too, while on Windows the Editor and the player have separate
+        // PlayerPrefs. Every player build sets MigratedKey in its own PlayerPrefs once it opens slot 1 with no file, so a slot 1
+        // file with no import marker, no MigratedKey and this player's own legacy progress waiting was written by the Editor:
+        // it is kept as *.editor and the player's progress is imported in its place.
+        const string MigratedKey = "AFTERSIGNAL.Unity.SaveMigrated";
+        static void ClaimSlot1(ref SlotFile file, ref bool fallback, string main)
+        {
+            if (file != null && !LifeState.SuppressSave && !PlayerPrefs.HasKey(MigratedKey) && !File.Exists(Path.Combine(Directory, MigratedFile)) && Array.Exists(LegacyKeys.Progress, PlayerPrefs.HasKey))
+            {
+                // Main file last: if anything fails, slot 1 is still there and nothing is imported over it.
+                try { foreach (var path in new[] { main + ".tmp", main + ".bak", main }) if (File.Exists(path)) { File.Copy(path, path + ".editor", true); File.Delete(path); } }
+                catch (Exception error) { Debug.LogWarning("AFTERSIGNAL save: could not set aside the Editor's slot 1 · " + error.Message); return; }
+                Debug.LogWarning("AFTERSIGNAL save: slot 1 was written by the Editor; kept as " + Path.GetFileName(main) + ".editor and importing this player's progress");
+                file = null; fallback = false;
+            }
+            if (file == null && !PlayerPrefs.HasKey(MigratedKey)) { PlayerPrefs.SetInt(MigratedKey, 1); PlayerPrefs.Save(); }
+        }
+#endif
+
         /// <summary>Hook for future format changes: migrate older slot files step by step.</summary>
         static SlotFile Upgrade(SlotFile file) { file.version = Version; return file; }
 
@@ -115,14 +138,18 @@ namespace AfterSignal
                 // PlayerPrefs has no type query: reading a key as the wrong type returns the fallback sentinel.
                 const string none = "\u0001";
                 string text = PlayerPrefs.GetString(key, none);
-                if (text != none) Put(key, 2, 0, 0, text);
-                else if (PlayerPrefs.GetInt(key, int.MinValue) != int.MinValue) Put(key, 0, PlayerPrefs.GetInt(key, 0), 0, null);
-                else Put(key, 1, 0, PlayerPrefs.GetFloat(key, 0), null);
+                // Straight into the slot, not through Put: while quitting every Put flushes (and a suppressed flush clears dirty),
+                // so the Flush below would report "nothing to write" although slot 1 was never written.
+                values[key] = text != none ? new Entry { key = key, type = 2, s = text }
+                    : PlayerPrefs.GetInt(key, int.MinValue) != int.MinValue ? new Entry { key = key, type = 0, i = PlayerPrefs.GetInt(key, 0) }
+                    : new Entry { key = key, type = 1, f = PlayerPrefs.GetFloat(key, 0) };
                 imported++;
             }
             if (imported == 0) return;
-            Put(LegacyFlag, 0, 1, 0, null);
-            if (!Flush()) return;
+            values[LegacyFlag] = new Entry { key = LegacyFlag, type = 0, i = 1 };
+            // dirty is set here, so true means this call wrote slot 1; a failed write is retried by the runner, not marked done.
+            dirty = true;
+            if (!Flush()) { Save(); return; }
             try { File.WriteAllText(Path.Combine(Directory, MigratedFile), DateTime.UtcNow.ToString("o")); }
             catch (Exception error) { Debug.LogWarning("AFTERSIGNAL save migration marker failed · " + error.Message); }
             Debug.Log($"AFTERSIGNAL: imported {imported} legacy progress keys into save slot 1");
