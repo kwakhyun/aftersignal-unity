@@ -61,7 +61,7 @@ namespace AfterSignal
             string main = PathFor(loadedSlot);
             var file = ReadSlot(loadedSlot, out bool fallback);
 #if !UNITY_EDITOR
-            if (loadedSlot == 0 && directoryOverride == null) ClaimSlot1(ref file, ref fallback, main);
+            if (loadedSlot == 0 && directoryOverride == null) ImportBesideSlot1(file);
 #endif
             if (fallback || file == null && File.Exists(main))
             {
@@ -103,20 +103,33 @@ namespace AfterSignal
         }
 
 #if !UNITY_EDITOR
-        // Earlier builds kept the Editor's slots in this same folder too, while on Windows the Editor and the player have separate
-        // PlayerPrefs. Every player build sets MigratedKey in its own PlayerPrefs once it opens slot 1 with no file, so a slot 1
-        // file with no import marker, no MigratedKey and this player's own legacy progress waiting was written by the Editor:
-        // it is kept as *.editor and the player's progress is imported in its place.
+        // Earlier builds kept the Editor's slots in this same folder, while on Windows the Editor and the player have separate
+        // PlayerPrefs. So a slot 1 file with no import marker, no MigratedKey and this player's own legacy progress still
+        // waiting may be the Editor's, or this player's own progress on a file the Editor created. Slot 1 is never touched:
+        // the legacy progress goes into the first empty slot instead, so both appear in the Load list.
         const string MigratedKey = "AFTERSIGNAL.Unity.SaveMigrated";
-        static void ClaimSlot1(ref SlotFile file, ref bool fallback, string main)
+        static void ImportBesideSlot1(SlotFile file)
         {
             if (file != null && !LifeState.SuppressSave && !PlayerPrefs.HasKey(MigratedKey) && !File.Exists(Path.Combine(Directory, MigratedFile)) && Array.Exists(LegacyKeys.Progress, PlayerPrefs.HasKey))
             {
-                // Main file last: if anything fails, slot 1 is still there and nothing is imported over it.
-                try { foreach (var path in new[] { main + ".tmp", main + ".bak", main }) if (File.Exists(path)) { File.Copy(path, path + ".editor", true); File.Delete(path); } }
-                catch (Exception error) { Debug.LogWarning("AFTERSIGNAL save: could not set aside the Editor's slot 1 · " + error.Message); return; }
-                Debug.LogWarning("AFTERSIGNAL save: slot 1 was written by the Editor; kept as " + Path.GetFileName(main) + ".editor and importing this player's progress");
-                file = null; fallback = false;
+                int target = -1;
+                for (int slot = 1; slot < SlotCount && target < 0; slot++) if (ReadSlot(slot, out _) == null && !File.Exists(PathFor(slot))) target = slot;
+                if (target < 0) Debug.LogWarning("AFTERSIGNAL save: earlier PlayerPrefs progress found, but slots 2 and 3 are in use; it was not imported");
+                else
+                {
+                    var entries = LegacyEntries();
+                    try
+                    {
+                        System.IO.Directory.CreateDirectory(Directory);
+                        string path = PathFor(target);
+                        File.WriteAllText(path + ".tmp", JsonUtility.ToJson(new SlotFile { version = Version, savedAt = DateTime.UtcNow.Ticks, entries = entries }));
+                        File.Move(path + ".tmp", path);
+                    }
+                    catch (Exception error) { Debug.LogWarning("AFTERSIGNAL save: could not import earlier progress into slot " + (target + 1) + " · " + error.Message); return; }
+                    WriteMigratedMarker();
+                    LastLoadWarning = $"이전 버전의 진행 기록을 슬롯 {target + 1}에 가져왔습니다. 슬롯 1은 그대로 두었습니다.";
+                    Debug.LogWarning($"AFTERSIGNAL save: slot 1 already existed; imported {entries.Count - 1} legacy progress keys into slot {target + 1}");
+                }
             }
             if (file == null && !PlayerPrefs.HasKey(MigratedKey)) { PlayerPrefs.SetInt(MigratedKey, 1); PlayerPrefs.Save(); }
         }
@@ -131,28 +144,40 @@ namespace AfterSignal
         /// </summary>
         static void ImportLegacy()
         {
-            int imported = 0;
+            var entries = LegacyEntries();
+            if (entries.Count == 0) return;
+            // Straight into the slot, not through Put: while quitting every Put flushes (and a suppressed flush clears dirty),
+            // so the Flush below would report "nothing to write" although slot 1 was never written.
+            foreach (var e in entries) values[e.key] = e;
+            // dirty is set here, so true means this call wrote slot 1; a failed write is retried by the runner, not marked done.
+            dirty = true;
+            if (!Flush()) { Save(); return; }
+            WriteMigratedMarker();
+            Debug.Log($"AFTERSIGNAL: imported {entries.Count - 1} legacy progress keys into save slot 1");
+        }
+
+        /// <summary>The pre-slot PlayerPrefs progress as slot entries, plus the LegacyImported flag; empty when there is none.</summary>
+        static List<Entry> LegacyEntries()
+        {
+            var entries = new List<Entry>();
             foreach (var key in LegacyKeys.Progress)
             {
                 if (!PlayerPrefs.HasKey(key)) continue;
                 // PlayerPrefs has no type query: reading a key as the wrong type returns the fallback sentinel.
                 const string none = "\u0001";
                 string text = PlayerPrefs.GetString(key, none);
-                // Straight into the slot, not through Put: while quitting every Put flushes (and a suppressed flush clears dirty),
-                // so the Flush below would report "nothing to write" although slot 1 was never written.
-                values[key] = text != none ? new Entry { key = key, type = 2, s = text }
+                entries.Add(text != none ? new Entry { key = key, type = 2, s = text }
                     : PlayerPrefs.GetInt(key, int.MinValue) != int.MinValue ? new Entry { key = key, type = 0, i = PlayerPrefs.GetInt(key, 0) }
-                    : new Entry { key = key, type = 1, f = PlayerPrefs.GetFloat(key, 0) };
-                imported++;
+                    : new Entry { key = key, type = 1, f = PlayerPrefs.GetFloat(key, 0) });
             }
-            if (imported == 0) return;
-            values[LegacyFlag] = new Entry { key = LegacyFlag, type = 0, i = 1 };
-            // dirty is set here, so true means this call wrote slot 1; a failed write is retried by the runner, not marked done.
-            dirty = true;
-            if (!Flush()) { Save(); return; }
+            if (entries.Count > 0) entries.Add(new Entry { key = LegacyFlag, type = 0, i = 1 });
+            return entries;
+        }
+
+        static void WriteMigratedMarker()
+        {
             try { File.WriteAllText(Path.Combine(Directory, MigratedFile), DateTime.UtcNow.ToString("o")); }
             catch (Exception error) { Debug.LogWarning("AFTERSIGNAL save migration marker failed · " + error.Message); }
-            Debug.Log($"AFTERSIGNAL: imported {imported} legacy progress keys into save slot 1");
         }
 
         static void Put(string key, int type, int i, float f, string s) { values[key] = new Entry { key = key, type = type, i = i, f = f, s = s }; dirty = true; Runner.Wake(); }

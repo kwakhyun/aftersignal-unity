@@ -78,8 +78,10 @@ namespace AfterSignal
             // One distance everywhere: the road distance when a route exists, otherwise the straight line.
             float distance = roadRoute != null && navigation.Connected && !navigation.Arrived ? navigation.Remaining : delta.magnitude;
             string heading = Mathf.Abs(delta.y) > 6 && delta.magnitude < 18 ? delta.y > 0 ? "위층 ↑" : "아래층 ↓" : RelativeDirection(delta);
-            // The label is often the objective text, which carries default keys. With the navigation card up, its remaining distance is the only one shown.
-            mainRouteText.text = KeyHints.Apply(mainLabel) + "\n" + heading + (navigationCard && navigationCard.activeSelf ? "" : "  ·  " + distance.ToString("0") + " m");
+            // The label is often the objective text, which carries default keys. With the navigation card up, its remaining distance is the only one shown,
+            // except on a short canvas (large UI on 16:9) where Noa's or the battle radio can cover the card's bottom line.
+            bool cardShowsDistance = navigationCard && navigationCard.activeSelf && root.rect.height >= 860;
+            mainRouteText.text = KeyHints.Apply(mainLabel) + "\n" + heading + (cardShowsDistance ? "" : "  ·  " + distance.ToString("0") + " m");
             Vector3 next = mainGoal;
             if (roadRoute != null && !navigation.Arrived)next=navigation.Next+Vector3.up*.8f;
 
@@ -87,6 +89,8 @@ namespace AfterSignal
             var screen = cam.WorldToScreenPoint(next);
             bool behind = screen.z < 0;
             float floor = PinFloor();
+            // Keep the whole 200-unit pin label on screen at any canvas scale (the text is centred on the point).
+            float margin = Mathf.Max(110, 100 * canvas.scaleFactor + 8);
             if (behind)
             {
                 // A mirrored projection can land mid-screen. Park the pin on the border instead, toward the target's side, with "behind" reading as down.
@@ -94,14 +98,14 @@ namespace AfterSignal
                 var dir = new Vector2(local.x, -Mathf.Abs(local.z));
                 dir = dir.sqrMagnitude > .0001f ? dir.normalized : Vector2.down;
                 var centre = new Vector2(Screen.width * .5f, Screen.height * .5f);
-                float tx = dir.x > 0 ? (Screen.width - 110 - centre.x) / dir.x : dir.x < 0 ? (110 - centre.x) / dir.x : float.MaxValue;
+                float tx = dir.x > 0 ? (Screen.width - margin - centre.x) / dir.x : dir.x < 0 ? (margin - centre.x) / dir.x : float.MaxValue;
                 float ty = (floor - centre.y) / dir.y;
                 var edge = centre + dir * Mathf.Max(0, Mathf.Min(tx, ty));
                 screen.x = edge.x;
                 screen.y = edge.y;
             }
 
-            screen.x = Mathf.Clamp(screen.x, 110, Screen.width - 110);
+            screen.x = Mathf.Clamp(screen.x, margin, Mathf.Max(margin, Screen.width - margin));
             screen.y = Mathf.Clamp(screen.y, floor, Screen.height - 120);
             PlaceScreen(mainRoutePin.rectTransform, screen, new Vector2(100, 0));
             string pin = roadRoute != null ? navigation.Arrived?"◆  도착":navigation.Arrow+"  "+navigation.TurnDistance.ToString("0")+" m" : "◆  " + distance.ToString("0") + " m";

@@ -151,6 +151,7 @@ namespace AfterSignal
                 if (changed)
                 {
                     lifeRevision = life.Revision;
+                    labelsForPad = KeyHints.UsingGamepad;
                     storyReveal = default; // every story panel is a new line, even when its text repeats
                     lifeTitle.text = life.Heading;
                     lifeBody.text = life.Body;
@@ -188,6 +189,16 @@ namespace AfterSignal
                         }
                     }
                 }
+                else if (labelsForPad != KeyHints.UsingGamepad)
+                {
+                    // Switching between keyboard and pad: show or drop the number-key prefixes without rebuilding the panel.
+                    labelsForPad = KeyHints.UsingGamepad;
+                    for (int i = 0; i < lifeOptions.Length && i < life.Options.Count; i++)
+                    {
+                        var option = life.Options[i];
+                        lifeOptions[i].GetComponentInChildren<Text>().text = OptionKey(life, i) + (ShopItemArt.Get(option.image) ? option.label.Replace(" / ", "\n") : option.label);
+                    }
+                }
 
                 ConversationLayout(life);
                 if (life.Mode == "story") lifeBody.text = Reveal(life.Body, ref storyReveal);
@@ -211,7 +222,7 @@ namespace AfterSignal
             sleepShade.color = new Color(.005f, .012f, .025f, life.SleepFade);
         }
 
-        bool lifeBack;
+        bool lifeBack, labelsForPad;
         /// <summary>Gamepad B closes the life panel after every Update has run. B is also Dash: closing during Update could unblock GameDirector later in the same frame and turn the press into a dash.</summary>
         void LateUpdate()
         {

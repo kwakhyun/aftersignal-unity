@@ -108,7 +108,7 @@ namespace AfterSignal
             if(control.journal&&!(control.journalFromPad&&CityLife.Instance.Mode=="journal")&&(!Blocked||CityLife.Instance.Mode=="journal")){if(CityLife.Instance.Mode=="journal")CityLife.Instance.Dismiss();else CityLife.Instance.StoryJournal();return;}
             if(control.pause&&!Title&&!Dead&&!Transition&&!CityCinematic.Active){if(CityLife.Instance&&CityLife.Instance.Mode=="sleeping")return;if(Dialogue)CloseDialogue();else SetPaused(!Paused);}
             // Keys 1–7 pick the matching option of an open CityLife panel in on-screen order (image cards first), exactly like clicking it.
-            if(Dialogue&&!Paused&&control.weapon>=0&&CityLife.Instance){var menu=CityLife.Instance;int pick=MenuOption(menu.Mode,menu.Options.Count,control.weapon,menu.TextFocused);if(pick>=0)pick=menu.DisplayedOption(pick);if(pick>=0){menu.Options[pick].action();return;}}
+            if(Dialogue&&!Paused&&control.weapon>=0&&CityLife.Instance){var menu=CityLife.Instance;int pick=MenuOption(menu.Mode,menu.Options.Count,control.weapon,menu.TextFocused);if(pick>=0)pick=menu.DisplayedOption(pick);if(pick>=0){if(!(menu.Mode=="story"&&Hud&&Hud.RevealDialogue()))menu.Options[pick].action();return;}}
             if(Dialogue&&control.interact)
             {
                 // First press finishes a line that is still typing; the next one advances.

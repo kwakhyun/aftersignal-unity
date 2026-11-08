@@ -167,7 +167,7 @@ namespace AfterSignal
                 pointer = new Vector2(Screen.width * .5f, Screen.height * .5f),
                 zoom = held ? zoom.ReadValue<Vector2>().y : 0,
                 journal = journal.WasPressedThisFrame(),
-                journalFromPad = journal.WasPressedThisFrame() && Gamepad.current != null && !(Keyboard.current != null && Keyboard.current.anyKey.wasPressedThisFrame),
+                journalFromPad = journal.WasPressedThisFrame() && Gamepad.current != null && Gamepad.current.dpad.up.wasPressedThisFrame, // the pad binding is fixed to d-pad up
                 rescueReport = rescueReport.WasPressedThisFrame(),
                 panorama = panorama.WasPressedThisFrame(),
                 attack = attack.IsPressed(),
