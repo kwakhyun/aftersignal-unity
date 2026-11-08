@@ -8,7 +8,7 @@ namespace AfterSignal
         public Vector2 move, pointer, lookDelta;
         public float zoom, vertical;
         public bool boost, passenger, surrender, vehicleView, secondaryFire, horn, summonBike;
-        public bool journal, rescueReport, panorama;
+        public bool journal, journalFromPad, rescueReport, panorama;
         public bool look, cameraReset, run;
         public bool attack, grapple, jump, interact, dash, skill, guard, pause, reload, map, exit;
         public int weapon, weaponCycle;
@@ -167,6 +167,7 @@ namespace AfterSignal
                 pointer = new Vector2(Screen.width * .5f, Screen.height * .5f),
                 zoom = held ? zoom.ReadValue<Vector2>().y : 0,
                 journal = journal.WasPressedThisFrame(),
+                journalFromPad = journal.WasPressedThisFrame() && Gamepad.current != null && !(Keyboard.current != null && Keyboard.current.anyKey.wasPressedThisFrame),
                 rescueReport = rescueReport.WasPressedThisFrame(),
                 panorama = panorama.WasPressedThisFrame(),
                 attack = attack.IsPressed(),

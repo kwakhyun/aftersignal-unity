@@ -5,7 +5,7 @@ namespace AfterSignal
 {
     public sealed class MilitaryResponse:MonoBehaviour
     {
-        readonly List<CityVehicle> vehicles=new();readonly List<WorldActor> soldiers=new();
+        readonly List<CityVehicle> vehicles=new();readonly List<WorldActor> soldiers=new();CombatRobot robot;
         public RiftIncursion Incident {get;private set;}
         public int VehicleCount=>vehicles.Count;
         public int SoldierCount=>soldiers.Count;
@@ -47,7 +47,7 @@ namespace AfterSignal
             WorldActor body;
             if(Incident)body=ArmyResponder.Create(safe,index,Incident).Body;
             else{var s=PoliceOfficer.Create(WantedSystem.Instance,safe,4,index);s.name="군 긴급대응 소총수";s.Body.military=true;PeopleArt.Attach(s.gameObject,"Soldier");WantedSystem.Instance.Officers.Add(s);body=s.Body;}
-            if(index==0)CombatRobot.Create(safe+Vector3.right*3,true);
+            if(index==0)robot=CombatRobot.Create(safe+Vector3.right*3,true);
             soldiers.Add(body);NpcSpeech.Say(body,NpcDialogueBank.Line(null,"deployment"),4,5);
         }
         public void Withdraw()
@@ -55,6 +55,7 @@ namespace AfterSignal
             if(withdrawn)return;withdrawn=true;StopAllCoroutines();
             foreach(var s in soldiers)if(s&&!s.Downed){var officer=s.GetComponent<PoliceOfficer>();if(officer)officer.Withdraw();else Destroy(s.gameObject,18);}
             foreach(var v in vehicles)if(v){var ai=v.GetComponent<MilitaryVehicleAI>();if(ai)Destroy(ai);if(!v.owned)Destroy(v.gameObject,18);}
+            if(robot)robot.Withdraw();
             if(Incident)Destroy(gameObject);else Destroy(this);
         }
         void Update(){if(!withdrawn&&!Active)Withdraw();else if(fullyDeployed&&!vehicles.Exists(v=>v&&!v.Wrecked)&&!soldiers.Exists(s=>s&&s.Alive))Withdraw();}

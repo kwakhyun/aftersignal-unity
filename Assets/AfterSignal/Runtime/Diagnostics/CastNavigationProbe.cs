@@ -58,7 +58,7 @@ namespace AfterSignal
         IEnumerator UiReview()
         {
             Set(game,"<Fade>k__BackingField",0f);var start=CityRoadNetwork.Junction(1,1);var goal=CityRoadNetwork.Junction(4,3);game.Player.Respawn(start+Vector3.up*.1f);yield return new WaitForSeconds(.6f);var map=FindObjectsByType<AtlasViewport>(FindObjectsInactive.Include,FindObjectsSortMode.None).First(a=>!a.mini);map.Waypoint?.Invoke(goal);game.Toast("");yield return new WaitForSeconds(.6f);
-            var card=GameObject.Find("Navigation guidance");Check(card&&card.GetComponent<RectTransform>().anchoredPosition.y>=330,"Navigation card is above weapon selection UI");
+            var card=GameObject.Find("Navigation guidance");var bay=GameObject.Find("Weapon bay");var cardCorners=new Vector3[4];var bayCorners=new Vector3[4];if(card)card.GetComponent<RectTransform>().GetWorldCorners(cardCorners);if(bay)bay.GetComponent<RectTransform>().GetWorldCorners(bayCorners);Check(card&&(!bay||cardCorners[0].y>bayCorners[1].y),"Navigation card is above weapon selection UI");
             yield return View("navigation",start+new Vector3(-8,5,-6),start+Vector3.right*18,true);UrbanSimulation.Instance.OpenMap();yield return new WaitForSeconds(.3f);yield return View("city-atlas",start+new Vector3(-8,5,-6),start+Vector3.right*18,true);UrbanSimulation.Instance.CloseMap();
             game.ShowDialogue("서하","노아, 주민들은 안전한 곳으로 이동했어. 지금부터 신호를 따라갈게.");yield return View("seo-dialogue",start+new Vector3(-8,5,-6),start+Vector3.right*18,true);game.CloseDialogue();
             Set(game,"<Title>k__BackingField",true);yield return new WaitForSeconds(1);yield return View("ensemble-title",start+new Vector3(-8,5,-6),start+Vector3.right*18,true);Set(game,"<Title>k__BackingField",false);

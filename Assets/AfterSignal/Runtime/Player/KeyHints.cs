@@ -91,6 +91,8 @@ namespace AfterSignal
         }
 
         /// <summary>Display name of the current binding for an action ("E", "[X]"…), for menus.</summary>
+        /// <summary>Keyboard key of weapon slot 0..6; the same keys pick life-panel options.</summary>
+        public static string WeaponKey(int slot) => slot >= 0 && slot < weaponActions.Length ? For(weaponActions[slot]) : "";
         public static string For(string actionName, bool gamepad = false)
         {
             var action = asset ? asset.FindAction(actionName) : null;

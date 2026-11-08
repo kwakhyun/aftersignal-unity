@@ -13,7 +13,7 @@ namespace AfterSignal
             {
                 end=hit.point;var vehicle=hit.collider.GetComponentInParent<CityVehicle>();
                 if(vehicle)vehicle.Damage(damage,end,source,false);
-                else {hit.collider.GetComponentInParent<WorldActor>()?.Damage(damage,direction*8,source);hit.collider.GetComponentInParent<PlayerMotor>()?.ReceiveDamage(25,muzzle);}
+                else {hit.collider.GetComponentInParent<WorldActor>()?.Damage(damage,direction*8,source);hit.collider.GetComponentInParent<PlayerMotor>()?.ReceiveDamage(Mathf.RoundToInt(25*(player?1:vessel.Faction==SeaFaction.Pirates?DifficultySettings.EnemyDamage:DifficultySettings.PoliceDamage)),muzzle);}
                 VehicleExplosion.Create(end,1.1f);
             }
             CombatVfx.Tracer(muzzle,end,SignalEffects.Gold);

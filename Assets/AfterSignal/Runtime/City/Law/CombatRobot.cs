@@ -25,6 +25,8 @@ namespace AfterSignal
             foreach(var t in r.form.GetComponentsInChildren<Transform>())if(t.name.StartsWith("Thigh_")||t.name.StartsWith("Shin_")||t.name.StartsWith("Arm_")||t.name=="Sensor"){r.joints.Add(t);r.rests.Add(t.localRotation);}
             NpcSpeech.Say(r,"시민은 안전 구역으로 이동하십시오. 위협 대상을 제압합니다.",4);return r;
         }
+        /// <summary>Stop engaging, walk home and despawn out of sight (military robots when their response ends).</summary>
+        public void Withdraw(){if(Body&&Body.Alive){withdrawing=true;target=attacker=null;}}
         public void Attacked(WorldActor source){attacker=source;retaliate=Time.time+25;scan=0;}
         void Update()
         {

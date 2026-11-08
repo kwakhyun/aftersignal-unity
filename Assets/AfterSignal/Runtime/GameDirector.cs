@@ -105,7 +105,7 @@ namespace AfterSignal
             // The shared settings panel owns ESC/back while it is open (and on the frame it closes).
             if(SettingsPanel.IsOpen||SettingsPanel.ClosedFrame==Time.frameCount){Audio.SetPaused(Paused||Dead||Title);return;}
             if(control.pause&&UrbanSimulation.Instance&&UrbanSimulation.Instance.MapOpen){UrbanSimulation.Instance.CloseMap();return;}
-            if(control.journal&&(!Blocked||CityLife.Instance.Mode=="journal")){if(CityLife.Instance.Mode=="journal")CityLife.Instance.Dismiss();else CityLife.Instance.StoryJournal();return;}
+            if(control.journal&&!(control.journalFromPad&&CityLife.Instance.Mode=="journal")&&(!Blocked||CityLife.Instance.Mode=="journal")){if(CityLife.Instance.Mode=="journal")CityLife.Instance.Dismiss();else CityLife.Instance.StoryJournal();return;}
             if(control.pause&&!Title&&!Dead&&!Transition&&!CityCinematic.Active){if(CityLife.Instance&&CityLife.Instance.Mode=="sleeping")return;if(Dialogue)CloseDialogue();else SetPaused(!Paused);}
             // Keys 1–7 pick the matching option of an open CityLife panel in on-screen order (image cards first), exactly like clicking it.
             if(Dialogue&&!Paused&&control.weapon>=0&&CityLife.Instance){var menu=CityLife.Instance;int pick=MenuOption(menu.Mode,menu.Options.Count,control.weapon,menu.TextFocused);if(pick>=0)pick=menu.DisplayedOption(pick);if(pick>=0){menu.Options[pick].action();return;}}
@@ -122,7 +122,7 @@ namespace AfterSignal
             if(control.summonBike){if(!(control.horn&&UrbanSimulation.Instance&&UrbanSimulation.Instance.Driving))UrbanSimulation.RequestBike();control.summonBike=false;}
             float dt=Mathf.Min(Time.deltaTime,.1f);Audio.SetPaused(false);inputSuppress-=dt;
             // The press that confirmed a menu or closed a dialogue must not also act in the world (A / Space would jump).
-            if(inputSuppress>0){control.attack=control.grapple=control.interact=control.jump=false;}
+            if(inputSuppress>0){control.attack=control.grapple=control.interact=control.jump=control.dash=false;}
             Elapsed+=dt;NoticeTimer=Mathf.Max(0,NoticeTimer-dt);coreCooldown-=dt;
             Player.TickRecovery(dt);
             VenueRide.BeforeInput(ref control);

@@ -173,7 +173,7 @@ namespace AfterSignal
                             PlaceLifeElement(label.rectTransform, 232, 35, 222, 125);
                             label.alignment = TextAnchor.MiddleLeft;
                             label.fontSize = 20;
-                            label.text = option.label.Replace(" / ", "\n");
+                            label.text = OptionKey(life, i) + option.label.Replace(" / ", "\n");
                             lifeItemActions[i].text = life.Mode == "wardrobe" ? "선택" : "구매";
                             cardIndex++;
                         }
@@ -183,7 +183,7 @@ namespace AfterSignal
                             PlaceLifeElement(label.rectTransform, 10, 0, 454, 44);
                             label.alignment = TextAnchor.MiddleCenter;
                             label.fontSize = 16;
-                            label.text = option.label;
+                            label.text = OptionKey(life, i) + option.label;
                             plainIndex++;
                         }
                     }
@@ -224,6 +224,13 @@ namespace AfterSignal
         }
 
         /// <summary>Gives gamepad and keyboard navigation a starting point: the first option, unless the selection is already a live control in this panel.</summary>
+        /// <summary>"1  " before an option when a number key picks it (GameDirector maps the weapon keys to the displayed order).</summary>
+        static string OptionKey(CityLife life, int index)
+        {
+            if (life.Mode == "talk" || KeyHints.UsingGamepad) return "";
+            int slot = life.OptionSlot(index);string key = slot >= 0 ? KeyHints.WeaponKey(slot) : "";
+            return string.IsNullOrEmpty(key) ? "" : key + "  ";
+        }
         void SelectLifeOption(bool force)
         {
             var events = EventSystem.current;
