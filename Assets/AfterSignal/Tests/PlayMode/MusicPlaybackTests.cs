@@ -9,14 +9,15 @@ namespace AfterSignal.Tests
     public class MusicPlaybackTests
     {
         SignalMusic music;
-        bool hadVolume, hadMusicVolume, hadSite, suppressed, chronicleSuppressed, skipTitle;
+        bool hadVolume, hadMusicVolume, suppressed, chronicleSuppressed, skipTitle;
         float volume, musicVolume;
-        int site;
+        int previousSlot; string saveDirectory;
         [UnitySetUp] public IEnumerator Setup()
         {
             hadVolume=PlayerPrefs.HasKey("AFTERSIGNAL.Unity.Volume");volume=PlayerPrefs.GetFloat("AFTERSIGNAL.Unity.Volume");
             hadMusicVolume=PlayerPrefs.HasKey("AFTERSIGNAL.Unity.MusicVolume");musicVolume=PlayerPrefs.GetFloat("AFTERSIGNAL.Unity.MusicVolume");
-            hadSite=PlayerPrefs.HasKey(UrbanCatalog.Prefix+"Site");site=UrbanCatalog.Current;
+            // Progress (including the current city) lives in SaveStore: play an empty test slot in a temporary folder.
+            previousSlot = SaveStore.ActiveSlot; saveDirectory = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "aftersignal-music-tests-" + System.Guid.NewGuid().ToString("N")); SaveStore.Directory = saveDirectory; SaveStore.ActiveSlot = 2;
             suppressed=LifeState.SuppressSave;LifeState.SuppressSave=true;
             chronicleSuppressed=CityChronicle.SuppressSave;CityChronicle.SuppressSave=true;
             skipTitle=GameDirector.SkipTitle;
@@ -64,7 +65,7 @@ namespace AfterSignal.Tests
             LifeState.SuppressSave=suppressed;CityChronicle.SuppressSave=chronicleSuppressed;GameDirector.SkipTitle=skipTitle;
             Restore("AFTERSIGNAL.Unity.Volume",volume,hadVolume);
             Restore("AFTERSIGNAL.Unity.MusicVolume",musicVolume,hadMusicVolume);
-            if(hadSite)PlayerPrefs.SetInt(UrbanCatalog.Prefix+"Site",site);else PlayerPrefs.DeleteKey(UrbanCatalog.Prefix+"Site");
+            SaveStore.Directory = null; SaveStore.ActiveSlot = previousSlot; if (saveDirectory != null && System.IO.Directory.Exists(saveDirectory)) System.IO.Directory.Delete(saveDirectory, true);
             PlayerPrefs.Save();
         }
         void Restore(string key,float value,bool existed){if(existed)PlayerPrefs.SetFloat(key,value);else PlayerPrefs.DeleteKey(key);}

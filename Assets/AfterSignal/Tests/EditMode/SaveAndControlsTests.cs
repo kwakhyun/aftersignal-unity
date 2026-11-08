@@ -208,5 +208,18 @@ namespace AfterSignal.Tests
             }
             finally { KeyHints.Detach(asset); Object.DestroyImmediate(asset); }
         }
+
+        [Test]
+        public void NumberKeysMapToLifePanelOptions()
+        {
+            Assert.AreEqual(0, GameDirector.MenuOption("service", 3, 0, false));
+            Assert.AreEqual(2, GameDirector.MenuOption("story", 3, 2, false));
+            Assert.AreEqual(-1, GameDirector.MenuOption("service", 3, 3, false), "past the last option");
+            Assert.AreEqual(-1, GameDirector.MenuOption("talk", 3, 0, false), "digits are typed in the AI conversation");
+            Assert.AreEqual(-1, GameDirector.MenuOption("journal", 3, 0, true), "a focused text field keeps the digit");
+            Assert.AreEqual(-1, GameDirector.MenuOption("", 3, 0, false), "no panel open");
+            Assert.AreEqual(-1, GameDirector.MenuOption("service", 9, 7, false), "only seven option keys");
+            Assert.AreEqual(-1, GameDirector.MenuOption("service", 3, -1, false), "no weapon key pressed");
+        }
     }
 }

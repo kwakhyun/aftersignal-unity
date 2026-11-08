@@ -20,9 +20,9 @@ namespace AfterSignal.Tests
         GameDirector game;
         CityLife life;
         StoryVoice voice;
-        bool suppressed, chronicleSuppressed, hadVolume, hadSfxVolume, hadMusicVolume, hadSite, skipTitle;
+        bool suppressed, chronicleSuppressed, hadVolume, hadSfxVolume, hadMusicVolume, skipTitle;
         float volume, sfxVolume, musicVolume;
-        int site;
+        int previousSlot; string saveDirectory;
 
         [UnitySetUp] public IEnumerator Setup()
         {
@@ -34,7 +34,8 @@ namespace AfterSignal.Tests
             sfxVolume = PlayerPrefs.GetFloat("AFTERSIGNAL.Unity.SfxVolume");
             hadMusicVolume = PlayerPrefs.HasKey("AFTERSIGNAL.Unity.MusicVolume");
             musicVolume = PlayerPrefs.GetFloat("AFTERSIGNAL.Unity.MusicVolume");
-            hadSite = PlayerPrefs.HasKey(UrbanCatalog.Prefix + "Site"); site = UrbanCatalog.Current;
+            // Progress (including the current city) lives in SaveStore: play an empty test slot in a temporary folder.
+            previousSlot = SaveStore.ActiveSlot; saveDirectory = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "aftersignal-voice-tests-" + System.Guid.NewGuid().ToString("N")); SaveStore.Directory = saveDirectory; SaveStore.ActiveSlot = 2;
             skipTitle = GameDirector.SkipTitle; GameDirector.SkipTitle = true;
             yield return SceneManager.LoadSceneAsync(CampaignRules.Scene(StageId.Residence));
             yield return null;
@@ -62,7 +63,7 @@ namespace AfterSignal.Tests
             if (hadVolume) PlayerPrefs.SetFloat("AFTERSIGNAL.Unity.Volume", volume); else PlayerPrefs.DeleteKey("AFTERSIGNAL.Unity.Volume");
             if (hadSfxVolume) PlayerPrefs.SetFloat("AFTERSIGNAL.Unity.SfxVolume", sfxVolume); else PlayerPrefs.DeleteKey("AFTERSIGNAL.Unity.SfxVolume");
             if (hadMusicVolume) PlayerPrefs.SetFloat("AFTERSIGNAL.Unity.MusicVolume", musicVolume); else PlayerPrefs.DeleteKey("AFTERSIGNAL.Unity.MusicVolume");
-            if (hadSite) PlayerPrefs.SetInt(UrbanCatalog.Prefix + "Site", site); else PlayerPrefs.DeleteKey(UrbanCatalog.Prefix + "Site");
+            SaveStore.Directory = null; SaveStore.ActiveSlot = previousSlot; if (saveDirectory != null && System.IO.Directory.Exists(saveDirectory)) System.IO.Directory.Delete(saveDirectory, true);
             PlayerPrefs.Save();
         }
 

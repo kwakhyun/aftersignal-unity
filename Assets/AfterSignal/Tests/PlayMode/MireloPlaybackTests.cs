@@ -16,8 +16,8 @@ namespace AfterSignal.Tests
         const string Evidence = "Artifacts/AudioProduction/Mirelo/Playback";
         static readonly string[] PreferenceKeys = { "AFTERSIGNAL.Unity.Volume", "AFTERSIGNAL.Unity.SfxVolume", "AFTERSIGNAL.Unity.MusicVolume" };
         readonly bool[] had = new bool[3]; readonly float[] values = new float[3];
-        bool initialized, save, chronicleSave, skip, hadSite;
-        int site; GameDirector game;
+        bool initialized, save, chronicleSave, skip;
+        int previousSlot; string saveDirectory; GameDirector game;
         [Serializable] class Measurement { public string clip; public float peak; }
         [Serializable] class Report { public List<Measurement> clips = new(); }
 
@@ -29,7 +29,8 @@ namespace AfterSignal.Tests
             save = LifeState.SuppressSave; LifeState.SuppressSave = true;
             chronicleSave = CityChronicle.SuppressSave; CityChronicle.SuppressSave = true;
             skip = GameDirector.SkipTitle; GameDirector.SkipTitle = true;
-            hadSite = PlayerPrefs.HasKey(UrbanCatalog.Prefix + "Site"); site = UrbanCatalog.Current;
+            // Progress (including the current city) lives in SaveStore: play an empty test slot in a temporary folder.
+            previousSlot = SaveStore.ActiveSlot; saveDirectory = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "aftersignal-mirelo-tests-" + System.Guid.NewGuid().ToString("N")); SaveStore.Directory = saveDirectory; SaveStore.ActiveSlot = 2;
             for (int i = 0; i < 3; i++) { had[i] = PlayerPrefs.HasKey(PreferenceKeys[i]); values[i] = PlayerPrefs.GetFloat(PreferenceKeys[i]); }
             yield return SceneManager.LoadSceneAsync(CampaignRules.Scene(StageId.Residence));
             yield return null;
@@ -54,7 +55,7 @@ namespace AfterSignal.Tests
             yield return null;
             LifeState.SuppressSave = save; CityChronicle.SuppressSave = chronicleSave; GameDirector.SkipTitle = skip;
             for (int i = 0; i < 3; i++) { if (had[i]) PlayerPrefs.SetFloat(PreferenceKeys[i], values[i]); else PlayerPrefs.DeleteKey(PreferenceKeys[i]); }
-            if (hadSite) PlayerPrefs.SetInt(UrbanCatalog.Prefix + "Site", site); else PlayerPrefs.DeleteKey(UrbanCatalog.Prefix + "Site");
+            SaveStore.Directory = null; SaveStore.ActiveSlot = previousSlot; if (saveDirectory != null && System.IO.Directory.Exists(saveDirectory)) System.IO.Directory.Delete(saveDirectory, true);
             PlayerPrefs.Save(); initialized = false;
         }
         void StopSources() { foreach (var source in game.GetComponents<AudioSource>()) source.Stop(); }
